@@ -15,7 +15,7 @@ using WinterWorkShop.Cinema.Domain.Services;
 using WinterWorkShop.Cinema.Repositories;
 
 //Komentar sasa
-//Komentar 2
+//Komentar DRugi komentar
 
 namespace WinterWorkShop.Cinema.Tests.Services
 {
