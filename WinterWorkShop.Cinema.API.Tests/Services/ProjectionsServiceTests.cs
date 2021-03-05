@@ -14,6 +14,8 @@ using WinterWorkShop.Cinema.Domain.Models;
 using WinterWorkShop.Cinema.Domain.Services;
 using WinterWorkShop.Cinema.Repositories;
 
+//Komentar sasa
+
 namespace WinterWorkShop.Cinema.Tests.Services
 {
     [TestClass]
