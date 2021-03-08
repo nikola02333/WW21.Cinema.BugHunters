@@ -14,7 +14,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         Task<T> GetByIdAsync(object id);
 
-        T Insert(T obj);
+        Task<T> InsertAsync(T obj);
 
         void Save();
 

@@ -135,7 +135,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
             _mockProjectionsRepository = new Mock<IProjectionsRepository>();
             _mockProjectionsRepository.Setup(x => x.GetByAuditoriumId(It.IsAny<int>())).Returns(projectionsModelsList);
-            _mockProjectionsRepository.Setup(x => x.Insert(It.IsAny<Projection>())).Returns(_projection);
+            _mockProjectionsRepository.Setup(x => x.InsertAsync(It.IsAny<Projection>())).ReturnsAsync(_projection);
             ProjectionService projectionsController = new ProjectionService(_mockProjectionsRepository.Object);
 
             //Act
@@ -160,7 +160,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
             _mockProjectionsRepository = new Mock<IProjectionsRepository>();
             _mockProjectionsRepository.Setup(x => x.GetByAuditoriumId(It.IsAny<int>())).Returns(projectionsModelsList);
-            _mockProjectionsRepository.Setup(x => x.Insert(It.IsAny<Projection>())).Returns(_projection);
+            _mockProjectionsRepository.Setup(x => x.InsertAsync(It.IsAny<Projection>())).ReturnsAsync(_projection);
             _mockProjectionsRepository.Setup(x => x.Save());
             ProjectionService projectionsController = new ProjectionService(_mockProjectionsRepository.Object);
 
@@ -182,7 +182,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             List<Projection> projectionsModelsList = new List<Projection>();
 
             _mockProjectionsRepository = new Mock<IProjectionsRepository>();
-            _mockProjectionsRepository.Setup(x => x.Insert(It.IsAny<Projection>())).Throws(new DbUpdateException());
+            _mockProjectionsRepository.Setup(x => x.InsertAsync(It.IsAny<Projection>())).Throws(new DbUpdateException());
             _mockProjectionsRepository.Setup(x => x.Save());
             ProjectionService projectionsController = new ProjectionService(_mockProjectionsRepository.Object);
 

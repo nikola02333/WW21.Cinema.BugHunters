@@ -50,11 +50,11 @@ namespace WinterWorkShop.Cinema.Repositories
             return projectionsData;
         }
 
-        public Projection Insert(Projection obj)
+        public async Task<Projection> InsertAsync(Projection obj)
         {
-            var data = _cinemaContext.Projections.Add(obj).Entity;
+            var data = await _cinemaContext.Projections.AddAsync(obj);
 
-            return data;
+            return data.Entity;
         }
 
         public void Save()
