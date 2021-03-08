@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WinterWorkShop.Cinema.Domain.Models
 {
-    public class GetDomainModel<T> where T : class
+    public class GenericResult<T> where T : class
     {
         public bool IsSuccessful { get; set; }
 
