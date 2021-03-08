@@ -107,11 +107,7 @@ namespace WinterWorkShop.Cinema.Data
 
 
             /*---*/
-            modelBuilder.Entity<Ticket>()
-               .HasOne(a => a.Auditorium)
-               .WithMany(t => t.Tickets)
-               .HasForeignKey(t => t.AuditoriumId)
-               .IsRequired();
+          
 
             modelBuilder.Entity<Ticket>()
                 .HasOne(a => a.Seat)
@@ -126,17 +122,7 @@ namespace WinterWorkShop.Cinema.Data
                 .IsRequired();
 
 
-            modelBuilder.Entity<Ticket>()
-                .HasOne(a => a.Movie)
-                .WithMany(t => t.Tickets)
-                .HasForeignKey(t => t.MovieId)
-                .IsRequired();
-
             /*---*/
-
-            modelBuilder.Entity<Auditorium>()
-                .HasMany(t => t.Tickets)
-                .WithOne(a => a.Auditorium);
 
             modelBuilder.Entity<Seat>()
                  .HasMany(t => t.Tickets)
@@ -146,9 +132,7 @@ namespace WinterWorkShop.Cinema.Data
                 .HasMany(t => t.Tickets)
                 .WithOne(a => a.User);
 
-            modelBuilder.Entity<Movie>()
-                .HasMany(t => t.Tickets)
-                .WithOne(a => a.Movie);
+          
 
             // Index
             modelBuilder.Entity<Movie>().HasIndex(i => new { i.Year, i.HasOscar });

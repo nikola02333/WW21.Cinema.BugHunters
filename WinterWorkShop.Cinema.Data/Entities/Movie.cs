@@ -21,6 +21,11 @@ namespace WinterWorkShop.Cinema.Data
 
         public bool Current { get; set; }
 
+        public float? UserRaiting { get; set; }
+
+        public string    Genre { get; set; }
+        public string? CoverPicture { get; set; }
+
         public virtual ICollection<Projection> Projections { get; set; }
         public virtual ICollection<Ticket> Tickets { get; set; }
     }

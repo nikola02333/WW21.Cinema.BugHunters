@@ -37,7 +37,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Id = item.Id,
                     MovieId = item.MovieId,
                     AuditoriumId = item.AuditoriumId,
-                    ProjectionTime = item.DateTime,
+                    ProjectionTime = item.ShowingDate,
                     MovieTitle = item.Movie.Title,
                     AditoriumName = item.Auditorium.AuditName
                 };
@@ -52,7 +52,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             int projectionTime = 3;
 
             var projectionsAtSameTime = _projectionsRepository.GetByAuditoriumId(domainModel.AuditoriumId)
-                .Where(x => x.DateTime < domainModel.ProjectionTime.AddHours(projectionTime) && x.DateTime > domainModel.ProjectionTime.AddHours(-projectionTime))
+                .Where(x => x.ShowingDate < domainModel.ProjectionTime.AddHours(projectionTime) && x.ShowingDate > domainModel.ProjectionTime.AddHours(-projectionTime))
                 .ToList();
 
             if (projectionsAtSameTime != null && projectionsAtSameTime.Count > 0)
@@ -68,7 +68,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 MovieId = domainModel.MovieId,
                 AuditoriumId = domainModel.AuditoriumId,
-                DateTime = domainModel.ProjectionTime
+                 ShowingDate = domainModel.ProjectionTime
             };
 
             var insertedProjection = _projectionsRepository.Insert(newProjection);
@@ -92,7 +92,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Id = insertedProjection.Id,
                     AuditoriumId = insertedProjection.AuditoriumId,
                     MovieId = insertedProjection.MovieId,
-                    ProjectionTime = insertedProjection.DateTime
+                    ProjectionTime = insertedProjection.ShowingDate
                 }
             };
 
