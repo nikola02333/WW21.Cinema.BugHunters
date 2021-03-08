@@ -33,7 +33,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _projection = new Projection
             {
                 Id = Guid.NewGuid(),
-                Auditorium = new Auditorium { AuditName = "ImeSale" },
+                Auditorium = new Auditorium { AuditoriumName = "ImeSale" },
                 Movie = new Movie { Title = "ImeFilma" },
                 MovieId = Guid.NewGuid(),
                 ShowingDate = DateTime.Now.AddDays(1),
