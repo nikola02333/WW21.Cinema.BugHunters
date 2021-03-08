@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using WinterWorkShop.Cinema.Data.Entities;
 
 namespace WinterWorkShop.Cinema.Data
 {
@@ -14,6 +15,8 @@ namespace WinterWorkShop.Cinema.Data
         public DbSet<Auditorium> Auditoriums { get; set; }
         public DbSet<Seat> Seats { get; set; }
 
+
+        public DbSet<Ticket> Tickets { get; set; }
         public CinemaContext(DbContextOptions options)
             : base(options)
         {
@@ -101,6 +104,57 @@ namespace WinterWorkShop.Cinema.Data
                 .HasMany(x => x.Projections)
                 .WithOne(x => x.Movie)
                 .IsRequired();
+
+
+            /*---*/
+            modelBuilder.Entity<Ticket>()
+               .HasOne(a => a.Auditorium)
+               .WithMany(t => t.Tickets)
+               .HasForeignKey(t => t.AuditoriumId)
+               .IsRequired();
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(a => a.Seat)
+                .WithMany(t => t.Tickets)
+                .HasForeignKey(t => t.SeatId)
+                .IsRequired();
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(a => a.User)
+                .WithMany(t => t.Tickets)
+                .HasForeignKey(t => t.UserId)
+                .IsRequired();
+
+
+            modelBuilder.Entity<Ticket>()
+                .HasOne(a => a.Movie)
+                .WithMany(t => t.Tickets)
+                .HasForeignKey(t => t.MovieId)
+                .IsRequired();
+
+            /*---*/
+
+            modelBuilder.Entity<Auditorium>()
+                .HasMany(t => t.Tickets)
+                .WithOne(a => a.Auditorium);
+
+            modelBuilder.Entity<Seat>()
+                 .HasMany(t => t.Tickets)
+                 .WithOne(a => a.Seat);
+
+            modelBuilder.Entity<User>()
+                .HasMany(t => t.Tickets)
+                .WithOne(a => a.User);
+
+            modelBuilder.Entity<Movie>()
+                .HasMany(t => t.Tickets)
+                .WithOne(a => a.Movie);
+
+            // Index
+            modelBuilder.Entity<Movie>().HasIndex(i => new { i.Year, i.HasOscar });
+            modelBuilder.Entity<Movie>().HasIndex(i => i.Title);
+
+            modelBuilder.Entity<User>().HasIndex(i => i.UserName);
         }
     }
 }
