@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using WinterWorkShop.Cinema.Data.Entities;
 
 namespace WinterWorkShop.Cinema.Data
 {
@@ -21,6 +22,8 @@ namespace WinterWorkShop.Cinema.Data
         public Guid MovieId { get; set; }
 
         public virtual Movie Movie { get; set; }
+
+        public ICollection<Ticket> Tickets { get; set; }
 
     }
 }

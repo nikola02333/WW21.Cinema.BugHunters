@@ -17,6 +17,10 @@ namespace WinterWorkShop.Cinema.Data.Entities
 
         public User User { get; set; }
 
-      
+
+        public Guid ProjectionId { get; set; }
+
+        public Projection Projection { get; set; }
+
     }
 }

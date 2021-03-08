@@ -122,11 +122,22 @@ namespace WinterWorkShop.Cinema.Data
                 .IsRequired();
 
 
+            modelBuilder.Entity<Ticket>()
+              .HasOne(a => a.Projection)
+              .WithMany(t => t.Tickets)
+              .HasForeignKey(t => t.ProjectionId)
+              .IsRequired();
+
+
             /*---*/
 
             modelBuilder.Entity<Seat>()
                  .HasMany(t => t.Tickets)
                  .WithOne(a => a.Seat);
+
+            modelBuilder.Entity<Projection>()
+               .HasMany(t => t.Tickets)
+               .WithOne(a => a.Projection);
 
             modelBuilder.Entity<User>()
                 .HasMany(t => t.Tickets)
