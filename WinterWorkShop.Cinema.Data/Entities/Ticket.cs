@@ -14,7 +14,7 @@ namespace WinterWorkShop.Cinema.Data.Entities
 
         public Seat Seat { get; set; }
 
-        public int UserId { get; set; }
+        public Guid UserId { get; set; }
 
         public User User { get; set; }
 

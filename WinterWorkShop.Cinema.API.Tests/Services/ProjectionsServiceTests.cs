@@ -57,7 +57,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Task<IEnumerable<Projection>> responseTask = Task.FromResult(projections);
 
             _mockProjectionsRepository = new Mock<IProjectionsRepository>();
-            _mockProjectionsRepository.Setup(x => x.GetAll()).Returns(responseTask);
+            _mockProjectionsRepository.Setup(x => x.GetAllAsync()).Returns(responseTask);
         }
 
         [TestMethod]
@@ -86,7 +86,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Task<IEnumerable<Projection>> responseTask = Task.FromResult(projections);
 
             _mockProjectionsRepository = new Mock<IProjectionsRepository>();
-            _mockProjectionsRepository.Setup(x => x.GetAll()).Returns(responseTask);
+            _mockProjectionsRepository.Setup(x => x.GetAllAsync()).Returns(responseTask);
             ProjectionService projectionsController = new ProjectionService(_mockProjectionsRepository.Object);
 
             //Act

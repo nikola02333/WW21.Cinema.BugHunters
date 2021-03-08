@@ -21,7 +21,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<IEnumerable<ProjectionDomainModel>> GetAllAsync()
         {
-            var data = await _projectionsRepository.GetAll();
+            var data = await _projectionsRepository.GetAllAsync();
 
             if (data == null)
             {

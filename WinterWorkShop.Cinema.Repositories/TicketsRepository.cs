@@ -25,12 +25,16 @@ namespace WinterWorkShop.Cinema.Repositories
         public Ticket Delete(object id)
         {
             var existing = _cinemaContext.Tickets.Find(id);
+            if (existing == null)
+            {
+                return null;
+            }
             var result = _cinemaContext.Tickets.Remove(existing).Entity;
 
             return result;
         }
 
-        public async Task<IEnumerable<Ticket>> GetAll()
+        public async Task<IEnumerable<Ticket>> GetAllAsync()
         {
             var data = await _cinemaContext.Tickets.Include(x => x.Projection).ThenInclude(x => x.Movie)
                                                     .Include(x => x.Projection).ThenInclude(x => x.Auditorium)

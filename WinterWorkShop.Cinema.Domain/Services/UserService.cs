@@ -35,7 +35,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 FirstName = userToCreate.FirstName,
                  LastName= userToCreate.LastName,
                   UserName= userToCreate.UserName,
-                   IsAdmin= userToCreate.IsAdmin
+                   Role= userToCreate.Role
             };
             var userResult = _usersRepository.InsertAsync(user);
             _usersRepository.Save();
@@ -51,7 +51,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<UserDomainModel>> GetAllAsync()
         {
-            var data = await _usersRepository.GetAll();
+            var data = await _usersRepository.GetAllAsync();
 
             if (data == null)
             {
@@ -69,7 +69,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     FirstName = item.FirstName,
                     LastName = item.LastName,
                     UserName = item.UserName,
-                    IsAdmin = item.IsAdmin,
+                    Role = item.Role
                 };
                 result.DataList.Add(model);
             }
@@ -90,13 +90,13 @@ namespace WinterWorkShop.Cinema.Domain.Services
             { 
                 IsSuccessful=true,
                 Data =
-             {
-                Id = data.Id,
-                FirstName = data.FirstName,
-                LastName = data.LastName,
-                UserName = data.UserName,
-                IsAdmin = data.IsAdmin,
-            }
+                 {
+                    Id = data.Id,
+                    FirstName = data.FirstName,
+                    LastName = data.LastName,
+                    UserName = data.UserName,
+                    Role = data.Role
+                }
         };
 
             return domainModel;
@@ -119,8 +119,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 FirstName = data.FirstName,
                 LastName = data.LastName,
                 UserName = data.UserName,
-                IsAdmin = data.IsAdmin,
-            }
+                Role = data.Role
+                }
             };
 
             return domainModel;
