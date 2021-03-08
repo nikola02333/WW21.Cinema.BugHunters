@@ -36,7 +36,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 Auditorium = new Auditorium { AuditName = "ImeSale" },
                 Movie = new Movie { Title = "ImeFilma" },
                 MovieId = Guid.NewGuid(),
-                DateTime = DateTime.Now.AddDays(1),
+                ShowingDate = DateTime.Now.AddDays(1),
                 AuditoriumId = 1
             };
 

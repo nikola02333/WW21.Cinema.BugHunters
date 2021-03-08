@@ -12,6 +12,10 @@ namespace WinterWorkShop.Cinema.Data
 
         public string Name { get; set; }
 
+        public string Address { get; set; }
+
+        public string CityName { get; set; }
+
         public virtual ICollection<Auditorium> Auditoriums { get; set; }
     }
 }

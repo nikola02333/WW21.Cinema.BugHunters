@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
+using WinterWorkShop.Cinema.Data.Entities;
 
 namespace WinterWorkShop.Cinema.Data
 {
@@ -10,16 +11,19 @@ namespace WinterWorkShop.Cinema.Data
     {
         public Guid Id { get; set; }
 
-        [Column("auditorium_id")]
+     
         public int AuditoriumId { get; set; }
 
-        public DateTime DateTime { get; set; }
+        public virtual Auditorium Auditorium { get; set; }
 
-        //[Column("movieId")]
+        public DateTime ShowingDate { get; set; }
+
+      
         public Guid MovieId { get; set; }
 
         public virtual Movie Movie { get; set; }
 
-        public virtual Auditorium Auditorium { get; set; }
+        public ICollection<Ticket> Tickets { get; set; }
+
     }
 }
