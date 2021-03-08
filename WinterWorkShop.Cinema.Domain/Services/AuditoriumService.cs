@@ -39,7 +39,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 {
                     Id = item.Id,
                     CinemaId = item.CinemaId,
-                    Name = item.AuditName
+                    Name = item.AuditoriumName
                 };
                 result.Add(model);
             }
@@ -72,7 +72,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             Auditorium newAuditorium = new Auditorium
             {
-                AuditName = domainModel.Name,
+                AuditoriumName = domainModel.Name,
                 CinemaId = domainModel.CinemaId,
             };
 
@@ -110,7 +110,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Auditorium = new AuditoriumDomainModel
                 {
                     Id = insertedAuditorium.Id,
-                    Name = insertedAuditorium.AuditName,
+                    Name = insertedAuditorium.AuditoriumName,
                     CinemaId = insertedAuditorium.CinemaId,
                     SeatsList = new List<SeatDomainModel>()
                 }
