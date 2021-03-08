@@ -33,6 +33,7 @@ namespace WinterWorkShop.Cinema.API
         {
             services.AddDbContext<CinemaContext>(options =>
             {
+               
                 options
                 .UseSqlServer(Configuration.GetConnectionString("CinemaConnection"))
                 .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);

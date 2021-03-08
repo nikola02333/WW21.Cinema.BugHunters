@@ -23,7 +23,7 @@ namespace WinterWorkShop.Cinema.API.Models
         [StringLength(50, ErrorMessage = Messages.USER_LASTNAME_REQUIRED)]
         public string LastName { get; set; }
 
-        public bool IsAdmin { get; set; }
+        public string Role { get; set; }
 
     }
 }

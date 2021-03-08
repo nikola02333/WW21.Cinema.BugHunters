@@ -34,5 +34,9 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
         /// <param name="username"></param>
         /// <returns>User</returns>
         Task<GenericResult<UserDomainModel>> GetUserByUserNameAsync(string username);
+
+        Task<GenericResult<UserDomainModel>> DeleteUserAsync(Guid userId);
+
+        Task<GenericResult<UserDomainModel>> UpdateUserAsync(Guid userId, UserDomainModel userToUpdate);
     }
 }
