@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using WinterWorkShop.Cinema.Data;
+using WinterWorkShop.Cinema.Domain.Common;
 using WinterWorkShop.Cinema.Domain.Interfaces;
 using WinterWorkShop.Cinema.Domain.Models;
 using WinterWorkShop.Cinema.Repositories;
@@ -17,7 +19,37 @@ namespace WinterWorkShop.Cinema.Domain.Services
             _usersRepository = usersRepository;
         }
 
-        public async Task<IEnumerable<UserDomainModel>> GetAllAsync()
+        public async Task<GenericResult<UserDomainModel>> CreateUserAsync(UserDomainModel userToCreate)
+        {
+          if(userToCreate ==null)
+            {
+                return new GenericResult<UserDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage= "error message"
+                };
+            }
+
+            User user = new User()
+            {
+                FirstName = userToCreate.FirstName,
+                 LastName= userToCreate.LastName,
+                  UserName= userToCreate.UserName,
+                   IsAdmin= userToCreate.IsAdmin
+            };
+            var userResult = _usersRepository.InsertAsync(user);
+            _usersRepository.Save();
+
+
+            return new GenericResult<UserDomainModel>
+            {
+                IsSuccessful = true,
+                Data = new UserDomainModel()
+            };
+
+        }
+
+        public async Task<GenericResult<UserDomainModel>> GetAllAsync()
         {
             var data = await _usersRepository.GetAll();
 
@@ -26,7 +58,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 return null;
             }
 
-            List<UserDomainModel> result = new List<UserDomainModel>();
+            GenericResult<UserDomainModel> result = new GenericResult<UserDomainModel>();
+
             UserDomainModel model;
             foreach (var item in data)
             {
@@ -38,13 +71,13 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     UserName = item.UserName,
                     IsAdmin = item.IsAdmin,
                 };
-                result.Add(model);
+                result.DataList.Add(model);
             }
 
             return result;
         }
 
-        public async Task<UserDomainModel> GetUserByIdAsync(Guid id)
+        public async Task<GenericResult<UserDomainModel>> GetUserByIdAsync(Guid id)
         {
             var data = await _usersRepository.GetByIdAsync(id);
 
@@ -53,19 +86,23 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 return null;
             }
 
-            UserDomainModel domainModel = new UserDomainModel
-            {
+            GenericResult<UserDomainModel> domainModel = new GenericResult<UserDomainModel>
+            { 
+                IsSuccessful=true,
+                Data =
+             {
                 Id = data.Id,
                 FirstName = data.FirstName,
                 LastName = data.LastName,
                 UserName = data.UserName,
                 IsAdmin = data.IsAdmin,
-            };
+            }
+        };
 
             return domainModel;
         }
 
-        public async Task<UserDomainModel> GetUserByUserName(string username)
+        public async Task<GenericResult<UserDomainModel>> GetUserByUserNameAsync(string username)
         {
             var data = _usersRepository.GetByUserName(username);
 
@@ -74,13 +111,16 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 return null;
             }
 
-            UserDomainModel domainModel = new UserDomainModel
+            GenericResult<UserDomainModel> domainModel = new GenericResult<UserDomainModel>
             {
+                IsSuccessful=true,
+                Data ={
                 Id = data.Id,
                 FirstName = data.FirstName,
                 LastName = data.LastName,
                 UserName = data.UserName,
                 IsAdmin = data.IsAdmin,
+            }
             };
 
             return domainModel;

@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WinterWorkShop.Cinema.API.Models;
 using WinterWorkShop.Cinema.Domain.Common;
 using WinterWorkShop.Cinema.Domain.Interfaces;
 using WinterWorkShop.Cinema.Domain.Models;
@@ -29,13 +30,13 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDomainModel>>> GetAsync()
         {
-            IEnumerable<UserDomainModel> userDomainModels;
+            GenericResult<UserDomainModel> userDomainModels;
 
             userDomainModels = await _userService.GetAllAsync();
 
             if (userDomainModels == null)
             {
-                userDomainModels = new List<UserDomainModel>();
+                
             }
 
             return Ok(userDomainModels);
@@ -50,7 +51,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("{id}")]
         public async Task<ActionResult<UserDomainModel>> GetbyIdAsync(Guid id)
         {
-            UserDomainModel model;
+            GenericResult<UserDomainModel> model;
 
             model = await _userService.GetUserByIdAsync(id);
 
@@ -62,6 +63,13 @@ namespace WinterWorkShop.Cinema.API.Controllers
             return Ok(model);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<UserDomainModel>> CreateUser(CreateUserModel createUser)
+        {
+
+            //return _userService.CreateUserAsync();
+            return null;
+        }
         // <summary>
         /// Gets User by UserName
         /// </summary>
@@ -71,9 +79,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("{username}")]
         public async Task<ActionResult<UserDomainModel>> GetbyUserNameAsync(string username)
         {
-            UserDomainModel model;
+            GenericResult<UserDomainModel> model;
 
-            model = await _userService.GetUserByUserName(username);
+            model = await _userService.GetUserByUserNameAsync(username);
 
             if (model == null)
             {
