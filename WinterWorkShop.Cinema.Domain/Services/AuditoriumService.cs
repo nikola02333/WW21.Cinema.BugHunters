@@ -86,6 +86,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     {
                         Row = i,
                         Number = j
+                        
                     };
 
                     newAuditorium.Seats.Add(newSeat);

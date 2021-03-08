@@ -10,16 +10,17 @@ namespace WinterWorkShop.Cinema.Data
     {
         public Guid Id { get; set; }
 
-        [Column("auditorium_id")]
+     
         public int AuditoriumId { get; set; }
+
+        public virtual Auditorium Auditorium { get; set; }
 
         public DateTime ShowingDate { get; set; }
 
-        //[Column("movieId")]
+      
         public Guid MovieId { get; set; }
 
         public virtual Movie Movie { get; set; }
 
-        public virtual Auditorium Auditorium { get; set; }
     }
 }

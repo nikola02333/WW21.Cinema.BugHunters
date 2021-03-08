@@ -15,10 +15,10 @@ namespace WinterWorkShop.Cinema.Data
 
         public string LastName { get; set; }
 
-        [Column("userName")]
+        
         public string UserName { get; set; }        
 
-        [Column("isAdmin")]
+        
         public bool IsAdmin { get; set; }
 
         public virtual ICollection<Ticket> Tickets { get; set; }

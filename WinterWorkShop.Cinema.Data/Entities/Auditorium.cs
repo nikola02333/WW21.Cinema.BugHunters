@@ -11,17 +11,18 @@ namespace WinterWorkShop.Cinema.Data
     {
         public int Id { get; set; }
 
-        [Column("cinemaId")]
         public int CinemaId { get; set; }
 
-        [Column("AuditoriumName")]
-        public string AuditName { get; set; }
+        public virtual Cinema Cinema { get; set; }
+
+
+        public string AuditoriumName { get; set; }
 
         public virtual ICollection<Projection> Projections { get; set; }
 
         public virtual ICollection<Seat> Seats { get; set; }
 
-        public virtual Cinema Cinema { get; set; }
+        
         
     }
 }
