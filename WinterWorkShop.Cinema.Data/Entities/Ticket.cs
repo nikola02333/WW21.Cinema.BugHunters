@@ -7,11 +7,13 @@ namespace WinterWorkShop.Cinema.Data.Entities
     public class Ticket
     {
         public Guid Id { get; set; }
+
         public DateTime Created { get; set; }
 
         public Guid SeatId { get; set; }
 
         public Seat Seat { get; set; }
+
         public Guid UserId { get; set; }
 
         public User User { get; set; }

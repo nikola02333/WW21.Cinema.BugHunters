@@ -18,7 +18,6 @@ namespace WinterWorkShop.Cinema.Data
         public DateTime ShowingDate { get; set; }
 
         public int Duration { get; set; }
-      
         public Guid MovieId { get; set; }
 
         public virtual Movie Movie { get; set; }

@@ -68,5 +68,9 @@ namespace WinterWorkShop.Cinema.Repositories
 
             return updatedEntry.Entity;
         }
+        public void SaveAsync()
+        {
+            _cinemaContext.SaveChangesAsync();
+        }
     }
 }
