@@ -12,7 +12,7 @@ using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class SeatsController : ControllerBase
@@ -34,6 +34,22 @@ namespace WinterWorkShop.Cinema.API.Controllers
             IEnumerable<SeatDomainModel> seatDomainModels;
             
             seatDomainModels = await _seatService.GetAllAsync();
+
+            if (seatDomainModels == null)
+            {
+                seatDomainModels = new List<SeatDomainModel>();
+            }
+
+            return Ok(seatDomainModels);
+        }
+
+        [HttpGet]
+        [Route("reserved/{id:guid}")]
+        public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetReservedSeatsAsync(Guid id)
+        {
+            IEnumerable<SeatDomainModel> seatDomainModels;
+
+            seatDomainModels = await _seatService.ReservedSeats(id);
 
             if (seatDomainModels == null)
             {

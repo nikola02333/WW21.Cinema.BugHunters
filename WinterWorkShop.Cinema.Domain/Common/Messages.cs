@@ -44,6 +44,7 @@
         #region Seats
         public const string SEAT_GET_ALL_SEATS_ERROR = "Error occured while getting all seats, please try again.";
         public const string SEAT_GET_BY_ID = "Error occured while getting seat by Id, please try again.";
+        public const string SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION = "Error occured becouse Id of seat is not in the auditorium for the given projection";
         #endregion
 
         #region Users

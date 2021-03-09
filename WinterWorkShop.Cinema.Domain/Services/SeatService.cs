@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using WinterWorkShop.Cinema.Domain.Common;
 using WinterWorkShop.Cinema.Domain.Interfaces;
 using WinterWorkShop.Cinema.Domain.Models;
 using WinterWorkShop.Cinema.Repositories;
@@ -29,6 +30,27 @@ namespace WinterWorkShop.Cinema.Domain.Services
             List<SeatDomainModel> result = new List<SeatDomainModel>();
             SeatDomainModel model;
             foreach (var item in data)
+            {
+                model = new SeatDomainModel
+                {
+                    Id = item.Id,
+                    AuditoriumId = item.AuditoriumId,
+                    Number = item.Number,
+                    Row = item.Row
+                };
+                result.Add(model);
+            }
+
+            return result;
+        }
+
+        public async Task<IEnumerable<SeatDomainModel>> ReservedSeats(Guid projectionId)
+        {
+            var seats = await _seatsRepository.getReservedSeatsForProjection(projectionId);
+
+            List<SeatDomainModel> result = new List<SeatDomainModel>();
+            SeatDomainModel model;
+            foreach (var item in seats)
             {
                 model = new SeatDomainModel
                 {

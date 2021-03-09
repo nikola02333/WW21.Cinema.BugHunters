@@ -26,11 +26,17 @@ namespace WinterWorkShop.Cinema.Domain.Services
         }
         public async Task<GenericResult<TicketDomainModel>> CreateTicketAsync(CreateTicketModel ticketToCreate)
         {
-            var seat = await _seatsRepository.GetByIdAsync(ticketToCreate.SeatId);
-            string error=null;
+            string error = null;
 
+            var seat = await _seatsRepository.GetByIdAsync(ticketToCreate.SeatId);
             if (seat==null){
                 error += Messages.SEAT_GET_BY_ID + "\n";
+            }
+
+            var checkSeatiInProjection = await _seatsRepository.isSeatInProjectionAuditoriumAsync(ticketToCreate.SeatId, ticketToCreate.ProjectionId);
+            if (checkSeatiInProjection == null && seat!=null)
+            {
+                error += Messages.SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION + "\n";
             }
 
             var user = await _usersRepository.GetByIdAsync(ticketToCreate.UserId);

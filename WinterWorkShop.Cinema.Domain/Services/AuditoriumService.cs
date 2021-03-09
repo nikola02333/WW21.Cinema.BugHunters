@@ -39,7 +39,14 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 {
                     Id = item.Id,
                     CinemaId = item.CinemaId,
-                    Name = item.AuditoriumName
+                    Name = item.AuditoriumName,
+                    SeatsList = item.Seats.Select(seat => new SeatDomainModel
+                    {
+                        Id = seat.Id,
+                        AuditoriumId = seat.AuditoriumId,
+                        Number = seat.Number,
+                        Row = seat.Row
+                    }).ToList()
                 };
                 result.Add(model);
             }
@@ -102,6 +109,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     ErrorMessage = Messages.AUDITORIUM_CREATION_ERROR
                 };
             }
+
+            _auditoriumsRepository.Save();
 
             CreateAuditoriumResultModel resultModel = new CreateAuditoriumResultModel
             {

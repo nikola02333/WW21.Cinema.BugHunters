@@ -2,13 +2,19 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Data;
 
 namespace WinterWorkShop.Cinema.Repositories
 {
-    public interface ISeatsRepository : IRepository<Seat> { }
+    public interface ISeatsRepository : IRepository<Seat> 
+    {
+        Task<Seat> isSeatInProjectionAuditoriumAsync(Guid seatId, Guid projectionId);
+
+        Task<IEnumerable<Seat>> getReservedSeatsForProjection(Guid projectionId);
+    }
     public class SeatsRepository : ISeatsRepository
     {
         private CinemaContext _cinemaContext;
@@ -60,6 +66,33 @@ namespace WinterWorkShop.Cinema.Repositories
         public void SaveAsync()
         {
             _cinemaContext.SaveChangesAsync();
+        }
+
+        public async Task<Seat> isSeatInProjectionAuditoriumAsync(Guid seatId, Guid projectionId)
+        {
+            var seat =await _cinemaContext.Seats.Include(x => x.Auditorium).Include(x => x.Auditorium.Seats).Include(x => x.Auditorium.Projections)
+                .Where(x => x.Id == (seatId) && x.Auditorium.Projections.Select(proj => proj.Id).SingleOrDefault() == projectionId).SingleOrDefaultAsync();
+
+            return seat;
+        }
+
+        public async Task<IEnumerable<Seat>> getReservedSeatsForProjection(Guid projectionId)
+        {
+            //var tickets = _cinemaContext.Seats.Include(x => x.Tickets).Select(x => x.Tickets.Select(x=>x.Seat));
+
+            var seats = _cinemaContext.Seats.Include(x => x.Tickets).ToList();
+
+            List<Seat> result = new List<Seat>();
+            foreach (var item in seats)
+            {
+                var x = item.Tickets.Any(x => x.ProjectionId == projectionId);
+                if (x)
+                {
+                    result.Add(item);
+                }
+                
+            }
+            return result;
         }
     }
 }
