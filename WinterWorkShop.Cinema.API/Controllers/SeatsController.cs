@@ -29,34 +29,35 @@ namespace WinterWorkShop.Cinema.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetAsync()
+        public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetAllAsync()
         {
-            IEnumerable<SeatDomainModel> seatDomainModels;
-            
+            GenericResult<SeatDomainModel> seatDomainModels;
+
             seatDomainModels = await _seatService.GetAllAsync();
 
-            if (seatDomainModels == null)
-            {
-                seatDomainModels = new List<SeatDomainModel>();
-            }
-
-            return Ok(seatDomainModels);
+            return Ok(seatDomainModels.DataList);
         }
 
         [HttpGet]
         [Route("reserved/{id:guid}")]
         public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetReservedSeatsAsync(Guid id)
         {
-            IEnumerable<SeatDomainModel> seatDomainModels;
+            GenericResult<SeatDomainModel> seatDomainModels;
 
-            seatDomainModels = await _seatService.ReservedSeats(id);
+            seatDomainModels = await _seatService.ReservedSeatsAsync(id);
 
-            if (seatDomainModels == null)
-            {
-                seatDomainModels = new List<SeatDomainModel>();
-            }
+            return Ok(seatDomainModels.DataList);
+        }
 
-            return Ok(seatDomainModels);
+        [HttpGet]
+        [Route("byAuditoriumId/{id:int}")]
+        public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetAllByAuditoriumIdAsync(int id)
+        {
+            GenericResult<SeatDomainModel> seatDomainModels;
+
+            seatDomainModels = await _seatService.GetByAuditoriumIdAsync(id);
+
+            return Ok(seatDomainModels.DataList);
         }
     }
 }

@@ -38,7 +38,8 @@ namespace WinterWorkShop.Cinema.Repositories
         {
             var data = await _cinemaContext.Tickets.Include(x => x.Projection).ThenInclude(x => x.Movie)
                                                     .Include(x => x.Projection).ThenInclude(x => x.Auditorium)
-                                                    .Include(x => x.User).Include(x => x.Seat).ToListAsync();
+                                                    .Include(x => x.User).Include(x => x.Seat)
+                                                    .ToListAsync();
             return data;
         }
 

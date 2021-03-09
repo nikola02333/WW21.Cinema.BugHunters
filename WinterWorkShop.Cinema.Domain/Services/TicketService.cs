@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Data.Entities;
@@ -28,28 +29,53 @@ namespace WinterWorkShop.Cinema.Domain.Services
         {
             string error = null;
 
+            var reservedSeats = await _seatsRepository.GetReservedSeatsForProjectionAsync(ticketToCreate.ProjectionId);
+            var exist = reservedSeats.FirstOrDefault(x => x.Id == ticketToCreate.SeatId);
+            if (exist!=null)
+            {
+                return new GenericResult<TicketDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.SEAT_RESERVED
+                };
+            }
             var seat = await _seatsRepository.GetByIdAsync(ticketToCreate.SeatId);
             if (seat==null){
-                error += Messages.SEAT_GET_BY_ID + "\n";
+                error += Messages.SEAT_GET_BY_ID + "   ";
             }
-
-            var checkSeatiInProjection = await _seatsRepository.isSeatInProjectionAuditoriumAsync(ticketToCreate.SeatId, ticketToCreate.ProjectionId);
-            if (checkSeatiInProjection == null && seat!=null)
+            else
             {
-                error += Messages.SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION + "\n";
+                _seatsRepository.Attach(seat);
+            }
+            
+
+            var checkSeatiInProjection = await _seatsRepository.GetSeatInProjectionAuditoriumAsync(ticketToCreate.SeatId, ticketToCreate.ProjectionId);
+            if (checkSeatiInProjection == null )
+            {
+                error += Messages.SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION +  "   ";
             }
 
             var user = await _usersRepository.GetByIdAsync(ticketToCreate.UserId);
             if (user == null)
             {
-                error += Messages.USER_GET_BY_ID + "\n";
+                error += Messages.USER_GET_BY_ID + "   ";
             }
+            else
+            {
+                _usersRepository.Attach(user);
+            }
+            
 
             var projection = await _projectionsRepository.GetByIdAsync(ticketToCreate.ProjectionId);
             if (projection == null)
             {
                 error += Messages.PROJECTION_GET_BY_ID + "\n";
             }
+            else
+            {
+                _projectionsRepository.Attach(projection);
+            }
+            
 
             if (error != null)
             {

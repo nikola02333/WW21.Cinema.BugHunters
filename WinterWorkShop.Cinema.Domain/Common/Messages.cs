@@ -16,6 +16,7 @@
         public const string AUDITORIUM_SEATS_CREATION_ERROR = "Error occured while creating seats for auditorium, please try again.";
         public const string AUDITORIUM_SAME_NAME = "Cannot create new auditorium, auditorium with same name alredy exist.";
         public const string AUDITORIUM_UNVALID_CINEMAID = "Cannot create new auditorium, auditorium with given cinemaId does not exist.";
+        public const string AUDITORIUM_GET_BY_ID = "Error occured while getting auditroium by Id, please try again.";
         #endregion
 
         #region Cinemas
@@ -42,9 +43,11 @@
         #endregion
 
         #region Seats
+        public const string SEATS_IN_AUDITORIUM = "There are no seats in given auditorium.";
         public const string SEAT_GET_ALL_SEATS_ERROR = "Error occured while getting all seats, please try again.";
         public const string SEAT_GET_BY_ID = "Error occured while getting seat by Id, please try again.";
         public const string SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION = "Error occured becouse Id of seat is not in the auditorium for the given projection";
+        public const string SEAT_RESERVED = "Seat is reservet for selected projection";
         #endregion
 
         #region Users

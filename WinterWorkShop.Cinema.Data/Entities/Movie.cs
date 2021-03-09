@@ -27,6 +27,6 @@ namespace WinterWorkShop.Cinema.Data
         public string? CoverPicture { get; set; }
 
         public virtual ICollection<Projection> Projections { get; set; }
-        public virtual ICollection<Ticket> Tickets { get; set; }
+       
     }
 }

@@ -11,9 +11,10 @@ namespace WinterWorkShop.Cinema.Repositories
 {
     public interface ISeatsRepository : IRepository<Seat> 
     {
-        Task<Seat> isSeatInProjectionAuditoriumAsync(Guid seatId, Guid projectionId);
-
-        Task<IEnumerable<Seat>> getReservedSeatsForProjection(Guid projectionId);
+        Task<Seat> GetSeatInProjectionAuditoriumAsync(Guid seatId, Guid projectionId);
+        Task<IEnumerable<Seat>> GetReservedSeatsForProjectionAsync(Guid projectionId);
+        Task<IEnumerable<Seat>> GetSeatsByAuditoriumIdAsync(int auditoriumId);
+        void Attach(Seat seat);
     }
     public class SeatsRepository : ISeatsRepository
     {
@@ -68,31 +69,31 @@ namespace WinterWorkShop.Cinema.Repositories
             _cinemaContext.SaveChangesAsync();
         }
 
-        public async Task<Seat> isSeatInProjectionAuditoriumAsync(Guid seatId, Guid projectionId)
+        public async Task<Seat> GetSeatInProjectionAuditoriumAsync(Guid seatId, Guid projectionId)
         {
-            var seat =await _cinemaContext.Seats.Include(x => x.Auditorium).Include(x => x.Auditorium.Seats).Include(x => x.Auditorium.Projections)
+            var seat =await _cinemaContext.Seats.Include(x => x.Auditorium).Include(x => x.Auditorium.Projections)
                 .Where(x => x.Id == (seatId) && x.Auditorium.Projections.Select(proj => proj.Id).SingleOrDefault() == projectionId).SingleOrDefaultAsync();
 
             return seat;
         }
 
-        public async Task<IEnumerable<Seat>> getReservedSeatsForProjection(Guid projectionId)
+        public async Task<IEnumerable<Seat>> GetReservedSeatsForProjectionAsync(Guid projectionId)
         {
-            //var tickets = _cinemaContext.Seats.Include(x => x.Tickets).Where(x => x.Tickets.Any(x=>x.ProjectionId == projectionId)).ToList();
+            var seats = await _cinemaContext.Seats.Where(x => x.Tickets.Any(x => x.Projection.Id == projectionId)).ToListAsync();
 
-            var seats = _cinemaContext.Seats.Include(x => x.Tickets).ToList();
+            return seats;
+        }
 
-            List<Seat> result = new List<Seat>();
-            foreach (var item in seats)
-            {
-                var x = item.Tickets.Any(x => x.ProjectionId == projectionId);
-                if (x)
-                {
-                    result.Add(item);
-                }
+        public async Task<IEnumerable<Seat>> GetSeatsByAuditoriumIdAsync(int auditoriumId)
+        {
+            var seats =await _cinemaContext.Seats.Where(x => x.AuditoriumId == auditoriumId).ToListAsync();
 
-            }
-            return result;
+            return seats;
+        }
+
+        public void Attach(Seat seat)
+        {
+            _cinemaContext.Attach(seat);
         }
     }
 }
