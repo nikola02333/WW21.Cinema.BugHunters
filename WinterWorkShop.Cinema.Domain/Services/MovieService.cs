@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Data;
+using WinterWorkShop.Cinema.Domain.Common;
 using WinterWorkShop.Cinema.Domain.Interfaces;
 using WinterWorkShop.Cinema.Domain.Models;
 using WinterWorkShop.Cinema.Repositories;
@@ -18,9 +19,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
             _moviesRepository = moviesRepository;
         }
 
-        public IEnumerable<MovieDomainModel> GetAllMovies(bool? isCurrent)
+        public async Task<IEnumerable<MovieDomainModel>> GetAllMoviesAsync(bool? isCurrent)
         {
-            var data = _moviesRepository.GetCurrentMovies();
+            var data = await _moviesRepository.GetCurrentMoviesAsync();
 
             if (data == null)
             {
@@ -46,110 +47,148 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         }
 
-        public async Task<MovieDomainModel> GetMovieByIdAsync(Guid id)
+        public async Task<GenericResult<MovieDomainModel>> GetMovieByIdAsync(Guid id)
         {
-            var data = await _moviesRepository.GetByIdAsync(id);
+            var movie = await _moviesRepository.GetByIdAsync(id);
 
-            if (data == null)
+            if (movie == null)
             {
-                return null;
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful=false,
+                    ErrorMessage = Messages.MOVIE_DOES_NOT_EXIST
+                };
             }
 
             MovieDomainModel domainModel = new MovieDomainModel
             {
-                Id = data.Id,
-                Current = data.Current,
-                Rating = data.Rating ?? 0,
-                Title = data.Title,
-                Year = data.Year
+                Id = movie.Id,
+                Current = movie.Current,
+                Rating = movie.Rating ?? 0,
+                Title = movie.Title,
+                Year = movie.Year
             };
 
-            return domainModel;
+            return  new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = true,
+                Data = domainModel
+            }; 
         }
 
-        public async Task<MovieDomainModel> AddMovie(MovieDomainModel newMovie)
+        public async Task<GenericResult<MovieDomainModel>> AddMovieAsync(MovieDomainModel newMovie)
         {
             Movie movieToCreate = new Movie()
             {
                 Title = newMovie.Title,
                 Current = newMovie.Current,
                 Year = newMovie.Year,
-                Rating = newMovie.Rating
+                Rating = newMovie.Rating,
+                Genre= newMovie.Genre
             };
 
-            var data = await _moviesRepository.InsertAsync(movieToCreate);
-            if (data == null)
+            var movie = await _moviesRepository.InsertAsync(movieToCreate);
+
+            if (movie == null)
             {
-                return null;
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.MOVIE_DOES_NOT_EXIST
+                };
             }
 
             _moviesRepository.Save();
 
             MovieDomainModel domainModel = new MovieDomainModel()
             {
-                Id = data.Id,
-                Title = data.Title,
-                Current = data.Current,
-                Year = data.Year,
-                Rating = data.Rating ?? 0
+                Id = movie.Id,
+                Title = movie.Title,
+                Current = movie.Current,
+                Year = movie.Year,
+                Genre= movie.Genre,
+                Rating = movie.Rating ?? 0
             };
 
-            return domainModel;
+            return new GenericResult<MovieDomainModel> 
+            {
+                IsSuccessful= true,
+                Data = domainModel
+            };
         }
 
-        public async Task<MovieDomainModel> UpdateMovie(MovieDomainModel updateMovie) {
+        public  GenericResult<MovieDomainModel> UpdateMovie(MovieDomainModel updateMovie) {
 
-            Movie movie = new Movie()
+            Movie movieToUpdate = new Movie()
             {
                 Id = updateMovie.Id,
                 Title = updateMovie.Title,
                 Current = updateMovie.Current,
                 Year = updateMovie.Year,
-                Rating = updateMovie.Rating
+                Rating = updateMovie.Rating,
+                Genre= updateMovie.Genre
             };
             
-            var data = _moviesRepository.Update(movie);
+            var movieUpdated = _moviesRepository.Update(movieToUpdate);
 
-            if (data == null)
+            if (movieUpdated == null)
             {
-                return null;
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.MOVIE_DOES_NOT_EXIST
+                };
             }
             _moviesRepository.Save();
 
             MovieDomainModel domainModel = new MovieDomainModel()
             {
-                Id = data.Id,
-                Title = data.Title,
-                Current = data.Current,
-                Year = data.Year,
-                Rating = data.Rating ?? 0
+                Id = movieUpdated.Id,
+                Title = movieUpdated.Title,
+                Current = movieUpdated.Current,
+                Year = movieUpdated.Year,
+                Genre= movieToUpdate.Genre,
+                Rating = movieUpdated.Rating ?? 0
             };
 
-            return domainModel;
+            return new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful=true,
+                Data = domainModel
+            };
         }
 
-        public async Task<MovieDomainModel> DeleteMovie(Guid id)
+        public async Task<GenericResult<MovieDomainModel>> DeleteMovieAsync(Guid id)
         {
-            var data = _moviesRepository.Delete(id);
+            var movieToDelete =await _moviesRepository.GetByIdAsync(id);
 
-            if (data == null)
+            if (movieToDelete == null)
             {
-                return null;
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.MOVIE_DOES_NOT_EXIST
+                };
             }
+            _moviesRepository.Delete(id);
 
             _moviesRepository.Save();
 
             MovieDomainModel domainModel = new MovieDomainModel
             {
-                Id = data.Id,
-                Title = data.Title,
-                Current = data.Current,
-                Year = data.Year,
-                Rating = data.Rating ?? 0
+                Id = movieToDelete.Id,
+                Title = movieToDelete.Title,
+                Current = movieToDelete.Current,
+                Year = movieToDelete.Year,
+                Rating = movieToDelete.Rating ?? 0
 
             };
-            
-            return domainModel;
+
+            return new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = true,
+                Data =domainModel
+            };
         }
     }
 }

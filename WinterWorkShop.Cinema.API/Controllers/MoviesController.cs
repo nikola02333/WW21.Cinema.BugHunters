@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -12,7 +9,6 @@ using WinterWorkShop.Cinema.Data;
 using WinterWorkShop.Cinema.Domain.Common;
 using WinterWorkShop.Cinema.Domain.Interfaces;
 using WinterWorkShop.Cinema.Domain.Models;
-using WinterWorkShop.Cinema.Repositories;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
@@ -31,74 +27,54 @@ namespace WinterWorkShop.Cinema.API.Controllers
             _movieService = movieService;
         }
 
-        /// <summary>
-        /// Gets Movie by Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet]
-        [Route("{id}")]
-        public async Task<ActionResult<MovieDomainModel>> GetAsync(Guid id)
+        [Route("GetById/{id}")]
+        public async Task<ActionResult<MovieDomainModel>> GetByIdAsync(Guid id)
         {
-            MovieDomainModel movie;
+            GenericResult<MovieDomainModel> movie;
 
             movie = await _movieService.GetMovieByIdAsync(id);
 
-            if (movie == null)
+            if (!movie.IsSuccessful)
             {
                 return NotFound(Messages.MOVIE_DOES_NOT_EXIST);
             }
 
-            return Ok(movie);
+            return Ok(movie.Data);
         }
 
-        /// <summary>
-        /// Gets all current movies
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
         [Route("current")]
-        public async Task<ActionResult<IEnumerable<Movie>>> GetAsync()
+        public async Task<ActionResult<IEnumerable<Movie>>> GetAllAsync()
         {
             IEnumerable<MovieDomainModel> movieDomainModels;
 
-            movieDomainModels = _movieService.GetAllMovies(true);
+            movieDomainModels = await _movieService.GetAllMoviesAsync(true);
 
-            if (movieDomainModels == null)
-            {
-                movieDomainModels = new List<MovieDomainModel>();
-            }
-
+           
             return Ok(movieDomainModels);
         }
 
-        /// <summary>
-        /// Adds a new movie
-        /// </summary>
-        /// <param name="movieModel"></param>
-        /// <returns></returns>
-        [Authorize(Roles = "admin")]
+     
+        //[Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<ActionResult> Post([FromBody]MovieModel movieModel)
+        public async Task<ActionResult> CreateMovieAsync([FromBody] CreateMovieModel movieModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             MovieDomainModel domainModel = new MovieDomainModel
             {
                 Current = movieModel.Current,
                 Rating = movieModel.Rating,
                 Title = movieModel.Title,
-                Year = movieModel.Year
+                Year = movieModel.Year,
+                Genre= movieModel.Genre
             };
 
-            MovieDomainModel createMovie;
+            GenericResult<MovieDomainModel> createMovie;
 
             try
             {
-                createMovie = await _movieService.AddMovie(domainModel);
+                createMovie = await _movieService.AddMovieAsync(domainModel);
             }
             catch (DbUpdateException e)
             {
@@ -121,27 +97,22 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
                 return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, errorResponse);
             }
-
-            return Created("movies//" + createMovie.Id, createMovie);
+              return CreatedAtAction("GetById", new { Id= createMovie.Data.Id }, createMovie.Data);
+            
         }
 
-        /// <summary>
-        /// Updates a movie
-        /// </summary>
-        /// <param name="id"></param>
-        /// <param name="movieModel"></param>
-        /// <returns></returns>
-        [Authorize(Roles = "admin")]
+        
+        //[Authorize(Roles = "admin")]
         [HttpPut]
-        [Route("{id}")]
-        public async Task<ActionResult> Put(Guid id, [FromBody]MovieModel movieModel)
+        [Route("Update/{id}")]
+        public async Task<ActionResult> Put(Guid id, [FromBody] CreateMovieModel movieModel)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            MovieDomainModel movieToUpdate;
+            GenericResult<MovieDomainModel> movieToUpdate;
 
             movieToUpdate = await _movieService.GetMovieByIdAsync(id);
 
@@ -156,15 +127,16 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return BadRequest(errorResponse);
             }
 
-            movieToUpdate.Title = movieModel.Title;
-            movieToUpdate.Current = movieModel.Current;
-            movieToUpdate.Year = movieModel.Year;
-            movieToUpdate.Rating = movieModel.Rating;
+            movieToUpdate.Data.Title = movieModel.Title;
+            movieToUpdate.Data.Current = movieModel.Current;
+            movieToUpdate.Data.Year = movieModel.Year;
+            movieToUpdate.Data.Rating = movieModel.Rating;
+            movieToUpdate.Data.Genre = movieModel.Genre;
 
-            MovieDomainModel movieDomainModel;
+            GenericResult<MovieDomainModel> movieDomainModel;
             try
             {
-                movieDomainModel = await _movieService.UpdateMovie(movieToUpdate);
+                movieDomainModel =  _movieService.UpdateMovie(movieToUpdate.Data);
             }
             catch (DbUpdateException e)
             {
@@ -177,24 +149,21 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return BadRequest(errorResponse);
             }
 
-            return Accepted("movies//" + movieDomainModel.Id, movieDomainModel);
+            return Accepted();
 
         }
 
-        /// <summary>
-        /// Delete a movie by id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
-        [Authorize(Roles = "admin")]
+       
+        //[Authorize(Roles = "admin")]
         [HttpDelete]
-        [Route("{id}")]
+        [Route("Delete/{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            MovieDomainModel deletedMovie;
+            GenericResult<MovieDomainModel> deletedMovie;
+
             try
             {
-                deletedMovie = await _movieService.DeleteMovie(id);
+                deletedMovie = await _movieService.DeleteMovieAsync(id);
             }
             catch (DbUpdateException e)
             {
@@ -218,7 +187,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, errorResponse);
             }
 
-            return Accepted("movies//" + deletedMovie.Id, deletedMovie);
+            return Accepted();
         }
     }
 }
