@@ -104,7 +104,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<UserDomainModel>> GetAllAsync()
         {
-            var data = await _usersRepository.GetAllAsync();
+            var data = await _usersRepository.GetAll();
 
 
             GenericResult<UserDomainModel> result = new GenericResult<UserDomainModel>();
