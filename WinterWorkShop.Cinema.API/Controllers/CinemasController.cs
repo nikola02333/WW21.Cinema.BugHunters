@@ -12,7 +12,7 @@ using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
-    [Authorize]
+   // [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class CinemasController : ControllerBase
@@ -29,18 +29,82 @@ namespace WinterWorkShop.Cinema.API.Controllers
         /// </summary>
         /// <returns>List of cinemas</returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<CinemaDomainModel>>> GetAsync()
+        public async Task<ActionResult<GenericResult<CinemaDomainModel>>> GetAsync()
         {
-            IEnumerable<CinemaDomainModel> cinemaDomainModels;
+           GenericResult<CinemaDomainModel> result;
 
-            cinemaDomainModels = await _cinemaService.GetAllAsync();
+            result = await _cinemaService.GetAllAsync();
 
-            if (cinemaDomainModels == null)
+            if (!result.IsSuccessful)
             {
-                cinemaDomainModels = new List<CinemaDomainModel>();
+                return BadRequest(result.ErrorMessage);
             }
 
-            return Ok(cinemaDomainModels);
+            return Ok(result.DataList);
         }
+
+        [HttpGet]
+        [Route("{id:int}", Name = nameof(GetCinemaById))]
+
+        public async Task<ActionResult<CinemaDomainModel>> GetCinemaById(int id)
+        {
+            var response =await _cinemaService.GetCinemaById(id);
+            if (!response.IsSuccessful)
+            {
+                return NotFound(response.ErrorMessage);
+            }
+            return Ok(response.Data);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> InsertAsync([FromBody] CinemaDomainModel cinema)
+        {
+
+           
+            var insertedCinema = await _cinemaService.AddCinemaAsync(cinema);
+            if (!insertedCinema.IsSuccessful)
+            {
+                return BadRequest(insertedCinema.ErrorMessage);
+            }
+
+            return CreatedAtAction(nameof(GetCinemaById),
+                new { Id = insertedCinema.Data.Id },
+                insertedCinema.DataList);
+        }
+
+
+        [HttpDelete]
+        [Route("{id:int}")]
+        public ActionResult Delete(int id)
+        {
+            
+            var result = _cinemaService.DeleteCinema(id);
+
+            if (!result.IsSuccessful)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+
+            return Accepted(result.Data);
+        
+        }
+
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<ActionResult> UpdateMovie(int id, [FromBody] CinemaDomainModel updatedMovie)
+        {
+            updatedMovie.Id = id;
+
+            var result = await _cinemaService.UpdateCinema(updatedMovie);
+            if (!result.IsSuccessful)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return Accepted(result.Data);
+        }
+
+
     }
 }
