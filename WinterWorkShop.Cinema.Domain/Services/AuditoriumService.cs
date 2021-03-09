@@ -24,7 +24,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<IEnumerable<AuditoriumDomainModel>> GetAllAsync()
         {
-            var data = await _auditoriumsRepository.GetAll();
+            var data = await _auditoriumsRepository.GetAllAsync();
 
             if (data == null)
             {

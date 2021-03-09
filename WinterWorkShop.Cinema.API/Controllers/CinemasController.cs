@@ -91,15 +91,13 @@ namespace WinterWorkShop.Cinema.API.Controllers
         
         }
 
-
         [HttpPut]
-        [Route("Update/{id}")]
-        public async Task<ActionResult> UpdateCinema(int id, [FromBody] CinemaDomainModel updatedCienma)
+        [Route("{id}")]
+        public async Task<ActionResult> UpdateMovie(int id, [FromBody] CinemaDomainModel updatedMovie)
         {
+            updatedMovie.Id = id;
 
-
-            updatedCienma.Id = id;
-            var result = await _cinemaService.UpdateCinema(updatedCienma);
+            var result = await _cinemaService.UpdateCinema(updatedMovie);
             if (!result.IsSuccessful)
             {
                 return BadRequest(result.ErrorMessage);

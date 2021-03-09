@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,12 +10,13 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
     public interface ICinemaService
     {
         Task<GenericResult<CinemaDomainModel>> GetAllAsync();
-        Task<GenericResult<CinemaDomainModel>> AddCinemaAsync(CinemaDomainModel newCinema);
-
+       Task<GenericResult<CinemaDomainModel>> AddCinemaAsync(CinemaDomainModel newCinema);
+ 
         GenericResult<CinemaDomainModel> DeleteCinema(int id);
-
         Task<GenericResult<CinemaDomainModel>> GetCinemaById(int id);
 
         Task<GenericResult<CinemaDomainModel>> UpdateCinema(CinemaDomainModel updateCinema);
+
+
     }
 }

@@ -29,7 +29,7 @@ namespace WinterWorkShop.Cinema.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<User>> GetAll()
+        public async Task<IEnumerable<User>> GetAllAsync()
         {
             var data = await _cinemaContext.Users.ToListAsync();
 

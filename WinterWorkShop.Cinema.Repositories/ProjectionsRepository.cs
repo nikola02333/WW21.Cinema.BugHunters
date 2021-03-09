@@ -31,7 +31,7 @@ namespace WinterWorkShop.Cinema.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<Projection>> GetAll()
+        public async Task<IEnumerable<Projection>> GetAllAsync()
         {
             var data = await _cinemaContext.Projections.Include(x => x.Movie).Include(x => x.Auditorium).ToListAsync();
             
@@ -52,7 +52,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public async Task<Projection> InsertAsync(Projection obj)
         {
-            var data =await _cinemaContext.Projections.AddAsync(obj);
+            var data = await _cinemaContext.Projections.AddAsync(obj);
 
             return data.Entity;
         }
