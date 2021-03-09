@@ -44,7 +44,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
         [HttpGet]
-        [Route("{id:int}", Name = nameof(GetCinemaById))]
+        [Route("GetById/{id:int}", Name = nameof(GetCinemaById))]
 
         public async Task<ActionResult<CinemaDomainModel>> GetCinemaById(int id)
         {
@@ -57,7 +57,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> InsertAsync([FromBody] CinemaDomainModel cinema)
+        [Route("Create")]
+        public async Task<IActionResult> CreateCinemaAsync([FromBody] CinemaDomainModel cinema)
         {
 
            
@@ -74,8 +75,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
 
         [HttpDelete]
-        [Route("{id:int}")]
-        public ActionResult Delete(int id)
+        [Route("Delete/{id:int}")]
+        public ActionResult DeleteCinema(int id)
         {
             
             var result = _cinemaService.DeleteCinema(id);
@@ -89,6 +90,24 @@ namespace WinterWorkShop.Cinema.API.Controllers
             return Accepted(result.Data);
         
         }
+
+
+        [HttpPut]
+        [Route("Update/{id}")]
+        public async Task<ActionResult> UpdateCinema(int id, [FromBody] CinemaDomainModel updatedCienma)
+        {
+
+
+            updatedCienma.Id = id;
+            var result = await _cinemaService.UpdateCinema(updatedCienma);
+            if (!result.IsSuccessful)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return Accepted(result.Data);
+        }
+
 
     }
 }

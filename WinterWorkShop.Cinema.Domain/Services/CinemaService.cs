@@ -166,7 +166,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             cinema.Name = updateCinema.Name;
             cinema.Address = updateCinema.Address;
             cinema.CityName = updateCinema.CityName;
-            cinema.Name = updateCinema.Name;
+        
 
             _cinemasRepository.Save();
 
