@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace WinterWorkShop.Cinema.Domain.Models
+namespace WinterWorkShop.Cinema.Domain.Common
 {
     public class GenericResult<T> where T : class
     {
