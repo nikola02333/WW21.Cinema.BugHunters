@@ -7,7 +7,7 @@ using WinterWorkShop.Cinema.Domain.Common;
 
 namespace WinterWorkShop.Cinema.API.Models
 {
-    public class MovieModel
+    public class CreateMovieModel
     {
         [Required]
         [StringLength(50, ErrorMessage = Messages.MOVIE_PROPERTIE_TITLE_NOT_VALID)]
@@ -21,6 +21,9 @@ namespace WinterWorkShop.Cinema.API.Models
         [Range(1, 10, ErrorMessage = Messages.MOVIE_PROPERTIE_RATING_NOT_VALID)]
         public double Rating { get; set; }
 
+        [Required]
+        [StringLength(20)]
+        public string Genre { get; set; }
         public bool Current { get; set; }
     }
 }
