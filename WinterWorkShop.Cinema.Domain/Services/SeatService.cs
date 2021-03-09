@@ -19,7 +19,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<IEnumerable<SeatDomainModel>> GetAllAsync()
         {
-            var data = await _seatsRepository.GetAll();
+            var data = await _seatsRepository.GetAllAsync();
 
             if (data == null)
             {

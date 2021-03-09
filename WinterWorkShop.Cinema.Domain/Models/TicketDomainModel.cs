@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using WinterWorkShop.Cinema.Data;
 
-namespace WinterWorkShop.Cinema.Data.Entities
+namespace WinterWorkShop.Cinema.Domain.Models
 {
-    public class Ticket
+    public class TicketDomainModel
     {
         public Guid Id { get; set; }
 
@@ -12,15 +13,15 @@ namespace WinterWorkShop.Cinema.Data.Entities
 
         public Guid SeatId { get; set; }
 
-        public Seat Seat { get; set; }
+        public SeatDomainModel Seat { get; set; }
 
         public Guid UserId { get; set; }
 
-        public User User { get; set; }
+        public UserDomainModel User { get; set; }
 
         public Guid ProjectionId { get; set; }
 
-        public Projection Projection { get; set; }
+        public ProjectionDomainModel Projection { get; set; }
 
     }
 }

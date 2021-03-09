@@ -38,7 +38,7 @@ namespace WinterWorkShop.Cinema.Repositories
             return result.Entity;
         }
 
-        public async Task<IEnumerable<Auditorium>> GetAll()
+        public async Task<IEnumerable<Auditorium>> GetAllAsync()
         {
             var data = await _cinemaContext.Auditoriums.ToListAsync();
 
@@ -68,6 +68,11 @@ namespace WinterWorkShop.Cinema.Repositories
             _cinemaContext.Entry(obj).State = EntityState.Modified;
 
             return updatedEntry.Entity;
+        }
+
+        public void SaveAsync()
+        {
+            _cinemaContext.SaveChangesAsync();
         }
     }
 }

@@ -10,13 +10,15 @@ namespace WinterWorkShop.Cinema.Repositories
     {
         T Delete(object id);
 
-        Task<IEnumerable<T>> GetAll();
+        Task<IEnumerable<T>> GetAllAsync();
 
         Task<T> GetByIdAsync(object id);
 
         Task<T> InsertAsync(T obj);
 
         void Save();
+
+        void SaveAsync();
 
         T Update(T obj);
     }

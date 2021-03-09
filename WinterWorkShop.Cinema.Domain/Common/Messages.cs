@@ -2,10 +2,7 @@
 {
     public static class Messages
     {
-        #region Users
-
-        #endregion
-
+        
         #region Payments
         public const string PAYMENT_CREATION_ERROR = "Connection error, occured while creating new payment, please try again";
         #endregion
@@ -41,14 +38,29 @@
         public const string PROJECTION_CREATION_ERROR = "Error occured while creating new projection, please try again.";
         public const string PROJECTIONS_AT_SAME_TIME = "Cannot create new projection, there are projections at same time alredy.";
         public const string PROJECTION_IN_PAST = "Projection time cannot be in past.";
+        public const string PROJECTION_GET_BY_ID = "Error occured while getting projection by Id, please try again.";
         #endregion
 
         #region Seats
         public const string SEAT_GET_ALL_SEATS_ERROR = "Error occured while getting all seats, please try again.";
+        public const string SEAT_GET_BY_ID = "Error occured while getting seat by Id, please try again.";
         #endregion
 
-        #region User
+        #region Users
         public const string USER_NOT_FOUND = "User does not exist.";
+        public const string USER_NAME_REQUIRED = "User require name.";
+        public const string USER_USERNAME_REQUIRED = "User require username.";
+        public const string USER_LASTNAME_REQUIRED = "User require lastname.";
+        public const string USER_GET_BY_ID = "Error occured while getting user by Id, please try again.";
+        public const string USER_CREATION_ERROR = "Error occured while creating new user, please try again.";
+        public const string USER_CREATION_ERROR_USERNAME_EXISTS = "Error occured while creating new user, username exists.";
+        #endregion
+
+        #region Ticket       
+        public const string TICKET_GET_BY_ID = "Error occured while getting ticket by Id, please try again.";
+        public const string TICKET_DOES_NOT_EXIST = "Ticket does not exist.";
+        public const string TICKET_CREATION_ERROR = "Error occured while creating new ticket, please try again.";
+        public const string TICKET_GET_ALL_TICKETS_ERROR = "Error occured while getting all tickets, please try again.";
         #endregion
     }
 }

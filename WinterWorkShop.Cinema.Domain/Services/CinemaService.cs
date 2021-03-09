@@ -20,7 +20,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<CinemaDomainModel>> GetAllAsync()
         {
-            var data = await _cinemasRepository.GetAll();
+            var data = await _cinemasRepository.GetAllAsync();
 
             if (data == null)
             {

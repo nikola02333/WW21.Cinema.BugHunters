@@ -26,7 +26,7 @@ namespace WinterWorkShop.Cinema.Repositories
             return result;
         }
 
-        public async Task<IEnumerable<Seat>> GetAll()
+        public async Task<IEnumerable<Seat>> GetAllAsync()
         {
             var data = await _cinemaContext.Seats.ToListAsync();
 
@@ -38,9 +38,9 @@ namespace WinterWorkShop.Cinema.Repositories
             return await _cinemaContext.Seats.FindAsync(id);
         }
 
-        public  async Task<Seat> InsertAsync(Seat obj)
+        public async Task<Seat> InsertAsync(Seat obj)
         {
-            var data =await _cinemaContext.Seats.AddAsync(obj);
+            var data = await _cinemaContext.Seats.AddAsync(obj);
 
             return data.Entity;
         }
@@ -56,6 +56,10 @@ namespace WinterWorkShop.Cinema.Repositories
             _cinemaContext.Entry(obj).State = EntityState.Modified;
 
             return updatedEntry;
+        }
+        public void SaveAsync()
+        {
+            _cinemaContext.SaveChangesAsync();
         }
     }
 }
