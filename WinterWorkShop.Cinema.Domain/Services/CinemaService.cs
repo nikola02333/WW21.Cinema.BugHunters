@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Domain.Interfaces;
 using WinterWorkShop.Cinema.Domain.Models;
 using WinterWorkShop.Cinema.Repositories;
+using WinterWorkShop.Cinema.Domain.Common;
 
 namespace WinterWorkShop.Cinema.Domain.Services
 {
