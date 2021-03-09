@@ -68,7 +68,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
             {
                 AuditoriumId = projectionModel.AuditoriumId,
                 MovieId = projectionModel.MovieId,
-                ProjectionTime = projectionModel.ProjectionTime
+                ProjectionTime = projectionModel.ProjectionTime,
+                Duration = projectionModel.Duration
+                
             };
 
             CreateProjectionResultModel createProjectionResultModel;

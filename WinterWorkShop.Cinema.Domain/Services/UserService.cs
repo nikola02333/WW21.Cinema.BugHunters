@@ -176,8 +176,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 FirstName = data.FirstName,
                 LastName = data.LastName,
                 UserName = data.UserName,
-                Role = data.Role,
-            }
+                Role = data.Role
+                }
             };
 
             return domainModel;

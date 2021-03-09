@@ -21,7 +21,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<IEnumerable<ProjectionDomainModel>> GetAllAsync()
         {
-            var data = await _projectionsRepository.GetAll();
+            var data = await _projectionsRepository.GetAllAsync();
 
             if (data == null)
             {
@@ -39,7 +39,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     AuditoriumId = item.AuditoriumId,
                     ProjectionTime = item.ShowingDate,
                     MovieTitle = item.Movie.Title,
-                    AditoriumName = item.Auditorium.AuditoriumName
+                    AditoriumName = item.Auditorium.AuditoriumName,
+                    Duration = item.Duration
+                    
                 };
                 result.Add(model);
             }
@@ -68,7 +70,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 MovieId = domainModel.MovieId,
                 AuditoriumId = domainModel.AuditoriumId,
-                 ShowingDate = domainModel.ProjectionTime
+                 ShowingDate = domainModel.ProjectionTime,
+                 Duration = domainModel.Duration
+                 
             };
 
             var insertedProjection = _projectionsRepository.InsertAsync(newProjection);
@@ -92,7 +96,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Id = insertedProjection.Result.Id,
                     AuditoriumId = insertedProjection.Result.AuditoriumId,
                     MovieId = insertedProjection.Result.MovieId,
-                    ProjectionTime = insertedProjection.Result.ShowingDate
+                    ProjectionTime = insertedProjection.Result.ShowingDate,
+                    Duration = insertedProjection.Result.Duration
                 }
             };
 
