@@ -46,11 +46,11 @@ namespace WinterWorkShop.Cinema.Repositories
             return data;
         }
 
-        public Ticket Insert(Ticket obj)
+        public async Task<Ticket> InsertAsync(Ticket obj)
         {
-            var data = _cinemaContext.Tickets.Add(obj).Entity;
+            var data =await _cinemaContext.Tickets.AddAsync(obj);
 
-            return data;
+            return data.Entity;
         }
 
         public void Save()
@@ -64,6 +64,10 @@ namespace WinterWorkShop.Cinema.Repositories
             _cinemaContext.Entry(obj).State = EntityState.Modified;
 
             return updatedEntry;
+        }
+        public void SaveAsync()
+        {
+            _cinemaContext.SaveChangesAsync();
         }
     }
 }

@@ -41,9 +41,11 @@ namespace WinterWorkShop.Cinema.Repositories
             return data;
         }
 
-        public Data.Cinema Insert(Data.Cinema obj)
+        public async Task<Data.Cinema> InsertAsync(Data.Cinema obj)
         {
-            return _cinemaContext.Cinemas.Add(obj).Entity;
+            var data= await _cinemaContext.Cinemas.AddAsync(obj);
+
+            return data.Entity;
         }
 
         public void Save()
@@ -57,6 +59,10 @@ namespace WinterWorkShop.Cinema.Repositories
             _cinemaContext.Entry(obj).State = EntityState.Modified;
 
             return updatedEntry.Entity;
+        }
+        public void SaveAsync()
+        {
+            _cinemaContext.SaveChangesAsync();
         }
     }
 }

@@ -10,7 +10,7 @@ namespace WinterWorkShop.Cinema.Repositories
 {
     public interface IUsersRepository : IRepository<User> 
     {
-        User GetByUserName(string username);
+        Task<User> GetByUserName(string username);
     }
     public class UsersRepository : IUsersRepository
     {
@@ -41,16 +41,19 @@ namespace WinterWorkShop.Cinema.Repositories
             return await _cinemaContext.Users.FindAsync(id);
         }
 
-        public User GetByUserName(string username)
+        public async Task<User> GetByUserName(string username)
         {
-            var data = _cinemaContext.Users.SingleOrDefault(x => x.UserName == username);
+            var data = await _cinemaContext.Users.Where(x => x.UserName == username).SingleOrDefaultAsync();
 
             return data;
         }
 
-        public User Insert(User obj)
+        public async Task<User> InsertAsync(User obj)
         {
-            return _cinemaContext.Users.Add(obj).Entity;
+            var result = await _cinemaContext.Users.AddAsync(obj);
+
+            return result.Entity;
+       
         }
 
         public void Save()
@@ -64,6 +67,10 @@ namespace WinterWorkShop.Cinema.Repositories
             _cinemaContext.Entry(obj).State = EntityState.Modified;
 
             return updatedEntry;
+        }
+        public void SaveAsync()
+        {
+            _cinemaContext.SaveChangesAsync();
         }
     }
 }
