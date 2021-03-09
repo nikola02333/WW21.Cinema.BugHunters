@@ -23,12 +23,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
             _userService = userService;
         }
 
-        /// <summary>
-        /// Gets all users
-        /// </summary>
-        /// <returns></returns>
+     
         [HttpGet]
-
         public async Task<ActionResult<UserDomainModel>> GetAsync()
         {
             GenericResult<UserDomainModel> userDomainModels;
@@ -39,11 +35,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
             return Ok(userDomainModels.DataList);
         }
 
-        /// <summary>
-        /// Gets User by Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet]
         [Route("GetById/{id}")]
         public async Task<ActionResult<UserDomainModel>> GetbyIdAsync(Guid id)
@@ -59,7 +50,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             return Ok(result.Data);
         }
-
+       
         [HttpPost]
         [Route("Create")]
         public async Task<ActionResult<UserDomainModel>> CreateUserAsync(CreateUserModel createUser)
@@ -81,25 +72,21 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             return CreatedAtAction("GetById", new { Id= user.Data.Id }, user.Data);
         }
-        // <summary>
-        /// Gets User by UserName
-        /// </summary>
-        /// <param name="username"></param>
-        /// <returns></returns>
+       
         [HttpGet]
         [Route("Search/{username}")]
         public async Task<ActionResult<UserDomainModel>> GetbyUserNameAsync(string username)
         {
-            GenericResult<UserDomainModel> model;
+            GenericResult<UserDomainModel> user;
 
-            model = await _userService.GetUserByUserNameAsync(username);
+            user = await _userService.GetUserByUserNameAsync(username);
 
-            if (model == null)
+            if (!user.IsSuccessful)
             {
                 return NotFound(Messages.USER_NOT_FOUND);
             }
 
-            return Ok(model.Data);
+            return Ok(user.Data);
         }
 
 

@@ -53,6 +53,7 @@
         public const string USER_USERNAME_REQUIRED = "User require username.";
         public const string USER_LASTNAME_REQUIRED = "User require lastname.";
         public const string USER_CREATION_ERROR = "Error occured while creating new user, please try again.";
+        public const string USER_CREATION_ERROR_USERNAME_EXISTS = "Error occured while creating new user, username exists.";
         #endregion
     }
 }

@@ -20,6 +20,16 @@ namespace WinterWorkShop.Cinema.Domain.Services
             _usersRepository = usersRepository;
         }
 
+        public async Task<bool> CheckUsername(string usernameToCreate)
+        {
+            var user = await _usersRepository.GetByUserName(usernameToCreate);
+            if(user == null)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task<GenericResult<UserDomainModel>> CreateUserAsync(UserDomainModel userToCreate)
         {
           if(userToCreate ==null)
@@ -31,6 +41,17 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 };
             }
 
+            var usernameExists =await CheckUsername(userToCreate.UserName.ToLower());
+
+            if (!usernameExists)
+            {
+                return new GenericResult<UserDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage= Messages.USER_CREATION_ERROR_USERNAME_EXISTS
+                };
+                   
+            }
             User user = new User()
             {
                 FirstName = userToCreate.FirstName,
@@ -136,7 +157,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<UserDomainModel>> GetUserByUserNameAsync(string username)
         {
-            var data = _usersRepository.GetByUserName(username.ToLower());
+            var data = await _usersRepository.GetByUserName(username.ToLower());
 
             if (data == null)
             {
