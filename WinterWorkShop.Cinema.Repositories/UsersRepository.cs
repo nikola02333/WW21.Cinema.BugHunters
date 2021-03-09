@@ -48,9 +48,10 @@ namespace WinterWorkShop.Cinema.Repositories
             return data;
         }
 
-        public User Insert(User obj)
+        public async Task <User> InsertAsync(User obj)
         {
-            return _cinemaContext.Users.Add(obj).Entity;
+            var result = await _cinemaContext.Users.AddAsync(obj);
+            return result.Entity;
         }
 
         public void Save()

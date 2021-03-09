@@ -71,7 +71,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                  ShowingDate = domainModel.ProjectionTime
             };
 
-            var insertedProjection = _projectionsRepository.Insert(newProjection);
+            var insertedProjection = await _projectionsRepository.InsertAsync(newProjection);
 
             if (insertedProjection == null)
             {
@@ -89,7 +89,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 ErrorMessage = null,
                 Projection = new ProjectionDomainModel
                 {
-                    Id = insertedProjection.Id,
+                    Id = new Guid(),
                     AuditoriumId = insertedProjection.AuditoriumId,
                     MovieId = insertedProjection.MovieId,
                     ProjectionTime = insertedProjection.ShowingDate

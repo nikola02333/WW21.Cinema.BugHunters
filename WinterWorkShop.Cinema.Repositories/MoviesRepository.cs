@@ -57,11 +57,11 @@ namespace WinterWorkShop.Cinema.Repositories
             return data;
         }
 
-        public Movie Insert(Movie obj)
+        public async Task<Movie> InsertAsync(Movie obj)
         {
-            var data = _cinemaContext.Movies.Add(obj).Entity;
+            var data = await _cinemaContext.Movies.AddAsync(obj);
 
-            return data;
+            return data.Entity;
         }
 
         public void Save()

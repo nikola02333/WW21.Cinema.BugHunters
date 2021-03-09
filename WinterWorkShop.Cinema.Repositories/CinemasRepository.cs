@@ -21,7 +21,14 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public Data.Cinema Delete(object id)
         {
-            Data.Cinema existing = _cinemaContext.Cinemas.Find(id);
+            var existing = _cinemaContext.Cinemas.Find(id);
+
+
+            if (existing == null)
+            {
+                return null;
+            }
+
             var result = _cinemaContext.Cinemas.Remove(existing);
 
             return result.Entity;
@@ -41,9 +48,12 @@ namespace WinterWorkShop.Cinema.Repositories
             return data;
         }
 
-        public Data.Cinema Insert(Data.Cinema obj)
+        public async Task<Data.Cinema> InsertAsync(Data.Cinema obj)
         {
-            return _cinemaContext.Cinemas.Add(obj).Entity;
+
+            var result = await _cinemaContext.Cinemas.AddAsync(obj);
+           return result.Entity;
+           
         }
 
         public void Save()
