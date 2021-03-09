@@ -6,7 +6,7 @@ using WinterWorkShop.Cinema.Data.Entities;
 
 namespace WinterWorkShop.Cinema.Data
 {
-    [Table("user")]
+    [Table("User")]
     public class User
     {
         public Guid Id { get; set; }

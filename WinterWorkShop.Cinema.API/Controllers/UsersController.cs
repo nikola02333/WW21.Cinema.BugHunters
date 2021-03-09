@@ -11,7 +11,7 @@ using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
@@ -23,72 +23,117 @@ namespace WinterWorkShop.Cinema.API.Controllers
             _userService = userService;
         }
 
-        /// <summary>
-        /// Gets all users
-        /// </summary>
-        /// <returns></returns>
+     
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDomainModel>>> GetAsync()
+        public async Task<ActionResult<UserDomainModel>> GetAsync()
         {
             GenericResult<UserDomainModel> userDomainModels;
 
             userDomainModels = await _userService.GetAllAsync();
 
-            if (userDomainModels == null)
-            {
-                
-            }
 
-            return Ok(userDomainModels);
+            return Ok(userDomainModels.DataList);
         }
 
-        /// <summary>
-        /// Gets User by Id
-        /// </summary>
-        /// <param name="id"></param>
-        /// <returns></returns>
         [HttpGet]
-        [Route("{id}")]
+        [Route("GetById/{id}")]
         public async Task<ActionResult<UserDomainModel>> GetbyIdAsync(Guid id)
         {
-            GenericResult<UserDomainModel> model;
+            GenericResult<UserDomainModel> result;
 
-            model = await _userService.GetUserByIdAsync(id);
+            result = await _userService.GetUserByIdAsync(id);
 
-            if (model == null)
+            if (!result.IsSuccessful)
             {
                 return NotFound(Messages.USER_NOT_FOUND);
             }
 
-            return Ok(model);
+            return Ok(result.Data);
         }
-
+       
         [HttpPost]
-        public async Task<ActionResult<UserDomainModel>> CreateUser(CreateUserModel createUser)
+        [Route("Create")]
+        public async Task<ActionResult<UserDomainModel>> CreateUserAsync(CreateUserModel createUser)
         {
 
-            //return _userService.CreateUserAsync();
-            return null;
+            var userToCreate = new UserDomainModel
+            {
+                FirstName = createUser.FirstName,
+                LastName= createUser.LastName,
+                 Role= createUser.Role,
+                  UserName= createUser.UserName,
+            };
+            var user = await _userService.CreateUserAsync(userToCreate);
+
+            if(!user.IsSuccessful)
+            {
+                return BadRequest(user.ErrorMessage);
+            }
+
+            return CreatedAtAction("GetById", new { Id= user.Data.Id }, user.Data);
         }
-        // <summary>
-        /// Gets User by UserName
-        /// </summary>
-        /// <param name="username"></param>
-        /// <returns></returns>
+       
         [HttpGet]
-        [Route("{username}")]
+        [Route("Search/{username}")]
         public async Task<ActionResult<UserDomainModel>> GetbyUserNameAsync(string username)
         {
-            GenericResult<UserDomainModel> model;
+            GenericResult<UserDomainModel> user;
 
-            model = await _userService.GetUserByUserNameAsync(username);
+            user = await _userService.GetUserByUserNameAsync(username);
 
-            if (model == null)
+            if (!user.IsSuccessful)
             {
                 return NotFound(Messages.USER_NOT_FOUND);
             }
 
-            return Ok(model);
+            return Ok(user.Data);
+        }
+
+
+        [HttpDelete]
+        [Route("Delete/{userId}")]
+        public async Task<ActionResult<UserDomainModel>> DeleteUser(Guid userId)
+        {
+            if(userId == null || userId == Guid.Empty)
+            {
+                return BadRequest();
+            }
+
+
+            var result = await _userService.DeleteUserAsync(userId);
+
+           if(!result.IsSuccessful)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return Accepted();
+        }
+
+        [HttpPut]
+        [Route("Update/{userId}")]
+        public async Task<ActionResult<UserDomainModel>> UpdateUserAsync(Guid userId, CreateUserModel userToUpdate)
+        {
+            if (userId == null)
+            {
+                return BadRequest();
+            }
+
+            UserDomainModel userUpdate = new UserDomainModel
+            {
+                UserName= userToUpdate.UserName,
+                 FirstName= userToUpdate.FirstName,
+                  LastName = userToUpdate.LastName,
+                   Role= userToUpdate.Role
+            };
+            var result = await _userService.UpdateUserAsync(userId, userUpdate);
+
+            if (!result.IsSuccessful)
+            {
+                return BadRequest(result.ErrorMessage);
+            }
+
+            return Accepted();
         }
     }
 }
