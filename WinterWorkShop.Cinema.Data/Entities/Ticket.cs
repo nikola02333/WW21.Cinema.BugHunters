@@ -1,12 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace WinterWorkShop.Cinema.Data.Entities
 {
+    [Table("ticket")]
     public class Ticket
     {
         public Guid Id { get; set; }
+
+        public int price { get; set; }
 
         public DateTime Created { get; set; }
 

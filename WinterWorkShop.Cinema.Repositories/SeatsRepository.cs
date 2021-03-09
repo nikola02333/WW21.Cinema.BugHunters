@@ -78,7 +78,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public async Task<IEnumerable<Seat>> getReservedSeatsForProjection(Guid projectionId)
         {
-            //var tickets = _cinemaContext.Seats.Include(x => x.Tickets).Select(x => x.Tickets.Select(x=>x.Seat));
+            //var tickets = _cinemaContext.Seats.Include(x => x.Tickets).Where(x => x.Tickets.Any(x=>x.ProjectionId == projectionId)).ToList();
 
             var seats = _cinemaContext.Seats.Include(x => x.Tickets).ToList();
 
@@ -90,7 +90,7 @@ namespace WinterWorkShop.Cinema.Repositories
                 {
                     result.Add(item);
                 }
-                
+
             }
             return result;
         }

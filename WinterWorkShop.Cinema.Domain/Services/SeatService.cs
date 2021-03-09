@@ -48,6 +48,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
         {
             var seats = await _seatsRepository.getReservedSeatsForProjection(projectionId);
 
+            if (seats == null)
+            {
+                return null;
+            }
+
             List<SeatDomainModel> result = new List<SeatDomainModel>();
             SeatDomainModel model;
             foreach (var item in seats)
