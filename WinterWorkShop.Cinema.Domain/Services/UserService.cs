@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Data;
@@ -19,6 +20,16 @@ namespace WinterWorkShop.Cinema.Domain.Services
             _usersRepository = usersRepository;
         }
 
+        public async Task<bool> CheckUsername(string usernameToCreate)
+        {
+            var user = await _usersRepository.GetByUserName(usernameToCreate);
+            if(user == null)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public async Task<GenericResult<UserDomainModel>> CreateUserAsync(UserDomainModel userToCreate)
         {
           if(userToCreate ==null)
@@ -26,55 +37,93 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 return new GenericResult<UserDomainModel>
                 {
                     IsSuccessful = false,
-                    ErrorMessage= "error message"
+                    ErrorMessage= Messages.USER_CREATION_ERROR
                 };
             }
 
+            var usernameExists =await CheckUsername(userToCreate.UserName.ToLower());
+
+            if (!usernameExists)
+            {
+                return new GenericResult<UserDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage= Messages.USER_CREATION_ERROR_USERNAME_EXISTS
+                };
+                   
+            }
             User user = new User()
             {
                 FirstName = userToCreate.FirstName,
                  LastName= userToCreate.LastName,
-                  UserName= userToCreate.UserName,
-                   Role= userToCreate.Role
+                  UserName= userToCreate.UserName.ToLower(),
+                   Role= userToCreate.Role.ToLower()
             };
-            var userResult = _usersRepository.InsertAsync(user);
-            _usersRepository.Save();
+
+            var userResult = await _usersRepository.InsertAsync(user);
+            _usersRepository.SaveAsync();
 
 
             return new GenericResult<UserDomainModel>
             {
                 IsSuccessful = true,
-                Data = new UserDomainModel()
+                Data = new UserDomainModel
+                {
+                     FirstName= userResult.FirstName,
+                    LastName = userResult.LastName,
+                     UserName = userResult.UserName,
+                     Role = userResult.Role,
+                     Id= userResult.Id
+                }
             };
 
+        }
+
+        public async Task<GenericResult<UserDomainModel>> DeleteUserAsync(Guid userId)
+        {
+            var userToDelete = await _usersRepository.GetByIdAsync(userId);
+            
+            if(userToDelete == null)
+            {
+                return new GenericResult<UserDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage =Messages.USER_NOT_FOUND
+                };
+
+            }
+            
+            _usersRepository.Delete(userToDelete.Id);
+            _usersRepository.Save();
+
+            return new GenericResult<UserDomainModel>
+            {
+                IsSuccessful = true,
+            };
         }
 
         public async Task<GenericResult<UserDomainModel>> GetAllAsync()
         {
             var data = await _usersRepository.GetAllAsync();
 
-            if (data == null)
-            {
-                return null;
-            }
 
             GenericResult<UserDomainModel> result = new GenericResult<UserDomainModel>();
 
-            UserDomainModel model;
-            foreach (var item in data)
-            {
-                model = new UserDomainModel
-                {
-                    Id = item.Id,
-                    FirstName = item.FirstName,
-                    LastName = item.LastName,
-                    UserName = item.UserName,
-                    Role = item.Role
-                };
-                result.DataList.Add(model);
-            }
 
-            return result;
+            var items = data.Select(item => new UserDomainModel
+            {
+                Id = item.Id,
+                FirstName = item.FirstName,
+                LastName = item.LastName,
+                UserName = item.UserName,
+                Role = item.Role,
+            }).ToList();
+
+           return  new GenericResult<UserDomainModel> 
+            { 
+            IsSuccessful=true,
+            DataList= items
+            };
         }
 
         public async Task<GenericResult<UserDomainModel>> GetUserByIdAsync(Guid id)
@@ -83,20 +132,24 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             if (data == null)
             {
-                return null;
+                return new GenericResult<UserDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.USER_NOT_FOUND
+                };
             }
 
             GenericResult<UserDomainModel> domainModel = new GenericResult<UserDomainModel>
             { 
                 IsSuccessful=true,
-                Data =
-                 {
-                    Id = data.Id,
-                    FirstName = data.FirstName,
-                    LastName = data.LastName,
-                    UserName = data.UserName,
-                    Role = data.Role
-                }
+                Data = new UserDomainModel
+             {
+                Id = data.Id,
+                FirstName = data.FirstName,
+                LastName = data.LastName,
+                UserName = data.UserName,
+                Role = data.Role,
+            }
         };
 
             return domainModel;
@@ -104,17 +157,21 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<UserDomainModel>> GetUserByUserNameAsync(string username)
         {
-            var data = _usersRepository.GetByUserName(username);
+            var data = await _usersRepository.GetByUserName(username.ToLower());
 
             if (data == null)
             {
-                return null;
+                return new GenericResult<UserDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.USER_NOT_FOUND
+                };
             }
 
             GenericResult<UserDomainModel> domainModel = new GenericResult<UserDomainModel>
             {
                 IsSuccessful=true,
-                Data ={
+                Data =new UserDomainModel {
                 Id = data.Id,
                 FirstName = data.FirstName,
                 LastName = data.LastName,
@@ -124,6 +181,42 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
 
             return domainModel;
+        }
+
+        public async Task<GenericResult<UserDomainModel>> UpdateUserAsync(Guid userId, UserDomainModel userToUpdate)
+        {
+            var userForUpdate = await _usersRepository.GetByIdAsync(userId);
+
+            if(userForUpdate ==null)
+            {
+                return new GenericResult<UserDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage= Messages.USER_NOT_FOUND
+                };
+            }
+
+            userForUpdate.FirstName = userToUpdate.FirstName;
+            userForUpdate.LastName = userToUpdate.LastName;
+            userForUpdate.UserName = userToUpdate.UserName.ToLower();
+            userForUpdate.Role = userToUpdate.Role.ToLower();
+
+            _usersRepository.Update(userForUpdate);
+            _usersRepository.SaveAsync();
+
+            return new GenericResult<UserDomainModel>
+            {
+                IsSuccessful = true,
+                Data =  new UserDomainModel
+                {
+                    Id = userForUpdate.Id,
+                    Role = userForUpdate.Role,
+                    FirstName = userForUpdate.FirstName,
+                    LastName = userForUpdate.LastName,
+                     UserName = userForUpdate.UserName
+                } 
+            };
+
         }
     }
 }
