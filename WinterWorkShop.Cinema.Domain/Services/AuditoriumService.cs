@@ -93,7 +93,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 }
             }
 
-            Auditorium insertedAuditorium = _auditoriumsRepository.Insert(newAuditorium);
+            Auditorium insertedAuditorium = await _auditoriumsRepository.InsertAsync(newAuditorium);
             if (insertedAuditorium == null)
             {
                 return new CreateAuditoriumResultModel

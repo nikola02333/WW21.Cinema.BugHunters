@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WinterWorkShop.Cinema.Data
 {
-    [Table("cinema")]
+    [Table("Cinema")]
     public class Cinema
     {
         public int Id { get; set; }

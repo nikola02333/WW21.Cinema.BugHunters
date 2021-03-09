@@ -77,7 +77,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Rating = newMovie.Rating
             };
 
-            var data = _moviesRepository.Insert(movieToCreate);
+            var data =await _moviesRepository.InsertAsync(movieToCreate);
             if (data == null)
             {
                 return null;
@@ -87,7 +87,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             MovieDomainModel domainModel = new MovieDomainModel()
             {
-                Id = data.Id,
+                Id = new Guid(),
                 Title = data.Title,
                 Current = data.Current,
                 Year = data.Year,
