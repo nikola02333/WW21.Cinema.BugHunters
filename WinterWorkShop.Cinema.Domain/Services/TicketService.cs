@@ -176,8 +176,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     AuditoriumId = ticket.Projection.AuditoriumId,
                     MovieId = ticket.Projection.MovieId,
                     MovieTitle = ticket.Projection.Movie.Title,
-                    ProjectionTime = ticket.Projection.ShowingDate
-                    //treba dodati trajanje projeckije
+                    ProjectionTime = ticket.Projection.ShowingDate,
+                    Duration = ticket.Projection.Duration
+                    
                 },
                 SeatId = ticket.SeatId,
                 Seat = new SeatDomainModel

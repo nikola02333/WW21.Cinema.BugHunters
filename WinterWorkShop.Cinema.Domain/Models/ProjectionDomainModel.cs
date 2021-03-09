@@ -17,5 +17,7 @@ namespace WinterWorkShop.Cinema.Domain.Models
         public string AditoriumName { get; set; }
 
         public DateTime ProjectionTime { get; set; }
+
+        public int Duration { get; set; }
     }
 }

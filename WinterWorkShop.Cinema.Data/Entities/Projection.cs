@@ -11,14 +11,14 @@ namespace WinterWorkShop.Cinema.Data
     {
         public Guid Id { get; set; }
 
-     
         public int AuditoriumId { get; set; }
 
         public virtual Auditorium Auditorium { get; set; }
 
         public DateTime ShowingDate { get; set; }
 
-      
+        public int Duration { get; set; }
+
         public Guid MovieId { get; set; }
 
         public virtual Movie Movie { get; set; }
