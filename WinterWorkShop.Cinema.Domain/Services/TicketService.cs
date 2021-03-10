@@ -216,7 +216,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 Created = ticket.Created,
                 Id = ticket.Id,
-                ProjectionId = ticket.ProjectionId,
                 Projection = new ProjectionDomainModel
                 {
                     Id = ticket.Projection.Id,
@@ -228,7 +227,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Duration = ticket.Projection.Duration
                     
                 },
-                SeatId = ticket.SeatId,
                 Seat = new SeatDomainModel
                 {
                     AuditoriumId = ticket.Seat.AuditoriumId,
@@ -236,7 +234,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Number = ticket.Seat.Number,
                     Row = ticket.Seat.Row
                 },
-                UserId = ticket.UserId,
                 User = new UserDomainModel
                 {
                     Id = ticket.User.Id,

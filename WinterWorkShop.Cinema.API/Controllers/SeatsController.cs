@@ -39,7 +39,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
         [HttpGet]
-        [Route("reserved/{id:guid}")]
+        [Route("reservedByProjectionId/{id:guid}")]
         public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetReservedSeatsAsync(Guid id)
         {
             GenericResult<SeatDomainModel> seatDomainModels;
