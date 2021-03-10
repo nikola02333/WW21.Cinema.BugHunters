@@ -16,7 +16,11 @@
         public const string AUDITORIUM_SEATS_CREATION_ERROR = "Error occured while creating seats for auditorium, please try again.";
         public const string AUDITORIUM_SAME_NAME = "Cannot create new auditorium, auditorium with same name alredy exist.";
         public const string AUDITORIUM_UNVALID_CINEMAID = "Cannot create new auditorium, auditorium with given cinemaId does not exist.";
-        public const string AUDITORIUM_GET_BY_ID = "Error occured while getting auditroium by Id, please try again.";
+        public const string AUDITORIUM_GET_BY_ID_ERROR = "Auditorium doesn't exist.";
+        public const string AUDITORIUM_UPDATE_CINEMAID = "Cinema doesn't exist.";
+        public const string AUDITORIUM_UPDATE_ERROR = "Auditorium doesn't exist.";
+        public const string AUDITORIUM_NO_NAME = "Auditorium with this name doesn't exist";
+        
         #endregion
 
         #region Cinemas

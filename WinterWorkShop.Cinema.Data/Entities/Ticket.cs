@@ -5,7 +5,7 @@ using System.Text;
 
 namespace WinterWorkShop.Cinema.Data.Entities
 {
-    [Table("ticket")]
+    [Table("Ticket")]
     public class Ticket
     {
         public Guid Id { get; set; }

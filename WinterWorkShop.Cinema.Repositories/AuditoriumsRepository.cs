@@ -11,7 +11,9 @@ namespace WinterWorkShop.Cinema.Repositories
 {
     public interface IAuditoriumsRepository : IRepository<Auditorium> 
     {
-        Task<IEnumerable<Auditorium>> GetByAuditName(string name, int id);
+      
+        Task<IEnumerable<Auditorium>> GetAllByCinemaIdAsync(int cinemaId);
+        Task<IEnumerable<Auditorium>> GetByAuditoriumNameAsync(string auditoriumName, int cinemaId);
     }
     public class AuditoriumsRepository : IAuditoriumsRepository
     {
@@ -23,12 +25,7 @@ namespace WinterWorkShop.Cinema.Repositories
         }
 
 
-        public async Task<IEnumerable<Auditorium>> GetByAuditName(string name, int id)
-        {
-            var data = await _cinemaContext.Auditoriums.Where(x => x.AuditoriumName.Equals(name) && x.CinemaId.Equals(id)).ToListAsync();
-
-            return data;
-        }
+       
 
         public Auditorium Delete(object id)
         {
@@ -40,14 +37,26 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public async Task<IEnumerable<Auditorium>> GetAllAsync()
         {
-            var data = await _cinemaContext.Auditoriums.Include(x=>x.Seats).ToListAsync();
+            var data = await _cinemaContext.Auditoriums.Include(x => x.Seats).ToListAsync();
 
             return data;
         }
 
         public async Task<Auditorium> GetByIdAsync(object id)
         {
-            return await _cinemaContext.Auditoriums.FindAsync(id);
+
+
+            var auditorium = await _cinemaContext.Auditoriums
+                .Where(auditorium => auditorium.Id == (int)id)
+                .Include(auditorium => auditorium.Seats)
+                .FirstOrDefaultAsync();
+
+
+
+            return auditorium;
+
+
+           
         }
 
         public async Task<Auditorium> InsertAsync(Auditorium obj)
@@ -69,7 +78,24 @@ namespace WinterWorkShop.Cinema.Repositories
 
             return updatedEntry.Entity;
         }
+        public async Task<IEnumerable<Auditorium>> GetAllByCinemaIdAsync(int cinemaId)
+        {
+            return await _cinemaContext.Auditoriums.Where(x => x.CinemaId == cinemaId).ToListAsync();
+        }
 
+
+
+        public async Task<IEnumerable<Auditorium>> GetByAuditoriumNameAsync(string auditoriumName, int cinemaId)
+        {
+            var data = await _cinemaContext.Auditoriums
+                .Where(x => x.AuditoriumName.Equals(auditoriumName)
+                            && x.CinemaId.Equals(cinemaId))
+                .ToListAsync();
+
+
+
+            return data;
+        }
         public void SaveAsync()
         {
             _cinemaContext.SaveChangesAsync();

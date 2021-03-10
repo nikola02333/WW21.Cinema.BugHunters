@@ -59,7 +59,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 return new GenericResult<SeatDomainModel>
                 {
                     IsSuccessful = false,
-                    ErrorMessage = Messages.AUDITORIUM_GET_BY_ID
+                    ErrorMessage = Messages.AUDITORIUM_GET_BY_ID_ERROR
                 };
             }
 
