@@ -10,8 +10,7 @@ namespace WinterWorkShop.Cinema.Data
     public class Seat
     {
         public Guid Id { get; set; }
-
-       
+ 
         public int AuditoriumId { get; set; }
 
         public int Row { get; set; }
@@ -19,6 +18,7 @@ namespace WinterWorkShop.Cinema.Data
         public int Number { get; set; }
 
         public virtual Auditorium Auditorium { get; set; }
+
         public virtual ICollection<Ticket> Tickets { get; set; }
     }
 }

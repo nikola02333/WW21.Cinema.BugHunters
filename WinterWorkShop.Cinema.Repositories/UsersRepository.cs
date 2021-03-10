@@ -10,7 +10,8 @@ namespace WinterWorkShop.Cinema.Repositories
 {
     public interface IUsersRepository : IRepository<User> 
     {
-        Task<User> GetByUserNameAsync(string username);
+        Task<User> GetByUserName(string username);
+        void Attach(User user);
     }
     public class UsersRepository : IUsersRepository
     {
@@ -60,6 +61,7 @@ namespace WinterWorkShop.Cinema.Repositories
         {
             _cinemaContext.SaveChanges();
         }
+        
 
         public User Update(User obj)
         {
@@ -71,6 +73,11 @@ namespace WinterWorkShop.Cinema.Repositories
         public void SaveAsync()
         {
             _cinemaContext.SaveChangesAsync();
+        }
+
+        public void Attach(User user)
+        {
+            _cinemaContext.Attach(user);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Data.Entities;
@@ -26,23 +27,54 @@ namespace WinterWorkShop.Cinema.Domain.Services
         }
         public async Task<GenericResult<TicketDomainModel>> CreateTicketAsync(CreateTicketModel ticketToCreate)
         {
-            var seat = await _seatsRepository.GetByIdAsync(ticketToCreate.SeatId);
-            string error=null;
+            string error = null;
 
-            if (seat==null){
-                error += Messages.SEAT_GET_BY_ID + "\n";
+            var reservedSeats = await _seatsRepository.GetReservedSeatsForProjectionAsync(ticketToCreate.ProjectionId);
+            var exist = reservedSeats.FirstOrDefault(x => x.Id == ticketToCreate.SeatId);
+            if (exist!=null)
+            {
+                return new GenericResult<TicketDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.SEAT_RESERVED
+                };
             }
+            var seat = await _seatsRepository.GetByIdAsync(ticketToCreate.SeatId);
+            if (seat==null){
+                error += Messages.SEAT_GET_BY_ID + "   ";
+            }
+            else
+            {
+                _seatsRepository.Attach(seat);
+            }
+
+            
 
             var user = await _usersRepository.GetByIdAsync(ticketToCreate.UserId);
             if (user == null)
             {
-                error += Messages.USER_ID_NULL + "\n";
+                error += Messages.USER_ID_NULL + " ";
+               
+            }
+            else
+            {
+                _usersRepository.Attach(user);
             }
 
             var projection = await _projectionsRepository.GetByIdAsync(ticketToCreate.ProjectionId);
             if (projection == null)
             {
                 error += Messages.PROJECTION_GET_BY_ID + "\n";
+            }
+            else
+            {
+                _projectionsRepository.Attach(projection);
+            }
+
+            var checkSeatiInProjection = await _seatsRepository.GetSeatInProjectionAuditoriumAsync(ticketToCreate.SeatId, ticketToCreate.ProjectionId);
+            if (checkSeatiInProjection == null && seat!=null && projection!=null)
+            {
+                error += Messages.SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION +  "   ";
             }
 
             if (error != null)
@@ -77,10 +109,20 @@ namespace WinterWorkShop.Cinema.Domain.Services
             }
             _ticketsRepository.Save();
 
+            var result = await _ticketsRepository.GetByIdAsync(insertedTicket.Id);
+            if (result == null)
+            {
+                return new GenericResult<TicketDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.TICKET_GET_BY_ID
+                };
+            }
+
             return new GenericResult<TicketDomainModel>
             {
                 IsSuccessful = true,
-                Data = createTicketDomainModel(insertedTicket)
+                Data = createTicketDomainModel(result)
             };
         }
 
@@ -97,13 +139,20 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 };
             }
 
-           var deletedTicket = _ticketsRepository.Delete(id);
+            var deletedTicket = _ticketsRepository.Delete(id);
+            if(deletedTicket == null)
+            {
+                return new GenericResult<TicketDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.TICKET_DELTE_ERROR
+                };
+            }
             _ticketsRepository.Save();
 
             return new GenericResult<TicketDomainModel>
             {
-                IsSuccessful = true,
-                Data = createTicketDomainModel(deletedTicket)
+                IsSuccessful = true
             };
         }
 
@@ -168,7 +217,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 Created = ticket.Created,
                 Id = ticket.Id,
-                ProjectionId = ticket.ProjectionId,
                 Projection = new ProjectionDomainModel
                 {
                     Id = ticket.Projection.Id,
@@ -180,7 +228,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Duration = ticket.Projection.Duration
                     
                 },
-                SeatId = ticket.SeatId,
                 Seat = new SeatDomainModel
                 {
                     AuditoriumId = ticket.Seat.AuditoriumId,
@@ -188,7 +235,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Number = ticket.Seat.Number,
                     Row = ticket.Seat.Row
                 },
-                UserId = ticket.UserId,
                 User = new UserDomainModel
                 {
                     Id = ticket.User.Id,
