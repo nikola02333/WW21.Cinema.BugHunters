@@ -36,7 +36,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             var user = await _usersRepository.GetByIdAsync(ticketToCreate.UserId);
             if (user == null)
             {
-                error += Messages.USER_GET_BY_ID + "\n";
+                error += Messages.USER_ID_NULL + "\n";
             }
 
             var projection = await _projectionsRepository.GetByIdAsync(ticketToCreate.ProjectionId);

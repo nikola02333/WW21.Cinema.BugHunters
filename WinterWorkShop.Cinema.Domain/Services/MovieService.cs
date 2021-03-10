@@ -19,18 +19,21 @@ namespace WinterWorkShop.Cinema.Domain.Services
             _moviesRepository = moviesRepository;
         }
 
-        public async Task<IEnumerable<MovieDomainModel>> GetAllMoviesAsync(bool? isCurrent)
+        public async Task<GenericResult<MovieDomainModel>> GetAllMoviesAsync(bool? isCurrent)
         {
-            var data = await _moviesRepository.GetCurrentMoviesAsync();
+            var allMovies = await _moviesRepository.GetCurrentMoviesAsync();
 
-            if (data == null)
+            if (allMovies == null)
             {
-                return null;
+                return new GenericResult<MovieDomainModel>
+                {
+                   DataList= null
+                };
             }
 
             List<MovieDomainModel> result = new List<MovieDomainModel>();
             MovieDomainModel model;
-            foreach (var item in data)
+            foreach (var item in allMovies)
             {
                 model = new MovieDomainModel
                 {
@@ -43,7 +46,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 result.Add(model);
             }
 
-            return result;
+            return new GenericResult<MovieDomainModel>
+            { 
+                IsSuccessful= true,
+                 DataList= result
+            };
 
         }
 
@@ -94,7 +101,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 return new GenericResult<MovieDomainModel>
                 {
                     IsSuccessful = false,
-                    ErrorMessage = Messages.MOVIE_DOES_NOT_EXIST
+                    ErrorMessage = Messages.MOVIE_CREATION_ERROR
                 };
             }
 
@@ -136,7 +143,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 return new GenericResult<MovieDomainModel>
                 {
                     IsSuccessful = false,
-                    ErrorMessage = Messages.MOVIE_DOES_NOT_EXIST
+                    ErrorMessage = Messages.MOVIE_UPDATE_ERROR
                 };
             }
             _moviesRepository.Save();
@@ -170,7 +177,16 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     ErrorMessage = Messages.MOVIE_DOES_NOT_EXIST
                 };
             }
-            _moviesRepository.Delete(id);
+           var moveDeleted =  _moviesRepository.Delete(id);
+
+            if(moveDeleted ==null)
+            {
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage= Messages.MOVIE_DELETE_ERROR
+                };
+            }
 
             _moviesRepository.Save();
 
