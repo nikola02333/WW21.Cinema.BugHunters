@@ -33,6 +33,28 @@ namespace WinterWorkShop.Cinema.API.Controllers
             return Ok(ticketDomainModels.DataList);
         }
 
+        [HttpGet]
+        [Route("{id:guid}")]
+        public async Task<ActionResult<GenericResult<TicketDomainModel>>> GetByIdAsync(Guid id)
+        {
+            GenericResult<TicketDomainModel> ticketDomainModels;
+
+            ticketDomainModels = await _ticketService.GetTicketByIdAsync(id);
+
+            if (!ticketDomainModels.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = ticketDomainModels.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
+            return Ok(ticketDomainModels);
+        }
+
         [HttpPost]
         public async Task<ActionResult<GenericResult<TicketDomainModel>>> PostAsync([FromBody] Models.CreateTicketModel ticketModel)
         {
@@ -70,6 +92,41 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, errorResponse);
             }
             return CreatedAtAction("GetById", new { Id = createTicket.Data.Id }, createTicket.Data);
+        }
+
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        public async Task<ActionResult> Delete(Guid id)
+        {
+            GenericResult<TicketDomainModel> deletedticket;
+
+            try
+            {
+                deletedticket = await _ticketService.DeleteTicketAsync(id);
+            }
+            catch (DbUpdateException e)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = e.InnerException.Message ?? e.Message,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
+            if (!deletedticket.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = deletedticket.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.InternalServerError
+                };
+
+                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, errorResponse);
+            }
+
+            return Accepted();
         }
     }
 }

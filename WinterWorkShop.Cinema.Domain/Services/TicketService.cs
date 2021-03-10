@@ -47,13 +47,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 _seatsRepository.Attach(seat);
             }
-            
 
-            var checkSeatiInProjection = await _seatsRepository.GetSeatInProjectionAuditoriumAsync(ticketToCreate.SeatId, ticketToCreate.ProjectionId);
-            if (checkSeatiInProjection == null )
-            {
-                error += Messages.SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION +  "   ";
-            }
+            
 
             var user = await _usersRepository.GetByIdAsync(ticketToCreate.UserId);
             if (user == null)
@@ -64,7 +59,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 _usersRepository.Attach(user);
             }
-            
 
             var projection = await _projectionsRepository.GetByIdAsync(ticketToCreate.ProjectionId);
             if (projection == null)
@@ -75,7 +69,12 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 _projectionsRepository.Attach(projection);
             }
-            
+
+            var checkSeatiInProjection = await _seatsRepository.GetSeatInProjectionAuditoriumAsync(ticketToCreate.SeatId, ticketToCreate.ProjectionId);
+            if (checkSeatiInProjection == null && seat!=null && projection!=null)
+            {
+                error += Messages.SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION +  "   ";
+            }
 
             if (error != null)
             {
@@ -109,10 +108,20 @@ namespace WinterWorkShop.Cinema.Domain.Services
             }
             _ticketsRepository.Save();
 
+            var result = await _ticketsRepository.GetByIdAsync(insertedTicket.Id);
+            if (result == null)
+            {
+                return new GenericResult<TicketDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.TICKET_GET_BY_ID
+                };
+            }
+
             return new GenericResult<TicketDomainModel>
             {
                 IsSuccessful = true,
-                Data = createTicketDomainModel(insertedTicket)
+                Data = createTicketDomainModel(result)
             };
         }
 
@@ -129,13 +138,20 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 };
             }
 
-           var deletedTicket = _ticketsRepository.Delete(id);
+            var deletedTicket = _ticketsRepository.Delete(id);
+            if(deletedTicket == null)
+            {
+                return new GenericResult<TicketDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.TICKET_DELTE_ERROR
+                };
+            }
             _ticketsRepository.Save();
 
             return new GenericResult<TicketDomainModel>
             {
-                IsSuccessful = true,
-                Data = createTicketDomainModel(deletedTicket)
+                IsSuccessful = true
             };
         }
 

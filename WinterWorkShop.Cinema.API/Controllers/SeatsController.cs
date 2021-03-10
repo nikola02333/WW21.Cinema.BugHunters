@@ -46,6 +46,17 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             seatDomainModels = await _seatService.ReservedSeatsAsync(id);
 
+            if (!seatDomainModels.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = seatDomainModels.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
             return Ok(seatDomainModels.DataList);
         }
 
@@ -56,6 +67,17 @@ namespace WinterWorkShop.Cinema.API.Controllers
             GenericResult<SeatDomainModel> seatDomainModels;
 
             seatDomainModels = await _seatService.GetByAuditoriumIdAsync(id);
+
+            if (!seatDomainModels.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = seatDomainModels.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
 
             return Ok(seatDomainModels.DataList);
         }
