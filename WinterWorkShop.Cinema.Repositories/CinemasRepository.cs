@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Data;
@@ -21,15 +22,10 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public Data.Cinema Delete(object id)
         {
-            var existing = _cinemaContext.Cinemas.Find(id);
-
-
-            if (existing == null)
-            {
-                return null;
-            }
+            Data.Cinema existing = _cinemaContext.Cinemas.Include(a=>a.Auditoriums).Where(c => c.Id ==(int)id).FirstOrDefault();
 
             var result = _cinemaContext.Cinemas.Remove(existing);
+
 
             return result.Entity;
         }

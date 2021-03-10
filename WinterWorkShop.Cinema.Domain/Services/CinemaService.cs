@@ -129,14 +129,24 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<CinemaDomainModel>> GetCinemaById(int id)
         {
-            var data = await _cinemasRepository.GetByIdAsync(id);
+            var cinema = await _cinemasRepository.GetByIdAsync(id);
+
+            if (cinema == null)
+            {
+                return new GenericResult<CinemaDomainModel>
+                {
+                    IsSuccessful = false,
+                   ErrorMessage= Messages.CINEMA_ID_NOT_FOUND
+                };
+
+            }
 
             CinemaDomainModel domainModel = new CinemaDomainModel
             {
-                Id = data.Id,
-                Address = data.Address,
-                CityName = data.CityName,
-                Name = data.Name
+                Id = cinema.Id,
+                Address = cinema.Address,
+                CityName = cinema.CityName,
+                Name = cinema.Name
 
             };
 

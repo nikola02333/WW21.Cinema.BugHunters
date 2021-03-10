@@ -18,10 +18,11 @@ namespace WinterWorkShop.Cinema.API.Controllers
     public class CinemasController : ControllerBase
     {
         private readonly ICinemaService _cinemaService;
-
-        public CinemasController(ICinemaService cinemaService)
+        private readonly IAuditoriumService _auditoriumService;
+        public CinemasController(ICinemaService cinemaService,IAuditoriumService auditoriumService)
         {
             _cinemaService = cinemaService;
+            _auditoriumService = auditoriumService;
         }
 
         /// <summary>
@@ -37,7 +38,15 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             if (!result.IsSuccessful)
             {
-                return BadRequest(result.ErrorMessage);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = result.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+
+
+                return BadRequest(errorResponse);
             }
 
             return Ok(result.DataList);
@@ -51,22 +60,72 @@ namespace WinterWorkShop.Cinema.API.Controllers
             var response =await _cinemaService.GetCinemaById(id);
             if (!response.IsSuccessful)
             {
-                return NotFound(response.ErrorMessage);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = response.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+
+
+                return BadRequest(errorResponse);
             }
             return Ok(response.Data);
         }
 
         [HttpPost]
         [Route("Create")]
-        public async Task<IActionResult> CreateCinemaAsync([FromBody] CinemaDomainModel cinema)
+        public async Task<IActionResult> CreateCinemaAsync([FromBody] CreateCinemaModel cinema)
         {
-
+            CinemaDomainModel cinemaModel = new CinemaDomainModel
+            {
+                Address = cinema.Address,
+                CityName = cinema.CityName,
+                Name = cinema.Name
+            };
            
-            var insertedCinema = await _cinemaService.AddCinemaAsync(cinema);
+            var insertedCinema = await _cinemaService.AddCinemaAsync(cinemaModel);
             if (!insertedCinema.IsSuccessful)
             {
-                return BadRequest(insertedCinema.ErrorMessage);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = insertedCinema.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+
+
+                return BadRequest(errorResponse);
             }
+
+            if (cinema.createAuditoriumModel != null)
+            {
+                var auditoriumDomainModel = new AuditoriumDomainModel
+                {
+                    CinemaId = insertedCinema.Data.Id,
+                    Name = cinema.createAuditoriumModel.auditName,
+
+
+                };
+
+                var auditorium = await _auditoriumService.CreateAuditorium(auditoriumDomainModel, cinema.createAuditoriumModel.seatRows, cinema.createAuditoriumModel.numberOfSeats);
+
+                if (!auditorium.IsSuccessful)
+                {
+                    ErrorResponseModel errorResponse = new ErrorResponseModel
+                    {
+                        ErrorMessage = insertedCinema.ErrorMessage,
+                        StatusCode = System.Net.HttpStatusCode.BadRequest
+                    };
+
+
+
+                    return BadRequest(errorResponse);
+
+                }
+            }
+           
+
 
             return CreatedAtAction(nameof(GetCinemaById),
                 new { Id = insertedCinema.Data.Id },
@@ -75,15 +134,35 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
 
         [HttpDelete]
-        [Route("Delete/{id:int}")]
+        [Route("Delete/{id}")]
         public ActionResult DeleteCinema(int id)
         {
-            
+
+            if (id.GetType() !=typeof(int))
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = "Error",
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
             var result = _cinemaService.DeleteCinema(id);
+
 
             if (!result.IsSuccessful)
             {
-                return BadRequest(result.ErrorMessage);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = result.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+
+
+                return BadRequest(errorResponse);
             }
 
 
@@ -93,14 +172,22 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult> UpdateMovie(int id, [FromBody] CinemaDomainModel updatedMovie)
+        public async Task<ActionResult> UpdateCinema(int id, [FromBody] CinemaDomainModel updatedMovie)
         {
             updatedMovie.Id = id;
 
             var result = await _cinemaService.UpdateCinema(updatedMovie);
             if (!result.IsSuccessful)
             {
-                return BadRequest(result.ErrorMessage);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = result.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+
+
+                return BadRequest(errorResponse);
             }
 
             return Accepted(result.Data);

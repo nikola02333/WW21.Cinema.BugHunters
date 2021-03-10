@@ -13,6 +13,7 @@ namespace WinterWorkShop.Cinema.Repositories
     {
         Task<IEnumerable<Movie>> GetCurrentMoviesAsync();
         Task<Movie> GetMovieByNameAsync(string movieName);
+        
     }
 
     public class MoviesRepository : IMoviesRepository

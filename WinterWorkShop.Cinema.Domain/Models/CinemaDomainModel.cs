@@ -15,6 +15,6 @@ namespace WinterWorkShop.Cinema.Domain.Models
 
         public string CityName { get; set; }
 
-
+        
     }
 }

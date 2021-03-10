@@ -16,10 +16,19 @@
         public const string AUDITORIUM_SEATS_CREATION_ERROR = "Error occured while creating seats for auditorium, please try again.";
         public const string AUDITORIUM_SAME_NAME = "Cannot create new auditorium, auditorium with same name alredy exist.";
         public const string AUDITORIUM_UNVALID_CINEMAID = "Cannot create new auditorium, auditorium with given cinemaId does not exist.";
+        public const string AUDITORIUM_GET_BY_ID_ERROR = "Auditorium doesn't exist.";
+        public const string AUDITORIUM_UPDATE_CINEMAID = "Cinema doesn't exist.";
+        public const string AUDITORIUM_UPDATE_ERROR = "Auditorium doesn't exist.";
+        public const string AUDITORIUM_NO_NAME = "Auditorium with this name doesn't exist";
+        
         #endregion
 
         #region Cinemas
         public const string CINEMA_GET_ALL_CINEMAS_ERROR = "Error occured while getting all cinemas, please try again";
+        public const string CINEMA_ID_NOT_FOUND = "Error occured while getting cinema by id";
+        public const string CINEMA_PROPERTIE_NAME_REQUIERED = "The cinema name cannot be longer than 50 characters.";
+        public const string CINEMA_PROPERTIE_CITY_NAME_REQUIERED = "The cinema city cannot be longer than 50 characters.";
+        public const string CINEMA_PROPERTIE_ADRESS_REQUIERED = "The cinema adress cannot be longer than 50 characters.";
         #endregion
 
         #region Movies        
@@ -31,6 +40,8 @@
         public const string MOVIE_GET_ALL_CURRENT_MOVIES_ERROR = "Error occured while getting current movies, please try again.";
         public const string MOVIE_GET_BY_ID = "Error occured while getting movie by Id, please try again.";
         public const string MOVIE_GET_ALL_MOVIES_ERROR = "Error occured while getting all movies, please try again.";
+        public const string MOVIE_DELETE_ERROR = "Error occured while deleting  movie.";
+        public const string MOVIE_UPDATE_ERROR = "Error occured while updating  movie.";
         #endregion
 
         #region Projections
@@ -42,8 +53,11 @@
         #endregion
 
         #region Seats
+        public const string SEATS_IN_AUDITORIUM = "There are no seats in given auditorium.";
         public const string SEAT_GET_ALL_SEATS_ERROR = "Error occured while getting all seats, please try again.";
         public const string SEAT_GET_BY_ID = "Error occured while getting seat by Id, please try again.";
+        public const string SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION = "Error occured becouse Id of seat is not in the auditorium for the given projection";
+        public const string SEAT_RESERVED = "Seat is reservet for selected projection";
         #endregion
 
         #region Users
@@ -51,7 +65,7 @@
         public const string USER_NAME_REQUIRED = "User require name.";
         public const string USER_USERNAME_REQUIRED = "User require username.";
         public const string USER_LASTNAME_REQUIRED = "User require lastname.";
-        public const string USER_GET_BY_ID = "Error occured while getting user by Id, please try again.";
+        public const string USER_ID_NULL = "Error occured while getting user by Id, please try again.";
         public const string USER_CREATION_ERROR = "Error occured while creating new user, please try again.";
         public const string USER_CREATION_ERROR_USERNAME_EXISTS = "Error occured while creating new user, username exists.";
         #endregion
@@ -61,6 +75,7 @@
         public const string TICKET_DOES_NOT_EXIST = "Ticket does not exist.";
         public const string TICKET_CREATION_ERROR = "Error occured while creating new ticket, please try again.";
         public const string TICKET_GET_ALL_TICKETS_ERROR = "Error occured while getting all tickets, please try again.";
+        public const string TICKET_DELTE_ERROR = "Error occured while deleting ticket, please try again.";
         #endregion
     }
 }
