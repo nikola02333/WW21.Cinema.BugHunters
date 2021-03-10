@@ -47,12 +47,13 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("current")]
         public async Task<ActionResult<IEnumerable<Movie>>> GetAllAsync()
         {
-            IEnumerable<MovieDomainModel> movieDomainModels;
+            
+            GenericResult<MovieDomainModel> movieDomainModels;
 
             movieDomainModels = await _movieService.GetAllMoviesAsync(true);
 
            
-            return Ok(movieDomainModels);
+            return Ok(movieDomainModels.DataList);
         }
 
      
@@ -176,7 +177,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return BadRequest(errorResponse);
             }
 
-            if (deletedMovie == null)
+            if (!deletedMovie.IsSuccessful)
             {
                 ErrorResponseModel errorResponse = new ErrorResponseModel
                 {

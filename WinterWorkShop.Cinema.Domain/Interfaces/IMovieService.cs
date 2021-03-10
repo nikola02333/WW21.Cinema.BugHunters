@@ -9,7 +9,7 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
 {
     public interface IMovieService
     {
-        Task<IEnumerable<MovieDomainModel>> GetAllMoviesAsync(bool? isCurrent);
+        Task<GenericResult<MovieDomainModel>> GetAllMoviesAsync(bool? isCurrent);
        
         Task<GenericResult<MovieDomainModel>> GetMovieByIdAsync(Guid id);
 

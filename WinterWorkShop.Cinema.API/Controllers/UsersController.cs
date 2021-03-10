@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,23 +40,31 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("GetById/{id}")]
         public async Task<ActionResult<UserDomainModel>> GetbyIdAsync(Guid id)
         {
-            GenericResult<UserDomainModel> result;
+            GenericResult<UserDomainModel> user;
 
-            result = await _userService.GetUserByIdAsync(id);
+            user = await _userService.GetUserByIdAsync(id);
 
-            if (!result.IsSuccessful)
+            if (!user.IsSuccessful)
             {
-                return NotFound(Messages.USER_NOT_FOUND);
-            }
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = user.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
 
-            return Ok(result.Data);
+                return BadRequest(errorResponse);
+            }
+            return Ok(user.Data);
         }
        
         [HttpPost]
         [Route("Create")]
         public async Task<ActionResult<UserDomainModel>> CreateUserAsync(CreateUserModel createUser)
         {
-
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }    
             var userToCreate = new UserDomainModel
             {
                 FirstName = createUser.FirstName,
@@ -63,11 +72,33 @@ namespace WinterWorkShop.Cinema.API.Controllers
                  Role= createUser.Role,
                   UserName= createUser.UserName,
             };
-            var user = await _userService.CreateUserAsync(userToCreate);
 
-            if(!user.IsSuccessful)
+
+            GenericResult<UserDomainModel> user;
+            try
             {
-                return BadRequest(user.ErrorMessage);
+              user = await _userService.CreateUserAsync(userToCreate);
+            }
+            catch (DbUpdateException e)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = e.InnerException.Message ?? e.Message,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
+            if (!user.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = user.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
             }
 
             return CreatedAtAction("GetById", new { Id= user.Data.Id }, user.Data);
@@ -77,13 +108,31 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("Search/{username}")]
         public async Task<ActionResult<UserDomainModel>> GetbyUserNameAsync(string username)
         {
+            if(String.IsNullOrEmpty(username))
+            {
+                //return BadRequest(Messages.USER_NOT_FOUND);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = Messages.USER_NOT_FOUND,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+                return BadRequest(errorResponse);
+
+            }
+
             GenericResult<UserDomainModel> user;
 
             user = await _userService.GetUserByUserNameAsync(username);
 
             if (!user.IsSuccessful)
             {
-                return NotFound(Messages.USER_NOT_FOUND);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = user.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
             }
 
             return Ok(user.Data);
@@ -96,17 +145,26 @@ namespace WinterWorkShop.Cinema.API.Controllers
         {
             if(userId == null || userId == Guid.Empty)
             {
-                return BadRequest();
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = Messages.USER_ID_NULL,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+                return BadRequest(errorResponse);
             }
 
+            var user = await _userService.DeleteUserAsync(userId);
 
-            var result = await _userService.DeleteUserAsync(userId);
-
-           if(!result.IsSuccessful)
+            if (!user.IsSuccessful)
             {
-                return BadRequest(result.ErrorMessage);
-            }
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = user.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
 
+                return BadRequest(errorResponse);
+            }
             return Accepted();
         }
 
@@ -116,7 +174,17 @@ namespace WinterWorkShop.Cinema.API.Controllers
         {
             if (userId == null)
             {
-                return BadRequest();
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = Messages.USER_ID_NULL,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+                return BadRequest(errorResponse);
+            }
+            if(!ModelState.IsValid)
+            {
+               
+                return BadRequest(ModelState);
             }
 
             UserDomainModel userUpdate = new UserDomainModel
@@ -126,11 +194,17 @@ namespace WinterWorkShop.Cinema.API.Controllers
                   LastName = userToUpdate.LastName,
                    Role= userToUpdate.Role
             };
-            var result = await _userService.UpdateUserAsync(userId, userUpdate);
+            var user = await _userService.UpdateUserAsync(userId, userUpdate);
 
-            if (!result.IsSuccessful)
+            if (!user.IsSuccessful)
             {
-                return BadRequest(result.ErrorMessage);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = user.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
             }
 
             return Accepted();

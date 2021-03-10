@@ -61,6 +61,15 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
 
             var userResult = await _usersRepository.InsertAsync(user);
+
+            if(userResult == null)
+            {
+                return new GenericResult<UserDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage= Messages.USER_CREATION_ERROR
+                };
+            }
             _usersRepository.SaveAsync();
 
 
