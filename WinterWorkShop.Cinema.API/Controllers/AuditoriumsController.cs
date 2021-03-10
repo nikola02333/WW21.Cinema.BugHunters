@@ -106,7 +106,15 @@ namespace WinterWorkShop.Cinema.API.Controllers
             var response = await _auditoriumService.GetByIdAsync(id);
             if (!response.IsSuccessful)
             {
-                return NotFound(response.ErrorMessage);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = response.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+
+
+                return BadRequest(errorResponse);
             }
 
             return Ok(response.Data);
@@ -117,6 +125,19 @@ namespace WinterWorkShop.Cinema.API.Controllers
         public async Task<ActionResult<GenericResult<AuditoriumDomainModel>>> Delete(int id)
         {
             var result= await _auditoriumService.DeleteAsync(id);
+
+            if (!result.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = result.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+
+
+                return BadRequest(errorResponse);
+            }
 
             return Ok(result.Data);
         }
