@@ -12,7 +12,7 @@ using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class SeatsController : ControllerBase
@@ -29,18 +29,57 @@ namespace WinterWorkShop.Cinema.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetAsync()
+        public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetAllAsync()
         {
-            IEnumerable<SeatDomainModel> seatDomainModels;
-            
+            GenericResult<SeatDomainModel> seatDomainModels;
+
             seatDomainModels = await _seatService.GetAllAsync();
 
-            if (seatDomainModels == null)
+            return Ok(seatDomainModels.DataList);
+        }
+
+        [HttpGet]
+        [Route("reservedByProjectionId/{id:guid}")]
+        public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetReservedSeatsAsync(Guid id)
+        {
+            GenericResult<SeatDomainModel> seatDomainModels;
+
+            seatDomainModels = await _seatService.ReservedSeatsAsync(id);
+
+            if (!seatDomainModels.IsSuccessful)
             {
-                seatDomainModels = new List<SeatDomainModel>();
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = seatDomainModels.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
             }
 
-            return Ok(seatDomainModels);
+            return Ok(seatDomainModels.DataList);
+        }
+
+        [HttpGet]
+        [Route("byAuditoriumId/{id:int}")]
+        public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetAllByAuditoriumIdAsync(int id)
+        {
+            GenericResult<SeatDomainModel> seatDomainModels;
+
+            seatDomainModels = await _seatService.GetByAuditoriumIdAsync(id);
+
+            if (!seatDomainModels.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = seatDomainModels.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
+            return Ok(seatDomainModels.DataList);
         }
     }
 }

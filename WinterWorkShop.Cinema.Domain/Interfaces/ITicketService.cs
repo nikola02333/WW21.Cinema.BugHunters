@@ -19,5 +19,6 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
 
         Task<GenericResult<TicketDomainModel>> DeleteTicketAsync(Guid id);
 
+        
     }
 }
