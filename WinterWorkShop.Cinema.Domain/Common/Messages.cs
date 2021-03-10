@@ -68,6 +68,7 @@
 
         #region Ticket       
         public const string TICKET_GET_BY_ID = "Error occured while getting ticket by Id, please try again.";
+        public const string TICKET_ID_NULL = "Error occured becouse Id field is empty or null.";
         public const string TICKET_DOES_NOT_EXIST = "Ticket does not exist.";
         public const string TICKET_CREATION_ERROR = "Error occured while creating new ticket, please try again.";
         public const string TICKET_GET_ALL_TICKETS_ERROR = "Error occured while getting all tickets, please try again.";

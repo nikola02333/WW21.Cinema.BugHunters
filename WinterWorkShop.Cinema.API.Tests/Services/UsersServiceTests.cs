@@ -27,7 +27,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         }
 
 
-        [TestMethod]
+        
         public async Task GetByUserNameAsync_Returns_User()
         {
             var userNameToFind = "nikola023";

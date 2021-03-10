@@ -4,7 +4,7 @@ using System.Text;
 
 namespace WinterWorkShop.Cinema.Domain.Models
 {
-    public class CreateTicketModel
+    public class CreateTicketDomainModel
     {
         public Guid SeatId { get; set; }
 
