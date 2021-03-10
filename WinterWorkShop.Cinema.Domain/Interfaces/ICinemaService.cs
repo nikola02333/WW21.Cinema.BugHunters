@@ -17,6 +17,7 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
         Task<GenericResult<CinemaDomainModel>> GetCinemaById(int id);
 
         Task<GenericResult<CinemaDomainModel>> UpdateCinema(CinemaDomainModel updateCinema);
+    
 
 
     }
