@@ -47,8 +47,11 @@
         #endregion
 
         #region Seats
+        public const string SEATS_IN_AUDITORIUM = "There are no seats in given auditorium.";
         public const string SEAT_GET_ALL_SEATS_ERROR = "Error occured while getting all seats, please try again.";
         public const string SEAT_GET_BY_ID = "Error occured while getting seat by Id, please try again.";
+        public const string SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION = "Error occured becouse Id of seat is not in the auditorium for the given projection";
+        public const string SEAT_RESERVED = "Seat is reservet for selected projection";
         #endregion
 
         #region Users
@@ -66,6 +69,7 @@
         public const string TICKET_DOES_NOT_EXIST = "Ticket does not exist.";
         public const string TICKET_CREATION_ERROR = "Error occured while creating new ticket, please try again.";
         public const string TICKET_GET_ALL_TICKETS_ERROR = "Error occured while getting all tickets, please try again.";
+        public const string TICKET_DELTE_ERROR = "Error occured while deleting ticket, please try again.";
         #endregion
     }
 }

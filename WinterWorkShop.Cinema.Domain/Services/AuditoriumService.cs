@@ -45,7 +45,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Id = item.Id,
                     CinemaId = item.CinemaId,
                     Name = item.AuditoriumName,
-                    SeatsList= item.Seats.Select(seat => new SeatDomainModel
+                    SeatsList = item.Seats.Select(seat => new SeatDomainModel
                     {
                         Id = seat.Id,
                         AuditoriumId = seat.AuditoriumId,
@@ -106,8 +106,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
             }
 
             Auditorium insertedAuditorium = await _auditoriumsRepository.InsertAsync(newAuditorium);
-            _auditoriumsRepository.Save();
-
             if (insertedAuditorium == null)
             {
                 return new GenericResult<AuditoriumDomainModel>
@@ -116,6 +114,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     ErrorMessage = Messages.AUDITORIUM_CREATION_ERROR
                 };
             }
+            _auditoriumsRepository.Save();
 
             GenericResult<AuditoriumDomainModel> resultModel = new GenericResult<AuditoriumDomainModel>
             {

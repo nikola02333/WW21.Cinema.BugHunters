@@ -2,13 +2,20 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Data;
 
 namespace WinterWorkShop.Cinema.Repositories
 {
-    public interface ISeatsRepository : IRepository<Seat> { }
+    public interface ISeatsRepository : IRepository<Seat> 
+    {
+        Task<Seat> GetSeatInProjectionAuditoriumAsync(Guid seatId, Guid projectionId);
+        Task<IEnumerable<Seat>> GetReservedSeatsForProjectionAsync(Guid projectionId);
+        Task<IEnumerable<Seat>> GetSeatsByAuditoriumIdAsync(int auditoriumId);
+        void Attach(Seat seat);
+    }
     public class SeatsRepository : ISeatsRepository
     {
         private CinemaContext _cinemaContext;
@@ -60,6 +67,33 @@ namespace WinterWorkShop.Cinema.Repositories
         public void SaveAsync()
         {
             _cinemaContext.SaveChangesAsync();
+        }
+
+        public async Task<Seat> GetSeatInProjectionAuditoriumAsync(Guid seatId, Guid projectionId)
+        {
+            var seat =await _cinemaContext.Seats.Include(x => x.Auditorium).Include(x => x.Auditorium.Projections)
+                .Where(x => x.Id == (seatId) && x.Auditorium.Projections.Select(proj => proj.Id).SingleOrDefault() == projectionId).SingleOrDefaultAsync();
+
+            return seat;
+        }
+
+        public async Task<IEnumerable<Seat>> GetReservedSeatsForProjectionAsync(Guid projectionId)
+        {
+            var seats = await _cinemaContext.Seats.Where(x => x.Tickets.Any(x => x.Projection.Id == projectionId)).ToListAsync();
+
+            return seats;
+        }
+
+        public async Task<IEnumerable<Seat>> GetSeatsByAuditoriumIdAsync(int auditoriumId)
+        {
+            var seats =await _cinemaContext.Seats.Where(x => x.AuditoriumId == auditoriumId).ToListAsync();
+
+            return seats;
+        }
+
+        public void Attach(Seat seat)
+        {
+            _cinemaContext.Attach(seat);
         }
     }
 }
