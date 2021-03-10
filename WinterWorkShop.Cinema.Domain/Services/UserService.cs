@@ -22,7 +22,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<bool> CheckUsername(string usernameToCreate)
         {
-            var user = await _usersRepository.GetByUserName(usernameToCreate);
+            var user = await _usersRepository.GetByUserNameAsync(usernameToCreate);
             if(user == null)
             {
                 return true;
@@ -157,7 +157,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<UserDomainModel>> GetUserByUserNameAsync(string username)
         {
-            var data = await _usersRepository.GetByUserName(username.ToLower());
+            var data = await _usersRepository.GetByUserNameAsync(username.ToLower());
 
             if (data == null)
             {
