@@ -11,7 +11,8 @@ namespace WinterWorkShop.Cinema.Repositories
 {
     public interface IMoviesRepository : IRepository<Movie> 
     {
-        IEnumerable<Movie> GetCurrentMovies();
+        Task<IEnumerable<Movie>> GetCurrentMoviesAsync();
+        Task<Movie> GetMovieByNameAsync(string movieName);
     }
 
     public class MoviesRepository : IMoviesRepository
@@ -49,10 +50,10 @@ namespace WinterWorkShop.Cinema.Repositories
             return data;
         }
 
-        public IEnumerable<Movie> GetCurrentMovies()
+        public async Task<IEnumerable<Movie>> GetCurrentMoviesAsync()
         {
-            var data = _cinemaContext.Movies
-                .Where(x => x.Current);            
+            var data = await _cinemaContext.Movies
+                .Where(x => x.Current).ToListAsync();            
 
             return data;
         }
@@ -79,6 +80,11 @@ namespace WinterWorkShop.Cinema.Repositories
         public void SaveAsync()
         {
             _cinemaContext.SaveChangesAsync();
+        }
+
+        public async Task<Movie> GetMovieByNameAsync(string movieName)
+        {
+           return await _cinemaContext.Movies.Where(movie => movie.Title == movieName).FirstOrDefaultAsync();
         }
     }
 }

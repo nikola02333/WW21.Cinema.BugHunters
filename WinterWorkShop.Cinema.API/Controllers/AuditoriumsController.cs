@@ -14,7 +14,7 @@ using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AuditoriumsController : ControllerBase
@@ -31,7 +31,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AuditoriumDomainModel>>> GetAsync()
+        [Route("GetAll")]
+        public async Task<ActionResult<IEnumerable<AuditoriumDomainModel>>> GetAllAuditoriumsAsync()
         {
             IEnumerable<AuditoriumDomainModel> auditoriumDomainModels;
 
@@ -51,8 +52,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
         /// <param name="createAuditoriumModel"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = "admin")]
-        public async Task<ActionResult<AuditoriumDomainModel>> PostAsync(CreateAuditoriumModel createAuditoriumModel) 
+        [Route("Create")]
+        //[Authorize(Roles = "admin")]
+        public async Task<ActionResult<AuditoriumDomainModel>> CreateAuditoriumAsync(CreateAuditoriumModel createAuditoriumModel) 
         {
             if (!ModelState.IsValid)
             {
@@ -65,7 +67,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 Name = createAuditoriumModel.auditName
             };
 
-            CreateAuditoriumResultModel createAuditoriumResultModel;
+             GenericResult<AuditoriumDomainModel> createAuditoriumResultModel;
 
             try 
             {
@@ -93,7 +95,33 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return BadRequest(errorResponse);
             }
             
-            return Created("auditoriums//" + createAuditoriumResultModel.Auditorium.Id, createAuditoriumResultModel);
+            return Created("auditoriums//" + createAuditoriumResultModel.Data.Id, createAuditoriumResultModel);
         }
+
+
+        [HttpGet]
+        [Route("GetById/{id}")]
+        public async Task<ActionResult<GenericResult<AuditoriumDomainModel>>> GetById(int id)
+        {
+            var response = await _auditoriumService.GetByIdAsync(id);
+            if (!response.IsSuccessful)
+            {
+                return NotFound(response.ErrorMessage);
+            }
+
+            return Ok(response.Data);
+        }
+
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        public async Task<ActionResult<GenericResult<AuditoriumDomainModel>>> Delete(int id)
+        {
+            var result= await _auditoriumService.DeleteAsync(id);
+
+            return Ok(result.Data);
+        }
+
+
+       
     }
 }
