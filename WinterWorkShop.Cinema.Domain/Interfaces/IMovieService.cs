@@ -18,5 +18,9 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
         GenericResult<MovieDomainModel> UpdateMovie(MovieDomainModel updateMovie);
 
         Task<GenericResult<MovieDomainModel>> DeleteMovieAsync(Guid id);
+
+        Task<GenericResult<MovieDomainModel>> GetTopTenMoviesAsync();
+
+        Task<GenericResult<MovieDomainModel>> ActivateMovie(object movieId);
     }
 }

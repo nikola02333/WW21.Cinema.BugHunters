@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Data;
@@ -22,15 +23,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
         public async Task<GenericResult<MovieDomainModel>> GetAllMoviesAsync(bool? isCurrent)
         {
             var allMovies = await _moviesRepository.GetCurrentMoviesAsync();
-
-            if (allMovies == null)
-            {
-                return new GenericResult<MovieDomainModel>
-                {
-                   DataList= null
-                };
-            }
-
+           
             List<MovieDomainModel> result = new List<MovieDomainModel>();
             MovieDomainModel model;
             foreach (var item in allMovies)
@@ -42,6 +35,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Rating = item.Rating ?? 0,
                     Title = item.Title,
                     Year = item.Year
+                    
                 };
                 result.Add(model);
             }
@@ -58,11 +52,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
         {
             var movie = await _moviesRepository.GetByIdAsync(id);
 
-            if (movie == null)
+           if(movie == null)
             {
                 return new GenericResult<MovieDomainModel>
                 {
-                    IsSuccessful=false,
+                    IsSuccessful = false,
                     ErrorMessage = Messages.MOVIE_DOES_NOT_EXIST
                 };
             }
@@ -96,14 +90,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             var movie = await _moviesRepository.InsertAsync(movieToCreate);
 
-            if (movie == null)
-            {
-                return new GenericResult<MovieDomainModel>
-                {
-                    IsSuccessful = false,
-                    ErrorMessage = Messages.MOVIE_CREATION_ERROR
-                };
-            }
+          
 
             _moviesRepository.Save();
 
@@ -138,14 +125,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             
             var movieUpdated = _moviesRepository.Update(movieToUpdate);
 
-            if (movieUpdated == null)
-            {
-                return new GenericResult<MovieDomainModel>
-                {
-                    IsSuccessful = false,
-                    ErrorMessage = Messages.MOVIE_UPDATE_ERROR
-                };
-            }
+          
             _moviesRepository.Save();
 
             MovieDomainModel domainModel = new MovieDomainModel()
@@ -168,15 +148,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
         public async Task<GenericResult<MovieDomainModel>> DeleteMovieAsync(Guid id)
         {
             var movieToDelete =await _moviesRepository.GetByIdAsync(id);
-
-            if (movieToDelete == null)
-            {
-                return new GenericResult<MovieDomainModel>
-                {
-                    IsSuccessful = false,
-                    ErrorMessage = Messages.MOVIE_DOES_NOT_EXIST
-                };
-            }
+           
            var moveDeleted =  _moviesRepository.Delete(id);
 
             if(moveDeleted ==null)
@@ -205,6 +177,65 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 IsSuccessful = true,
                 Data =domainModel
             };
+        }
+
+        public async Task<GenericResult<MovieDomainModel>> GetTopTenMoviesAsync()
+        {
+            var topTenMovies =await _moviesRepository.GetTopTenMovies();
+
+            var movies = topTenMovies.Select(movie => new MovieDomainModel
+            {
+                 Current= movie.Current,
+                  Genre= movie.Genre,
+                   Id= movie.Id,
+                    Rating= movie.Rating?? 0,
+                     Title= movie.Title,
+                      Year= movie.Year
+            }).ToList();
+            return new GenericResult<MovieDomainModel> 
+            { 
+            DataList= movies
+            };
+        }
+
+        public async Task<GenericResult<MovieDomainModel>> ActivateMovie(object movieId)
+        {
+            var movie =await _moviesRepository.GetByIdAsync(movieId);
+
+            var dataTimeNow = DateTime.Now;
+
+            var upcomingProjections = movie.Projections.Where(project => project.ShowingDate > dataTimeNow)
+                .ToList();
+
+            if(upcomingProjections.Count > 0)
+            {
+               return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.MOVIE_ACTIVATE_DEACTIVATE_ERROR
+                };
+            }
+
+            movie.Current = !movie.Current;
+            _moviesRepository.Update(movie);
+
+            _moviesRepository.SaveAsync();
+
+            return new GenericResult<MovieDomainModel>
+            {
+            
+            IsSuccessful= true,
+            Data=  new MovieDomainModel
+            {
+                 Current= movie.Current,
+                  Genre= movie.Genre,
+                   Id= movie.Id,
+                    Rating= movie.Rating ?? 0,
+                     Title= movie.Title,
+                      Year= movie.Year
+            }
+            };
+
         }
     }
 }

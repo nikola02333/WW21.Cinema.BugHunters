@@ -571,10 +571,11 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var usersResult = ((AcceptedResult)result.Result).Value;
 
-
+            var StatusCode = (AcceptedResult)result.Result;
             //Assert
             Assert.IsInstanceOfType(result.Result, typeof(AcceptedResult));
-
+            Assert.AreEqual(expectedStatusCode, StatusCode.StatusCode);
+                
         }
     }
 }
