@@ -75,7 +75,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                  
             };
 
-            var insertedProjection = _projectionsRepository.InsertAsync(newProjection);
+            var insertedProjection = await _projectionsRepository.InsertAsync(newProjection);
 
             if (insertedProjection == null)
             {
@@ -85,7 +85,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     ErrorMessage = Messages.PROJECTION_CREATION_ERROR
                 };
             }
-
             _projectionsRepository.Save();
             CreateProjectionResultModel result = new CreateProjectionResultModel
             {
@@ -93,11 +92,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 ErrorMessage = null,
                 Projection = new ProjectionDomainModel
                 {
-                    Id = insertedProjection.Result.Id,
-                    AuditoriumId = insertedProjection.Result.AuditoriumId,
-                    MovieId = insertedProjection.Result.MovieId,
-                    ProjectionTime = insertedProjection.Result.ShowingDate,
-                    Duration = insertedProjection.Result.Duration
+                    Id = insertedProjection.Id,
+                    AuditoriumId = insertedProjection.AuditoriumId,
+                    MovieId = insertedProjection.MovieId,
+                    ProjectionTime = insertedProjection.ShowingDate,
+                    Duration = insertedProjection.Duration
                 }
             };
 

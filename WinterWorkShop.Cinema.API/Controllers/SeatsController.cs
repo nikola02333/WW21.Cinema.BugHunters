@@ -29,7 +29,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetAllAsync()
+        public async Task<ActionResult<GenericResult<SeatDomainModel>>> GetAllAsync()
         {
             GenericResult<SeatDomainModel> seatDomainModels;
 
@@ -40,8 +40,18 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("reservedByProjectionId/{id:guid}")]
-        public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetReservedSeatsAsync(Guid id)
+        public async Task<ActionResult<GenericResult<SeatDomainModel>>> GetReservedSeatsAsync(Guid id)
         {
+            if (id == null || id == Guid.Empty)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = Messages.SEAT_ID_NULL,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+                return BadRequest(errorResponse);
+            }
+
             GenericResult<SeatDomainModel> seatDomainModels;
 
             seatDomainModels = await _seatService.ReservedSeatsAsync(id);
@@ -62,7 +72,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("byAuditoriumId/{id:int}")]
-        public async Task<ActionResult<IEnumerable<SeatDomainModel>>> GetAllByAuditoriumIdAsync(int id)
+        public async Task<ActionResult<GenericResult<SeatDomainModel>>> GetAllByAuditoriumIdAsync(int id)
         {
             GenericResult<SeatDomainModel> seatDomainModels;
 
