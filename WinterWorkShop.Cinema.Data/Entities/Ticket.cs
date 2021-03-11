@@ -10,7 +10,7 @@ namespace WinterWorkShop.Cinema.Data.Entities
     {
         public Guid Id { get; set; }
 
-        public int price { get; set; }
+        public int Price { get; set; }
 
         public DateTime Created { get; set; }
 
