@@ -38,6 +38,7 @@
         public const string MOVIE_GET_ALL_MOVIES_ERROR = "Error occured while getting all movies, please try again.";
         public const string MOVIE_DELETE_ERROR = "Error occured while deleting  movie.";
         public const string MOVIE_UPDATE_ERROR = "Error occured while updating  movie.";
+        public const string MOVIE_ACTIVATE_DEACTIVATE_ERROR = "Error occured while activate-deactivate  movie.";
         #endregion
 
         #region Projections
