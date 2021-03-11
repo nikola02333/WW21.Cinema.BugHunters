@@ -10,7 +10,7 @@ namespace WinterWorkShop.Cinema.Repositories
 {
     public interface IUsersRepository : IRepository<User> 
     {
-        Task<User> GetByUserName(string username);
+        Task<User> GetByUserNameAsync(string username);
         void Attach(User user);
     }
     public class UsersRepository : IUsersRepository

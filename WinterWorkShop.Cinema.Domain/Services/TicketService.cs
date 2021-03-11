@@ -25,7 +25,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             _usersRepository = usersRepository;
             _projectionsRepository = projectionsRepository;
         }
-        public async Task<GenericResult<TicketDomainModel>> CreateTicketAsync(CreateTicketModel ticketToCreate)
+        public async Task<GenericResult<TicketDomainModel>> CreateTicketAsync(CreateTicketDomainModel ticketToCreate)
         {
             string error = null;
 
@@ -41,20 +41,17 @@ namespace WinterWorkShop.Cinema.Domain.Services
             }
             var seat = await _seatsRepository.GetByIdAsync(ticketToCreate.SeatId);
             if (seat==null){
-                error += Messages.SEAT_GET_BY_ID + "   ";
+                error += Messages.SEAT_GET_BY_ID;
             }
             else
             {
                 _seatsRepository.Attach(seat);
             }
 
-            
-
             var user = await _usersRepository.GetByIdAsync(ticketToCreate.UserId);
             if (user == null)
             {
-                error += Messages.USER_ID_NULL + " ";
-               
+                error += Messages.USER_ID_NULL;
             }
             else
             {
@@ -64,7 +61,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             var projection = await _projectionsRepository.GetByIdAsync(ticketToCreate.ProjectionId);
             if (projection == null)
             {
-                error += Messages.PROJECTION_GET_BY_ID + "\n";
+                error += Messages.PROJECTION_GET_BY_ID;
             }
             else
             {
@@ -74,7 +71,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             var checkSeatiInProjection = await _seatsRepository.GetSeatInProjectionAuditoriumAsync(ticketToCreate.SeatId, ticketToCreate.ProjectionId);
             if (checkSeatiInProjection == null && seat!=null && projection!=null)
             {
-                error += Messages.SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION +  "   ";
+                error += Messages.SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION;
             }
 
             if (error != null)
@@ -163,11 +160,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             if (tickets == null)
             {
-                return new GenericResult<TicketDomainModel>
-                {
-                    IsSuccessful = false,
-                    ErrorMessage = Messages.TICKET_GET_ALL_TICKETS_ERROR
-                };
+                return null;
             }
 
             List<TicketDomainModel> result = new List<TicketDomainModel>();

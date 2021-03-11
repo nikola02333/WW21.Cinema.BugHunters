@@ -20,7 +20,8 @@
         public const string AUDITORIUM_UPDATE_CINEMAID = "Cinema doesn't exist.";
         public const string AUDITORIUM_UPDATE_ERROR = "Auditorium doesn't exist.";
         public const string AUDITORIUM_NO_NAME = "Auditorium with this name doesn't exist";
-        
+        public const string AUDITORIUM_ID_NULL = "Error occured while getting user by Id, please try again.";
+
         #endregion
 
         #region Cinemas
@@ -54,6 +55,7 @@
         public const string SEAT_GET_BY_ID = "Error occured while getting seat by Id, please try again.";
         public const string SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION = "Error occured becouse Id of seat is not in the auditorium for the given projection";
         public const string SEAT_RESERVED = "Seat is reservet for selected projection";
+        public const string SEAT_ID_NULL = "Error occured becouse Id field is empty or null.";
         #endregion
 
         #region Users
@@ -68,6 +70,7 @@
 
         #region Ticket       
         public const string TICKET_GET_BY_ID = "Error occured while getting ticket by Id, please try again.";
+        public const string TICKET_ID_NULL = "Error occured becouse Id field is empty or null.";
         public const string TICKET_DOES_NOT_EXIST = "Ticket does not exist.";
         public const string TICKET_CREATION_ERROR = "Error occured while creating new ticket, please try again.";
         public const string TICKET_GET_ALL_TICKETS_ERROR = "Error occured while getting all tickets, please try again.";
