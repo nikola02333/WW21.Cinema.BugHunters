@@ -570,5 +570,163 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             Assert.AreEqual(expectedStatusCode, statusCode.StatusCode);
 
         }
+
+        [TestMethod]
+        public async Task DeleteMovieAsync_When_Id_Empty_Retunrs_BadRequest()
+        {
+            //Arrange
+            int expectedStatusCode = 400;
+            var expectedMessage = Messages.MOVIE_DELETE_ERROR;
+
+            var movieToDeleteModaimMode = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = true,
+                Data = new MovieDomainModel
+                {
+                    Current = false,
+                    Genre = "comedy",
+                    Rating = 8,
+                    Title = "New Movie",
+                    Year = 1994,
+                }
+            };
+
+
+            var result = await _moviesController.Delete(It.IsNotNull<Guid>());
+
+
+            var movieResult = ((BadRequestObjectResult)result).Value;
+
+           
+
+            var errorStatusCode = (BadRequestObjectResult)result;
+
+            //Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(expectedMessage, movieResult);
+            Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
+
+
+        }
+
+        [TestMethod]
+        public async Task DeleteMovieAsync_When_IsSuccessful_False_Returns_BadRequest()
+        {
+            //Arrange
+            int expectedStatusCode = 400;
+            var userId = Guid.NewGuid();
+
+            var movieToDeleteModel = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = false,
+                ErrorMessage = Messages.MOVIE_DELETE_ERROR
+            };
+            //Act
+
+            _mockMovieService.Setup(srvc => srvc.DeleteMovieAsync(userId)).ReturnsAsync(movieToDeleteModel);
+
+
+            var result = await _moviesController.Delete(userId);
+
+
+            var movieResultMessage = ((BadRequestObjectResult)result).Value;
+
+            var errorMessage = (ErrorResponseModel)movieResultMessage;
+            var statusCode = (BadRequestObjectResult)result;
+
+            //Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(expectedStatusCode, statusCode.StatusCode);
+            Assert.AreEqual(movieToDeleteModel.ErrorMessage, errorMessage.ErrorMessage);
+
+        }
+
+        [TestMethod]
+        public async Task DeleteMovieAsync_When_IsSuccessful_True_Returns_Accepted()
+        {
+            //Arrange
+            int expectedStatusCode = 202;
+            var userId = Guid.NewGuid();
+
+            var movieToDeleteModel = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = true
+                
+            };
+            //Act
+
+            _mockMovieService.Setup(srvc => srvc.DeleteMovieAsync(userId)).ReturnsAsync(movieToDeleteModel);
+
+
+            var result = await _moviesController.Delete(userId);
+
+            var movieResultMessage = ((AcceptedResult)result);
+
+
+            //Assert
+            Assert.IsInstanceOfType(result, typeof(AcceptedResult));
+           Assert.AreEqual(expectedStatusCode, movieResultMessage.StatusCode);
+
+        }
+        // DBException
+        // i ovaj drugi
+        [TestMethod]
+        public async Task ActivateMovie_When_Movie_Has_Upcoming_Projection_Returns_BadRequest()
+        {
+            var expectedStatusCode = 400;
+            var movieId = Guid.NewGuid();
+
+            var moviToReturn = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = false,
+                ErrorMessage = Messages.MOVIE_ACTIVATE_DEACTIVATE_ERROR
+            };
+            _mockMovieService.Setup(srvc => srvc.ActivateMovie(movieId)).ReturnsAsync(moviToReturn);
+
+            //Act
+            var result = await _moviesController.ActivateMovie(movieId);
+
+
+
+            var movieResultMessage = ((BadRequestObjectResult)result.Result).Value;
+
+            var message = (ErrorResponseModel)movieResultMessage;
+            var statusCode = (BadRequestObjectResult)result.Result;
+
+            //Assert
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(expectedStatusCode, statusCode.StatusCode);
+            Assert.AreEqual(moviToReturn.ErrorMessage, message.ErrorMessage);
+
+
+        }
+
+        [TestMethod]
+        public async Task ActivateMovie_When_Movie_MovieId_Empty_Returns_BadRequest()
+        {
+            var expectedStatusCode = 400;
+            var expectedMessage = Messages.MOVIE_DOES_NOT_EXIST;
+            var movieId = Guid.Empty;
+
+
+
+            //Act
+            var result = await _moviesController.ActivateMovie(movieId);
+
+
+
+            var movieResultMessage = ((BadRequestObjectResult)result.Result).Value;
+
+            var message = (ErrorResponseModel)movieResultMessage;
+            var statusCode = (BadRequestObjectResult)result.Result;
+
+            //Assert
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(expectedStatusCode, statusCode.StatusCode);
+            Assert.AreEqual(expectedMessage, message.ErrorMessage);
+
+
+        }
+
     }
 }

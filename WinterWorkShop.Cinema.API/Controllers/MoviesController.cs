@@ -178,23 +178,17 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         }
 
-       
+
         //[Authorize(Roles = "admin")]
         [HttpDelete]
         [Route("Delete/{id}")]
         public async Task<ActionResult> Delete(Guid id)
         {
-            if(id == null)
+
+            if (id == Guid.Empty)
             {
-                ErrorResponseModel errorResponse = new ErrorResponseModel
-                {
-                    ErrorMessage = Messages.MOVIE_GET_BY_ID,
-                    StatusCode = System.Net.HttpStatusCode.BadRequest
-                };
-
-                return BadRequest(errorResponse);
+                return BadRequest(Messages.MOVIE_DELETE_ERROR);
             }
-
             GenericResult<MovieDomainModel> deletedMovie;
 
             try
@@ -216,11 +210,11 @@ namespace WinterWorkShop.Cinema.API.Controllers
             {
                 ErrorResponseModel errorResponse = new ErrorResponseModel
                 {
-                    ErrorMessage = Messages.MOVIE_DOES_NOT_EXIST,
-                    StatusCode = System.Net.HttpStatusCode.InternalServerError
+                    ErrorMessage = Messages.MOVIE_DELETE_ERROR,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
 
-                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, errorResponse);
+                return BadRequest(errorResponse);
             }
 
             return Accepted();
@@ -230,14 +224,14 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("ActivateMovie/{id}")]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> ActivateMovie(Guid id)
         {
-            if (id == null)
+            if (id == Guid.Empty)
             {
                 ErrorResponseModel errorResponse = new ErrorResponseModel
                 {
                     ErrorMessage = Messages.MOVIE_DOES_NOT_EXIST,
-                    StatusCode = System.Net.HttpStatusCode.InternalServerError
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
-                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, errorResponse);
+                return BadRequest(errorResponse);
             }
            
             var movieActivated =await _movieService.ActivateMovie(id);
@@ -247,11 +241,11 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 ErrorResponseModel errorResponse = new ErrorResponseModel
                 {
                     ErrorMessage = movieActivated.ErrorMessage,
-                    StatusCode = System.Net.HttpStatusCode.BadGateway
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
-                return StatusCode((int)System.Net.HttpStatusCode.BadGateway, errorResponse);
+                return BadRequest(errorResponse);
             }
-            return Accepted(movieActivated.Data);
+            return Accepted();
         }
     }
 }
