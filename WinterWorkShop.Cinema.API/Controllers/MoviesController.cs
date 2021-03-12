@@ -247,5 +247,15 @@ namespace WinterWorkShop.Cinema.API.Controllers
             }
             return Accepted();
         }
+
+        [HttpGet]
+        [Route("SearchMoviesByTags")]
+        public async Task<ActionResult<GenericResult<MovieDomainModel>>> SearchMoviesByTags([FromQuery]object froQuery)
+        {
+            string query = ControllerContext.HttpContext.Request.QueryString.Value;
+
+            
+            return null;
+        }
     }
 }
