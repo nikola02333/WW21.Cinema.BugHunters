@@ -46,35 +46,37 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _ticketService = new TicketService(_mockTicketRepository.Object,_mockSeatsRepository.Object,_mockUsersRepository.Object,_mockProjectionsRepository.Object);
 
             _ticket = new Ticket
-            {
+        {
                 Created = DateTime.Now,
                 Id = Guid.NewGuid(),
                 Price = 300,
-                Projection = new Projection
-                {
-                    Id = Guid.NewGuid(),
+                    Projection = new Projection 
+                    {
+                        Id = Guid.NewGuid(),
                     Auditorium = new Auditorium { AuditoriumName = "Auditorium", Id = 1 },
                     Duration = 100,
                     Movie = new Movie { Id = Guid.NewGuid(), Title = "Film" },
                     ShowingDate = DateTime.Now,
-                },
-                Seat = new Seat
-                {
+                    },
+                    Seat = new Seat
+                    {
                     Id = Guid.NewGuid(),
                     AuditoriumId = 1,
                     Number = 2,
                     Row = 2
-                },
-                User = new User
-                {
+                    },
+                    User = new User
+                    {
                     Id = Guid.NewGuid(),
                     FirstName = "sasa",
                     LastName = "gataric",
-                    Role = "admin",
+                        Role = "admin",
                     UserName = "sasag"
-                }
+                    }
+                
             };
-            
+           
+
             _ticketList = new List<Ticket>();
             _ticketList.Add(_ticket);
 
@@ -190,12 +192,12 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
         [TestMethod]
         public async Task GetTicketByIdAsyn_When_Is_Null_Return_GenericResult_ErrorMessge()
-        {
+            {
             //Arrange
             var id = Guid.NewGuid();
             Ticket expectedTicket = null;
             var genericResult = new GenericResult<TicketDomainModel>
-            {
+                {
                 IsSuccessful = false,
                 ErrorMessage = Messages.TICKET_GET_BY_ID
             };
@@ -223,9 +225,12 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
             _mockTicketRepository.Setup(repo => repo.GetByIdAsync(id)).ReturnsAsync(_ticket);
             _mockTicketRepository.Setup(repo => repo.Delete(id)).Returns(_ticket);
+
+            
            
             //Act
             var resultAction = await _ticketService.DeleteTicketAsync(id);
+            _mockTicketRepository.Verify(repo => repo.Delete(id), Times.Once);
 
             //Assert
             Assert.IsNotNull(resultAction);
@@ -299,21 +304,21 @@ namespace WinterWorkShop.Cinema.Tests.Services
                         MovieId = _movieId,
                         Id = _createTicketDomainModel.ProjectionId,
                         AuditoriumId = 1,
-                        Duration = 100,
+                    Duration = 100,
                         AditoriumName = "Auditorium"
-                    },
+                },
                     Seat = new SeatDomainModel
-                    {
+                {
                         Id = _createTicketDomainModel.SeatId,
-                        AuditoriumId = 1,
-                        Number = 2,
-                        Row = 2
-                    },
+                    AuditoriumId = 1,
+                    Number = 2,
+                    Row = 2
+                },
                     User = new UserDomainModel
-                    {
+                {
                         Id = _createTicketDomainModel.UserId,
-                        FirstName = "sasa",
-                        LastName = "gataric",
+                    FirstName = "sasa",
+                    LastName = "gataric",
                         UserName = "sasag",
                         Role = "admin"
                         
@@ -363,11 +368,13 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
             //Act
             var resultAction = await _ticketService.CreateTicketAsync(_createTicketDomainModel);
-            
+            _mockTicketRepository.Verify(repo => repo.InsertAsync(It.IsAny<Ticket>()),Times.Once);
+
             //Assert
             Assert.IsNotNull(resultAction.Data);
             Assert.IsInstanceOfType(resultAction, typeof(GenericResult<TicketDomainModel>));
             Assert.AreEqual(genericResult.Data.Id, resultAction.Data.Id);
+            Assert.IsTrue(genericResult.IsSuccessful);
         }
 
         [TestMethod]
@@ -379,7 +386,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 IsSuccessful = false,
                 ErrorMessage = Messages.SEAT_RESERVED
             };
-
+            
             _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_reservedSeats);
 
             //Act
@@ -389,6 +396,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Assert.IsNotNull(resultAction);
             Assert.IsInstanceOfType(resultAction, typeof(GenericResult<TicketDomainModel>));
             Assert.AreEqual(genericResult.ErrorMessage, resultAction.ErrorMessage);
+            Assert.IsFalse(genericResult.IsSuccessful);
         }
 
         [TestMethod]
@@ -406,7 +414,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.SeatId)).ReturnsAsync(seatById);
             _mockUsersRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.UserId)).ReturnsAsync(_userById);
             _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_projectionById);
-            
+
             //Act
             var resultAction = await _ticketService.CreateTicketAsync(_createTicketDomainModel);
 
@@ -414,6 +422,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Assert.IsNotNull(resultAction);
             Assert.IsInstanceOfType(resultAction, typeof(GenericResult<TicketDomainModel>));
             Assert.AreEqual(genericResult.ErrorMessage, resultAction.ErrorMessage);
+            Assert.IsFalse(genericResult.IsSuccessful);
         }
 
         [TestMethod]
@@ -433,7 +442,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _mockUsersRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.UserId)).ReturnsAsync(userById);
             _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_projectionById);
 
-
+          
             //Act
             var resultAction = await _ticketService.CreateTicketAsync(_createTicketDomainModel);
 
@@ -441,6 +450,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Assert.IsNotNull(resultAction);
             Assert.IsInstanceOfType(resultAction, typeof(GenericResult<TicketDomainModel>));
             Assert.AreEqual(genericResult.ErrorMessage, resultAction.ErrorMessage);
+            Assert.IsFalse(genericResult.IsSuccessful);
         }
 
         [TestMethod]
@@ -468,6 +478,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Assert.IsNotNull(resultAction);
             Assert.IsInstanceOfType(resultAction, typeof(GenericResult<TicketDomainModel>));
             Assert.AreEqual(genericResult.ErrorMessage, resultAction.ErrorMessage);
+            Assert.IsFalse(genericResult.IsSuccessful);
         }
         [TestMethod]
         public async Task CreateTicketAsync_When_Seat_is_Not_In_Projection_Is_Null_Return_GenericResolt_ErrorMessage()
@@ -492,6 +503,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Assert.IsNotNull(resultAction);
             Assert.IsInstanceOfType(resultAction, typeof(GenericResult<TicketDomainModel>));
             Assert.AreEqual(genericResult.ErrorMessage, resultAction.ErrorMessage);
+            Assert.IsFalse(genericResult.IsSuccessful);
         }
 
         [TestMethod]
@@ -513,11 +525,13 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
             //Act
             var resultAction = await _ticketService.CreateTicketAsync(_createTicketDomainModel);
+            _mockTicketRepository.Verify(repo => repo.InsertAsync(It.IsAny<Ticket>()),Times.Once);
 
             //Assert
             Assert.IsNotNull(resultAction);
             Assert.IsInstanceOfType(resultAction, typeof(GenericResult<TicketDomainModel>));
             Assert.AreEqual(genericResult.ErrorMessage, resultAction.ErrorMessage);
+            Assert.IsFalse(genericResult.IsSuccessful);
         }
         [TestMethod]
         public async Task CreateTicketAsync_When_GetByIdAsync_Inserted_Is_Null_Return_GenericResolt_ErrorMessage()
@@ -563,6 +577,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Assert.IsNotNull(resultAction);
             Assert.IsInstanceOfType(resultAction, typeof(GenericResult<TicketDomainModel>));
             Assert.AreEqual(genericResult.ErrorMessage, resultAction.ErrorMessage);
+            Assert.IsFalse(genericResult.IsSuccessful);
         }
 
 
