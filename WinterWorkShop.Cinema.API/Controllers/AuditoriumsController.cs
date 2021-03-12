@@ -121,6 +121,29 @@ namespace WinterWorkShop.Cinema.API.Controllers
             return Ok(response.Data);
         }
 
+
+        [HttpGet]
+        [Route("GetAllByCinemaId/{id}")]
+        public async Task<ActionResult<GenericResult<AuditoriumDomainModel>>> GetAllByCinemaId(int id)
+        {
+            var response = await _auditoriumService.GetAllAuditoriumByCinemaId(id);
+
+            if (!response.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = response.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
+            return Ok(response.DataList);
+        }
+
+
+
         [HttpDelete]
         [Route("Delete/{id}")]
         public async Task<ActionResult<GenericResult<AuditoriumDomainModel>>> Delete(int id)
@@ -134,7 +157,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     ErrorMessage = result.ErrorMessage,
                     StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
-
 
 
                 return BadRequest(errorResponse);

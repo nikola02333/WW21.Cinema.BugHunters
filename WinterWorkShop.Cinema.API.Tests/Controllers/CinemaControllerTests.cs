@@ -187,7 +187,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task AddCinemaAsync_When_IsSuccesfull_Is_False_Returns_BadRrquest()
+        public async Task AddCinemaAsync_When_IsSuccesfull_Is_False_Returns_Bad_Request()
         {
             string expectedMessage = "Cinema alreday exists";
             int expectedStatusCode = 400;
@@ -515,7 +515,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
 
         [TestMethod]
-        public async Task UpdateCinema_When_Is_Successful_Returns_Bad_Request()
+        public async Task UpdateCinema_When_Is_Successful_False_Returns_Bad_Request()
         {
             int expectedStatusCode = 400;
             var cinemaId = default(int);
