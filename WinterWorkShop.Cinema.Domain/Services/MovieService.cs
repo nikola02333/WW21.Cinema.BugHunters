@@ -117,17 +117,27 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
-        public  GenericResult<MovieDomainModel> UpdateMovie(MovieDomainModel updateMovie) {
+        public async Task<GenericResult<MovieDomainModel>> UpdateMovie(MovieDomainModel updateMovie) 
+        {
+            var movieToUpdate =await _moviesRepository.GetByIdAsync(updateMovie.Id);
 
-            Movie movieToUpdate = new Movie()
+            if(movieToUpdate == null)
             {
-                Id = updateMovie.Id,
-                Title = updateMovie.Title,
-                Current = updateMovie.Current,
-                Year = updateMovie.Year,
-                Rating = updateMovie.Rating,
-                Genre= updateMovie.Genre
-            };
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.MOVIE_UPDATE_ERROR
+                };
+            }
+
+
+            movieToUpdate.Id = updateMovie.Id;
+            movieToUpdate.Title = updateMovie.Title;
+            movieToUpdate.Current = updateMovie.Current;
+            movieToUpdate.Year = updateMovie.Year;
+            movieToUpdate.Rating = updateMovie.Rating;
+            movieToUpdate.Genre = updateMovie.Genre;
+            
             
             var movieUpdated = _moviesRepository.Update(movieToUpdate);
 
