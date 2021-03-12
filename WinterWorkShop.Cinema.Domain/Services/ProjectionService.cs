@@ -40,7 +40,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     ProjectionTime = item.ShowingDate,
                     MovieTitle = item.Movie.Title,
                     AditoriumName = item.Auditorium.AuditoriumName,
-                    Duration = item.Duration
+                    Duration = item.Duration,
+                    Price = item.Price
                     
                 };
                 result.Add(model);
@@ -71,7 +72,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 MovieId = domainModel.MovieId,
                 AuditoriumId = domainModel.AuditoriumId,
                  ShowingDate = domainModel.ProjectionTime,
-                 Duration = domainModel.Duration
+                 Duration = domainModel.Duration,
+                 Price = domainModel.Price
                  
             };
 
@@ -96,7 +98,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     AuditoriumId = insertedProjection.AuditoriumId,
                     MovieId = insertedProjection.MovieId,
                     ProjectionTime = insertedProjection.ShowingDate,
-                    Duration = insertedProjection.Duration
+                    Duration = insertedProjection.Duration,
+                    Price = insertedProjection.Price
                 }
             };
 
