@@ -30,6 +30,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         /// </summary>
         /// <returns>List of cinemas</returns>
         [HttpGet]
+        [Route("all")]
         public async Task<ActionResult<GenericResult<CinemaDomainModel>>> GetAsync()
         {
            GenericResult<CinemaDomainModel> result;

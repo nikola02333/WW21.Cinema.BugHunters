@@ -105,7 +105,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
        
         [HttpGet]
-        [Route("Search/{username}")]
+        [Route("byusername/{username}")]
         public async Task<ActionResult<UserDomainModel>> GetbyUserNameAsync(string username)
         {
             if(String.IsNullOrEmpty(username))
