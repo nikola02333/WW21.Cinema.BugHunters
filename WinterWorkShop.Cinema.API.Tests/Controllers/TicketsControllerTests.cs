@@ -427,6 +427,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             // Act
             var result = await _ticketController.DeleteTicketAsync(Id);
             _mockTicketService.Verify(srvc => srvc.DeleteTicketAsync(Id), Times.Once);
+
             var resultResponse = (AcceptedResult)result.Result;
 
             //Assert
