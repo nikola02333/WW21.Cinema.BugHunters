@@ -25,6 +25,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         private CinemasController _cinemaController;
 
         private Mock<IAuditoriumService> _mockAuditoriumService;
+
         [TestInitialize]
 
         public void TestInit()
@@ -40,7 +41,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
         [TestMethod]
 
-        public async Task GetCinemas_Return_All_Cinemas()
+        public async Task GetAllCinemas_Returns_All_Cinemas()
         {
             //Arrange
             int expectedStatusCode = 200;
@@ -80,7 +81,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task GetCinemas_Return_New_List()
+        public async Task GetAllCinemas_Returns_New_List()
         {
             int expectedStatusCode = 200;
 
@@ -203,8 +204,15 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
               
                 Address = "Perleska 167",
                 CityName = "Paris",
-                Name = "Cineplex"
-               
+                Name = "Cineplex",
+                createAuditoriumModel = new CreateAuditoriumModel
+                {
+                    auditName = "New Auditorium",
+                    numberOfSeats = 2,
+                    seatRows = 2
+
+                }
+
             };
 
             _mockCinemaService.Setup(srvc => srvc.AddCinemaAsync(It.IsAny<CinemaDomainModel>()))
@@ -220,6 +228,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var errorStatusCode = (BadRequestObjectResult)result;
 
             var errorResult = (ErrorResponseModel)badObjectResult;
+
             //Assert
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
 
@@ -227,39 +236,72 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
         }
-
+        
         [TestMethod]
-        public async Task CreateCinemaAsync_When_Is_IsSuccessful_True_Returns_User()
+        public async Task CreateCinemaAsync_When_Is_IsSuccessful_True_Returns_Cinema()
         {
             int expectedStatusCode = 201;
 
-           
+            int cinemaumId = 1;
             var cinemaToCreate = new CreateCinemaModel
             {
-
-                
+                 
                 Address = "Perleska 167",
                 CityName = "Paris",
-                Name = "Cineplex"
+                Name = "Cineplex",
+                 
+
+                 createAuditoriumModel=new CreateAuditoriumModel
+                 { 
+                 
+                  auditName="New auditorium",
+                  numberOfSeats=2,
+                   seatRows=2
+                 }
+
             };
 
+         
 
             GenericResult<CinemaDomainModel> CreateCinemaResponseModel = new GenericResult<CinemaDomainModel>
             {
                 IsSuccessful = true,
-                Data = new CinemaDomainModel
-                {
-                  
-                    Address = cinemaToCreate.Address,
-                    CityName = cinemaToCreate.CityName,
-                    Name = cinemaToCreate.Name,
-                  
+                Data=new CinemaDomainModel
+                {   
+                    Id=cinemaumId,
+                    Address = "Perleska 167",
+                    CityName = "Paris",
+                    Name = "Cineplex",
                 }
+
             };
 
-            _mockCinemaService.Setup(srvc => srvc.AddCinemaAsync(It.IsAny<CinemaDomainModel>()))
-                             .ReturnsAsync(CreateCinemaResponseModel);
 
+
+            GenericResult<AuditoriumDomainModel> CreateAuditoriumResponseModel = new GenericResult<AuditoriumDomainModel>
+            {
+                IsSuccessful = true,
+                Data = new AuditoriumDomainModel
+                {
+                    Id = 1,
+                    CinemaId = CreateCinemaResponseModel.Data.Id,
+                    Name = cinemaToCreate.createAuditoriumModel.auditName,
+                   SeatsList = new List<SeatDomainModel>()
+
+
+                }
+
+            };
+
+            var inserted= _mockCinemaService.Setup(srvc => srvc.AddCinemaAsync(It.IsNotNull<CinemaDomainModel>()))
+                           .ReturnsAsync(CreateCinemaResponseModel);
+
+
+            
+
+            _mockAuditoriumService.Setup(srvc => srvc.CreateAuditorium(It.IsNotNull<AuditoriumDomainModel>(), cinemaToCreate.createAuditoriumModel.seatRows, cinemaToCreate.createAuditoriumModel.numberOfSeats)).ReturnsAsync(CreateAuditoriumResponseModel);
+
+          
             // Act
             var result = await _cinemaController.CreateCinemaAsync(cinemaToCreate);
 
@@ -271,9 +313,86 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             Assert.IsInstanceOfType(result, typeof(CreatedAtActionResult));
             Assert.AreEqual(expectedStatusCode, resultResponse.StatusCode);
         }
+     
+        [TestMethod]
+        public async Task CreateCinemaAsync_When_Auditorium_Result_Is_IsSuccessful_False_Returns_Bad_Request()
+        {
+            int expectedStatusCode = 400;
+
+            int cinemaumId = 1;
+            var cinemaToCreate = new CreateCinemaModel
+            {
+
+                Address = "Perleska 167",
+                CityName = "Paris",
+                Name = "Cineplex",
 
 
-      
+                createAuditoriumModel = new CreateAuditoriumModel
+                {
+
+                    auditName = "New auditorium",
+                    numberOfSeats = 2,
+                    seatRows = 2
+                }
+
+            };
+
+
+
+            GenericResult<CinemaDomainModel> CreateCinemaResponseModel = new GenericResult<CinemaDomainModel>
+            {
+                IsSuccessful = true,
+                Data = new CinemaDomainModel
+                {
+                    Id = cinemaumId,
+                    Address = "Perleska 167",
+                    CityName = "Paris",
+                    Name = "Cineplex",
+                }
+
+            };
+
+
+
+            GenericResult<AuditoriumDomainModel> CreateAuditoriumResponseModel = new GenericResult<AuditoriumDomainModel>
+            {
+                IsSuccessful = false,
+                Data = new AuditoriumDomainModel
+                {
+                    Id = 1,
+                    CinemaId = CreateCinemaResponseModel.Data.Id,
+                    Name = cinemaToCreate.createAuditoriumModel.auditName,
+                    SeatsList = new List<SeatDomainModel>()
+
+
+                }
+
+            };
+
+            var inserted = _mockCinemaService.Setup(srvc => srvc.AddCinemaAsync(It.IsNotNull<CinemaDomainModel>()))
+                           .ReturnsAsync(CreateCinemaResponseModel);
+
+
+
+
+            _mockAuditoriumService.Setup(srvc => srvc.CreateAuditorium(It.IsNotNull<AuditoriumDomainModel>(), cinemaToCreate.createAuditoriumModel.seatRows, cinemaToCreate.createAuditoriumModel.numberOfSeats)).ReturnsAsync(CreateAuditoriumResponseModel);
+
+
+            // Act
+            var result = await _cinemaController.CreateCinemaAsync(cinemaToCreate);
+
+
+            var resultResponse = (BadRequestObjectResult)result;
+            var cinemaCreated = resultResponse;
+
+            //Assert
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(expectedStatusCode, resultResponse.StatusCode);
+        }
+
+        
+
 
         [TestMethod]
         public async Task DeleteCinema_When_Called_Returns_Accepted()
@@ -287,7 +406,10 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 IsSuccessful = true,
                 Data = new CinemaDomainModel()
                 {
-                    Id = cinemaId
+                    Id = cinemaId,
+                    Address = "Perleska 167",
+                    CityName = "Paris",
+                    Name = "Cineplex",
                 }
             };
            
@@ -307,7 +429,9 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             Assert.AreEqual(expectedStatusCode, resultResponse.StatusCode);
         }
-      
+
+        
+
         [TestMethod]
         public async Task UpdateCinema_When_IsSuccessful_False_Returns_BadRequest()
         {
@@ -334,17 +458,16 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             // Act
             _mockCinemaService.Setup(srvc => srvc.UpdateCinema(It.IsAny<CinemaDomainModel>()))
                               .ReturnsAsync(UpdateCinemaResponseModel);
-            // Act
+         
             var result = await _cinemaController.UpdateCinema(userId,cinemaToUpdate);
 
-
-
             var badObjectResult = ((BadRequestObjectResult)result).Value;
-
 
             var errorStatusCode = (BadRequestObjectResult)result;
 
             var errorResult = (ErrorResponseModel)badObjectResult;
+
+
             //Assert
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
 
@@ -354,20 +477,14 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task UpdateUser_When_Called_Returns_Accepted()
+        public async Task UpdateCinema_When_Called_Returns_Accepted()
         {
             int expectedStatusCode = 202;
-            var userId = 1;
-
-
-            var updatedCinemaResult = new GenericResult<CinemaDomainModel>
-            {
-                IsSuccessful = true,
-            };
+            var cinemaId = 1;
 
             var cinemaToUpdate = new CinemaDomainModel
             {
-                Id = userId,
+                Id = cinemaId,
                 Address = "Perleska 167",
                 CityName = "Paris",
                 Name = "Cineplex"
@@ -375,18 +492,67 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             };
 
 
-            _mockCinemaService.Setup(srvc => srvc.UpdateCinema(It.IsAny<CinemaDomainModel>()))
+            var updatedCinemaResult = new GenericResult<CinemaDomainModel>
+            {
+                IsSuccessful = true,
+                Data = cinemaToUpdate
+            };
+
+            _mockCinemaService.Setup(srvc => srvc.UpdateCinema(cinemaToUpdate))
                             .ReturnsAsync(updatedCinemaResult);
 
             // Act
-            var result = await _cinemaController.UpdateCinema(userId,cinemaToUpdate);
+            var result = await _cinemaController.UpdateCinema(cinemaId,cinemaToUpdate);
 
-            var usersResult = ((AcceptedResult)result).Value;
+            var cinemaResult = ((AcceptedResult)result);
 
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(AcceptedResult));
 
+            Assert.IsInstanceOfType(cinemaResult,typeof(AcceptedResult));
+            
+        }
+
+
+        [TestMethod]
+        public async Task UpdateCinema_When_Is_Successful_Returns_Bad_Request()
+        {
+            int expectedStatusCode = 400;
+            var cinemaId = default(int);
+            var expectedErrorMessage = "Cinema not found";
+            var cinemaToUpdate = new CinemaDomainModel
+            {
+                Id = cinemaId,
+                Address = "Perleska 167",
+                CityName = "Paris",
+                Name = "Cineplex"
+
+            };
+
+
+            var updatedCinemaResult = new GenericResult<CinemaDomainModel>
+            {
+                IsSuccessful = false,
+                ErrorMessage = "Cinema not found"
+            };
+
+            _mockCinemaService.Setup(srvc => srvc.UpdateCinema(cinemaToUpdate))
+                            .ReturnsAsync(updatedCinemaResult);
+
+            // Act
+            var result = await _cinemaController.UpdateCinema(cinemaId, cinemaToUpdate);
+
+            var cinemaResult = ((BadRequestObjectResult)result).Value;
+           
+            var errorStatusCode = (BadRequestObjectResult)cinemaResult;
+
+            var errorResult = (ErrorResponseModel)cinemaResult;
+
+            //Assert
+
+            Assert.IsInstanceOfType(cinemaResult, typeof(BadRequestObjectResult));
+            Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
+            Assert.AreEqual(expectedErrorMessage, errorResult.ErrorMessage);
         }
 
     }

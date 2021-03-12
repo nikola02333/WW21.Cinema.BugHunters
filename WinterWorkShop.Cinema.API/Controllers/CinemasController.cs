@@ -105,7 +105,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     CinemaId = insertedCinema.Data.Id,
                     Name = cinema.createAuditoriumModel.auditName,
 
-
                 };
 
                 var auditorium = await _auditoriumService.CreateAuditorium(auditoriumDomainModel, cinema.createAuditoriumModel.seatRows, cinema.createAuditoriumModel.numberOfSeats);
@@ -118,14 +117,11 @@ namespace WinterWorkShop.Cinema.API.Controllers
                         StatusCode = System.Net.HttpStatusCode.BadRequest
                     };
 
-
-
                     return BadRequest(errorResponse);
 
                 }
             }
            
-
 
             return CreatedAtAction(nameof(GetCinemaById),
                 new { Id = insertedCinema.Data.Id },
