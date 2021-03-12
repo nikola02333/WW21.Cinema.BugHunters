@@ -147,7 +147,7 @@ namespace WinterWorkShop.Cinema.Data
 
             // Index
             modelBuilder.Entity<Movie>().HasIndex(i => new { i.Year, i.HasOscar });
-            modelBuilder.Entity<Movie>().HasIndex(i => i.Rating);
+            modelBuilder.Entity<Movie>().HasIndex(i => i.Title);
 
             modelBuilder.Entity<User>().HasIndex(i => i.UserName);
         }

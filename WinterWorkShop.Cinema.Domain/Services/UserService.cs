@@ -22,12 +22,24 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<bool> CheckUsername(string usernameToCreate)
         {
-           return await _usersRepository.CheckUsername(usernameToCreate);
+            var user = await _usersRepository.GetByUserName(usernameToCreate);
+            if(user == null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public async Task<GenericResult<UserDomainModel>> CreateUserAsync(UserDomainModel userToCreate)
         {
-        
+          if(userToCreate ==null)
+            {
+                return new GenericResult<UserDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage= Messages.USER_CREATION_ERROR
+                };
+            }
 
             var usernameExists =await CheckUsername(userToCreate.UserName.ToLower());
 
@@ -49,15 +61,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
 
             var userResult = await _usersRepository.InsertAsync(user);
-
-            if(userResult == null)
-            {
-                return new GenericResult<UserDomainModel>
-                {
-                    IsSuccessful = false,
-                    ErrorMessage= Messages.USER_CREATION_ERROR
-                };
-            }
             _usersRepository.SaveAsync();
 
 
@@ -101,13 +104,13 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<UserDomainModel>> GetAllAsync()
         {
-            var allUsers = await _usersRepository.GetAllAsync();
+            var data = await _usersRepository.GetAllAsync();
 
 
             GenericResult<UserDomainModel> result = new GenericResult<UserDomainModel>();
 
 
-            var items = allUsers.Select(item => new UserDomainModel
+            var items = data.Select(item => new UserDomainModel
             {
                 Id = item.Id,
                 FirstName = item.FirstName,
@@ -125,9 +128,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<UserDomainModel>> GetUserByIdAsync(Guid id)
         {
-            var user = await _usersRepository.GetByIdAsync(id);
+            var data = await _usersRepository.GetByIdAsync(id);
 
-            if (user == null)
+            if (data == null)
             {
                 return new GenericResult<UserDomainModel>
                 {
@@ -141,11 +144,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 IsSuccessful=true,
                 Data = new UserDomainModel
              {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                UserName = user.UserName,
-                Role = user.Role,
+                Id = data.Id,
+                FirstName = data.FirstName,
+                LastName = data.LastName,
+                UserName = data.UserName,
+                Role = data.Role,
             }
         };
 
@@ -154,9 +157,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<UserDomainModel>> GetUserByUserNameAsync(string username)
         {
-            var user = await _usersRepository.GetByUserNameAsync(username.ToLower());
+            var data = await _usersRepository.GetByUserName(username.ToLower());
 
-            if (user == null)
+            if (data == null)
             {
                 return new GenericResult<UserDomainModel>
                 {
@@ -169,11 +172,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 IsSuccessful=true,
                 Data =new UserDomainModel {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                UserName = user.UserName,
-                Role = user.Role
+                Id = data.Id,
+                FirstName = data.FirstName,
+                LastName = data.LastName,
+                UserName = data.UserName,
+                Role = data.Role
                 }
             };
 
@@ -199,7 +202,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
             userForUpdate.Role = userToUpdate.Role.ToLower();
 
             _usersRepository.Update(userForUpdate);
-
             _usersRepository.SaveAsync();
 
             return new GenericResult<UserDomainModel>

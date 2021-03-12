@@ -13,9 +13,6 @@ namespace WinterWorkShop.Cinema.Repositories
     {
         Task<IEnumerable<Movie>> GetCurrentMoviesAsync();
         Task<Movie> GetMovieByNameAsync(string movieName);
-
-        Task<IEnumerable<Movie>> GetTopTenMovies();
-
     }
 
     public class MoviesRepository : IMoviesRepository
@@ -48,8 +45,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public async Task<Movie> GetByIdAsync(object id)
         {
-         
-            var data = await _cinemaContext.Movies.Where(movie=> movie.Id ==(Guid)id) .Include(p => p.Projections).FirstOrDefaultAsync();
+            var data = await _cinemaContext.Movies.FindAsync(id);
 
             return data;
         }
@@ -57,7 +53,7 @@ namespace WinterWorkShop.Cinema.Repositories
         public async Task<IEnumerable<Movie>> GetCurrentMoviesAsync()
         {
             var data = await _cinemaContext.Movies
-                .Where(x => x.Current). Include(p => p.Projections).ToListAsync();            
+                .Where(x => x.Current).ToListAsync();            
 
             return data;
         }
@@ -90,14 +86,5 @@ namespace WinterWorkShop.Cinema.Repositories
         {
            return await _cinemaContext.Movies.Where(movie => movie.Title == movieName).FirstOrDefaultAsync();
         }
-
-        public async Task<IEnumerable<Movie>> GetTopTenMovies()
-        {
-            var topTenMovies =await _cinemaContext.Movies.OrderByDescending(m => m.Rating).Take(10).ToListAsync();
-
-            return topTenMovies;
-        }
-
-        
     }
 }

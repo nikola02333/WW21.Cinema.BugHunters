@@ -10,10 +10,7 @@ namespace WinterWorkShop.Cinema.Repositories
 {
     public interface IUsersRepository : IRepository<User> 
     {
-        Task<User> GetByUserNameAsync(string username);
-
-        Task<bool> CheckUsername(string usernameToCreate);
-        void Attach(User user);
+        Task<User> GetByUserName(string username);
     }
     public class UsersRepository : IUsersRepository
     {
@@ -44,7 +41,7 @@ namespace WinterWorkShop.Cinema.Repositories
             return await _cinemaContext.Users.FindAsync(id);
         }
 
-        public async Task<User> GetByUserNameAsync(string username)
+        public async Task<User> GetByUserName(string username)
         {
             var data = await _cinemaContext.Users.Where(x => x.UserName == username).SingleOrDefaultAsync();
 
@@ -63,7 +60,6 @@ namespace WinterWorkShop.Cinema.Repositories
         {
             _cinemaContext.SaveChanges();
         }
-        
 
         public User Update(User obj)
         {
@@ -75,22 +71,6 @@ namespace WinterWorkShop.Cinema.Repositories
         public void SaveAsync()
         {
             _cinemaContext.SaveChangesAsync();
-        }
-
-        public void Attach(User user)
-        {
-            _cinemaContext.Attach(user);
-        }
-
-        public async Task<bool> CheckUsername(string usernameToCreate)
-        {
-            var user =await _cinemaContext.Users.Where(user => user.UserName == usernameToCreate).FirstOrDefaultAsync();
-
-            if (user == null)
-            {
-                return true;
-            }
-            return false;
         }
     }
 }

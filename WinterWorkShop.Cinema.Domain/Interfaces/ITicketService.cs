@@ -13,12 +13,11 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
 
         Task<GenericResult<TicketDomainModel>> GetTicketByIdAsync(Guid id);
 
-        Task<GenericResult<TicketDomainModel>> CreateTicketAsync(CreateTicketDomainModel ticketToCreate);
+        Task<GenericResult<TicketDomainModel>> CreateTicketAsync(CreateTicketModel ticketToCreate);
 
         Task<GenericResult<TicketDomainModel>> UpdateTicketAsync(TicketDomainModel updatedTicket);
 
         Task<GenericResult<TicketDomainModel>> DeleteTicketAsync(Guid id);
 
-        
     }
 }
