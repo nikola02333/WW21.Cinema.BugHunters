@@ -85,7 +85,8 @@ namespace WinterWorkShop.Cinema.Repositories
         }
         public async Task<IEnumerable<Auditorium>> GetAllByCinemaIdAsync(int cinemaId)
         {
-            return await _cinemaContext.Auditoriums.Where(x => x.CinemaId == cinemaId).ToListAsync();
+            var data=await _cinemaContext.Auditoriums.Where(x => x.CinemaId == cinemaId).Include(x => x.Seats).ToListAsync();
+            return data;
         }
 
 
@@ -96,7 +97,6 @@ namespace WinterWorkShop.Cinema.Repositories
                 .Where(x => x.AuditoriumName.Equals(auditoriumName)
                             && x.CinemaId.Equals(cinemaId))
                 .ToListAsync();
-
 
 
             return data;

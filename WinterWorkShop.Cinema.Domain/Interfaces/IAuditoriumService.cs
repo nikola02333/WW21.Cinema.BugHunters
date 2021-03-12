@@ -13,7 +13,7 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
 
         Task<GenericResult<AuditoriumDomainModel>> CreateAuditorium(AuditoriumDomainModel domainModel, int numberOfRows, int numberOfSeats);
 
-       
+        Task<GenericResult<AuditoriumDomainModel>> GetAllAuditoriumByCinemaId(int id);
        Task<GenericResult<AuditoriumDomainModel>> DeleteAsync(int id);
         Task<GenericResult<AuditoriumDomainModel>> GetByIdAsync(int id);
 

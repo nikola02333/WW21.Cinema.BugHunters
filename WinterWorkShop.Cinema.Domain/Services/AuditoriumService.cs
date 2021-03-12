@@ -59,6 +59,48 @@ namespace WinterWorkShop.Cinema.Domain.Services
             return result;
         }
 
+
+        public async Task<GenericResult<AuditoriumDomainModel>> GetAllAuditoriumByCinemaId(int id)
+        {
+            var auditorium = await _auditoriumsRepository.GetAllByCinemaIdAsync(id);
+            if (auditorium == null)
+            {
+                return new GenericResult<AuditoriumDomainModel>
+                {
+                    ErrorMessage = Messages.AUDITORIUM_GET_BY_ID_ERROR,
+                    IsSuccessful = false
+                };
+            }
+
+            List<AuditoriumDomainModel> result = new List<AuditoriumDomainModel>();
+            AuditoriumDomainModel model;
+
+            foreach (var item in auditorium)
+            {
+                model = new AuditoriumDomainModel
+                {
+                    Id = item.Id,
+                    CinemaId = item.CinemaId,
+                    Name = item.AuditoriumName,
+                    SeatsList = item.Seats.Select(seat => new SeatDomainModel
+                    {
+                        Id = seat.Id,
+                        AuditoriumId = seat.AuditoriumId,
+                        Number = seat.Number,
+                        Row = seat.Row
+                    }).ToList()
+
+                };
+                result.Add(model);
+            }
+
+            return new GenericResult<AuditoriumDomainModel>
+            {
+                IsSuccessful = true,
+                DataList = result
+                
+            };
+        }
         public async Task<GenericResult<AuditoriumDomainModel>> CreateAuditorium(AuditoriumDomainModel domainModel, int numberOfRows, int numberOfSeats)
         {
             var cinema = await _cinemasRepository.GetByIdAsync(domainModel.CinemaId);
