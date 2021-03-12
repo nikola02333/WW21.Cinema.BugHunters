@@ -102,7 +102,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 Assert.IsNotNull(cinemaResult);
                 Assert.IsInstanceOfType(result, typeof(GenericResult<CinemaDomainModel>));
                 Assert.AreEqual(expectedCinemaResult.IsSuccessful, cinemaResult.IsSuccessful);
-                //Assert.AreEqual(expectedCinemaResult.DataList, cinemaResult.DataList);
+              
              
 
             }
