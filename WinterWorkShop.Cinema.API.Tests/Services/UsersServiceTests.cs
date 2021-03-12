@@ -97,7 +97,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
             _mockUserRepository.Setup(srvc => srvc.GetByUserNameAsync(userNameToFind)).ReturnsAsync(expectedUser);
 
-            //_mockUserRepository.Setup(srvc => srvc.CheckUsername(It.IsAny<string>())).Returns()
+           
             //Act
             var result = await _userService.GetUserByUserNameAsync(userNameToFind);
 
@@ -201,7 +201,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
         }
         [TestMethod]
-        public async Task GetByIdAsync_Returns_User()
+        public async Task GetUserByIdAsync_Returns_User()
         {
             var userId = Guid.NewGuid();
 
@@ -303,7 +303,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _mockUserRepository.Setup(srvc => srvc.InsertAsync(It.IsNotNull<User>())).ReturnsAsync(userToInsert);
 
             _mockUserRepository.Setup(srvc => srvc.CheckUsername(userToInsert.UserName)).ReturnsAsync(true);
-            //_mockUserRepository.Setup(srvc => srvc.CheckUsername())
+            
             //Act
 
             var result = await _userService.CreateUserAsync(userToCreate);
@@ -337,7 +337,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _mockUserRepository.Setup(srvc => srvc.InsertAsync(It.IsNotNull<User>())).ReturnsAsync(It.IsNotNull<User>());
 
             _mockUserRepository.Setup(srvc => srvc.CheckUsername(It.IsNotNull<string>())).ReturnsAsync(false);
-            //_mockUserRepository.Setup(srvc => srvc.CheckUsername())
+           
             //Act
 
 
@@ -351,6 +351,35 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
         }
 
+        [TestMethod]
+        public async Task CheckUsername_When_Username_Exists_Return_False()
+        {
+            var exptectedResult = false;
+            var username = "Nikola";
+            _mockUserRepository.Setup(srvc => srvc.CheckUsername(username)).ReturnsAsync(false);
+
+            //Act
+            var result =await _userService.CheckUsername(username);
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(exptectedResult, result);
+        }
+
+        [TestMethod]
+        public async Task CheckUsername_When_Username_Exists_Return_True()
+        {
+            var exptectedResult = true;
+            var username = "Nikola";
+            _mockUserRepository.Setup(srvc => srvc.CheckUsername(username)).ReturnsAsync(true);
+
+            //Act
+            var result =await _userService.CheckUsername(username);
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(exptectedResult, result);
+        }
 
         [TestMethod]
         public async Task CreateUserAsync_When_Called_Retunr_User_Creation_Error()
@@ -375,7 +404,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _mockUserRepository.Setup(srvc => srvc.InsertAsync(It.IsNotNull<User>())).ReturnsAsync(default(User));
 
             _mockUserRepository.Setup(srvc => srvc.CheckUsername(It.IsNotNull<string>())).ReturnsAsync(true);
-            //_mockUserRepository.Setup(srvc => srvc.CheckUsername())
+            
             //Act
 
 
@@ -390,7 +419,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         }
 
         [TestMethod]
-        public async Task Update_Returns_UpdatedUser()
+        public async Task UpdateUserAsync_Returns_UpdatedUser()
         {
             var userId = Guid.NewGuid();
 
@@ -423,6 +452,85 @@ namespace WinterWorkShop.Cinema.Tests.Services
             // Assert
             Assert.IsInstanceOfType(result.Data, typeof(UserDomainModel));
            
+
+        }
+
+        [TestMethod]
+        public async Task UpdateUserAsync_When_User_Id_Not_Found_Returns_IsSuccesful_False()
+        {
+            var userId = Guid.NewGuid();
+
+            var expectedMessage = Messages.USER_NOT_FOUND;
+            var isSuccesful = false;
+
+            var userToUpdate = new User
+            {
+                UserName = "Nikola",
+                Role = "admin"
+            };
+            var userToUpdateModel = new UserDomainModel
+            {
+
+                UserName = userToUpdate.UserName,
+                Role = "admin",
+                Id = userId,
+            };
+
+            _mockUserRepository.Setup(srvc => srvc.Update(It.IsNotNull<User>())).Returns(userToUpdate);
+
+
+
+            _mockUserRepository.Setup(srvc => srvc.GetByIdAsync(It.IsNotNull<Guid>())).ReturnsAsync( default(User));
+
+
+            //Act
+            var result = await _userService.UpdateUserAsync(userId, userToUpdateModel);
+
+            _mockUserRepository.Verify(srvc => srvc.GetByIdAsync(It.IsNotNull<Guid>()), Times.Once);
+
+            // Assert
+            Assert.AreEqual(expectedMessage, result.ErrorMessage);
+            Assert.AreEqual(isSuccesful, result.IsSuccessful);
+
+
+        }
+
+        [TestMethod]
+        public async Task DeleteUserAsync_When_Id_Not_Exists_Retuns_ErrorMessage()
+        {
+            var expectedMessage = Messages.USER_NOT_FOUND;
+            var isSuccesful = false;
+            var userIdToDelete = Guid.NewGuid();
+
+            _mockUserRepository.Setup(srvc => srvc.GetByIdAsync((Guid)userIdToDelete)).ReturnsAsync(default(User));
+
+            var result =await _userService.DeleteUserAsync(userIdToDelete);
+
+            //Assert
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.ErrorMessage, expectedMessage);
+            Assert.AreEqual(result.IsSuccessful, isSuccesful);
+
+        }
+
+
+        [TestMethod]
+        public async Task DeleteUserAsync_When_Id_Exists_Returns_IsSuccesful_True()
+        {
+            var isSuccesful = true;
+            var userIdToDelete = Guid.NewGuid();
+            var userToReturn = new User();
+
+            _mockUserRepository.Setup(srvc => srvc.GetByIdAsync((Guid)userIdToDelete)).ReturnsAsync(userToReturn);
+
+            //Act
+            var result = await _userService.DeleteUserAsync(userIdToDelete);
+
+            //Assert
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(result.IsSuccessful, isSuccesful);
 
         }
 
