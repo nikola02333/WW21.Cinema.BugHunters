@@ -426,6 +426,8 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             // Act
             var result = await _ticketController.DeleteTicketAsync(Id);
+            _mockTicketService.Verify(srvc => srvc.DeleteTicketAsync(Id), Times.Once);
+
             var resultResponse = (AcceptedResult)result.Result;
 
             //Assert
@@ -450,6 +452,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             // Act
             var result = await _ticketController.DeleteTicketAsync(Id);
+            _mockTicketService.Verify(srvc => srvc.DeleteTicketAsync(Id),Times.Once);
             var resultResponse = (BadRequestObjectResult)result.Result;
 
             //Assert
@@ -468,12 +471,11 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             Exception exception = new Exception("Inner exception error message.");
             DbUpdateException dbUpdateException = new DbUpdateException("Error.", exception);
 
-            // Act
-
             _mockTicketService.Setup(srvc => srvc.DeleteTicketAsync(It.IsAny<Guid>())).Throws(dbUpdateException);
 
             //Act
             var result = await _ticketController.DeleteTicketAsync(Id);
+            _mockTicketService.Verify(srvc => srvc.DeleteTicketAsync(Id), Times.Once);
             var badObjectResult = ((BadRequestObjectResult)result.Result).Value;
             var errorStatusCode = (BadRequestObjectResult)result.Result;
             var errorResult = (ErrorResponseModel)badObjectResult;

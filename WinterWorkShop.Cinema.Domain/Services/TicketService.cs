@@ -11,19 +11,29 @@ using WinterWorkShop.Cinema.Repositories;
 
 namespace WinterWorkShop.Cinema.Domain.Services
 {
-    public class TicketService : ITicketService
+    public interface ITicketServiceFunction
+    {
+        TicketDomainModel createTicketDomainModel(Ticket ticket);
+    }
+    public class TicketService : ITicketService, ITicketServiceFunction
     {
         private readonly ITicketsRepository _ticketsRepository;
         private readonly ISeatsRepository _seatsRepository;
         private readonly IUsersRepository _usersRepository;
         private readonly IProjectionsRepository _projectionsRepository;
+        
 
-        public TicketService(ITicketsRepository ticketsRepository,ISeatsRepository seatsRepository,IUsersRepository usersRepository, IProjectionsRepository projectionsRepository)
+        public TicketService(ITicketsRepository ticketsRepository,
+                            ISeatsRepository seatsRepository,
+                            IUsersRepository usersRepository,
+                            IProjectionsRepository projectionsRepository
+                            )
         {
             _ticketsRepository = ticketsRepository;
             _seatsRepository = seatsRepository;
             _usersRepository = usersRepository;
             _projectionsRepository = projectionsRepository;
+            
         }
         public async Task<GenericResult<TicketDomainModel>> CreateTicketAsync(CreateTicketDomainModel ticketToCreate)
         {
@@ -87,12 +97,12 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 Created = DateTime.Now,
                 Id = Guid.NewGuid(),
-                ProjectionId=projection.Id,
-                Projection=projection,
-                SeatId=seat.Id,
-                Seat=seat,
-                UserId=user.Id,
-                User=user
+                ProjectionId = projection.Id,
+                Projection = projection,
+                SeatId = seat.Id,
+                Seat = seat,
+                UserId = user.Id,
+                User = user
             };
 
             var insertedTicket = await _ticketsRepository.InsertAsync(ticket);
@@ -157,7 +167,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
         {
             var tickets = await _ticketsRepository.GetAllAsync();
 
-
             if (tickets == null)
             {
                 return null;
@@ -165,12 +174,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             List<TicketDomainModel> result = new List<TicketDomainModel>();
             TicketDomainModel model;
-            foreach(var item in tickets)
+            foreach (var item in tickets)
             {
                 model = createTicketDomainModel(item);
                 result.Add(model);
             }
-
 
             return new GenericResult<TicketDomainModel>
             {
@@ -210,12 +218,13 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 Created = ticket.Created,
                 Id = ticket.Id,
+                Price=ticket.Price,
                 Projection = new ProjectionDomainModel
                 {
                     Id = ticket.Projection.Id,
                     AditoriumName = ticket.Projection.Auditorium.AuditoriumName,
-                    AuditoriumId = ticket.Projection.AuditoriumId,
-                    MovieId = ticket.Projection.MovieId,
+                    AuditoriumId = ticket.Projection.Auditorium.Id,
+                    MovieId = ticket.Projection.Movie.Id,
                     MovieTitle = ticket.Projection.Movie.Title,
                     ProjectionTime = ticket.Projection.ShowingDate,
                     Duration = ticket.Projection.Duration

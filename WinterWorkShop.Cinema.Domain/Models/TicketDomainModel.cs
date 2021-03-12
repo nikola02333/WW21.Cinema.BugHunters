@@ -11,6 +11,8 @@ namespace WinterWorkShop.Cinema.Domain.Models
 
         public DateTime Created { get; set; }
 
+        public int Price { get; set; }
+
         public SeatDomainModel Seat { get; set; }
 
         public UserDomainModel User { get; set; }
