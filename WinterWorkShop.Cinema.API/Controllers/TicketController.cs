@@ -52,13 +52,19 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return BadRequest(errorResponse);
             }
 
-            return Ok(ticketDomainModels);
+            return Ok(ticketDomainModels.Data);
         }
 
         [HttpPost]
-        public async Task<ActionResult<GenericResult<TicketDomainModel>>> PostAsync([FromBody] Models.CreateTicketModel ticketModel)
+        [Route("Create")]
+        public async Task<ActionResult<GenericResult<TicketDomainModel>>> CreateTicketAsync([FromBody]CreateTicketModel ticketModel)
         {
-            Domain.Models.CreateTicketModel ticket = new Domain.Models.CreateTicketModel
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            CreateTicketDomainModel ticket = new CreateTicketDomainModel
             {
                 ProjectionId=ticketModel.ProjectionId,
                 SeatId=ticketModel.SeatId,
@@ -89,15 +95,25 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     StatusCode = System.Net.HttpStatusCode.InternalServerError
                 };
 
-                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, errorResponse);
+                return BadRequest(errorResponse);
             }
             return CreatedAtAction("GetById", new { Id = createTicket.Data.Id }, createTicket.Data);
         }
 
         [HttpDelete]
         [Route("Delete/{id}")]
-        public async Task<ActionResult> Delete(Guid id)
+        public async Task<ActionResult<TicketDomainModel>> DeleteTicketAsync(Guid id)
         {
+            if (id == null || id == Guid.Empty)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = Messages.TICKET_ID_NULL,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+                return BadRequest(errorResponse);
+            }
+
             GenericResult<TicketDomainModel> deletedticket;
 
             try
@@ -123,7 +139,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     StatusCode = System.Net.HttpStatusCode.InternalServerError
                 };
 
-                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, errorResponse);
+                return BadRequest(errorResponse);
             }
 
             return Accepted();

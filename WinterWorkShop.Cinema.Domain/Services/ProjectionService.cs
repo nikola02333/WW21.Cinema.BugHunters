@@ -40,7 +40,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     ProjectionTime = item.ShowingDate,
                     MovieTitle = item.Movie.Title,
                     AditoriumName = item.Auditorium.AuditoriumName,
-                    Duration = item.Duration
+                    Duration = item.Duration,
+                    Price = item.Price
                     
                 };
                 result.Add(model);
@@ -71,11 +72,12 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 MovieId = domainModel.MovieId,
                 AuditoriumId = domainModel.AuditoriumId,
                  ShowingDate = domainModel.ProjectionTime,
-                 Duration = domainModel.Duration
+                 Duration = domainModel.Duration,
+                 Price = domainModel.Price
                  
             };
 
-            var insertedProjection = _projectionsRepository.InsertAsync(newProjection);
+            var insertedProjection = await _projectionsRepository.InsertAsync(newProjection);
 
             if (insertedProjection == null)
             {
@@ -85,7 +87,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     ErrorMessage = Messages.PROJECTION_CREATION_ERROR
                 };
             }
-
             _projectionsRepository.Save();
             CreateProjectionResultModel result = new CreateProjectionResultModel
             {
@@ -93,11 +94,12 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 ErrorMessage = null,
                 Projection = new ProjectionDomainModel
                 {
-                    Id = insertedProjection.Result.Id,
-                    AuditoriumId = insertedProjection.Result.AuditoriumId,
-                    MovieId = insertedProjection.Result.MovieId,
-                    ProjectionTime = insertedProjection.Result.ShowingDate,
-                    Duration = insertedProjection.Result.Duration
+                    Id = insertedProjection.Id,
+                    AuditoriumId = insertedProjection.AuditoriumId,
+                    MovieId = insertedProjection.MovieId,
+                    ProjectionTime = insertedProjection.ShowingDate,
+                    Duration = insertedProjection.Duration,
+                    Price = insertedProjection.Price
                 }
             };
 

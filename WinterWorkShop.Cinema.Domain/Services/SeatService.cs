@@ -14,11 +14,13 @@ namespace WinterWorkShop.Cinema.Domain.Services
     {
         private readonly ISeatsRepository _seatsRepository;
         private readonly IAuditoriumsRepository _auditoriumsRepository;
+        private readonly IProjectionsRepository _projectionsRepository;
 
-        public SeatService(ISeatsRepository seatsRepository,IAuditoriumsRepository auditoriumsRepository)
+        public SeatService(ISeatsRepository seatsRepository,IAuditoriumsRepository auditoriumsRepository,IProjectionsRepository projectionsRepository)
         {
             _seatsRepository = seatsRepository;
             _auditoriumsRepository = auditoriumsRepository;
+            _projectionsRepository = projectionsRepository;
         }
 
         public async Task<GenericResult<SeatDomainModel>> GetAllAsync()
@@ -89,6 +91,16 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<SeatDomainModel>> ReservedSeatsAsync(Guid projectionId)
         {
+            var projection = await _projectionsRepository.GetByIdAsync(projectionId);
+            if (projection ==null)
+            {
+                return new GenericResult<SeatDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.PROJECTION_GET_BY_ID
+                };
+            }
+
             var seats = await _seatsRepository.GetReservedSeatsForProjectionAsync(projectionId);
 
             if (seats == null)

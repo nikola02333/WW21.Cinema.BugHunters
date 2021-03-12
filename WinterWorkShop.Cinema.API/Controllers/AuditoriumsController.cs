@@ -65,6 +65,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
             {
                 CinemaId = createAuditoriumModel.cinemaId,
                 Name = createAuditoriumModel.auditName
+                
             };
 
              GenericResult<AuditoriumDomainModel> createAuditoriumResultModel;

@@ -195,6 +195,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var errorStatusCode = (BadRequestObjectResult)result.Result;
 
             //Assert
+            Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
             Assert.AreEqual(message[0], expectedErrorMessage);
             
@@ -213,7 +214,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 ErrorMessage = Messages.USER_CREATION_ERROR 
             };
 
-            // Username 
             var userToCreate = new CreateUserModel
             {
                 FirstName = "Nikola",
@@ -225,8 +225,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                              .ReturnsAsync(CreateUserResponseModel);
             // Act
             var result = await _userController.CreateUserAsync(userToCreate);
-                    
-
 
             var badObjectResult = ((BadRequestObjectResult)result.Result).Value;
             
@@ -235,10 +233,9 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var errorResult = (ErrorResponseModel)badObjectResult;
             //Assert
+            Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
-
             Assert.AreEqual(errorResult.ErrorMessage, expectedMessage);
-
             Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
         }
 
@@ -248,7 +245,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             string expectedMessage = "Inner exception error message.";
             int expectedStatusCode = 400;
 
-            // Username 
             var userToCreate = new CreateUserModel
             {
                 FirstName = "Nikola",
@@ -281,8 +277,9 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var resultResponse = (BadRequestObjectResult)result.Result;
             var badObjectResult = ((BadRequestObjectResult)result.Result).Value;
             var errorResult = (ErrorResponseModel)badObjectResult;
-            
+
             //Assert
+            Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
 
             Assert.AreEqual(errorResult.ErrorMessage, expectedMessage);
@@ -340,9 +337,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         {
             int expectedStatusCode = 400;
             var expectedMessage = Messages.USER_NOT_FOUND;
-            // Username 
-           
-
            
             
             _mockUserService.Setup(srvc => srvc.GetUserByUserNameAsync(It.IsAny<string>()))
@@ -410,11 +404,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var userId = Guid.Empty;
 
-
-
-           /* _mockUserService.Setup(srvc => srvc.DeleteUserAsync(It.IsAny<Guid>()))
-                             .ReturnsAsync();
-           */
             // Act
             var result = await _userController.DeleteUser(userId);
 
@@ -429,25 +418,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             Assert.AreEqual(expectedStatusCode, resultResponse.StatusCode);
         }
 
-        [TestMethod]
-        public async Task DeleteUser_When_UserId_Is_Null_Return_BadRequest()
-        {
-            int expectedStatusCode = 400;
-           
-            // Act
-
-             // ovde !!!  
-            var result = await _userController.DeleteUser(default(Guid));
-
-
-            var resultResponse = (BadRequestObjectResult)result.Result;
-
-            //Assert
-            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
-
-
-            Assert.AreEqual(expectedStatusCode, resultResponse.StatusCode);
-        }
 
         [TestMethod]
         public async Task DeleteUser_When_Called_Returns_Accepted()
@@ -474,10 +444,10 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
 
             var resultResponse = (AcceptedResult)result.Result;
-           
-            //Assert
-            Assert.IsInstanceOfType(result.Result, typeof(AcceptedResult));
 
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result.Result, typeof(AcceptedResult));
 
             Assert.AreEqual(expectedStatusCode, resultResponse.StatusCode);
         }
@@ -489,11 +459,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var expectedMessage = Messages.USER_ID_NULL;
             var userId = Guid.Empty;
 
-       
-
-
-           
-
             // Act
             var result = await _userController.DeleteUser(userId);
 
@@ -502,6 +467,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var errorMessage = (ErrorResponseModel)resultObjectResponse.Value;
 
             //Assert
+            Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
 
             Assert.AreEqual(expectedStatusCode, resultObjectResponse.StatusCode);
@@ -562,7 +528,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 UserName= "username"
             };
 
-
             _mockUserService.Setup(srvc => srvc.UpdateUserAsync(userId, It.IsAny<UserDomainModel>()))
                             .ReturnsAsync(updatedUserResult);
 
@@ -571,10 +536,13 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var usersResult = ((AcceptedResult)result.Result).Value;
 
+            var StatusCode = (AcceptedResult)result.Result;
 
             //Assert
+            Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result.Result, typeof(AcceptedResult));
-
+            Assert.AreEqual(expectedStatusCode, StatusCode.StatusCode);
+                
         }
 
        
