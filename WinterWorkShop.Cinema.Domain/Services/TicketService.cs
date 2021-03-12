@@ -102,7 +102,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 SeatId = seat.Id,
                 Seat = seat,
                 UserId = user.Id,
-                User = user
+                User = user,
+                Price = projection.Price
             };
 
             var insertedTicket = await _ticketsRepository.InsertAsync(ticket);
