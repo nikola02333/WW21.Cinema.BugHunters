@@ -77,7 +77,10 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [HttpPost]
         public async Task<ActionResult> CreateMovieAsync([FromBody] CreateMovieModel movieModel)
         {
-
+            if(!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
             MovieDomainModel domainModel = new MovieDomainModel
             {
                 Current = movieModel.Current,
@@ -112,7 +115,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     StatusCode = System.Net.HttpStatusCode.InternalServerError
                 };
 
-                return StatusCode((int)System.Net.HttpStatusCode.InternalServerError, errorResponse);
+                return BadRequest(errorResponse);
             }
               return CreatedAtAction("GetById", new { Id= createMovie.Data.Id }, createMovie.Data);
             
@@ -124,6 +127,11 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("Update/{id}")]
         public async Task<ActionResult> UpdateMovieAsync(Guid id, [FromBody] CreateMovieModel movieModel)
         {
+            if(id == Guid.Empty)
+            {
+                return BadRequest(Messages.MOVIE_DOES_NOT_EXIST);
+            }
+
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);

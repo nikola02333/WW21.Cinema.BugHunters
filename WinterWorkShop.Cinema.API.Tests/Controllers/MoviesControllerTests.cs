@@ -30,16 +30,20 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task GetByIdAsync_When_ID_Null_Retuns_BadRequest()
+        public async Task GetByIdAsync_When_ID_Null_Retuns_NotFound()
         {
             //Arrange
-            int expectedStatusCode = 400;
+            int expectedStatusCode = 404;
             var expectedErrorMessage = Messages.MOVIE_GET_BY_ID;
             var movieId = Guid.Empty;
 
-           
+            var expectedMovieResult = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = false,
+                ErrorMessage= Messages.MOVIE_GET_BY_ID
+            };
 
-            _mockMovieService.Setup(src => src.GetMovieByIdAsync(movieId)).ReturnsAsync(It.IsAny<GenericResult<MovieDomainModel>>);
+            _mockMovieService.Setup(src => src.GetMovieByIdAsync(movieId)).ReturnsAsync(expectedMovieResult);
 
 
             //Act
@@ -47,14 +51,14 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var result = await _moviesController.GetByIdAsync(movieId);
 
             //Assert
-            var movieResult = ((BadRequestObjectResult)result.Result).Value;
+            var movieResult = ((NotFoundObjectResult)result.Result).Value;
             var error = (ErrorResponseModel)movieResult;
 
             Assert.IsNotNull(movieResult);
 
-            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+            Assert.IsInstanceOfType(result.Result, typeof(NotFoundObjectResult));
 
-            Assert.AreEqual(expectedStatusCode, ((BadRequestObjectResult)result.Result).StatusCode);
+            Assert.AreEqual(expectedStatusCode, ((NotFoundObjectResult)result.Result).StatusCode);
 
           
             Assert.AreEqual(expectedErrorMessage, error.ErrorMessage);
@@ -456,25 +460,28 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task UpdateMovieAsync_When_Id_Is_Empty_Returns_BadRequest()
+        public async Task UpdateMovieAsync_When_Id_Not_Found_Returns_BadRequest()
         {
             //Arrange
             int expectedStatusCode = 400;
-            var expectedMessage = Messages.MOVIE_GET_BY_ID;
-
-            var movieToUpdate = new CreateMovieModel
+            var expectedMessage = Messages.MOVIE_DOES_NOT_EXIST;
+            var userId = Guid.NewGuid();
+            var movieToUpdateModel = new CreateMovieModel
             {
-                Rating = 8,
-                Current = true,
-                Genre = "comedy",
-                Title="New Movie"
+                 
+            };
+            var movieToUpdate = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = false,
+                ErrorMessage= Messages.MOVIE_DOES_NOT_EXIST
             };
 
             //Act
 
+            _mockMovieService.Setup(srvc => srvc.GetMovieByIdAsync(userId)).ReturnsAsync(movieToUpdate);
 
-            var result = await _moviesController.UpdateMovieAsync(Guid.Empty, movieToUpdate);
 
+            var result =await _moviesController.UpdateMovieAsync(Guid.Empty, movieToUpdateModel);
 
             var movieResultMessage = ((BadRequestObjectResult)result).Value;
 
