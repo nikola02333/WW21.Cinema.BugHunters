@@ -54,7 +54,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             GenericResult<SeatDomainModel> seatDomainModels;
 
-            seatDomainModels = await _seatService.ReservedSeatsAsync(id);
+            seatDomainModels = await _seatService.GetReservedSeatsAsync(id);
 
             if (!seatDomainModels.IsSuccessful)
             {

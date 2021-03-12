@@ -129,7 +129,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 }
             };
 
-            _mockSeatService.Setup(srvc => srvc.ReservedSeatsAsync(It.IsAny<Guid>())).ReturnsAsync(expectedSeats);
+            _mockSeatService.Setup(srvc => srvc.GetReservedSeatsAsync(It.IsAny<Guid>())).ReturnsAsync(expectedSeats);
 
             //Act
             var result = await _seatsController.GetReservedSeatsAsync(projectionId);
@@ -158,7 +158,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 DataList = new List<SeatDomainModel> { }
             };
 
-            _mockSeatService.Setup(srvc => srvc.ReservedSeatsAsync(It.IsAny<Guid>())).ReturnsAsync(expectedSeats);
+            _mockSeatService.Setup(srvc => srvc.GetReservedSeatsAsync(It.IsAny<Guid>())).ReturnsAsync(expectedSeats);
 
             //Act
             var result = await _seatsController.GetReservedSeatsAsync(projectionId);
@@ -210,7 +210,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 IsSuccessful = false,
                 ErrorMessage = Messages.PROJECTION_GET_BY_ID
             };
-            _mockSeatService.Setup(srvc => srvc.ReservedSeatsAsync(It.IsAny<Guid>())).ReturnsAsync(expectedSeats);
+            _mockSeatService.Setup(srvc => srvc.GetReservedSeatsAsync(It.IsAny<Guid>())).ReturnsAsync(expectedSeats);
 
             //Act
             var result = await _seatsController.GetReservedSeatsAsync(projectionId);

@@ -73,7 +73,6 @@ namespace WinterWorkShop.Cinema.Tests.Services
                         Role = "admin",
                     UserName = "sasag"
                     }
-                
             };
            
 
@@ -157,18 +156,18 @@ namespace WinterWorkShop.Cinema.Tests.Services
         public async Task GetAllAsync_Return_Null()
         {
             //Arrange
-            IEnumerable<Ticket> expectedTickets = new List<Ticket>();
-            var expectedTicketsList = (List<Ticket>)expectedTickets;
+            IEnumerable<Ticket> expectedTickets = null;
+            
 
             _mockTicketRepository.Setup(repo => repo.GetAllAsync()).ReturnsAsync(expectedTickets);
 
             //Act
             var resultAction = await _ticketService.GetAllAsync();
-            var result = resultAction.DataList;
+            
 
             //Assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOfType(result, typeof(List<TicketDomainModel>));
+            Assert.IsNull(resultAction);
+            
         }
 
         [TestMethod]

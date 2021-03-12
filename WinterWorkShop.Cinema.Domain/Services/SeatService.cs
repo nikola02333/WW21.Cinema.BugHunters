@@ -89,7 +89,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
-        public async Task<GenericResult<SeatDomainModel>> ReservedSeatsAsync(Guid projectionId)
+        public async Task<GenericResult<SeatDomainModel>> GetReservedSeatsAsync(Guid projectionId)
         {
             var projection = await _projectionsRepository.GetByIdAsync(projectionId);
             if (projection ==null)
@@ -108,24 +108,16 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 return null;
             }
 
-            List<SeatDomainModel> result = new List<SeatDomainModel>();
-            SeatDomainModel model;
-            foreach (var item in seats)
-            {
-                model = new SeatDomainModel
-                {
-                    Id = item.Id,
-                    AuditoriumId = item.AuditoriumId,
-                    Number = item.Number,
-                    Row = item.Row
-                };
-                result.Add(model);
-            }
-
             return new GenericResult<SeatDomainModel>
             {
                 IsSuccessful = true,
-                DataList = result
+                DataList = seats.Select(item => new SeatDomainModel
+                {
+                    AuditoriumId = item.AuditoriumId,
+                    Id = item.Id,
+                    Number = item.Number,
+                    Row = item.Row
+                }).ToList()
             };
         }
     }

@@ -10,7 +10,7 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
     public interface ISeatService
     {
         Task<GenericResult<SeatDomainModel>> GetAllAsync();
-        Task<GenericResult<SeatDomainModel>> ReservedSeatsAsync(Guid projectionId);
+        Task<GenericResult<SeatDomainModel>> GetReservedSeatsAsync(Guid projectionId);
         Task<GenericResult<SeatDomainModel>> GetByAuditoriumIdAsync(int auditoriumId);
     }
 }
