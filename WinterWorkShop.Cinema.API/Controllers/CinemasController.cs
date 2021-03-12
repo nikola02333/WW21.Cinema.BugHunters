@@ -37,21 +37,37 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             if (!result.IsSuccessful)
             {
-                return BadRequest(result.ErrorMessage);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = result.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+
+
+                return BadRequest(errorResponse);
             }
 
             return Ok(result.DataList);
         }
 
         [HttpGet]
-        [Route("{id:int}", Name = nameof(GetCinemaById))]
+        [Route("GetById/{id:int}", Name = nameof(GetCinemaById))]
 
         public async Task<ActionResult<CinemaDomainModel>> GetCinemaById(int id)
         {
             var response =await _cinemaService.GetCinemaById(id);
             if (!response.IsSuccessful)
             {
-                return NotFound(response.ErrorMessage);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = response.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+
+
+                return BadRequest(errorResponse);
             }
             return Ok(response.Data);
         }
@@ -73,11 +89,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
 
 
-           
-            var insertedCinema = await _cinemaService.AddCinemaAsync(cinema);
-            if (!insertedCinema.IsSuccessful)
-            {
-                return BadRequest(insertedCinema.ErrorMessage);
+                return BadRequest(errorResponse);
             }
 
             return CreatedAtAction(nameof(GetCinemaById),
@@ -95,7 +107,15 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             if (!result.IsSuccessful)
             {
-                return BadRequest(result.ErrorMessage);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = result.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+
+
+                return BadRequest(errorResponse);
             }
 
 
@@ -112,7 +132,15 @@ namespace WinterWorkShop.Cinema.API.Controllers
             var result = await _cinemaService.UpdateCinema(updatedMovie);
             if (!result.IsSuccessful)
             {
-                return BadRequest(result.ErrorMessage);
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = result.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+
+
+                return BadRequest(errorResponse);
             }
 
             return Accepted(result.Data);

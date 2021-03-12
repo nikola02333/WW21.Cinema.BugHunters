@@ -14,7 +14,7 @@ using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class AuditoriumsController : ControllerBase
@@ -31,7 +31,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<AuditoriumDomainModel>>> GetAsync()
+        [Route("GetAll")]
+        public async Task<ActionResult<IEnumerable<AuditoriumDomainModel>>> GetAllAuditoriumsAsync()
         {
             IEnumerable<AuditoriumDomainModel> auditoriumDomainModels;
 
@@ -51,8 +52,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
         /// <param name="createAuditoriumModel"></param>
         /// <returns></returns>
         [HttpPost]
-        [Authorize(Roles = "admin")]
-        public async Task<ActionResult<AuditoriumDomainModel>> PostAsync(CreateAuditoriumModel createAuditoriumModel) 
+        [Route("Create")]
+        //[Authorize(Roles = "admin")]
+        public async Task<ActionResult<AuditoriumDomainModel>> CreateAuditoriumAsync(CreateAuditoriumModel createAuditoriumModel) 
         {
             if (!ModelState.IsValid)
             {
@@ -63,9 +65,10 @@ namespace WinterWorkShop.Cinema.API.Controllers
             {
                 CinemaId = createAuditoriumModel.cinemaId,
                 Name = createAuditoriumModel.auditName
+                
             };
 
-            CreateAuditoriumResultModel createAuditoriumResultModel;
+             GenericResult<AuditoriumDomainModel> createAuditoriumResultModel;
 
             try 
             {
