@@ -51,13 +51,13 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
         [HttpGet]
-        [Route("current")]
-        public async Task<ActionResult<IEnumerable<Movie>>> GetAllAsync()
+        [Route("AllMovies/{current}")]
+        public async Task<ActionResult<IEnumerable<Movie>>> GetAllAsync(bool? isCurrent)
         {
             
             GenericResult<MovieDomainModel> movieDomainModels;
 
-            movieDomainModels = await _movieService.GetAllMoviesAsync(true);
+            movieDomainModels = await _movieService.GetAllMoviesAsync(isCurrent);
 
            
             return Ok(movieDomainModels.DataList);
@@ -234,7 +234,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return BadRequest(errorResponse);
             }
            
-            var movieActivated =await _movieService.ActivateMovie(id);
+            var movieActivated =await _movieService.ActivateDeactivateMovie(id);
 
             if(! movieActivated.IsSuccessful)
             {

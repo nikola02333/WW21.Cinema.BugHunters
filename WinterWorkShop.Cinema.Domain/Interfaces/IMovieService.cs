@@ -21,6 +21,6 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
 
         Task<GenericResult<MovieDomainModel>> GetTopTenMoviesAsync();
 
-        Task<GenericResult<MovieDomainModel>> ActivateMovie(object movieId);
+        Task<GenericResult<MovieDomainModel>> ActivateDeactivateMovie(Guid movieId);
     }
 }

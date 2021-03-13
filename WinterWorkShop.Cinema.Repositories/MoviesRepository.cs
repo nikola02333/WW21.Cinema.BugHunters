@@ -12,9 +12,12 @@ namespace WinterWorkShop.Cinema.Repositories
     public interface IMoviesRepository : IRepository<Movie> 
     {
         Task<IEnumerable<Movie>> GetCurrentMoviesAsync();
+
         Task<Movie> GetMovieByNameAsync(string movieName);
 
         Task<IEnumerable<Movie>> GetTopTenMovies();
+
+        Task<Movie> ActivateDeactivateMovie(Movie movieToActivateDeactivate);
 
     }
 
@@ -98,6 +101,15 @@ namespace WinterWorkShop.Cinema.Repositories
             return topTenMovies;
         }
 
-        
+        public async Task<Movie> ActivateDeactivateMovie(Movie movieToActivateDeactivatemovieId)
+        {
+            movieToActivateDeactivatemovieId.Current = !movieToActivateDeactivatemovieId.Current;
+
+            _cinemaContext.Update(movieToActivateDeactivatemovieId);
+
+            await _cinemaContext.SaveChangesAsync();
+            // ovde
+            return movieToActivateDeactivatemovieId;
+        }
     }
 }
