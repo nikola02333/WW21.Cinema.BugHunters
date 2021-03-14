@@ -12,5 +12,7 @@ namespace WinterWorkShop.Cinema.Domain.Models
         public bool Current { get; set; }
         public double Rating { get; set; }
         public int Year { get; set; }
+
+        public string? ActorName { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Data;
+using WinterWorkShop.Cinema.Data.Entities;
 using WinterWorkShop.Cinema.Domain.Common;
 using WinterWorkShop.Cinema.Domain.Interfaces;
 using WinterWorkShop.Cinema.Domain.Models;
@@ -11,13 +12,20 @@ using WinterWorkShop.Cinema.Repositories;
 
 namespace WinterWorkShop.Cinema.Domain.Services
 {
+  
     public class MovieService : IMovieService
     {
         private readonly IMoviesRepository _moviesRepository;
+        private readonly ITagsRepository _tagsRepository;
+        private readonly ITagsMoviesRepository _tagsMoviesRepository;
 
-        public MovieService(IMoviesRepository moviesRepository)
+        public MovieService(IMoviesRepository moviesRepository,
+                            ITagsRepository tagsRepository,
+                            ITagsMoviesRepository tagsMoviesRepository)
         {
             _moviesRepository = moviesRepository;
+           _tagsRepository = tagsRepository;
+            _tagsMoviesRepository = tagsMoviesRepository;
         }
 
         public async Task<GenericResult<MovieDomainModel>> GetAllMoviesAsync(bool? isCurrent)
@@ -85,14 +93,46 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Current = newMovie.Current,
                 Year = newMovie.Year,
                 Rating = newMovie.Rating,
-                Genre= newMovie.Genre
+                Genre = newMovie.Genre
             };
 
             var movie = await _moviesRepository.InsertAsync(movieToCreate);
 
-          
+
 
             _moviesRepository.Save();
+            // proveravam da li tag postoji u bazi, ako nepostoji  kreiraj onda novi
+            // 
+            var tagGenreExists = _tagsRepository.GetTagByValue(newMovie.Genre);
+
+            var tagYearExists = _tagsRepository.GetTagByValue(newMovie.Year.ToString());
+
+            //var tagRaitingExists = _tagsRepository.GetTagByValue(newMovie.Rating);
+
+            var tagActorExists = _tagsRepository.GetTagByValue(newMovie.ActorName);
+
+
+            if (tagGenreExists == null)
+            {
+                var tagToCreate = new Tag
+                {
+                    TagValue = newMovie.Genre,
+                    TagName = "Genre"
+                };
+              var newTag=   await _tagsRepository.InsertAsync(tagToCreate);
+                _tagsRepository.SaveAsync();
+
+                var tagsMovies = new TagsMovies
+                {
+                    Movie = movie,
+                    Tag = newTag
+                };
+              await  _tagsMoviesRepository.InsertAsync(tagsMovies);
+
+                _tagsMoviesRepository.SaveAsync();
+            }
+
+          
 
             MovieDomainModel domainModel = new MovieDomainModel()
             {

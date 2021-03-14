@@ -10,7 +10,7 @@ namespace WinterWorkShop.Cinema.Data.Entities
 
         public Movie Movie { get; set; }
 
-        public string TagId { get; set; }
+        public int TagId { get; set; }
 
         public Tag Tag { get; set; }
     }
