@@ -13,7 +13,11 @@ namespace WinterWorkShop.Cinema.Repositories
     {
         Tag GetTagByValue(string tagValue);
 
-        Tag GetTagByValue(double tagValue);
+        Tag GetTagByYear(int tagYear);
+
+        Tag GetTagByRating(double tagRating);
+
+        void Attach(Tag tag);
     }
     public class TagsRepository : ITagsRepository
     {
@@ -23,6 +27,12 @@ namespace WinterWorkShop.Cinema.Repositories
         {
             _cinemaContext = cinemaContext;
         }
+
+        public void Attach(Tag tag)
+        {
+            _cinemaContext.Tags.Attach(tag);
+        }
+
         public Tag Delete(object id)
         {
             throw new NotImplementedException();
@@ -44,9 +54,14 @@ namespace WinterWorkShop.Cinema.Repositories
             return  _cinemaContext.Tags.Where(tag => tag.TagValue == tagValue).FirstOrDefault();
         }
 
-        public Tag GetTagByValue(double tagValue)
+        public Tag GetTagByRating(double tagRating)
         {
-            throw new NotImplementedException();
+            return _cinemaContext.Tags.Where(tag => tag.TagValue == tagRating.ToString()).FirstOrDefault();
+        }
+
+        public Tag GetTagByYear(int tagYear)
+        {
+            return _cinemaContext.Tags.Where(tag => tag.TagValue == tagYear.ToString()).FirstOrDefault();
         }
 
         public async Task<Tag> InsertAsync(Tag obj)

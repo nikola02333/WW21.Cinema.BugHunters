@@ -10,7 +10,9 @@ namespace WinterWorkShop.Cinema.Repositories
     public interface ITagsMoviesRepository : IRepository<TagsMovies>
     {
         // search tag by specific name and value
-       // Task<List<GenericResult<TagsMovies>>> GetTagById();
+        // Task<List<GenericResult<TagsMovies>>> GetTagById();
+
+        void Attach(TagsMovies TagsMovie);
     }
     public class TagsMoviesRepository : ITagsMoviesRepository
     {
@@ -19,6 +21,11 @@ namespace WinterWorkShop.Cinema.Repositories
         public TagsMoviesRepository(CinemaContext cinemaContext)
         {
             _cinemaContext = cinemaContext;
+        }
+
+        public void Attach(TagsMovies TagsMovie)
+        {
+            _cinemaContext.TagsMovies.Attach(TagsMovie);
         }
 
         public TagsMovies Delete(object id)
