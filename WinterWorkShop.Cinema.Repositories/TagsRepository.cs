@@ -58,12 +58,12 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public void Save()
         {
-            throw new NotImplementedException();
+            _cinemaContext.SaveChanges();
         }
 
-        public void SaveAsync()
+        public async void SaveAsync()
         {
-            _cinemaContext.SaveChangesAsync();
+            await _cinemaContext.SaveChangesAsync();
         }
 
         public Tag Update(Tag obj)

@@ -13,6 +13,6 @@ namespace WinterWorkShop.Cinema.Domain.Models
         public double Rating { get; set; }
         public int Year { get; set; }
 
-        public string? ActorName { get; set; }
+        
     }
 }

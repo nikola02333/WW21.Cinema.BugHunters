@@ -48,7 +48,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public void Save()
         {
-            throw new NotImplementedException();
+            _cinemaContext.SaveChanges();
         }
 
         public async void SaveAsync()

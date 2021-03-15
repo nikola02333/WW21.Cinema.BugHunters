@@ -103,34 +103,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
             _moviesRepository.Save();
             // proveravam da li tag postoji u bazi, ako nepostoji  kreiraj onda novi
             // 
-            var tagGenreExists = _tagsRepository.GetTagByValue(newMovie.Genre);
+          
 
-            var tagYearExists = _tagsRepository.GetTagByValue(newMovie.Year.ToString());
+           await AddTagsForMovie(movie);
 
-            //var tagRaitingExists = _tagsRepository.GetTagByValue(newMovie.Rating);
-
-            var tagActorExists = _tagsRepository.GetTagByValue(newMovie.ActorName);
-
-
-            if (tagGenreExists == null)
-            {
-                var tagToCreate = new Tag
-                {
-                    TagValue = newMovie.Genre,
-                    TagName = "Genre"
-                };
-              var newTag=   await _tagsRepository.InsertAsync(tagToCreate);
-                _tagsRepository.SaveAsync();
-
-                var tagsMovies = new TagsMovies
-                {
-                    Movie = movie,
-                    Tag = newTag
-                };
-              await  _tagsMoviesRepository.InsertAsync(tagsMovies);
-
-                _tagsMoviesRepository.SaveAsync();
-            }
+           
 
           
 
@@ -149,6 +126,76 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 IsSuccessful= true,
                 Data = domainModel
             };
+        }
+
+        private async Task AddTagsForMovie(Movie movie)
+        {
+            var tagExistGenre =  _tagsRepository.GetTagByValue(movie.Genre);
+
+            if(tagExistGenre != null)
+            {
+                var genreTagsMovies = new TagsMovies
+                {
+                    Movie = movie,
+                    Tag = tagExistGenre,
+                    MovieId= movie.Id,
+                    TagId = tagExistGenre.TagId
+                };
+                await _tagsMoviesRepository.InsertAsync(genreTagsMovies);
+                _tagsMoviesRepository.Save();
+
+
+            }
+            else
+            {
+                
+                var tagGenreToCreate = new Tag
+                {
+                    TagValue = movie.Genre,
+                    TagName = "Genre"
+                };
+                var newGenreTag = await _tagsRepository.InsertAsync(tagGenreToCreate);
+                _tagsRepository.Save();
+                
+                
+                var genreTagsMovies = new TagsMovies
+                {
+                    Movie = movie,
+                    Tag = newGenreTag,
+                    TagId= newGenreTag.TagId
+                };
+                await _tagsMoviesRepository.InsertAsync(genreTagsMovies);
+                
+                _tagsMoviesRepository.Save();
+
+           
+
+            }
+            var tagExistYear = _tagsRepository.GetTagByValue(movie.Genre);
+            if (tagExistYear !=null)
+            {
+                /// Tag Year to create 
+                var tagYearToCreate = new Tag
+                {
+                    TagName = "Year",
+                    TagValue = movie.Year.ToString()
+                };
+
+
+
+                var newYearTag = await _tagsRepository.InsertAsync(tagYearToCreate);
+                _tagsRepository.Save();
+
+                var yearTagsMovies = new TagsMovies
+                {
+                    Movie = movie,
+                    Tag = newYearTag
+                };
+                await _tagsMoviesRepository.InsertAsync(yearTagsMovies);
+
+                _tagsMoviesRepository.Save();
+            }
+
         }
 
         public  GenericResult<MovieDomainModel> UpdateMovie(MovieDomainModel updateMovie) {
