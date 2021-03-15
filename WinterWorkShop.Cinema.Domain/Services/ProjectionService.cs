@@ -63,7 +63,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<ProjectionDomainModel>> FilterProjectionAsync(FilterProjectionDomainModel filter)
         {
-            var projections =await _projectionsRepository.GetAllAsync();
             Data.Cinema cinema=null;
             Auditorium auditorium = null;
 
@@ -139,10 +138,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 }
             }
 
-            projections = projections.Where(x => (filter.CinemaId == null || x.Auditorium.CinemaId == filter.CinemaId)
-                                               && (filter.AuditoriumId == null || x.AuditoriumId == filter.AuditoriumId)
-                                               && (filter.MovieId == null || x.MovieId == filter.MovieId)
-                                               && (filter.DateTime == null || x.ShowingDate.Date == filter.DateTime.Value.Date));
+            var projections = await _projectionsRepository.FilterProjection(filter.CinemaId, filter.AuditoriumId, filter.MovieId, filter.DateTime);
 
             return new GenericResult<ProjectionDomainModel>
             {

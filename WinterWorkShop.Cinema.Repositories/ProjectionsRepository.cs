@@ -13,6 +13,8 @@ namespace WinterWorkShop.Cinema.Repositories
     {
         IEnumerable<Projection> GetByAuditoriumId(int salaId);
         void Attach(Projection projection);
+
+        Task<IEnumerable<Projection>> FilterProjection(int? CinemaId, int? AuditoriumId, Guid? MovieId, DateTime? DateTime);
     }
 
     public class ProjectionsRepository : IProjectionsRepository
@@ -77,6 +79,15 @@ namespace WinterWorkShop.Cinema.Repositories
         public void Attach(Projection projection)
         {
             _cinemaContext.Attach(projection);
+        }
+
+        public async Task<IEnumerable<Projection>> FilterProjection(int? CinemaId, int? AuditoriumId, Guid? MovieId, DateTime? DateTime)
+        {
+            var projections =await _cinemaContext.Projections.Where(x => (CinemaId == null || x.Auditorium.CinemaId == CinemaId)
+                                               && (AuditoriumId == null || x.AuditoriumId == AuditoriumId)
+                                               && (MovieId == null || x.MovieId == MovieId)
+                                               && (DateTime == null || x.ShowingDate.Date == DateTime.Value.Date)).ToListAsync();
+            return projections;
         }
     }
 }
