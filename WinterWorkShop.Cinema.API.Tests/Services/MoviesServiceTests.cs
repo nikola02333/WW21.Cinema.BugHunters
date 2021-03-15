@@ -19,7 +19,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         private Mock<IMoviesRepository> _mockMovieRepository;
         private MovieService _moviesService;
 
-
+           
         [TestInitialize]
         public void TestInit()
         {
