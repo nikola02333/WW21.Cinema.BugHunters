@@ -14,10 +14,12 @@ namespace WinterWorkShop.Cinema.Domain.Services
     public class MovieService : IMovieService
     {
         private readonly IMoviesRepository _moviesRepository;
+        private readonly IAuditoriumsRepository _auditoriumsRepository;
 
-        public MovieService(IMoviesRepository moviesRepository)
+        public MovieService(IMoviesRepository moviesRepository, IAuditoriumsRepository auditoriumsRepository)
         {
             _moviesRepository = moviesRepository;
+            _auditoriumsRepository = auditoriumsRepository;
         }
 
         public async Task<GenericResult<MovieDomainModel>> GetAllMoviesAsync(bool? isCurrent)
@@ -36,8 +38,12 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Id = item.Id,
                     Rating = item.Rating ?? 0,
                     Title = item.Title,
-                    Year = item.Year
-                    
+                    Year = item.Year,
+                    Genre = item.Genre,
+                    CoverPicture = item.CoverPicture,
+                    HasOscar = item.HasOscar,
+                    UserRaitings = item.UserRaitings ?? 0
+
                 };
                 result.Add(model);
             }
@@ -69,7 +75,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Current = movie.Current,
                 Rating = movie.Rating ?? 0,
                 Title = movie.Title,
-                Year = movie.Year
+                Year = movie.Year,
+                Genre = movie.Genre,
+                CoverPicture = movie.CoverPicture,
+                HasOscar = movie.HasOscar,
+                UserRaitings = movie.UserRaitings ?? 0
             };
 
             return  new GenericResult<MovieDomainModel>
@@ -79,6 +89,48 @@ namespace WinterWorkShop.Cinema.Domain.Services
             }; 
         }
 
+        public async Task<GenericResult<MovieDomainModel>> GetMoviesByAuditoriumId(int id)
+        {
+            var auditorium = await _auditoriumsRepository.GetByIdAsync(id);
+            if(auditorium == null)
+            {
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.AUDITORIUM_GET_BY_ID_ERROR
+                };
+            }
+
+            var movies = await _moviesRepository.GetMoviesByAuditoriumId(id);
+
+            if (movies == null)
+            {
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = true
+                };
+            }
+
+            return new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = true,
+                DataList = movies.Select(item => new MovieDomainModel
+                {
+                    Current = item.Current,
+                    Genre = item.Genre,
+                    Id = item.Id,
+                    Rating = item.Rating ?? 0,
+                    Title = item.Title,
+                    Year = item.Year,
+                    CoverPicture = item.CoverPicture,
+                    HasOscar = item.HasOscar,
+                    UserRaitings = item.UserRaitings ?? 0
+                }).ToList()
+            };
+
+        }
+
+
         public async Task<GenericResult<MovieDomainModel>> AddMovieAsync(MovieDomainModel newMovie)
         {
             Movie movieToCreate = new Movie()
@@ -87,7 +139,10 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Current = newMovie.Current,
                 Year = newMovie.Year,
                 Rating = newMovie.Rating,
-                Genre= newMovie.Genre
+                Genre= newMovie.Genre,
+                CoverPicture = newMovie.CoverPicture,
+                HasOscar = newMovie.HasOscar,
+                UserRaitings = newMovie.UserRaitings
             };
 
             var movie = await _moviesRepository.InsertAsync(movieToCreate);
@@ -103,7 +158,10 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Current = movie.Current,
                 Year = movie.Year,
                 Genre= movie.Genre,
-                Rating = movie.Rating ?? 0
+                Rating = movie.Rating ?? 0,
+                CoverPicture = movie.CoverPicture,
+                HasOscar = movie.HasOscar,
+                UserRaitings = movie.UserRaitings ?? 0
             };
 
             return new GenericResult<MovieDomainModel> 
@@ -122,7 +180,10 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Current = updateMovie.Current,
                 Year = updateMovie.Year,
                 Rating = updateMovie.Rating,
-                Genre= updateMovie.Genre
+                Genre= updateMovie.Genre,
+                CoverPicture = updateMovie.CoverPicture,
+                HasOscar = updateMovie.HasOscar,
+                UserRaitings = updateMovie.UserRaitings 
             };
             
             var movieUpdated = _moviesRepository.Update(movieToUpdate);
@@ -137,7 +198,10 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Current = movieUpdated.Current,
                 Year = movieUpdated.Year,
                 Genre= movieToUpdate.Genre,
-                Rating = movieUpdated.Rating ?? 0
+                Rating = movieUpdated.Rating ?? 0,
+                CoverPicture = movieUpdated.CoverPicture,
+                HasOscar = movieUpdated.HasOscar,
+                UserRaitings = movieUpdated.UserRaitings ?? 0
             };
 
             return new GenericResult<MovieDomainModel>
@@ -178,7 +242,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Title = movieToDelete.Title,
                 Current = movieToDelete.Current,
                 Year = movieToDelete.Year,
-                Rating = movieToDelete.Rating ?? 0
+                Rating = movieToDelete.Rating ?? 0,
+                Genre = movieToDelete.Genre,
+                CoverPicture = movieToDelete.CoverPicture,
+                HasOscar = movieToDelete.HasOscar,
+                UserRaitings = movieToDelete.UserRaitings ?? 0
 
             };
 
@@ -196,11 +264,14 @@ namespace WinterWorkShop.Cinema.Domain.Services
             var movies = topTenMovies.Select(movie => new MovieDomainModel
             {
                  Current= movie.Current,
-                  Genre= movie.Genre,
-                   Id= movie.Id,
-                    Rating= movie.Rating?? 0,
-                     Title= movie.Title,
-                      Year= movie.Year
+                 Genre= movie.Genre,
+                 Id= movie.Id,
+                 Rating= movie.Rating?? 0,
+                 Title= movie.Title,
+                 Year= movie.Year,
+                 CoverPicture = movie.CoverPicture,
+                 HasOscar = movie.HasOscar,
+                 UserRaitings = movie.UserRaitings ?? 0
             }).ToList();
             return new GenericResult<MovieDomainModel> 
             { 
@@ -244,11 +315,14 @@ namespace WinterWorkShop.Cinema.Domain.Services
             Data=  new MovieDomainModel
             {
                  Current= updatedMovie.Current,
-                  Genre= updatedMovie.Genre,
-                   Id= updatedMovie.Id,
-                    Rating= updatedMovie.Rating ?? 0,
-                     Title= updatedMovie.Title,
-                      Year= updatedMovie.Year
+                 Genre= updatedMovie.Genre,
+                 Id= updatedMovie.Id,
+                 Rating= updatedMovie.Rating ?? 0,
+                 Title= updatedMovie.Title,
+                 Year= updatedMovie.Year,
+                CoverPicture = updatedMovie.CoverPicture,
+                HasOscar = updatedMovie.HasOscar,
+                UserRaitings = updatedMovie.UserRaitings ?? 0
             }
             };
 
