@@ -83,7 +83,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             if (filter.AuditoriumId != null)
             {
-                
                 auditorium = await _auditoruimsRepository.GetByIdAsync(filter.AuditoriumId);
                 if (auditorium == null)
                 {
