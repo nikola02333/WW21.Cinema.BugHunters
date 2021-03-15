@@ -44,6 +44,31 @@ namespace WinterWorkShop.Cinema.API.Controllers
             return Ok(projectionDomainModels);
         }
 
+        [HttpGet]
+        [Route("filter")]
+        public async Task<ActionResult> GetFilteredProjection([FromQuery] FilterProjectionModel query)
+        {
+            var filter = new FilterProjectionDomainModel
+            {
+                AuditoriumId = query.AuditoriumId,
+                CinemaId = query.CinemaId,
+                DateTime = query.DateTime,
+                MovieId = query.MovieId
+            };
+            var filteredProjection =await _projectionService.FilterProjectionAsync(filter);
+            if (!filteredProjection.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = filteredProjection.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+            return Ok(filteredProjection.DataList);
+        }
+
         /// <summary>
         /// Adds a new projection
         /// </summary>
