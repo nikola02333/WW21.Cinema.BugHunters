@@ -146,7 +146,7 @@ const Projection: React.FC = (props: any) => {
 
     setState({ ...state, isLoading: true });
     fetch(
-      `${serviceConfig.baseURL}/api/movies/currentMoviesAndProjections`,
+      `${serviceConfig.baseURL}/api/movies/AllMovies/${true}`,
       requestOptions
     )
       .then((response) => {
@@ -180,6 +180,9 @@ const Projection: React.FC = (props: any) => {
     setState({ ...state, isLoading: true });
     let query = "";
     if (cinemaId) {
+      if(cinemaId==="none"){
+        query = `cinemaId=${null}`;
+      }
       query = `cinemaId=${cinemaId}`;
     }
     if (auditoriumId) {
@@ -320,12 +323,12 @@ const Projection: React.FC = (props: any) => {
   const fillFilterWithAuditoriums = () => {
     if (state.selectedCinema) {
       return state.filteredAuditoriums.map((auditorium) => {
-        return <option value={auditorium.id}>{auditorium.name}</option>;
+        return <option key={auditorium.id} value={auditorium.id}>{auditorium.name}</option>;
       });
     } else {
       return state.auditoriums.map((auditorium) => {
         return (
-          <option value={auditorium.id} key={auditorium.id}>
+          <option   value={auditorium.id} key={auditorium.id}>
             {auditorium.name}
           </option>
         );
@@ -373,7 +376,7 @@ const Projection: React.FC = (props: any) => {
   const fillTableWithFilteredProjections = () => {
     return state.filteredProjections.map((filteredProjection) => {
       return (
-        <Card.Body>
+        <Card.Body key={filteredProjection.movieId}>
           <div className="banner-img">
             <img className="img-style" src={filteredProjection.bannerUrl}></img>
           </div>
@@ -517,7 +520,7 @@ const Projection: React.FC = (props: any) => {
           name="auditoriumId"
           id="auditorium"
           className="select-dropdown"
-          disabled
+          
         >
           <option value="none">Auditorium</option>
           {fillFilterWithAuditoriums()}
@@ -529,7 +532,7 @@ const Projection: React.FC = (props: any) => {
           name="movieId"
           id="movie"
           className="select-dropdown"
-          disabled
+          
         >
           <option value="none">Movie</option>
           {fillFilterWithMovies()}
@@ -555,7 +558,7 @@ const Projection: React.FC = (props: any) => {
       </form>
       <Row className="justify-content-center">
         <Col>
-          <Card className="card-width">{checkIfFiltered()}</Card>
+          <Card key={1} className="card-width">{checkIfFiltered()}</Card>
         </Col>
       </Row>
     </Container>
