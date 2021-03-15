@@ -123,7 +123,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
 
         [HttpGet]
-        [Route("GetAllByCinemaId/{id}")]
+        [Route("ByCinemaId/{id}")]
         public async Task<ActionResult<GenericResult<AuditoriumDomainModel>>> GetAllByCinemaId(int id)
         {
             var response = await _auditoriumService.GetAllAuditoriumByCinemaId(id);

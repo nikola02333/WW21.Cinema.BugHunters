@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using WinterWorkShop.Cinema.Domain.Common;
 using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.Domain.Interfaces
@@ -10,5 +11,7 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
     {
         Task<IEnumerable<ProjectionDomainModel>> GetAllAsync();
         Task<CreateProjectionResultModel> CreateProjection(ProjectionDomainModel domainModel);
+
+        Task<GenericResult<ProjectionDomainModel>> FilterProjectionAsync(FilterProjectionDomainModel filter);
     }
 }
