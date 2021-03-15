@@ -59,6 +59,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             return result;
         }
+        
 
         public async Task<GenericResult<ProjectionDomainModel>> FilterProjectionAsync(FilterProjectionDomainModel filter)
         {
@@ -66,6 +67,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             Data.Cinema cinema=null;
             Auditorium auditorium = null;
 
+            //If CinemaId is used for filtering we are checking if CinemaId exists
             if (filter.CinemaId!=null)
             {
                 cinema =await _cinemasRepository.GetByIdAsync(filter.CinemaId);
@@ -77,10 +79,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
                         ErrorMessage = Messages.CINEMA_ID_NOT_FOUND
                     };
                 }
-
-                projections = projections.Where(x => x.Auditorium.CinemaId == filter.CinemaId).ToList();
             }
 
+            //If AuditoriumId is used for filtering we are checking if AuditoriumId exists,
+            // and after that we are checking if CinemaId is also used for filtering after which 
+            // we check if AuditoriumId is in cinema with CinemaID
             if (filter.AuditoriumId != null)
             {
                 auditorium = await _auditoruimsRepository.GetByIdAsync(filter.AuditoriumId);
@@ -105,13 +108,13 @@ namespace WinterWorkShop.Cinema.Domain.Services
                         };
                     }
                 }
-                projections = projections.Where(x => x.AuditoriumId == filter.AuditoriumId).ToList();
             }
 
-
+            //If MovieId is used for filtering we are checking if MovieId exists,
+            // and after that we are checking if AuditoriumId is also used for filtering after which 
+            // we check if MovieId is projecting in auditorium with AuditoriumId
             if (filter.MovieId != null)
             {
-                
                 var movie = await _moviesRepository.GetByIdAsync(filter.MovieId);
                 if (movie == null)
                 {
@@ -134,13 +137,12 @@ namespace WinterWorkShop.Cinema.Domain.Services
                         };
                     }
                 }
-                projections = projections.Where(x => x.MovieId == filter.MovieId).ToList();
             }
 
-            if (filter.DateTime != null)
-            {
-                projections = projections.Where(x => x.ShowingDate.Date == filter.DateTime.Value.Date).ToList();
-            }
+            projections = projections.Where(x => (filter.CinemaId == null || x.Auditorium.CinemaId == filter.CinemaId)
+                                               && (filter.AuditoriumId == null || x.AuditoriumId == filter.AuditoriumId)
+                                               && (filter.MovieId == null || x.MovieId == filter.MovieId)
+                                               && (filter.DateTime == null || x.ShowingDate.Date == filter.DateTime.Value.Date));
 
             return new GenericResult<ProjectionDomainModel>
             {
