@@ -21,6 +21,7 @@
         public const string AUDITORIUM_UPDATE_ERROR = "Auditorium doesn't exist.";
         public const string AUDITORIUM_NO_NAME = "Auditorium with this name doesn't exist";
         public const string AUDITORIUM_ID_NULL = "Error occured while getting user by Id, please try again.";
+        public const string AUDITORIUM_NOT_IN_CINEMA = "Auditorium does not exist in given cinema";
 
         #endregion
 
@@ -44,6 +45,7 @@
         public const string MOVIE_DELETE_ERROR = "Error occured while deleting  movie.";
         public const string MOVIE_UPDATE_ERROR = "Error occured while updating  movie.";
         public const string MOVIE_ACTIVATE_DEACTIVATE_ERROR = "Error occured while activate-deactivate  movie.";
+        public const string MOVIE_NOT_IN_AUDITORIUM = "Movie is not showing in given auditorium";
         #endregion
 
         #region Projections

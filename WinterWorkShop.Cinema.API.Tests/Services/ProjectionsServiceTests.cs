@@ -24,12 +24,21 @@ namespace WinterWorkShop.Cinema.Tests.Services
     public class ProjectionsServiceTests
     {
         private Mock<IProjectionsRepository> _mockProjectionsRepository;
+        private Mock<ICinemasRepository> _mockCinemasRepository;
+        private Mock<IAuditoriumsRepository> _mockAuditoriumsRepository;
+        private Mock<IMoviesRepository> _mockMoviesRepository;
         private Projection _projection;
         private ProjectionDomainModel _projectionDomainModel;
+        ProjectionService _projectionsController;
 
-        [TestInitialize]
+       [TestInitialize]
         public void TestInitialize()
         {
+            _mockProjectionsRepository = new Mock<IProjectionsRepository>();
+            _mockCinemasRepository = new Mock<ICinemasRepository>();
+            _mockAuditoriumsRepository = new Mock<IAuditoriumsRepository>();
+            _mockMoviesRepository = new Mock<IMoviesRepository>();
+            _projectionsController = new ProjectionService(_mockProjectionsRepository.Object, _mockCinemasRepository.Object,_mockAuditoriumsRepository.Object,_mockMoviesRepository.Object);
             _projection = new Projection
             {
                 Id = Guid.NewGuid(),
@@ -56,7 +65,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             IEnumerable<Projection> projections = projectionsModelsList;
             Task<IEnumerable<Projection>> responseTask = Task.FromResult(projections);
 
-            _mockProjectionsRepository = new Mock<IProjectionsRepository>();
+            
             _mockProjectionsRepository.Setup(x => x.GetAllAsync()).Returns(responseTask);
         }
 
@@ -65,10 +74,10 @@ namespace WinterWorkShop.Cinema.Tests.Services
         {
             //Arrange
             int expectedResultCount = 1;
-            ProjectionService projectionsController = new ProjectionService(_mockProjectionsRepository.Object);
+            
 
             //Act
-            var resultAction = projectionsController.GetAllAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            var resultAction = _projectionsController.GetAllAsync().ConfigureAwait(false).GetAwaiter().GetResult();
             var result = (List<ProjectionDomainModel>)resultAction;
 
             //Assert
@@ -85,12 +94,12 @@ namespace WinterWorkShop.Cinema.Tests.Services
             IEnumerable<Projection> projections = null;
             Task<IEnumerable<Projection>> responseTask = Task.FromResult(projections);
 
-            _mockProjectionsRepository = new Mock<IProjectionsRepository>();
+            
             _mockProjectionsRepository.Setup(x => x.GetAllAsync()).Returns(responseTask);
-            ProjectionService projectionsController = new ProjectionService(_mockProjectionsRepository.Object);
+            
 
             //Act
-            var resultAction = projectionsController.GetAllAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            var resultAction = _projectionsController.GetAllAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
             //Assert
             Assert.IsNull(resultAction);
@@ -107,12 +116,12 @@ namespace WinterWorkShop.Cinema.Tests.Services
             projectionsModelsList.Add(_projection);
             string expectedMessage = "Cannot create new projection, there are projections at same time alredy.";
 
-            _mockProjectionsRepository = new Mock<IProjectionsRepository>();
+            
             _mockProjectionsRepository.Setup(x => x.GetByAuditoriumId(It.IsAny<int>())).Returns(projectionsModelsList);
-            ProjectionService projectionsController = new ProjectionService(_mockProjectionsRepository.Object);
+            
 
             //Act
-            var resultAction = projectionsController.CreateProjection(_projectionDomainModel).ConfigureAwait(false).GetAwaiter().GetResult();
+            var resultAction = _projectionsController.CreateProjection(_projectionDomainModel).ConfigureAwait(false).GetAwaiter().GetResult();
 
             //Assert
             Assert.IsNotNull(resultAction);
@@ -133,13 +142,13 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _projection = null;
             string expectedMessage = "Error occured while creating new projection, please try again.";
 
-            _mockProjectionsRepository = new Mock<IProjectionsRepository>();
+           
             _mockProjectionsRepository.Setup(x => x.GetByAuditoriumId(It.IsAny<int>())).Returns(projectionsModelsList);
             _mockProjectionsRepository.Setup(x => x.InsertAsync(It.IsAny<Projection>())).ReturnsAsync(_projection);
-            ProjectionService projectionsController = new ProjectionService(_mockProjectionsRepository.Object);
+            
 
             //Act
-            var resultAction = projectionsController.CreateProjection(_projectionDomainModel).ConfigureAwait(false).GetAwaiter().GetResult();
+            var resultAction = _projectionsController.CreateProjection(_projectionDomainModel).ConfigureAwait(false).GetAwaiter().GetResult();
 
             //Assert
             Assert.IsNotNull(resultAction);
@@ -158,14 +167,14 @@ namespace WinterWorkShop.Cinema.Tests.Services
             //Arrange
             List<Projection> projectionsModelsList = new List<Projection>();
 
-            _mockProjectionsRepository = new Mock<IProjectionsRepository>();
+            
             _mockProjectionsRepository.Setup(x => x.GetByAuditoriumId(It.IsAny<int>())).Returns(projectionsModelsList);
             _mockProjectionsRepository.Setup(x => x.InsertAsync(It.IsAny<Projection>())).ReturnsAsync(_projection);
             _mockProjectionsRepository.Setup(x => x.Save());
-            ProjectionService projectionsController = new ProjectionService(_mockProjectionsRepository.Object);
+        
 
             //Act
-            var resultAction = projectionsController.CreateProjection(_projectionDomainModel).ConfigureAwait(false).GetAwaiter().GetResult();
+            var resultAction = _projectionsController.CreateProjection(_projectionDomainModel).ConfigureAwait(false).GetAwaiter().GetResult();
 
             //Assert
             Assert.IsNotNull(resultAction);
@@ -181,13 +190,13 @@ namespace WinterWorkShop.Cinema.Tests.Services
             // Arrange
             List<Projection> projectionsModelsList = new List<Projection>();
 
-            _mockProjectionsRepository = new Mock<IProjectionsRepository>();
+            
             _mockProjectionsRepository.Setup(x => x.InsertAsync(It.IsAny<Projection>())).Throws(new DbUpdateException());
             _mockProjectionsRepository.Setup(x => x.Save());
-            ProjectionService projectionsController = new ProjectionService(_mockProjectionsRepository.Object);
+           
 
             //Act
-            var resultAction = projectionsController.CreateProjection(_projectionDomainModel).ConfigureAwait(false).GetAwaiter().GetResult();
+            var resultAction = _projectionsController.CreateProjection(_projectionDomainModel).ConfigureAwait(false).GetAwaiter().GetResult();
         }
     }
 }

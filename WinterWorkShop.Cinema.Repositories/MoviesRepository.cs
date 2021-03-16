@@ -13,9 +13,14 @@ namespace WinterWorkShop.Cinema.Repositories
     public interface IMoviesRepository : IRepository<Movie> 
     {
         Task<IEnumerable<Movie>> GetCurrentMoviesAsync();
+
         Task<Movie> GetMovieByNameAsync(string movieName);
 
         Task<IEnumerable<Movie>> GetTopTenMovies();
+
+        Task<Movie> ActivateDeactivateMovie(Movie movieToActivateDeactivate);
+
+        Task<IEnumerable<Movie>> GetMoviesByAuditoriumId(int id);
 
         Task<IEnumerable<Movie>> SearchMoviesByTags(string query);
     }
@@ -100,6 +105,23 @@ namespace WinterWorkShop.Cinema.Repositories
             return topTenMovies;
         }
 
+        public async Task<Movie> ActivateDeactivateMovie(Movie movieToActivateDeactivatemovieId)
+        {
+            movieToActivateDeactivatemovieId.Current = !movieToActivateDeactivatemovieId.Current;
+
+            _cinemaContext.Update(movieToActivateDeactivatemovieId);
+
+            await _cinemaContext.SaveChangesAsync();
+            // ovde
+            return movieToActivateDeactivatemovieId;
+        }
+
+        public async Task<IEnumerable<Movie>> GetMoviesByAuditoriumId(int id)
+        {
+            var movies = await _cinemaContext.Movies.Where(x => x.Projections.Any(p => p.AuditoriumId == id)).ToListAsync();
+
+            return movies;
+        }
         public async Task<IEnumerable<Movie>> SearchMoviesByTags(string query)
         {
 
