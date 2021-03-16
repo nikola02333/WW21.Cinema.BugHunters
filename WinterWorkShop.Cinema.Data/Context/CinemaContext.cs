@@ -15,7 +15,10 @@ namespace WinterWorkShop.Cinema.Data
         public DbSet<Auditorium> Auditoriums { get; set; }
         public DbSet<Seat> Seats { get; set; }
 
+        public DbSet<Tag> Tags { get; set; }
 
+        public DbSet<TagsMovies> TagsMovies { get; set; }
+ 
         public DbSet<Ticket> Tickets { get; set; }
         public CinemaContext(DbContextOptions options)
             : base(options)
@@ -143,6 +146,21 @@ namespace WinterWorkShop.Cinema.Data
                 .HasMany(t => t.Tickets)
                 .WithOne(a => a.User);
 
+            // realacija vise prema vise mora ovako !!!
+
+            modelBuilder.Entity<TagsMovies>()
+                .HasKey(tm => new { tm.MovieId, tm.TagId });
+
+            modelBuilder.Entity<TagsMovies>()
+                .HasOne<Tag>(t => t.Tag)
+                .WithMany(m => m.TagsMovies)
+                .HasForeignKey(t => t.TagId);
+
+            modelBuilder.Entity<TagsMovies>()
+                .HasOne<Movie>(m => m.Movie)
+                .WithMany(m => m.TagsMovies)
+                .HasForeignKey(m => m.MovieId);
+           
           
 
             // Index
