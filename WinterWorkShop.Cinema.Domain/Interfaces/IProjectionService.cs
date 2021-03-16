@@ -10,7 +10,7 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
     public interface IProjectionService
     {
         Task<IEnumerable<ProjectionDomainModel>> GetAllAsync();
-        Task<CreateProjectionResultModel> CreateProjection(ProjectionDomainModel domainModel);
+        Task<GenericResult<ProjectionDomainModel>> CreateProjection(ProjectionDomainModel domainModel);
 
         Task<GenericResult<ProjectionDomainModel>> FilterProjectionAsync(FilterProjectionDomainModel filter);
     }
