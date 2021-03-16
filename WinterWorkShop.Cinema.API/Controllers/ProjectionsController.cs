@@ -46,7 +46,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("filter")]
-        public async Task<ActionResult> GetFilteredProjection([FromQuery] FilterProjectionModel query)
+        public async Task<ActionResult<GenericResult<ProjectionDomainModel>>> GetFilteredProjection([FromQuery] FilterProjectionModel query)
         {
             var filter = new FilterProjectionDomainModel
             {
@@ -98,7 +98,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 
             };
 
-            CreateProjectionResultModel createProjectionResultModel;
+            GenericResult<ProjectionDomainModel> createProjectionResultModel;
 
             try
             {
@@ -126,7 +126,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return BadRequest(errorResponse);                
             }
 
-            return Created("projections//" + createProjectionResultModel.Projection.Id, createProjectionResultModel.Projection);
+            return Created("projections//" + createProjectionResultModel.Data.Id, createProjectionResultModel.Data);
         }
     }
 }
