@@ -23,9 +23,10 @@ const ShowAllCinemas: React.FC = (props: any) => {
     isLoading: true,
   });
 
+  
   useEffect(() => {
     getCinemas();
-  }, []);
+  },[]);
 
   const getCinemas = () => {
     const requestOptions = {
@@ -54,6 +55,7 @@ const ShowAllCinemas: React.FC = (props: any) => {
         setState({ ...state, isLoading: false });
       });
   };
+
 
   const removeCinema = (id: string) => {
     const requestOptions = {
