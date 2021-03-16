@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using WinterWorkShop.Cinema.API.Models;
@@ -96,12 +98,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
             {
                 createMovie = await _movieService.AddMovieAsync(domainModel);
                 // 
-               /*
-                if(createMovie.IsSuccessful)
-                {
-                   await _movieService.AddTagsForMovie(createMovie.Data);
-                }
-                */
+              
+                
             }
             catch (DbUpdateException e)
             {
@@ -257,11 +255,17 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("SearchMoviesByTags")]
-        public async Task<ActionResult<GenericResult<MovieDomainModel>>> SearchMoviesByTags([FromQuery]object froQuery)
+        public async Task<ActionResult<GenericResult<MovieDomainModel>>> SearchMoviesByTags([FromQuery]string froQuery)
         {
-            string query = ControllerContext.HttpContext.Request.QueryString.Value;
 
-            
+             if( User.FindFirst(ClaimTypes.Role).Value == "admin")
+            {
+
+            }
+            string query = ControllerContext.HttpContext.Request.QueryString.Value;
+            var queryParameters = QueryHelpers.ParseQuery(query);
+
+            var movies = await _movieService.SearchMoviesByTag(queryParameters);
             return null;
         }
     }

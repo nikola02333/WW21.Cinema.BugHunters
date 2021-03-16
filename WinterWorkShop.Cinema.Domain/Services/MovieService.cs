@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -106,7 +107,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             // 
           
 
-           await AddTagsForMovie2(movie);
+           await AddTagsForMovie(movie);
 
            
 
@@ -129,11 +130,13 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
-        private async Task AddTagsForMovie2(Movie movie)
+        public async Task AddTagsForMovie(Movie movie)
         {
             var tagExistGenre =  _tagsRepository.GetTagByValue(movie.Genre);
+            var tagExistYear = _tagsRepository.GetTagByYear(movie.Year);
+            var tagExistTitle = _tagsRepository.GetTagByValue(movie.Title);
 
-            if(tagExistGenre != null)
+            if (tagExistGenre != null)
             {
                 var genreTagsMovies = new TagsMovies
                 {
@@ -174,7 +177,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
            
 
             }
-            var tagExistYear = _tagsRepository.GetTagByYear(movie.Year);
+           
 
             if (tagExistYear != null)
             {
@@ -215,6 +218,42 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
                 _tagsMoviesRepository.Save();
 
+            }
+            if (tagExistTitle != null)
+            {
+                var titleTagsMovies = new TagsMovies
+                {
+                    Movie = movie,
+                    Tag = tagExistTitle,
+                    MovieId = movie.Id,
+                    TagId = tagExistTitle.TagId
+                };
+
+                _tagsRepository.Attach(tagExistTitle);
+                await _tagsMoviesRepository.InsertAsync(titleTagsMovies);
+
+
+            }
+            else
+            {
+
+                var tagTitleToCreate = new Tag
+                {
+                    TagValue = movie.Title,
+                    TagName = "Title"
+                };
+                var newGenreTag = await _tagsRepository.InsertAsync(tagTitleToCreate);
+
+
+                var titleTagsMovies = new TagsMovies
+                {
+                    Movie = movie,
+                    Tag = newGenreTag,
+                    TagId = newGenreTag.TagId
+                };
+                await _tagsMoviesRepository.InsertAsync(titleTagsMovies);
+
+                _tagsMoviesRepository.Save();
             }
 
         }
@@ -346,102 +385,19 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         }
 
-        public async Task AddTagsForMovie(MovieDomainModel movieDomainModel)
+        public async Task<GenericResult<MovieDomainModel>> SearchMoviesByTag(Dictionary<string, StringValues> parameters)
         {
-            var movie = new Movie
+            var query="";
+            foreach (var item in parameters)
             {
-                Title= movieDomainModel.Title,
-                 Id= movieDomainModel.Id,
-                  Current= movieDomainModel.Current,
-                   Genre = movieDomainModel.Genre,
-            };
-            var tagExistGenre = _tagsRepository.GetTagByValue(movie.Genre);
-
-            if (tagExistGenre != null)
-            {
-                var genreTagsMovies = new TagsMovies
+                if (item.Key =="genre")
                 {
-                    Movie = movie,
-                    Tag = tagExistGenre,
-                    MovieId = movie.Id,
-                    TagId = tagExistGenre.TagId
-                };
-
-                _tagsRepository.Attach(tagExistGenre);
-                await _tagsMoviesRepository.InsertAsync(genreTagsMovies);
-                 _tagsMoviesRepository.Save();
-
-
+                    query += $"Where(x=>x.{item.Key} == {item.Value})";
+                }
             }
-            else
-            {
-
-                var tagGenreToCreate = new Tag
-                {
-                    TagValue = movie.Genre,
-                    TagName = "Genre"
-                };
-                var newGenreTag = await _tagsRepository.InsertAsync(tagGenreToCreate);
-                //_tagsRepository.Save();
-
-
-                var genreTagsMovies = new TagsMovies
-                {
-                    Movie = movie,
-                    Tag = newGenreTag,
-                    TagId = newGenreTag.TagId
-                };
-                await _tagsMoviesRepository.InsertAsync(genreTagsMovies);
-
-                //_tagsMoviesRepository.Save();
-
-
-
-            }
-            var tagExistYear = _tagsRepository.GetTagByYear(movie.Year);
-
-            if (tagExistYear != null)
-            {
-                /// Tag Year to Attach 
-                var yearTagMovies = new TagsMovies
-                {
-                    Movie = movie,
-                    Tag = tagExistYear,
-                    MovieId = movie.Id,
-                    TagId = tagExistYear.TagId
-                };
-
-                _tagsRepository.Attach(tagExistYear);
-
-                await _tagsMoviesRepository.InsertAsync(yearTagMovies);
-               // _tagsMoviesRepository.Save();
-
-            }
-            else
-            {
-                /// Tag Year to create 
-                var tagYearToCreate = new Tag
-                {
-                    TagName = "Year",
-                    TagValue = movie.Year.ToString()
-                };
-
-                var newYearTag = await _tagsRepository.InsertAsync(tagYearToCreate);
-               // _tagsRepository.Save();
-
-
-                var yearTagMovie = new TagsMovies
-                {
-                    Movie = movie,
-                    Tag = newYearTag,
-                    TagId = newYearTag.TagId
-                };
-                await _tagsMoviesRepository.InsertAsync(yearTagMovie);
-
-               // _tagsMoviesRepository.Save();
-
-            }
-            _tagsRepository.Save();
+            var itemf = await _moviesRepository.SearchMoviesByTags("");
+         
+            return null;
         }
     }
 }

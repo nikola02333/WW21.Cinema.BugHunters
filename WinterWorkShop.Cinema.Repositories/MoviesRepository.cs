@@ -16,6 +16,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         Task<IEnumerable<Movie>> GetTopTenMovies();
 
+        Task<IEnumerable<Movie>> SearchMoviesByTags(string queryTags);
     }
 
     public class MoviesRepository : IMoviesRepository
@@ -98,6 +99,17 @@ namespace WinterWorkShop.Cinema.Repositories
             return topTenMovies;
         }
 
-        
+        public async Task<IEnumerable<Movie>> SearchMoviesByTags(string queryTags="comedy")
+        {
+            // genre= comedy
+            var movies = await _cinemaContext.Movies
+                 .Include(t => t.TagsMovies)
+                 .ThenInclude(m => m.Movie)
+                 .Where(tm => tm.TagsMovies.Any(tm => tm.Movie.Genre == queryTags))
+                   .AsNoTracking()
+                 .ToListAsync();
+
+            return movies;
+        }
     }
 }

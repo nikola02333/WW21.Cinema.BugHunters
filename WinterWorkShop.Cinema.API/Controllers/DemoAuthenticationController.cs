@@ -23,11 +23,12 @@ namespace WinterWorkShop.Cinema.API.Controllers
         // NOT FOR PRODUCTION USE!!!
         // you will need a robust auth implementation for production
         // i.e. try IdentityServer4
-        [Route("/get-token")]
-        public IActionResult GenerateToken(string name, bool admin)
+        [HttpGet]
+        [Route("token")]
+        public IActionResult GenerateToken([FromQuery]string name)
         {
             var jwt = JwtTokenGenerator
-                .Generate(name, admin, _configuration["Tokens:Issuer"], _configuration["Tokens:Key"]);
+                .Generate(name, true, _configuration["Tokens:Issuer"], _configuration["Tokens:Key"]);
 
             return Ok(new {token = jwt});
         }

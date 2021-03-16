@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,6 +25,8 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
 
         Task<GenericResult<MovieDomainModel>> ActivateMovie(object movieId);
 
-        Task AddTagsForMovie(MovieDomainModel movie);
+        //Task AddTagsForMovie(MovieDomainModel movie);
+       
+        Task<GenericResult<MovieDomainModel>> SearchMoviesByTag(Dictionary<string, StringValues> parameters);
     }
 }
