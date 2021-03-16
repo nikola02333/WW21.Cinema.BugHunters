@@ -21,7 +21,7 @@ namespace WinterWorkShop.Cinema.Repositories
         Task<Movie> ActivateDeactivateMovie(Movie movieToActivateDeactivate);
 
         Task<IEnumerable<Movie>> GetMoviesByAuditoriumId(int id);
-
+        Task<IEnumerable<Movie>> SearchMoviesByTags(string query);
     }
     
     public class MoviesRepository : IMoviesRepository

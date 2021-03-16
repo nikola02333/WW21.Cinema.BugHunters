@@ -17,6 +17,9 @@ namespace WinterWorkShop.Cinema.Tests.Services
     public class MoviesServiceTests
     {
         private Mock<IMoviesRepository> _mockMovieRepository;
+        private Mock<ITagsRepository> _mockTagsRepository;
+        private Mock<ITagsMoviesRepository> _mockTagsMoviesRepository;
+
         private Mock<IAuditoriumsRepository> _mockAuditoriumRepository;
         private MovieService _moviesService;
 
@@ -25,7 +28,13 @@ namespace WinterWorkShop.Cinema.Tests.Services
         public void TestInit()
         {
             _mockMovieRepository = new Mock<IMoviesRepository>();
-            _moviesService = new MovieService(_mockMovieRepository.Object, _mockAuditoriumRepository.Object);
+            _mockAuditoriumRepository = new Mock<IAuditoriumsRepository>();
+            _mockTagsMoviesRepository = new Mock<ITagsMoviesRepository>();
+            _mockTagsRepository = new Mock<ITagsRepository>();
+            _moviesService = new MovieService(_mockMovieRepository.Object,
+                                    _mockTagsRepository.Object,
+                                    _mockTagsMoviesRepository.Object,
+                                    _mockAuditoriumRepository.Object );
         }
 
         [TestMethod]

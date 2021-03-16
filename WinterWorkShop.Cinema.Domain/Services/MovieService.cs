@@ -22,10 +22,10 @@ namespace WinterWorkShop.Cinema.Domain.Services
         private readonly ITagsRepository _tagsRepository;
         private readonly ITagsMoviesRepository _tagsMoviesRepository;
 
-        public MovieService(IMoviesRepository moviesRepository, IAuditoriumsRepository auditoriumsRepository)
         public MovieService(IMoviesRepository moviesRepository,
                             ITagsRepository tagsRepository,
-                            ITagsMoviesRepository tagsMoviesRepository)
+                            ITagsMoviesRepository tagsMoviesRepository,
+                            IAuditoriumsRepository auditoriumsRepository)
         {
             _moviesRepository = moviesRepository;
            _tagsRepository = tagsRepository;
