@@ -53,13 +53,13 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
         [HttpGet]
-        [Route("current")]
-        public async Task<ActionResult<IEnumerable<Movie>>> GetAllAsync()
+        [Route("AllMovies/{isCurrent}")]
+        public async Task<ActionResult<IEnumerable<Movie>>> GetAllAsync(bool? isCurrent)
         {
             
             GenericResult<MovieDomainModel> movieDomainModels;
 
-            movieDomainModels = await _movieService.GetAllMoviesAsync(true);
+            movieDomainModels = await _movieService.GetAllMoviesAsync(isCurrent);
 
            
             return Ok(movieDomainModels.DataList);
@@ -74,7 +74,26 @@ namespace WinterWorkShop.Cinema.API.Controllers
             return Ok(movies.DataList);
         }
 
-     
+        [HttpGet]
+        [Route("byauditoriumid/{auditoriumId:int}")]
+        public async Task<ActionResult> GetByAuditoriumIdAsync(int auditoriumId)
+        {
+            var movies = await _movieService.GetMoviesByAuditoriumId(auditoriumId);
+            if (!movies.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = movies.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.NotFound
+                };
+
+                return NotFound(errorResponse);
+            }
+    
+            return Ok(movies.DataList);
+        }
+
+
         //[Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult> CreateMovieAsync([FromBody] CreateMovieModel movieModel)
@@ -89,7 +108,10 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 Rating = movieModel.Rating,
                 Title = movieModel.Title,
                 Year = movieModel.Year,
-                Genre= movieModel.Genre
+                Genre= movieModel.Genre,
+                CoverPicture= movieModel.CoverPicture,
+                UserRaitings = movieModel.UserRaitings,
+                HasOscar = movieModel.HasOscar
             };
 
             GenericResult<MovieDomainModel> createMovie;
@@ -162,6 +184,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
             movieToUpdate.Data.Year = movieModel.Year;
             movieToUpdate.Data.Rating = movieModel.Rating;
             movieToUpdate.Data.Genre = movieModel.Genre;
+            movieToUpdate.Data.CoverPicture = movieModel.CoverPicture;
+            movieToUpdate.Data.UserRaitings = movieModel.UserRaitings;
+            movieToUpdate.Data.HasOscar = movieModel.HasOscar;
 
             GenericResult<MovieDomainModel> movieDomainModel;
             try
@@ -239,7 +264,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return BadRequest(errorResponse);
             }
            
-            var movieActivated =await _movieService.ActivateMovie(id);
+            var movieActivated =await _movieService.ActivateDeactivateMovie(id);
 
             if(! movieActivated.IsSuccessful)
             {

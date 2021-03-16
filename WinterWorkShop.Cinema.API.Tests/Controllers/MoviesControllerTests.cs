@@ -166,7 +166,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             //Act
 
-            var result = await _moviesController.GetAllAsync();
+            var result = await _moviesController.GetAllAsync(false);
 
             var movieResult = ((OkObjectResult)result.Result).Value;
 
@@ -192,6 +192,43 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 IsSuccessful = true,
                 DataList = new List<MovieDomainModel>
                 {
+                    new MovieDomainModel{ Current= false, Genre = "comedy", Id = Guid.NewGuid(), Rating= 8, Title="New_Movie1", Year=1999},
+                     new MovieDomainModel{ Current= false, Genre = "comedy", Id = Guid.NewGuid(), Rating= 8, Title="New_Movie2", Year=1999},
+                }
+            };
+
+
+            _mockMovieService.Setup(src => src.GetAllMoviesAsync(true)).ReturnsAsync(expectedMovies);
+
+
+            //Act
+
+            var result = await _moviesController.GetAllAsync(false);
+
+            var movieResult = ((OkObjectResult)result.Result).Value;
+
+            //Assert
+
+            Assert.IsNotNull(movieResult);
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
+            Assert.AreEqual(expectedStatusCode, ((OkObjectResult)result.Result).StatusCode);
+            Assert.AreSame(expectedMovies.DataList, movieResult);
+
+        }
+
+        [TestMethod]
+        public async Task GetAllCurrentMoviesAsync_Returns_Movies()
+        {
+            //Arrange
+            int expectedStatusCode = 200;
+
+
+
+            var expectedMovies = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = true,
+                DataList = new List<MovieDomainModel>
+                {
                     new MovieDomainModel{ Current= true, Genre = "comedy", Id = Guid.NewGuid(), Rating= 8, Title="New_Movie1", Year=1999},
                      new MovieDomainModel{ Current= true, Genre = "comedy", Id = Guid.NewGuid(), Rating= 8, Title="New_Movie2", Year=1999},
                 }
@@ -203,7 +240,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             //Act
 
-            var result = await _moviesController.GetAllAsync();
+            var result = await _moviesController.GetAllAsync(true);
 
             var movieResult = ((OkObjectResult)result.Result).Value;
 
@@ -681,7 +718,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 IsSuccessful = false,
                 ErrorMessage = Messages.MOVIE_ACTIVATE_DEACTIVATE_ERROR
             };
-            _mockMovieService.Setup(srvc => srvc.ActivateMovie(movieId)).ReturnsAsync(moviToReturn);
+            _mockMovieService.Setup(srvc => srvc.ActivateDeactivateMovie(movieId)).ReturnsAsync(moviToReturn);
 
             //Act
             var result = await _moviesController.ActivateMovie(movieId);

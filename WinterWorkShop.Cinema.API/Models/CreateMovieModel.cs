@@ -25,5 +25,9 @@ namespace WinterWorkShop.Cinema.API.Models
         [StringLength(20)]
         public string Genre { get; set; }
         public bool Current { get; set; }
+
+        public bool HasOscar { get; set; }
+        public double UserRaitings { get; set; }
+        public string CoverPicture { get; set; }
     }
 }
