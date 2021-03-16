@@ -22,6 +22,7 @@ function App() {
         <Route path="/ProjectionDetails/:id" component={ProjectionDetails} />
         <Route path="/Projection" component={Projection} />
         <Route path="/dashboard" component={Dashboard} />
+      
       </Switch>
       <NotificationContainer />
       </div>
