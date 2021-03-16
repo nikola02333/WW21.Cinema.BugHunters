@@ -390,12 +390,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
             var query="";
             foreach (var item in parameters)
             {
-                if (item.Key =="genre")
-                {
-                    query += $"Where(x=>x.{item.Key} == {item.Value})";
-                }
+                
             }
-            var itemf = await _moviesRepository.SearchMoviesByTags("");
+            var itemf = await _moviesRepository.SearchMoviesByTags("comedy");
          
             return null;
         }

@@ -258,10 +258,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> SearchMoviesByTags([FromQuery]string froQuery)
         {
 
-             if( User.FindFirst(ClaimTypes.Role).Value == "admin")
-            {
-
-            }
+         
             string query = ControllerContext.HttpContext.Request.QueryString.Value;
             var queryParameters = QueryHelpers.ParseQuery(query);
 

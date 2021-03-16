@@ -101,15 +101,18 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public async Task<IEnumerable<Movie>> SearchMoviesByTags(string queryTags="comedy")
         {
-            // genre= comedy
-            var movies = await _cinemaContext.Movies
-                 .Include(t => t.TagsMovies)
-                 .ThenInclude(m => m.Movie)
-                 .Where(tm => tm.TagsMovies.Any(tm => tm.Movie.Genre == queryTags))
-                   .AsNoTracking()
-                 .ToListAsync();
 
-            return movies;
+
+            var tag =  _cinemaContext.Tags
+                .Where(t => t.TagValue == queryTags)
+                .SingleOrDefault();
+
+            var listMovies = _cinemaContext.TagsMovies.Where(tm => tm.TagId == tag.TagId).Include(m => m.Movie).Select(m => m.Movie).ToList();
+
+            // genre= comedy
+            
+
+            return null;
         }
     }
 }
