@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.API.Models;
 using WinterWorkShop.Cinema.Data;
+using WinterWorkShop.Cinema.Data.Entities;
 using WinterWorkShop.Cinema.Domain.Common;
 using WinterWorkShop.Cinema.Domain.Models;
 using WinterWorkShop.Cinema.Domain.Services;
@@ -170,8 +171,9 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 Current = movieToCreate.Current,
                 Title = movieToCreate.Title
             };
-            
+            var tagToReturn = new Tag { };
 
+            _mockTagsRepository.Setup(stvc => stvc.InsertAsync(It.IsNotNull<Tag>())).ReturnsAsync(tagToReturn);
             _mockMovieRepository.Setup(srvc => srvc.InsertAsync(It.IsNotNull<Movie>())).ReturnsAsync(movieToReturn);
             // Act
 
