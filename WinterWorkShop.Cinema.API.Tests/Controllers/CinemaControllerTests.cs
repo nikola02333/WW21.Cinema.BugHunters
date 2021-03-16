@@ -544,15 +544,15 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var cinemaResult = ((BadRequestObjectResult)result).Value;
            
-            var errorStatusCode = (BadRequestObjectResult)cinemaResult;
+            var errorStatusCode = (ErrorResponseModel)cinemaResult;
 
-            var errorResult = (ErrorResponseModel)cinemaResult;
+
 
             //Assert
-
-            Assert.IsInstanceOfType(cinemaResult, typeof(BadRequestObjectResult));
-            Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
-            Assert.AreEqual(expectedErrorMessage, errorResult.ErrorMessage);
+            Assert.IsNotNull(cinemaResult);
+            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(expectedStatusCode, ((BadRequestObjectResult)result).StatusCode);
+            Assert.AreEqual(expectedErrorMessage, errorStatusCode.ErrorMessage);
         }
 
     }
