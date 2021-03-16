@@ -254,16 +254,16 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
         [HttpGet]
-        [Route("SearchMoviesByTags")]
-        public async Task<ActionResult<GenericResult<MovieDomainModel>>> SearchMoviesByTags([FromQuery]string froQuery)
+        [Route("SearchMoviesByTag")]
+        public async Task<ActionResult<GenericResult<MovieDomainModel>>> SearchMoviesByTags( [FromQuery]string query)
         {
 
          
-            string query = ControllerContext.HttpContext.Request.QueryString.Value;
+            string query2 = ControllerContext.HttpContext.Request.QueryString.Value;
             var queryParameters = QueryHelpers.ParseQuery(query);
 
-            var movies = await _movieService.SearchMoviesByTag(queryParameters);
-            return null;
+            var movies = await _movieService.SearchMoviesByTag(query);
+            return  Ok(movies.DataList);
         }
     }
 }

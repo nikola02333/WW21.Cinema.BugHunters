@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,9 +17,9 @@ namespace WinterWorkShop.Cinema.Repositories
 
         Task<IEnumerable<Movie>> GetTopTenMovies();
 
-        Task<IEnumerable<Movie>> SearchMoviesByTags(string queryTags);
+        Task<IEnumerable<Movie>> SearchMoviesByTags(string query);
     }
-
+    
     public class MoviesRepository : IMoviesRepository
     {
         private CinemaContext _cinemaContext;
@@ -99,20 +100,23 @@ namespace WinterWorkShop.Cinema.Repositories
             return topTenMovies;
         }
 
-        public async Task<IEnumerable<Movie>> SearchMoviesByTags(string queryTags="comedy")
+        public async Task<IEnumerable<Movie>> SearchMoviesByTags(string query)
         {
 
-
-            var tag =  _cinemaContext.Tags
-                .Where(t => t.TagValue == queryTags)
+            
+            var searchTag =  _cinemaContext.Tags
+                .Where(t => t.TagValue == query)
                 .SingleOrDefault();
-
-            var listMovies = _cinemaContext.TagsMovies.Where(tm => tm.TagId == tag.TagId).Include(m => m.Movie).Select(m => m.Movie).ToList();
-
-            // genre= comedy
             
 
-            return null;
+            var listMovies = await _cinemaContext.TagsMovies
+                        .Where(tm => tm.TagId == searchTag.TagId)
+                        .Include(m => m.Movie)
+                        .Select(m => m.Movie)
+                        .ToListAsync();
+
+
+            return listMovies;
         }
     }
 }

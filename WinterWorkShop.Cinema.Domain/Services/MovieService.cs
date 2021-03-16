@@ -385,16 +385,24 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         }
 
-        public async Task<GenericResult<MovieDomainModel>> SearchMoviesByTag(Dictionary<string, StringValues> parameters)
+        public async Task<GenericResult<MovieDomainModel>> SearchMoviesByTag(string query)
         {
-            var query="";
-            foreach (var item in parameters)
-            {
-                
-            }
-            var itemf = await _moviesRepository.SearchMoviesByTags("comedy");
-         
-            return null;
+           
+            var items = await _moviesRepository.SearchMoviesByTags(query);
+
+            var movies = items.Select(movie => 
+                        new MovieDomainModel { 
+                            Current= movie.Current, 
+                             Genre= movie.Genre,
+                              Id= movie.Id,
+                               Rating= movie.Rating ?? 0,
+                                Title= movie.Title,
+                                 Year= movie.Year
+                 }).ToList();
+            return new GenericResult<MovieDomainModel> {
+            
+                DataList= movies
+            };
         }
     }
 }
