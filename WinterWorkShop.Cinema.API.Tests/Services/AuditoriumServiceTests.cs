@@ -756,7 +756,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             var expectedAuditoriumResult = new GenericResult<AuditoriumDomainModel>
             {
                 IsSuccessful = false,
-                ErrorMessage = Messages.AUDITORIUM_UNVALID_CINEMAID
+                ErrorMessage = Messages.AUDITORIUM_GET_BY_ID_ERROR
 
 
             };
