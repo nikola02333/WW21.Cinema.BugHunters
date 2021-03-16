@@ -88,7 +88,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Data = domainModel
             }; 
         }
-
+        //Fale testovi
         public async Task<GenericResult<MovieDomainModel>> GetMoviesByAuditoriumId(int id)
         {
             var auditorium = await _auditoriumsRepository.GetByIdAsync(id);

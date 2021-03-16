@@ -38,24 +38,17 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 return null;
             }
 
-            List<ProjectionDomainModel> result = new List<ProjectionDomainModel>();
-            ProjectionDomainModel model;
-            foreach (var item in data)
+            var result = data.Select(item => new ProjectionDomainModel
             {
-                model = new ProjectionDomainModel
-                {
-                    Id = item.Id,
-                    MovieId = item.MovieId,
-                    AuditoriumId = item.AuditoriumId,
-                    ProjectionTime = item.ShowingDate,
-                    MovieTitle = item.Movie.Title,
-                    AditoriumName = item.Auditorium.AuditoriumName,
-                    Duration = item.Duration,
-                    Price = item.Price
-                    
-                };
-                result.Add(model);
-            }
+                Id = item.Id,
+                MovieId = item.MovieId,
+                AuditoriumId = item.AuditoriumId,
+                ProjectionTime = item.ShowingDate,
+                MovieTitle = item.Movie.Title,
+                AditoriumName = item.Auditorium.AuditoriumName,
+                Duration = item.Duration,
+                Price = item.Price
+            }).ToList();
 
             return result;
         }
@@ -138,7 +131,16 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 }
             }
 
-            var projections = await _projectionsRepository.FilterProjection(filter.CinemaId, filter.AuditoriumId, filter.MovieId, filter.DateTime);
+            if (filter.DateTime != null && filter.DateTime < DateTime.Now)
+            {
+                return new GenericResult<ProjectionDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.PROJECTION_IN_PAST
+                };
+            }
+
+            var projections = await _projectionsRepository.FilterProjectionAsync(filter.CinemaId, filter.AuditoriumId, filter.MovieId, filter.DateTime);
 
             return new GenericResult<ProjectionDomainModel>
             {
@@ -156,7 +158,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         }
 
-        public async Task<CreateProjectionResultModel> CreateProjection(ProjectionDomainModel domainModel)
+        public async Task<GenericResult<ProjectionDomainModel>> CreateProjection(ProjectionDomainModel domainModel)
         {
             int projectionTime = 3;
 
@@ -166,7 +168,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             if (projectionsAtSameTime != null && projectionsAtSameTime.Count > 0)
             {
-                return new CreateProjectionResultModel
+                return new GenericResult<ProjectionDomainModel>
                 {
                     IsSuccessful = false,
                     ErrorMessage = Messages.PROJECTIONS_AT_SAME_TIME
@@ -187,18 +189,18 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             if (insertedProjection == null)
             {
-                return new CreateProjectionResultModel
+                return new GenericResult<ProjectionDomainModel>
                 {
                     IsSuccessful = false,
                     ErrorMessage = Messages.PROJECTION_CREATION_ERROR
                 };
             }
             _projectionsRepository.Save();
-            CreateProjectionResultModel result = new CreateProjectionResultModel
+
+            var result = new GenericResult<ProjectionDomainModel>
             {
                 IsSuccessful = true,
-                ErrorMessage = null,
-                Projection = new ProjectionDomainModel
+                Data = new ProjectionDomainModel
                 {
                     Id = insertedProjection.Id,
                     AuditoriumId = insertedProjection.AuditoriumId,

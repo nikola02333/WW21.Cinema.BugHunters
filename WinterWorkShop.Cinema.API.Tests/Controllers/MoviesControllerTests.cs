@@ -161,7 +161,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             };
 
 
-            _mockMovieService.Setup(src => src.GetAllMoviesAsync(true)).ReturnsAsync(expectedMovies);
+            _mockMovieService.Setup(src => src.GetAllMoviesAsync(false)).ReturnsAsync(expectedMovies);
 
 
             //Act
@@ -198,7 +198,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             };
 
 
-            _mockMovieService.Setup(src => src.GetAllMoviesAsync(true)).ReturnsAsync(expectedMovies);
+            _mockMovieService.Setup(src => src.GetAllMoviesAsync(false)).ReturnsAsync(expectedMovies);
 
 
             //Act

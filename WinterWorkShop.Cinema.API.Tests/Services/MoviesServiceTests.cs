@@ -25,6 +25,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         public void TestInit()
         {
             _mockMovieRepository = new Mock<IMoviesRepository>();
+            _mockAuditoriumRepository = new Mock<IAuditoriumsRepository>();
             _moviesService = new MovieService(_mockMovieRepository.Object, _mockAuditoriumRepository.Object);
         }
 
