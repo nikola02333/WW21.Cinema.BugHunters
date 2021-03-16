@@ -30,8 +30,8 @@ interface IState {
 const NewCinema: React.FC = (props: any) => {
   const [state, setState] = useState<IState>({
     name: "",
-    nameError: "",
-    auditName: "",
+    nameError:"",
+    auditName:"",
     seatRows: 0,
     numberOfSeats: 0,
     auditNameError: "",
@@ -59,6 +59,7 @@ const NewCinema: React.FC = (props: any) => {
         setState({ ...state, nameError: "", canSubmit: true });
       }
     }
+
     if (id === "auditName") {
       if (value === "") {
         setState({
@@ -108,7 +109,7 @@ const NewCinema: React.FC = (props: any) => {
 
   const addCinema = () => {
     const data = {
-      Name: state.name,
+      Name: state.name,     
       numberOfSeats: +state.numberOfSeats,
       seatRows: +state.seatRows,
       auditName: state.auditName,
@@ -123,7 +124,7 @@ const NewCinema: React.FC = (props: any) => {
       body: JSON.stringify(data),
     };
 
-    fetch(`${serviceConfig.baseURL}/api/cinemas`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/cinemas/create`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);

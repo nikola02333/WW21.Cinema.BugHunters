@@ -22,6 +22,7 @@ export interface IMovie {
 export interface ICinema {
   id: string;
   name: string;
+
 }
 
 export interface IAuditorium {

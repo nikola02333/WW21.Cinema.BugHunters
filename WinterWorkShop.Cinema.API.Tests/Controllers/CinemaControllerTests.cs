@@ -549,7 +549,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var errorResult = (ErrorResponseModel)cinemaResult;
 
            //Assert
-
             Assert.IsInstanceOfType(cinemaResult, typeof(ErrorResponseModel));
            Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
            Assert.AreEqual(expectedErrorMessage, errorResult.ErrorMessage);
