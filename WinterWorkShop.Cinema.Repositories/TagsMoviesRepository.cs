@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
@@ -9,9 +10,6 @@ namespace WinterWorkShop.Cinema.Repositories
 {
     public interface ITagsMoviesRepository : IRepository<TagsMovies>
     {
-        // search tag by specific name and value
-        // Task<List<GenericResult<TagsMovies>>> GetTagById();
-
         void Attach(TagsMovies TagsMovie);
     }
     public class TagsMoviesRepository : ITagsMoviesRepository
@@ -30,20 +28,19 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public TagsMovies Delete(object id)
         {
-            throw new NotImplementedException();
+            var tagMovieToDelete = _cinemaContext.TagsMovies.Find(id);
+
+            return _cinemaContext.TagsMovies.Remove(tagMovieToDelete).Entity;
         }
 
-        public Task<IEnumerable<TagsMovies>> GetAllAsync()
+        public async Task<IEnumerable<TagsMovies>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _cinemaContext.TagsMovies.ToListAsync();
         }
 
         public async Task<TagsMovies> GetByIdAsync(object id)
         {
-            
-            throw new NotImplementedException();
-            //var tagMovie = await _cinemaContext.TagsMovies
-            // au ovde moram da imam dva id-ja, tagname i movieId, 
+            return await _cinemaContext.TagsMovies.FindAsync(id);
         }
 
         public async Task<TagsMovies> InsertAsync(TagsMovies obj)
@@ -65,7 +62,10 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public TagsMovies Update(TagsMovies obj)
         {
-            throw new NotImplementedException();
+            var updatedEntry = _cinemaContext.TagsMovies.Attach(obj).Entity;
+            _cinemaContext.Entry(obj).State = EntityState.Modified;
+
+            return updatedEntry;
         }
     }
 }

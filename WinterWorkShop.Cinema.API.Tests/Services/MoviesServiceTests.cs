@@ -394,5 +394,84 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Assert.IsInstanceOfType(result, typeof(GenericResult<MovieDomainModel>));
             Assert.AreEqual(isSuccesful, result.IsSuccessful);
         }
+
+        [TestMethod]
+        public async Task AddTagForMovies_When_Tags_Not_Exists_Adds_New_Tags()
+        {
+            var movieId = Guid.NewGuid();
+
+            var genreTagsMovies = new TagsMovies
+            {
+                Movie = new Movie(),
+                Tag = new Tag(),
+                MovieId = movieId,
+            };
+
+            var yearTagsMovies = new TagsMovies
+            {
+                Movie = new Movie(),
+                Tag = new Tag(),
+                MovieId = movieId,
+            };
+
+            var titleTagsMovies = new TagsMovies
+            {
+                Movie = new Movie(),
+                Tag = new Tag(),
+                MovieId = movieId,
+            };
+            var movie = new Movie
+            {
+                Title= "New Movie",
+                Year= 2000,
+                Genre ="comedy"
+            };
+
+            var newGenreTagId = 1;
+            var tagGenreToCreate = new Tag
+            {
+                TagValue = movie.Genre,
+                TagName = "Genre",
+               
+            };
+
+            var newYearTagId = 2;
+            var tagYearToCreate = new Tag
+            {
+                TagValue = movie.Year.ToString(),
+                TagName = "Year",
+                TagId = newYearTagId
+
+            };
+
+            var newTitleTagId = 3;
+            var tagTitleToCreate = new Tag
+            {
+                TagValue = movie.Title,
+                TagName = "Title",
+                TagId = newTitleTagId
+
+            };
+
+
+            _mockTagsRepository.Setup(srvc => srvc.GetTagByValue(It.IsNotNull<string>())).Returns(default(Tag));
+            _mockTagsRepository.Setup(srvc => srvc.GetTagByYear(It.IsNotNull<int>())).Returns(default(Tag));
+
+            _mockTagsRepository.Setup(srvc => srvc.InsertAsync(tagGenreToCreate)).ReturnsAsync(tagGenreToCreate);
+            _mockTagsRepository.Setup(srvc => srvc.InsertAsync(tagYearToCreate)).ReturnsAsync(tagYearToCreate);
+            _mockTagsRepository.Setup(srvc => srvc.InsertAsync(tagTitleToCreate)).ReturnsAsync(tagTitleToCreate);
+
+
+            _mockTagsMoviesRepository.Setup(srvc => srvc.InsertAsync(genreTagsMovies)).ReturnsAsync(genreTagsMovies);
+
+            _mockTagsMoviesRepository.Setup(srvc => srvc.InsertAsync(yearTagsMovies)).ReturnsAsync(yearTagsMovies);
+            _mockTagsMoviesRepository.Setup(srvc => srvc.InsertAsync(titleTagsMovies)).ReturnsAsync(It.IsNotNull<TagsMovies>());
+
+            await _moviesService.AddTagsForMovie(movie);
+            _mockTagsMoviesRepository.Verify(srvc => srvc.InsertAsync(It.IsNotNull<TagsMovies>()), Times.Exactly(3));
+
+
+            _mockTagsRepository.Verify(srvc => srvc.InsertAsync(It.IsNotNull<Tag>()), Times.Exactly(3));
+        }
     }
 }
