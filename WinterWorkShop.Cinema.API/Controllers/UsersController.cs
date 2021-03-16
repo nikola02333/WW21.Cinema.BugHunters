@@ -25,6 +25,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
      
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public async Task<ActionResult<UserDomainModel>> GetAsync()
         {
