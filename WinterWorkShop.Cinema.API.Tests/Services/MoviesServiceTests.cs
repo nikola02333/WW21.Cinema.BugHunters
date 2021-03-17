@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.API.Models;
 using WinterWorkShop.Cinema.Data;
+using WinterWorkShop.Cinema.Data.Entities;
 using WinterWorkShop.Cinema.Domain.Common;
 using WinterWorkShop.Cinema.Domain.Models;
 using WinterWorkShop.Cinema.Domain.Services;
@@ -17,6 +18,9 @@ namespace WinterWorkShop.Cinema.Tests.Services
     public class MoviesServiceTests
     {
         private Mock<IMoviesRepository> _mockMovieRepository;
+        private Mock<ITagsRepository> _mockTagsRepository;
+        private Mock<ITagsMoviesRepository> _mockTagsMoviesRepository;
+
         private Mock<IAuditoriumsRepository> _mockAuditoriumRepository;
         private MovieService _moviesService;
 
@@ -26,7 +30,12 @@ namespace WinterWorkShop.Cinema.Tests.Services
         {
             _mockMovieRepository = new Mock<IMoviesRepository>();
             _mockAuditoriumRepository = new Mock<IAuditoriumsRepository>();
-            _moviesService = new MovieService(_mockMovieRepository.Object, _mockAuditoriumRepository.Object);
+            _mockTagsMoviesRepository = new Mock<ITagsMoviesRepository>();
+            _mockTagsRepository = new Mock<ITagsRepository>();
+            _moviesService = new MovieService(_mockMovieRepository.Object,
+                                    _mockTagsRepository.Object,
+                                    _mockTagsMoviesRepository.Object,
+                                    _mockAuditoriumRepository.Object );
         }
 
         [TestMethod]
@@ -162,8 +171,9 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 Current = movieToCreate.Current,
                 Title = movieToCreate.Title
             };
-            
+            var tagToReturn = new Tag { };
 
+            _mockTagsRepository.Setup(stvc => stvc.InsertAsync(It.IsNotNull<Tag>())).ReturnsAsync(tagToReturn);
             _mockMovieRepository.Setup(srvc => srvc.InsertAsync(It.IsNotNull<Movie>())).ReturnsAsync(movieToReturn);
             // Act
 

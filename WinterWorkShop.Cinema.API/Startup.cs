@@ -31,6 +31,8 @@ namespace WinterWorkShop.Cinema.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
+          
             services.AddDbContext<CinemaContext>(options =>
             {
                
@@ -54,6 +56,8 @@ namespace WinterWorkShop.Cinema.API
             services.AddTransient<ISeatsRepository, SeatsRepository>();
             services.AddTransient<IUsersRepository, UsersRepository>();
             services.AddTransient<ITicketsRepository, TicketsRepository>();
+            services.AddTransient<ITagsRepository, TagsRepository>();
+            services.AddTransient<ITagsMoviesRepository, TagsMoviesRepository>();
 
             // Business Logic
             services.AddTransient<IMovieService, MovieService>();
@@ -66,6 +70,9 @@ namespace WinterWorkShop.Cinema.API
             services.AddTransient<ITicketService, TicketService>();
             services.AddTransient<ITicketServiceFunction, TicketService>();
 
+
+            services.AddTransient<ITagService, TagService>();
+            services.AddTransient<ITtagsMoviesService, TagsMoviesService>();
 
             // Allow Cors for client app
             services.AddCors(options => {

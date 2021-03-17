@@ -1,7 +1,9 @@
-﻿using System;
+﻿using Microsoft.Extensions.Primitives;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using WinterWorkShop.Cinema.Data;
 using WinterWorkShop.Cinema.Domain.Common;
 using WinterWorkShop.Cinema.Domain.Models;
 
@@ -23,5 +25,10 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
 
         Task<GenericResult<MovieDomainModel>> ActivateDeactivateMovie(Guid movieId);
         Task<GenericResult<MovieDomainModel>> GetMoviesByAuditoriumId(int id);
+        //Task<GenericResult<MovieDomainModel>> ActivateMovie(object movieId);
+
+        //Task AddTagsForMovie(MovieDomainModel movie);
+       
+        Task<GenericResult<MovieDomainModel>> SearchMoviesByTag(string query);
     }
 }

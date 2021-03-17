@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.Extensions.Primitives;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,9 +21,9 @@ namespace WinterWorkShop.Cinema.Repositories
         Task<Movie> ActivateDeactivateMovie(Movie movieToActivateDeactivate);
 
         Task<IEnumerable<Movie>> GetMoviesByAuditoriumId(int id);
-
+        Task<IEnumerable<Movie>> SearchMoviesByTags(string query);
     }
-
+    
     public class MoviesRepository : IMoviesRepository
     {
         private CinemaContext _cinemaContext;
@@ -103,6 +104,24 @@ namespace WinterWorkShop.Cinema.Repositories
             return topTenMovies;
         }
 
+        public async Task<IEnumerable<Movie>> SearchMoviesByTags(string query)
+        {
+
+            
+            var searchTag =  _cinemaContext.Tags
+                .Where(t => t.TagValue == query)
+                .SingleOrDefault();
+            
+
+            var listMovies = await _cinemaContext.TagsMovies
+                        .Where(tm => tm.TagId == searchTag.TagId)
+                        .Include(m => m.Movie)
+                        .Select(m => m.Movie)
+                        .ToListAsync();
+
+
+            return listMovies;
+        }
         public async Task<Movie> ActivateDeactivateMovie(Movie movieToActivateDeactivatemovieId)
         {
             movieToActivateDeactivatemovieId.Current = !movieToActivateDeactivatemovieId.Current;
