@@ -394,5 +394,144 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Assert.IsInstanceOfType(result, typeof(GenericResult<MovieDomainModel>));
             Assert.AreEqual(isSuccesful, result.IsSuccessful);
         }
+
+        [TestMethod]
+        public async Task AddTagForMovies_When_Tags_Not_Exists_Adds_New_Tags()
+        {
+            var movieId = Guid.NewGuid();
+
+            var genreTagsMovies = new TagsMovies
+            {
+                Movie = new Movie(),
+                Tag = new Tag(),
+                MovieId = movieId,
+            };
+
+            var yearTagsMovies = new TagsMovies
+            {
+                Movie = new Movie(),
+                Tag = new Tag(),
+                MovieId = movieId,
+            };
+
+            var titleTagsMovies = new TagsMovies
+            {
+                Movie = new Movie(),
+                Tag = new Tag(),
+                MovieId = movieId,
+            };
+            var movie = new Movie
+            {
+                Title = "New Movie",
+                Year = 2000,
+                Genre = "comedy"
+            };
+
+            var newGenreTagId = 1;
+            var tagGenreToCreate = new Tag
+            {
+                TagValue = movie.Genre,
+                TagName = "Genre",
+
+            };
+
+            var newYearTagId = 2;
+            var tagYearToCreate = new Tag
+            {
+                TagValue = movie.Year.ToString(),
+                TagName = "Year",
+                TagId = newYearTagId
+
+            };
+
+            var newTitleTagId = 3;
+            var tagTitleToCreate = new Tag
+            {
+                TagValue = movie.Title,
+                TagName = "Title",
+                TagId = newTitleTagId
+
+            };
+
+
+            _mockTagsRepository.Setup(srvc => srvc.GetTagByValue(It.IsNotNull<string>())).Returns(default(Tag));
+            _mockTagsRepository.Setup(srvc => srvc.GetTagByYear(It.IsNotNull<int>())).Returns(default(Tag));
+
+            _mockTagsRepository.Setup(srvc => srvc.InsertAsync(It.IsAny<Tag>())).ReturnsAsync(tagGenreToCreate);
+            _mockTagsRepository.Setup(srvc => srvc.InsertAsync(It.IsAny<Tag>())).ReturnsAsync(tagYearToCreate);
+            _mockTagsRepository.Setup(srvc => srvc.InsertAsync(It.IsAny<Tag>())).ReturnsAsync(tagTitleToCreate);
+
+
+            _mockTagsMoviesRepository.Setup(srvc => srvc.InsertAsync(genreTagsMovies)).ReturnsAsync(genreTagsMovies);
+
+            _mockTagsMoviesRepository.Setup(srvc => srvc.InsertAsync(yearTagsMovies)).ReturnsAsync(yearTagsMovies);
+            _mockTagsMoviesRepository.Setup(srvc => srvc.InsertAsync(titleTagsMovies)).ReturnsAsync(It.IsNotNull<TagsMovies>());
+
+            await _moviesService.AddTagsForMovie(movie);
+            _mockTagsMoviesRepository.Verify(srvc => srvc.InsertAsync(It.IsNotNull<TagsMovies>()), Times.Exactly(3));
+
+
+            _mockTagsRepository.Verify(srvc => srvc.InsertAsync(It.IsNotNull<Tag>()), Times.Exactly(3));
+        }
+        [TestMethod]
+        public void GetMoviesByAuditoriumId_When_AuditoriumID_NotFound_Returns_IsSuccesful_False()
+        {
+            var isSuccesful = false;
+            var expectedMessage = Messages.AUDITORIUM_GET_BY_ID_ERROR;
+
+
+            _mockAuditoriumRepository.Setup(srvc => srvc.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(default(Auditorium));
+
+
+            var result = _moviesService.GetMoviesByAuditoriumId(It.IsAny<int>());
+
+            var message = (GenericResult<MovieDomainModel>)result.Result;
+
+            Assert.AreEqual(isSuccesful, message.IsSuccessful);
+            Assert.AreEqual(expectedMessage, message.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void GetMoviesByAuditoriumId_When_MovieID_NotFound_Returns_IsSuccesful_False()
+        {
+            var isSuccesful = false;
+            var expectedMessage = Messages.MOVIE_NOT_IN_AUDITORIUM;
+
+             List<Movie> movies = null;
+            var auditorium = new Auditorium { };
+
+            _mockAuditoriumRepository.Setup(srvc => srvc.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(auditorium);
+
+            _mockMovieRepository.Setup(srvc => srvc.GetMoviesByAuditoriumId(It.IsAny<int>())).ReturnsAsync(movies);
+
+
+            var result = _moviesService.GetMoviesByAuditoriumId(It.IsAny<int>());
+
+            var message = (GenericResult<MovieDomainModel>)result.Result;
+
+            Assert.AreEqual(isSuccesful, message.IsSuccessful);
+            Assert.AreEqual(expectedMessage, message.ErrorMessage);
+        }
+
+        [TestMethod]
+        public void GetMoviesByAuditoriumId_When_Called_Returns_Movies_With_Specific_Auditorirum()
+        {
+            var isSuccesful = true;
+
+            var auditoriumId = 1;
+            List<Movie> movies = new List<Movie>();
+            var auditorium = new Auditorium { };
+
+            _mockAuditoriumRepository.Setup(srvc => srvc.GetByIdAsync(auditoriumId)).ReturnsAsync(auditorium);
+
+            _mockMovieRepository.Setup(srvc => srvc.GetMoviesByAuditoriumId(It.IsAny<int>())).ReturnsAsync(movies);
+
+
+            var result = _moviesService.GetMoviesByAuditoriumId(auditoriumId);
+
+            var message = (GenericResult<MovieDomainModel>)result.Result;
+
+            Assert.AreEqual(isSuccesful, message.IsSuccessful);
+        }
     }
 }

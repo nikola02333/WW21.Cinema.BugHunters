@@ -118,7 +118,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 return new GenericResult<MovieDomainModel>
                 {
-                    IsSuccessful = true
+                    IsSuccessful = false,
+                    ErrorMessage =Messages.MOVIE_NOT_IN_AUDITORIUM
                 };
             }
 
@@ -198,13 +199,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
                 _tagsRepository.Attach(tagExistGenre);
                 await _tagsMoviesRepository.InsertAsync(genreTagsMovies);
-               // _tagsMoviesRepository.Save();
-
-
             }
             else
             {
-                
                 var tagGenreToCreate = new Tag
                 {
                     TagValue = movie.Genre,
