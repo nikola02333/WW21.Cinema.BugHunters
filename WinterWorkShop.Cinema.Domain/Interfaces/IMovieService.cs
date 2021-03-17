@@ -27,8 +27,9 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
         Task<GenericResult<MovieDomainModel>> GetMoviesByAuditoriumId(int id);
         //Task<GenericResult<MovieDomainModel>> ActivateMovie(object movieId);
 
-        //Task AddTagsForMovie(MovieDomainModel movie);
-       
+        void AddTagsForMovie(MovieDomainModel movieDomainModel);
+
+
         Task<GenericResult<MovieDomainModel>> SearchMoviesByTag(string query);
     }
 }

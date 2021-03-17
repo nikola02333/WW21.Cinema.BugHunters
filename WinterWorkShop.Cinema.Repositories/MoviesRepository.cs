@@ -22,6 +22,8 @@ namespace WinterWorkShop.Cinema.Repositories
 
         Task<IEnumerable<Movie>> GetMoviesByAuditoriumId(int id);
         Task<IEnumerable<Movie>> SearchMoviesByTags(string query);
+
+        void Detach(object entity);
     }
     
     public class MoviesRepository : IMoviesRepository
@@ -139,5 +141,11 @@ namespace WinterWorkShop.Cinema.Repositories
 
             return movies;
         }
+
+        public void Detach(object entity)
+        {
+            _cinemaContext.Entry(entity).State = EntityState.Deleted;
+        }
+
     }
 }
