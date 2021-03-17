@@ -43,7 +43,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public async Task<Projection> GetByIdAsync(object id)
         {
-            return await _cinemaContext.Projections.FindAsync(id);
+            return await _cinemaContext.Projections.Include(x => x.Movie).Include(x => x.Auditorium).FirstOrDefaultAsync(x=>x.Id == (Guid)id);
         }
 
         public  IEnumerable<Projection> GetByAuditoriumId(int auditoriumId)
@@ -83,7 +83,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public async Task<IEnumerable<Projection>> FilterProjectionAsync(int? CinemaId, int? AuditoriumId, Guid? MovieId, DateTime? DateTime)
         {
-            var projections =await _cinemaContext.Projections.Where(x => (CinemaId == null || x.Auditorium.CinemaId == CinemaId)
+            var projections =await _cinemaContext.Projections.Include(x=>x.Movie).Include(x=>x.Auditorium).Where(x => (CinemaId == null || x.Auditorium.CinemaId == CinemaId)
                                                && (AuditoriumId == null || x.AuditoriumId == AuditoriumId)
                                                && (MovieId == null || x.MovieId == MovieId)
                                                && (DateTime == null || x.ShowingDate.Date == DateTime.Value.Date)).ToListAsync();
