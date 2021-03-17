@@ -83,9 +83,11 @@ const NewAuditorium: React.FC = (props: any) => {
   }, [getCinemas]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
+    e.preventDefault();
     const { id, value } = e.target;
     setState({ ...state, [id]: value });
-    validate(id, value);
+    //validate(id, value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -241,7 +243,7 @@ const NewAuditorium: React.FC = (props: any) => {
                 placeholder="Choose a cinema..."
                 id="browser"
                 onChange={(e: ICinema[]) => {
-                  onCinemaChange(e);
+                onCinemaChange(e);
                 }}
               />
               <FormText className="text-danger">{state.cinemaIdError}</FormText>
