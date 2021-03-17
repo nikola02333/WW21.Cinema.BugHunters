@@ -125,7 +125,8 @@ const ProjectionDetails: React.FC = () => {
 
   const getReservedSeats = (requestOptions: RequestInit, id: string) => {
     const reservedSeats = fetch(
-      `${serviceConfig.baseURL}/api/reservations/getbyprojectionid/${id}`,
+      // `${serviceConfig.baseURL}/api/reservations/getbyprojectionid/${id}`,
+      `${serviceConfig.baseURL}/api/seats/reservedByProjectionId/${id}`,
       requestOptions
     )
       .then((response) => {
@@ -158,7 +159,7 @@ const ProjectionDetails: React.FC = () => {
     };
 
     fetch(
-      `${serviceConfig.baseURL}/api/seats/numberofseats/${auditId}`,
+      `${serviceConfig.baseURL}/api/seats/maxNumberOfSeatsByAuditoriumId/${auditId}`,
       requestOptions
     )
       .then((response) => {
@@ -258,7 +259,7 @@ const ProjectionDetails: React.FC = () => {
       },
     };
 
-    fetch(`${serviceConfig.baseURL}/api/movies/${id}`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/movies/getbyid/${id}`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);
@@ -338,7 +339,8 @@ const ProjectionDetails: React.FC = () => {
         body: JSON.stringify(data),
       };
 
-      fetch(`${serviceConfig.baseURL}/api/reservations`, requestOptions)
+      // fetch(`${serviceConfig.baseURL}/api/reservations`, requestOptions)
+      fetch(`${serviceConfig.baseURL}/api/ticket/create`, requestOptions)
         .then((response) => {
           if (!response.ok) {
             return Promise.reject(response);
