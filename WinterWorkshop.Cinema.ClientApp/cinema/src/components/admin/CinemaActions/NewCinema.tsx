@@ -44,7 +44,7 @@ const NewCinema: React.FC = (props: any) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setState({ ...state, [id]: value });
-    validate(id, value);
+    //validate(id, value);
   };
 
   const validate = (id: string, value: string) => {

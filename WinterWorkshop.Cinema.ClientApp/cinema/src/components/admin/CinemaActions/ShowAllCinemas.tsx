@@ -38,7 +38,7 @@ const ShowAllCinemas: React.FC = (props: any) => {
     };
 
     setState({ ...state, isLoading: true });
-    fetch(`${serviceConfig.baseURL}/api/Cinemas/all`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/cinemas/all`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);

@@ -101,7 +101,7 @@ const TopTenMovies: React.FC = (props: any) => {
     };
 
     setState({ ...state, isLoading: true });
-    fetch(`${serviceConfig.baseURL}/api/Movies/top`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/Movies/TopTenMovies`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);
