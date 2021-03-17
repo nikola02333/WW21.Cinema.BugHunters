@@ -12,5 +12,6 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
         Task<GenericResult<SeatDomainModel>> GetAllAsync();
         Task<GenericResult<SeatDomainModel>> GetReservedSeatsAsync(Guid projectionId);
         Task<GenericResult<SeatDomainModel>> GetByAuditoriumIdAsync(int auditoriumId);
+        Task<GenericResult<SeatsMaxNumbersDomainModel>> GetMaxNumbersOfSeatsByAuditoriumIdAsync(int auditoriumId);
     }
 }

@@ -30,6 +30,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpGet]
+        [Route("all")]
         public async Task<ActionResult<IEnumerable<ProjectionDomainModel>>> GetAsync()
         {
             IEnumerable<ProjectionDomainModel> projectionDomainModels;
@@ -42,6 +43,26 @@ namespace WinterWorkShop.Cinema.API.Controllers
             }
 
             return Ok(projectionDomainModels);
+        }
+
+        [HttpGet]
+        [Route("byprojectionid/{id:guid}")]
+        public async Task<ActionResult<GenericResult<ProjectionDomainModel>>> GetByIdAsync(Guid id)
+        {
+            var projection = await _projectionService.GetByIdAsync(id);
+
+            if (!projection.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = projection.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
+            return Ok(projection.Data);
         }
 
         [HttpGet]
