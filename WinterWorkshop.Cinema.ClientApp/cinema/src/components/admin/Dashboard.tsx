@@ -44,10 +44,10 @@ const Dashboard: React.FC = () => {
             path="/dashboard/EditMovie/:id"
             component={EditMovie}
           />
-          <PrivateRouteAdmin
+          {/* <PrivateRouteAdmin
             path="/dashboard/NewCinema"
             component={NewCinema}
-          />
+          /> */}
           <PrivateRouteAdmin
             path="/dashboard/AllCinemas"
             component={ShowAllCinemas}

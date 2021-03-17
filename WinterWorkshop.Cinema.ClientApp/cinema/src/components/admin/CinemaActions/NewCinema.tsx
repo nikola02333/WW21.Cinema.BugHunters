@@ -172,7 +172,7 @@ const NewCinema: React.FC = (props: any) => {
                 id="name"
                 type="text"
                 placeholder="Cinema Name"
-                defaultValue={state.name}
+                value={state.name} 
                 className="add-new-form"             
                 onChange={handleChange}
               />
@@ -182,7 +182,7 @@ const NewCinema: React.FC = (props: any) => {
                 id="auditName"
                 type="text"
                 placeholder="Auditorium Name"
-                defaultValue={state.auditName}
+                value={state.auditName} 
                 onChange={handleChange}
                 className="add-new-form"
               />
@@ -194,7 +194,7 @@ const NewCinema: React.FC = (props: any) => {
                 className="add-new-form"
                 type="number"
                 placeholder="Number Of Rows"
-                defaultValue={state.seatRows.toString()}
+                value={state.seatRows.toString()} 
                 onChange={handleChange}
               />
               <FormText className="text-danger">{state.seatRowsError}</FormText>
@@ -203,7 +203,7 @@ const NewCinema: React.FC = (props: any) => {
                 className="add-new-form"
                 type="number"
                 placeholder="Number Of Seats"
-                defaultValue={state.numberOfSeats.toString()}
+                value={state.numberOfSeats.toString()} 
                 onChange={handleChange}
                 max="36"
               />
