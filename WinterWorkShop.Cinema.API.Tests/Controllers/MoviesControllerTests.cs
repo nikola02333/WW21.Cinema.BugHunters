@@ -765,5 +765,38 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
         }
 
+        [TestMethod]
+        public void CreateMovieAsync_When_Called_IsSuccesful_True_Calls_AddTagsForMovie()
+        {
+            var movieToCreateTags = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful= true,
+                Data = new MovieDomainModel()
+            };
+            var movieToCreate = new MovieDomainModel();
+            var movieDomainModel = new MovieDomainModel { };
+
+            var movieCreateModel = new CreateMovieModel
+            {
+                 Title="new Movie",
+                  Current= true,
+                   Genre= "comedy",
+                    Rating= 3,
+                     HasOscar= true,
+                      Year=1999,
+                       UserRaitings= 2
+            };
+            _mockMovieService.Setup(srvc => srvc.AddMovieAsync(It.IsNotNull<MovieDomainModel>())).ReturnsAsync(movieToCreateTags);
+            _mockMovieService.Setup(srvc => srvc.AddTagsForMovie(It.IsNotNull<MovieDomainModel>()));
+            
+            //Act
+            var result = _moviesController.CreateMovieAsync(movieCreateModel);
+            
+            //Assert
+           
+
+
+        }
+
     }
 }
