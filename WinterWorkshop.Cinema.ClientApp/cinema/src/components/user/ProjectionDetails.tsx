@@ -11,10 +11,13 @@ import {
   IProjection,
   IReservedSeats,
   ISeats,
+  IProjectionNEW,
 } from "../../models";
+import Projection from "./Projection";
+import { debug } from "console";
 
 interface IState {
-  projections: IProjection[];
+  projections: IProjectionNEW;
   movie: IMovie;
   slicedTime: string;
   moviesId: string;
@@ -34,7 +37,16 @@ interface IState {
 
 const ProjectionDetails: React.FC = () => {
   const [state, setState] = useState<IState>({
-    projections: [],
+    projections: {
+      auditoriumId: 0,
+      auditoriumName: "",
+      duration: 0,
+      id: "",
+      movieId: "",
+      movieTitle: "",
+      price: 0,
+      projectionTime: "",
+    },
     movie: {
       id: "",
       bannerUrl: "",
@@ -79,11 +91,12 @@ const ProjectionDetails: React.FC = () => {
     getProjection();
     getUserByUsername();
   }, []);
+ 
 
   const getProjection = () => {
     var idFromUrl = window.location.pathname.split("/");
     var id = idFromUrl[3];
-
+    
     const requestOptions = {
       method: "GET",
       headers: {
@@ -93,8 +106,7 @@ const ProjectionDetails: React.FC = () => {
     };
 
     fetch(
-      `${serviceConfig.baseURL}/api/projections/byprojectionid/` + id,
-      requestOptions
+      `${serviceConfig.baseURL}/api/projections/byprojectionid/` + id, requestOptions
     )
       .then((response) => {
         if (!response.ok) {
@@ -106,21 +118,28 @@ const ProjectionDetails: React.FC = () => {
         if (data) {
           setState({
             ...state,
-            projections: data,
+            projections: data ,
             auditId: data.auditoriumId,
             slicedTime: data.projectionTime.slice(11, 16),
             moviesId: data.movieId,
           });
+          console.log("Projection");
+          console.log(data);
+          
+          console.log("projection from stat");
+          console.log(state.projections);
 
           getReservedSeats(requestOptions, id);
           getSeatsForAuditorium(data.auditoriumId);
           getSeats(data.auditoriumId);
+          
         }
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
         setState({ ...state, submitted: false });
       });
+      
   };
 
   const getReservedSeats = (requestOptions: RequestInit, id: string) => {
@@ -141,6 +160,8 @@ const ProjectionDetails: React.FC = () => {
             ...state,
             reservedSeats: data,
           });
+          console.log("getReservedSeats");
+          console.log(data);
         }
       })
       .catch((response) => {
@@ -176,6 +197,8 @@ const ProjectionDetails: React.FC = () => {
             maxRow: data.maxRow,
             maxNumberOfRow: data.maxNumber,
           });
+          console.log("getSeatsForAuditorium");
+          console.log(data);
         }
       })
       .catch((response) => {
@@ -208,6 +231,8 @@ const ProjectionDetails: React.FC = () => {
       .then((data) => {
         if (data) {
           setState({ ...state, userId: data.id });
+          console.log("getUserByUsername");
+          console.log(data);
         }
       })
       .catch((response) => {
@@ -241,6 +266,8 @@ const ProjectionDetails: React.FC = () => {
             ...state,
             seats: data as ISeats[],
           });
+          console.log("getSeats");
+          console.log(data);
         }
       })
       .catch((response) => {
@@ -272,6 +299,8 @@ const ProjectionDetails: React.FC = () => {
             ...state,
             movie: data as IMovie,
           });
+          console.log("getMovie");
+          console.log(data);
         }
       })
       .catch((response) => {
@@ -631,7 +660,7 @@ const ProjectionDetails: React.FC = () => {
           </span>
         </Card.Subtitle>
         <hr />
-        <Card.Text>
+        <Card.Body>
           <Row className="mt-2">
             <Col className="justify-content-center align-content-center">
               <form>
@@ -682,7 +711,7 @@ const ProjectionDetails: React.FC = () => {
             </Col>
           </Row>
           <hr />
-        </Card.Text>
+        </Card.Body>
       </Card.Body>
     );
   };

@@ -51,7 +51,10 @@ const Projection: React.FC = (props: any) => {
         ],
       },
     ],
-    cinemas: [{ id: "", name: "" }],
+    cinemas: [
+      { id: "",
+       name: "",
+      }],
     auditoriums: [
       {
         id: "",
@@ -159,6 +162,8 @@ const Projection: React.FC = (props: any) => {
         if (data) {
           setState({ ...state, movies: data, isLoading: false });
         }
+        console.log("Curren movies");
+        console.log(data);
       })
       .catch((response) => {
         setState({ ...state, isLoading: false });
@@ -180,9 +185,6 @@ const Projection: React.FC = (props: any) => {
     setState({ ...state, isLoading: true });
     let query = "";
     if (cinemaId) {
-      if(cinemaId==="none"){
-        query = `cinemaId=${null}`;
-      }
       query = `cinemaId=${cinemaId}`;
     }
     if (auditoriumId) {
@@ -251,6 +253,8 @@ const Projection: React.FC = (props: any) => {
         if (data) {
           setState({ ...state, auditoriums: data, isLoading: false });
         }
+        console.log("all auditoriums");
+        console.log(data);
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
@@ -282,6 +286,8 @@ const Projection: React.FC = (props: any) => {
             cinemas: data,
             isLoading: false,
           });
+          console.log("All Cinemas");
+        console.log(data);
         }
       })
       .catch((response) => {
@@ -534,6 +540,7 @@ const Projection: React.FC = (props: any) => {
           className="select-dropdown"
           
         >
+           {/* <option value="" selected disabled hidden>Movie</option>  */}
           <option value="none">Movie</option>
           {fillFilterWithMovies()}
         </select>
