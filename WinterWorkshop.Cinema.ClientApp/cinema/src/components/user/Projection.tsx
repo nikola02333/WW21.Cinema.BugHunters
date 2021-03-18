@@ -220,7 +220,7 @@ const Projection: React.FC = (props: any) => {
               }
             }
           }
-
+          console.log(data);
           setState({ ...state, filteredProjections: data, isLoading: false });
         }
       })

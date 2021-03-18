@@ -49,19 +49,12 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public async Task<Auditorium> GetByIdAsync(object id)
         {
-
-
             var auditorium = await _cinemaContext.Auditoriums
                 .Where(auditorium => auditorium.Id == (int)id)
                 .Include(auditorium => auditorium.Seats)
                 .FirstOrDefaultAsync();
 
-
-
             return auditorium;
-
-
-           
         }
 
         public async Task<Auditorium> InsertAsync(Auditorium obj)
@@ -89,15 +82,12 @@ namespace WinterWorkShop.Cinema.Repositories
             return data;
         }
 
-
-
         public async Task<IEnumerable<Auditorium>> GetByAuditoriumNameAsync(string auditoriumName, int cinemaId)
         {
             var data = await _cinemaContext.Auditoriums
                 .Where(x => x.AuditoriumName.Equals(auditoriumName)
                             && x.CinemaId.Equals(cinemaId))
                 .ToListAsync();
-
 
             return data;
         }

@@ -89,6 +89,42 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
+        public async Task<GenericResult<SeatsMaxNumbersDomainModel>> GetMaxNumbersOfSeatsByAuditoriumIdAsync(int auditoriumId)
+        {
+            var auditorium =await _auditoriumsRepository.GetByIdAsync(auditoriumId);
+            if (auditorium == null)
+            {
+                return new GenericResult<SeatsMaxNumbersDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.AUDITORIUM_GET_BY_ID_ERROR
+                };
+            }
+
+            var seats = await _seatsRepository.GetSeatsByAuditoriumIdAsync(auditoriumId);
+            if (seats == null || !seats.Any())
+            {
+                return new GenericResult<SeatsMaxNumbersDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.SEATS_IN_AUDITORIUM
+                };
+            }
+            var maxNumber = seats.Select(x => x.Number).Max();
+            var maxRow = seats.Select(x => x.Row).Max();
+
+            return new GenericResult<SeatsMaxNumbersDomainModel>
+            {
+                IsSuccessful = true,
+                Data = new SeatsMaxNumbersDomainModel
+                {
+                    AuditoriumId = auditoriumId,
+                    MaxNumber=maxNumber,
+                    MaxRow=maxRow
+                }
+            };
+        }
+
         public async Task<GenericResult<SeatDomainModel>> GetReservedSeatsAsync(Guid projectionId)
         {
             var projection = await _projectionsRepository.GetByIdAsync(projectionId);
