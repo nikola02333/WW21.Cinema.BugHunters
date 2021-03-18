@@ -105,9 +105,9 @@ const Projection: React.FC = (props: any) => {
   });
 
   useEffect(() => {
-    getCurrentMoviesAndProjections();
     getAllCinemas();
     getAllAuditoriums();
+    getCurrentMoviesAndProjections();
   }, []);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
