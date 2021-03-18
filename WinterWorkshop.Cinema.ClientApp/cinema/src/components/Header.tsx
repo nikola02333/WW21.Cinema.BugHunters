@@ -46,9 +46,9 @@ const Header: React.FC = (props: any) => {
   useEffect(() => {
     let tokenExp = getTokenExp();
     let currentTimestamp = +new Date();
-    if (!tokenExp || tokenExp * 1000 < currentTimestamp) {
-      getTokenForGuest();
-    }
+    // if (!tokenExp || tokenExp * 1000 < currentTimestamp) {
+    //   getTokenForGuest();
+    // }
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,7 +73,7 @@ const Header: React.FC = (props: any) => {
     localStorage.removeItem("userLoggedIn");
     setState({ ...state, submitted: true });
     setState({ ...state, token: false });
-    getTokenForGuest();
+    // getTokenForGuest();
   };
 
   const hideLoginButtonElement = () => {
@@ -173,30 +173,30 @@ const Header: React.FC = (props: any) => {
       });
   };
 
-  const getTokenForGuest = () => {
-    const requestOptions = {
-      method: "GET",
-    };
-    fetch(`${serviceConfig.baseURL}/get-token?guest=true`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setState({ ...state, shouldHide: true });
-        if (data.token) {
-          localStorage.setItem("jwt", data.token);
-          window.location.reload();
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
-    state.token = true;
-  };
+  // const getTokenForGuest = () => {
+  //   const requestOptions = {
+  //     method: "GET",
+  //   };
+  //   fetch(`${serviceConfig.baseURL}/get-token?guest=true`, requestOptions)
+  //     .then((response) => {
+  //       if (!response.ok) {
+  //         return Promise.reject(response);
+  //       }
+  //       return response.json();
+  //     })
+  //     .then((data) => {
+  //       setState({ ...state, shouldHide: true });
+  //       if (data.token) {
+  //         localStorage.setItem("jwt", data.token);
+  //         window.location.reload();
+  //       }
+  //     })
+  //     .catch((response) => {
+  //       NotificationManager.error(response.message || response.statusText);
+  //       setState({ ...state, submitted: false });
+  //     });
+  //   state.token = true;
+  // };
 
   const redirectToUserPage = () => {
     props.history.push(`userprofile`);

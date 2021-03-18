@@ -45,7 +45,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                         Projection = new ProjectionDomainModel
                         {
                             Id = Guid.NewGuid(),
-                            AditoriumName = "Auditorium Name",
+                            AuditoriumName = "Auditorium Name",
                             AuditoriumId = 1,
                             MovieId = Guid.NewGuid(),
                             MovieTitle = "NazivFilma",
@@ -75,7 +75,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                         Projection = new ProjectionDomainModel
                         {
                             Id = Guid.NewGuid(),
-                            AditoriumName = "Auditorium Name",
+                            AuditoriumName = "Auditorium Name",
                             AuditoriumId = 1,
                             MovieId = Guid.NewGuid(),
                             MovieTitle = "NazivFilma",
@@ -162,7 +162,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                     Projection = new ProjectionDomainModel
                     {
                         Id = Guid.NewGuid(),
-                        AditoriumName = "Auditorium Name",
+                        AuditoriumName = "Auditorium Name",
                         AuditoriumId = 1,
                         MovieId = Guid.NewGuid(),
                         MovieTitle = "NazivFilma",
@@ -252,7 +252,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                     Projection = new ProjectionDomainModel
                     {
                         Id = createTicketModel.ProjectionId,
-                        AditoriumName = "Auditorium Name",
+                        AuditoriumName = "Auditorium Name",
                         AuditoriumId = 1,
                         MovieId = Guid.NewGuid(),
                         MovieTitle = "NazivFilma",

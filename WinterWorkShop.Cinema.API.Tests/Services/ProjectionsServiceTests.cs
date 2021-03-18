@@ -61,7 +61,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _projectionDomainModel = new ProjectionDomainModel
             {
                 Id = Guid.NewGuid(),
-                AditoriumName = "ImeSale",
+                AuditoriumName = "ImeSale",
                 AuditoriumId = 1,
                 MovieId = Guid.NewGuid(),
                 MovieTitle = "ImeFilma",
@@ -275,7 +275,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
                         ProjectionTime = _date,
                         Duration = 100,
                         Price = 300,
-                        AditoriumName = _auditorium.AuditoriumName,
+                        AuditoriumName = _auditorium.AuditoriumName,
                         MovieTitle =_movie.Title
                     }
                 }
@@ -569,7 +569,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
                         ProjectionTime = _date,
                         Duration = 100,
                         Price = 300,
-                        AditoriumName = _auditorium.AuditoriumName,
+                        AuditoriumName = _auditorium.AuditoriumName,
                         MovieTitle =_movie.Title
                     }
                 }
@@ -634,7 +634,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
                         ProjectionTime = _date,
                         Duration = 100,
                         Price = 300,
-                        AditoriumName = _auditorium.AuditoriumName,
+                        AuditoriumName = _auditorium.AuditoriumName,
                         MovieTitle =_movie.Title
                     }
                 }
@@ -693,7 +693,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
                         ProjectionTime = _date,
                         Duration = 100,
                         Price = 300,
-                        AditoriumName = _auditorium.AuditoriumName,
+                        AuditoriumName = _auditorium.AuditoriumName,
                         MovieTitle =_movie.Title
                     }
                 }
