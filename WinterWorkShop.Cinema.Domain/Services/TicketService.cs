@@ -223,7 +223,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Projection = new ProjectionDomainModel
                 {
                     Id = ticket.Projection.Id,
-                    AditoriumName = ticket.Projection.Auditorium.AuditoriumName,
+                    AuditoriumName = ticket.Projection.Auditorium.AuditoriumName,
                     AuditoriumId = ticket.Projection.Auditorium.Id,
                     MovieId = ticket.Projection.Movie.Id,
                     MovieTitle = ticket.Projection.Movie.Title,
