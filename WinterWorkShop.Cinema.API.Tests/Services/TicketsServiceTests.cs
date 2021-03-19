@@ -304,7 +304,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
                         Id = _createTicketDomainModel.ProjectionId,
                         AuditoriumId = 1,
                     Duration = 100,
-                        AditoriumName = "Auditorium"
+                        AuditoriumName = "Auditorium"
                 },
                     Seat = new SeatDomainModel
                 {

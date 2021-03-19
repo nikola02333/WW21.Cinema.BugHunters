@@ -29,7 +29,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         // NOT FOR PRODUCTION USE!!!
         // you will need a robust auth implementation for production
         // i.e. try IdentityServer4
-        [HttpGet]
+        [HttpPost]
         [Route("/get-token")]
         public async Task<ActionResult> GenerateToken([FromBody]UserLoginModel userLogin)
         {
@@ -46,9 +46,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
 
                 var jwt = JwtTokenGenerator
-                .Generate(userLogin.UserName, userExists.Data.Role, _configuration["Tokens:Issuer"], _configuration["Tokens:Key"]);
+                .Generate(userLogin.UserName, userExists.Data.Role,userExists.Data.Id, _configuration["Tokens:Issuer"], _configuration["Tokens:Key"]);
 
-                return Ok(new { token = jwt });
+                return Ok(new { token = jwt, firstName= userExists.Data.FirstName });
             }
 
             return Unauthorized();

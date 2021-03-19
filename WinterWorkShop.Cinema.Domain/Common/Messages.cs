@@ -83,5 +83,11 @@
         public const string TICKET_GET_ALL_TICKETS_ERROR = "Error occured while getting all tickets, please try again.";
         public const string TICKET_DELTE_ERROR = "Error occured while deleting ticket, please try again.";
         #endregion
+
+        #region Tags       
+        public const string TAG_DOES_NOT_EXIST = "Error occured while getting tag by Id, please try again.";
+        public const string TAG_DELTE_ERROR = "Error occured while deleting tag, please try again.";
+
+        #endregion
     }
 }

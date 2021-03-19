@@ -52,20 +52,38 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
-        public Task<GenericResult<TagDomainModel>> DeleteTagAsync(string tagToDelete)
+        public async Task<GenericResult<TagDomainModel>> DeleteTagAsync(object tagToDelete)
         {
-            throw new NotImplementedException();
+            var tagExists = await _tagsRepository.GetByIdAsync(tagToDelete);
+
+            if(tagExists == null)
+            {
+                return new GenericResult<TagDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.TAG_DOES_NOT_EXIST
+                };
+            }
+           _tagsRepository.Delete(tagExists.TagId);
+           _tagsRepository.Save();
+
+            return new GenericResult<TagDomainModel>
+            {
+                IsSuccessful = true,
+            };
+
         }
 
         public async Task<GenericResult<TagDomainModel>> GetTagByName(string tag)
         {
             var tagToFind = await _tagsRepository.GetByIdAsync(tag);
+
             if(tagToFind == null)
             {
                 return new GenericResult<TagDomainModel>
                 {
                     IsSuccessful = false,
-                    ErrorMessage = "Error while finding this tag "
+                    ErrorMessage = Messages.TAG_DOES_NOT_EXIST
                 };
             }
             return new GenericResult<TagDomainModel>
