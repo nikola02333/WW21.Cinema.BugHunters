@@ -11,7 +11,7 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
     {
         Task<GenericResult<TagDomainModel>> AddTagAsync(TagDomainModel tagToCreate);
 
-        Task<GenericResult<TagDomainModel>> DeleteTagAsync(string tagToDelete);
+        Task<GenericResult<TagDomainModel>> DeleteTagAsync(object tagIdToDelete);
 
         Task<GenericResult<TagDomainModel>> GetTagByName(string tag);
     }

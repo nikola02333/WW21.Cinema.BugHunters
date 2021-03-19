@@ -13,12 +13,12 @@ namespace WinterWorkShop.Cinema.API.TokenServiceExtensions
     {
         // WARNING: This is just for demo purpose
 
-        public static string Generate(string name, string role, string issuer, string key)
+        public static string Generate(string name, string role,Guid userId, string issuer, string key)
         {
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.Sub, name),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, userId.ToString())
             };
             if (role =="admin")
             {
