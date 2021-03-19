@@ -13,7 +13,7 @@ import Dashboard from './components/admin/Dashboard';
 import UserProfile from "../src/components/user/UserProfile";
 import UserSingUp from '../src/components/user/UserSingUp';
 
-import Formaa from '../src/components/helpers/Formaa';
+
 
 function App() {
   return (
