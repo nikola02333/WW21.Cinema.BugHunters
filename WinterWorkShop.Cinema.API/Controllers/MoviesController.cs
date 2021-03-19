@@ -119,7 +119,12 @@ namespace WinterWorkShop.Cinema.API.Controllers
             try
             {
                 createMovie = await _movieService.AddMovieAsync(domainModel);
-                // 
+                 
+              if(createMovie.IsSuccessful)
+                {
+                    _movieService.AddTagsForMovie(createMovie.Data);
+                }
+                
             }
             catch (DbUpdateException e)
             {

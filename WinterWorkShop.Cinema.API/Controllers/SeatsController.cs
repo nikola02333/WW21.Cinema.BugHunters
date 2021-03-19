@@ -91,5 +91,27 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             return Ok(seatDomainModels.DataList);
         }
+
+        [HttpGet]
+        [Route("maxNumberOfSeatsByAuditoriumId/{id:int}")]
+        public async Task<ActionResult<GenericResult<SeatsMaxNumbersDomainModel>>> GetMaxNumbersOfSeatsAsync(int id)
+        {
+            GenericResult<SeatsMaxNumbersDomainModel> dimensionsOfAuditoriumSeats;
+
+            dimensionsOfAuditoriumSeats = await _seatService.GetMaxNumbersOfSeatsByAuditoriumIdAsync(id);
+
+            if (!dimensionsOfAuditoriumSeats.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = dimensionsOfAuditoriumSeats.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
+            return Ok(dimensionsOfAuditoriumSeats.Data);
+        }
     }
 }
