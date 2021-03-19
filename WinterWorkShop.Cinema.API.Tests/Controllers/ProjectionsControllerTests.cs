@@ -35,7 +35,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             ProjectionDomainModel projectionDomainModel = new ProjectionDomainModel
             {
                 Id = Guid.NewGuid(),
-                AditoriumName = "ImeSale",
+                AuditoriumName = "ImeSale",
                 AuditoriumId = 1,
                 MovieId = Guid.NewGuid(),
                 MovieTitle = "ImeFilma",
@@ -107,7 +107,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 Data = new ProjectionDomainModel
                 {
                     Id = Guid.NewGuid(),
-                    AditoriumName = "ImeSale",
+                    AuditoriumName = "ImeSale",
                     AuditoriumId = createProjectionModel.AuditoriumId,
                     MovieId = createProjectionModel.MovieId,
                     MovieTitle = "ImeFilma",
@@ -156,7 +156,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 Projection = new ProjectionDomainModel
                 {
                     Id = Guid.NewGuid(),
-                    AditoriumName = "ImeSale",
+                    AuditoriumName = "ImeSale",
                     AuditoriumId = createProjectionModel.AuditoriumId,
                     MovieId = createProjectionModel.MovieId,
                     MovieTitle = "ImeFilma",
@@ -209,7 +209,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 Data = new ProjectionDomainModel
                 {
                     Id = Guid.NewGuid(),
-                    AditoriumName = "ImeSale",
+                    AuditoriumName = "ImeSale",
                     AuditoriumId = createProjectionModel.AuditoriumId,
                     MovieId = createProjectionModel.MovieId,
                     MovieTitle = "ImeFilma",
@@ -326,7 +326,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                     new ProjectionDomainModel
                     {
                         Id=Guid.NewGuid(),
-                        AditoriumName="Naziv",
+                        AuditoriumName="Naziv",
                         AuditoriumId=(int)filterModel.AuditoriumId,
                         Duration=100,
                         MovieId=movieId,
