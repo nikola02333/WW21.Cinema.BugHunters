@@ -16,6 +16,7 @@ import { ICinema } from "../../../models";
 
 interface IState {
   cinemaId: string;
+
   auditName: string;
   seatRows: number;
   numberOfSeats: number;
@@ -38,6 +39,8 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
       {
         id: "",
         name: "",
+        address:"",
+        cityName:""
       },
     ],
     cinemaIdError: "",
@@ -51,7 +54,7 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setState({ ...state, [id]: value });
-    validate(id, value);
+    //validate(id, value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {

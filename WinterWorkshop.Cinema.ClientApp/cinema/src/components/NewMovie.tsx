@@ -99,7 +99,7 @@ const NewMovie: React.FC = (props: any) => {
       body: JSON.stringify(data),
     };
 
-    fetch(`${serviceConfig.baseURL}/api/movies`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/movies/create`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);

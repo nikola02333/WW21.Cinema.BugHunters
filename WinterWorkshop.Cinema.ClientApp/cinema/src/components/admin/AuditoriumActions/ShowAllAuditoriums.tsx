@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "../../Spinner";
 import { withRouter } from "react-router";
-import { IAuditorium } from "../../../models";
+import { IAuditorium, ISeats } from "../../../models";
 
 interface IState {
   auditoriums: IAuditorium[];
@@ -19,8 +19,10 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
       {
         id: "",
         cinemaId: "",
-        name: "",
-      },
+        name: "", 
+        numberOfSeats:0,
+        seatRows: 0
+      },   
     ],
     isLoading: true,
   });
@@ -35,7 +37,7 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
     };
 
     setState({ ...state, isLoading: true });
-    fetch(`${serviceConfig.baseURL}/api/Auditoriums/all`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/auditoriums/all`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);
@@ -44,7 +46,7 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
       })
       .then((data) => {
         if (data) {
-          setState({ auditoriums: data, isLoading: false });
+          setState({auditoriums: data, isLoading: false });
         }
       })
       .catch((response) => {
@@ -87,12 +89,20 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
     setTimeout(() => window.location.reload(), 1000);
   };
 
+   const size= (obj)=> {
+    var size = 0, key;
+    for (key in obj) {
+        if (obj.hasOwnProperty(key)) size++;
+    }
+    return size;
+};
+
   const fillTableWithData = () => {
     return state.auditoriums.map((auditorium) => {
       return (
         <tr key={auditorium.id}>
-          <td width="30%">{auditorium.cinemaId}</td>
-          <td width="30%">{auditorium.name}</td>
+          <td width="25%">{auditorium.cinemaId}</td>
+          <td width="25%">{auditorium.name}</td> 
           <td
             width="5%"
             className="text-center cursor-pointer"
@@ -125,9 +135,7 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
       <thead>
         <tr>
           <th>Cinema Id</th>
-          <th>Name</th>
-          <th></th>
-          <th></th>
+          <th>Name</th>       
         </tr>
       </thead>
       <tbody>{rowsData}</tbody>

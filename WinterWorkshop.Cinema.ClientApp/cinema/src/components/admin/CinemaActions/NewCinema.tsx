@@ -16,6 +16,8 @@ import { faCouch } from "@fortawesome/free-solid-svg-icons";
 
 interface IState {
   name: string;
+  address:string;
+  cityName:string;
   nameError: string;
   auditName: string;
   seatRows: number;
@@ -30,6 +32,8 @@ interface IState {
 const NewCinema: React.FC = (props: any) => {
   const [state, setState] = useState<IState>({
     name: "",
+    address:"",
+    cityName:"",
     nameError:"",
     auditName:"",
     seatRows: 0,
@@ -43,8 +47,9 @@ const NewCinema: React.FC = (props: any) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
+    validate(id, value);
     setState({ ...state, [id]: value });
-    //validate(id, value);
+    
   };
 
   const validate = (id: string, value: string) => {
@@ -59,7 +64,28 @@ const NewCinema: React.FC = (props: any) => {
         setState({ ...state, nameError: "", canSubmit: true });
       }
     }
-
+    if (id === "address") {
+      if (value === "") {
+        setState({
+          ...state,
+          auditNameError: "Fill in cinema address",
+          canSubmit: false,
+        });
+      } else {
+        setState({ ...state, auditNameError: "", canSubmit: true });
+      }
+    }
+      if (id === "cityName") {
+        if (value === "") {
+          setState({
+            ...state,
+            auditNameError: "Fill in cinema city name",
+            canSubmit: false,
+          });
+        } else {
+          setState({ ...state, auditNameError: "", canSubmit: true });
+        }
+      }
     if (id === "auditName") {
       if (value === "") {
         setState({
@@ -99,7 +125,7 @@ const NewCinema: React.FC = (props: any) => {
     e.preventDefault();
 
     setState({ ...state, submitted: true });
-    if (state.name) {
+    if (state.name && state.address && state.cityName && state.auditName && state.numberOfSeats && state.seatRows) {
       addCinema();
     } else {
       NotificationManager.error("Please fill in data");
@@ -109,7 +135,9 @@ const NewCinema: React.FC = (props: any) => {
 
   const addCinema = () => {
     const data = {
-      Name: state.name,     
+      Name: state.name, 
+      address:state.address,
+      cityName:state.cityName,
       numberOfSeats: +state.numberOfSeats,
       seatRows: +state.seatRows,
       auditName: state.auditName,
@@ -161,6 +189,7 @@ const NewCinema: React.FC = (props: any) => {
     return renderedSeats;
   };
 
+  
   return (
     <Container>
       <Row>
@@ -171,8 +200,24 @@ const NewCinema: React.FC = (props: any) => {
               <FormControl
                 id="name"
                 type="text"
-                placeholder="Cinema Name"
+                placeholder="Cinema name"
                 value={state.name} 
+                className="add-new-form"             
+                onChange={handleChange}
+              />          
+              <FormControl
+                id="address"
+                type="text"
+                placeholder="Cinema address"
+                value={state.address} 
+                className="add-new-form"             
+                onChange={handleChange}
+              />
+              <FormControl
+                id="cityName"
+                type="text"
+                placeholder="Cinema city name"
+                value={state.cityName} 
                 className="add-new-form"             
                 onChange={handleChange}
               />
@@ -181,7 +226,7 @@ const NewCinema: React.FC = (props: any) => {
               <FormControl
                 id="auditName"
                 type="text"
-                placeholder="Auditorium Name"
+                placeholder="Auditorium name"
                 value={state.auditName} 
                 onChange={handleChange}
                 className="add-new-form"
@@ -193,7 +238,7 @@ const NewCinema: React.FC = (props: any) => {
                 id="seatRows"
                 className="add-new-form"
                 type="number"
-                placeholder="Number Of Rows"
+                placeholder="Number Of rows"
                 value={state.seatRows.toString()} 
                 onChange={handleChange}
               />
@@ -202,7 +247,7 @@ const NewCinema: React.FC = (props: any) => {
                 id="numberOfSeats"
                 className="add-new-form"
                 type="number"
-                placeholder="Number Of Seats"
+                placeholder="Number Of seats"
                 value={state.numberOfSeats.toString()} 
                 onChange={handleChange}
                 max="36"

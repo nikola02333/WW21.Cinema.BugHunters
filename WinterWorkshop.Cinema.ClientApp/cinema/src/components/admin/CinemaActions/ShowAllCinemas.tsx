@@ -18,6 +18,8 @@ const ShowAllCinemas: React.FC = (props: any) => {
       {
         id: "",
         name: "",
+        address:"",
+        cityName:""
       },
     ],
     isLoading: true,
@@ -66,7 +68,7 @@ const ShowAllCinemas: React.FC = (props: any) => {
       },
     };
 
-    fetch(`${serviceConfig.baseURL}/api/cinemas/${id}`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/cinemas/delete/${id}`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);
@@ -86,8 +88,10 @@ const ShowAllCinemas: React.FC = (props: any) => {
     return state.cinemas.map((cinema) => {
       return (
         <tr key={cinema.id}>
-          <td width="45%">{cinema.id}</td>
-          <td width="45%">{cinema.name}</td>
+          <td width="25%">{cinema.id}</td>
+          <td width="25%">{cinema.name}</td>
+          <td width="25%">{cinema.address}</td>
+          <td width="25%">{cinema.cityName}</td>
           <td
             width="5%"
             className="text-center cursor-pointer"
@@ -122,6 +126,10 @@ const ShowAllCinemas: React.FC = (props: any) => {
         <tr>
           <th>Id</th>
           <th>Name</th>
+          <th>Address</th>
+          <th>City name</th>
+          <th></th>
+          <th></th>
           <th></th>
           <th></th>
         </tr>
