@@ -30,7 +30,10 @@ const Header: React.FC = (props: any) => {
   useEffect(() => {
     let tokenExp = getTokenExp();
     let currentTimestamp = +new Date();
-
+    if (!tokenExp || tokenExp * 1000 < currentTimestamp) {
+      //getTokenForGuest();
+    }
+  }, []);
   return (
     <Navbar bg="dark" expand="lg">
       <Navbar.Brand className="text-info font-weight-bold text-capitalize">
