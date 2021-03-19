@@ -10,7 +10,10 @@ import Header from './components/Header';
 import ProjectionDetails from './components/user/ProjectionDetails';
 import Projection from './components/user/Projection';
 import Dashboard from './components/admin/Dashboard';
+import UserProfile from "../src/components/user/UserProfile";
+import UserSingUp from '../src/components/user/UserSingUp';
 
+import Formaa from '../src/components/helpers/Formaa';
 
 function App() {
   return (
@@ -22,6 +25,8 @@ function App() {
         <Route path="/ProjectionDetails/:id" component={ProjectionDetails} />
         <Route path="/Projection" component={Projection} />
         <Route path="/dashboard" component={Dashboard} />
+        <Route path="/userprofile" component={UserProfile} />
+        <Route path="/newUser" component={UserSingUp} />
       </Switch>
       <NotificationContainer />
       </div>
