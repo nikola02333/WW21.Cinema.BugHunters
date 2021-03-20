@@ -471,7 +471,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     ErrorMessage =Messages.MOVIE_SEARCH_BY_TAG_NOT_FOUND
                 };
             }
-            //var tagExists = _tagsRepository.ge
+           
 
             var items = await _moviesRepository.SearchMoviesByTags(query);
 

@@ -468,11 +468,10 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var expectedErrorMessage = "The Title field is required.";
 
-            var movieToUpdate = new CreateMovieModel
+            var movieToUpdate = new UpdateMovieModel
             {
                 Rating = 8,
                 Current = true,
-                Genre = "comedy"
             };
 
             //Act
@@ -503,7 +502,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             int expectedStatusCode = 400;
             var expectedMessage = Messages.MOVIE_DOES_NOT_EXIST;
             var userId = Guid.NewGuid();
-            var movieToUpdateModel = new CreateMovieModel
+            var movieToUpdateModel = new UpdateMovieModel
             {
                  
             };
@@ -548,7 +547,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             _mockMovieService.Setup(srvc => srvc.GetMovieByIdAsync(It.IsNotNull<Guid>())).ReturnsAsync(movieToUpdateModaimMode);
 
 
-            var result = await _moviesController.UpdateMovieAsync(Guid.NewGuid(), It.IsNotNull<CreateMovieModel>());
+            var result = await _moviesController.UpdateMovieAsync(Guid.NewGuid(), It.IsNotNull<UpdateMovieModel>());
 
 
             var movieResultMessage = ((BadRequestObjectResult)result).Value;
@@ -581,14 +580,12 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                     Year = 1994,
                 }
             };
-            var UpdateMovieModel = new CreateMovieModel
+            var UpdateMovieModel = new UpdateMovieModel
             {
                 Current= false,
-                 Genre="comedy",
                   Rating= 8,
                    Title="New Movie",
                     Year=1994,
-                    
             };
 
             //Act
@@ -795,6 +792,32 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             //Assert
            
 
+
+        }
+        [TestMethod]
+        public async Task SearchMoviesByTags_When_isSuccesful_False_Returns_BadRequest()
+        {
+            var expectedMessage = Messages.MOVIE_SEARCH_BY_TAG_NOT_FOUND;
+
+            var ResultModel = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = false,
+                ErrorMessage = Messages.MOVIE_SEARCH_BY_TAG_NOT_FOUND
+            };
+
+            
+            _mockMovieService.Setup(srvc => srvc.SearchMoviesByTag(It.IsAny<string>())).ReturnsAsync(ResultModel);
+
+            var result = await _moviesController.SearchMoviesByTags(It.IsAny<string>());
+
+            var movieResultMessage = ((BadRequestObjectResult)result.Result).Value;
+
+
+
+            //Assert
+            Assert.IsInstanceOfType(movieResultMessage, typeof(ErrorResponseModel));
+            var message = (ErrorResponseModel)movieResultMessage;
+            Assert.AreEqual(expectedMessage, message.ErrorMessage);
 
         }
 

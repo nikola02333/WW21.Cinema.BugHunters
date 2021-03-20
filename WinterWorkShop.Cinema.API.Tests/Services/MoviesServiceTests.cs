@@ -533,5 +533,17 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
             Assert.AreEqual(isSuccesful, message.IsSuccessful);
         }
+
+        [TestMethod]
+        public async Task SearchMovieByTag_When_isIntString_False_And_Tag_Does_Not_Exists_Returns_IsSuccessful_False()
+        {
+            var isSuccesful = false;
+            var expectMessage = Messages.MOVIE_SEARCH_BY_TAG_NOT_FOUND;
+
+            _mockTagsRepository.Setup(srvc => srvc.GetTagByValue(It.IsAny<string>())).Returns(default(Tag));
+
+            
+        }
+
     }
 }
