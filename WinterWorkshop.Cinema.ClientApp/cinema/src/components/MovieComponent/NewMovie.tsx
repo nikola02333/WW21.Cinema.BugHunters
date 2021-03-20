@@ -10,8 +10,12 @@ import {
   FormText,
 } from "react-bootstrap";
 import { NotificationManager } from "react-notifications";
-import { serviceConfig } from "../../../appSettings";
+import { serviceConfig } from "../../appSettings";
 import { YearPicker } from "react-dropdown-date";
+
+import { movieService } from './../Services/movieService';
+import { IMovieToCreateModel } from './../../models/IMovieToCreateModel';
+import { stat } from "fs";
 
 interface IState {
   title: string;
@@ -24,6 +28,8 @@ interface IState {
   tags: string;
   bannerUrl: string;
   yearError: string;
+  genre: string;
+  genreError: string;
 }
 
 const NewMovie: React.FC = (props: any) => {
@@ -38,12 +44,15 @@ const NewMovie: React.FC = (props: any) => {
     tags: "",
     bannerUrl: "",
     yearError: "",
+    genre: "romance",
+  genreError: ""
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setState({ ...state, [id]: value });
     validate(id, value);
+    setState({ ...state, [id]: value });
+  
   };
 
   const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,6 +73,17 @@ const NewMovie: React.FC = (props: any) => {
         });
       } else {
         setState({ ...state, titleError: "", canSubmit: true });
+      }
+    }
+    if (id === "genre") {
+      if (value === "") {
+        setState({
+          ...state,
+          genreError: "Fill in movie genre",
+          canSubmit: false,
+        });
+      } else {
+        setState({ ...state, genreError: "", canSubmit: true });
       }
     }
 
@@ -92,8 +112,9 @@ const NewMovie: React.FC = (props: any) => {
   };
 
   const handleYearChange = (year: string) => {
-    setState({ ...state, year: year });
     validate("year", year);
+    setState({ ...state, year: year });
+   
   };
 
   const addMovie = (splitTags: string[]) => {
@@ -104,32 +125,19 @@ const NewMovie: React.FC = (props: any) => {
       Rating: +state.rating,
       Tags: splitTags,
       BannerUrl: state.bannerUrl,
+      genre: state.genre
     };
-
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-      body: JSON.stringify(data),
+    var movieToCreate : IMovieToCreateModel = {
+ 
+      Title: state.title,
+      Year: +state.year,
+      Current: ( (state.current === true) ? true: false),
+      Rating: +state.rating,
+      Tags: state.tags,
+      CoverPicture: state.bannerUrl,
+      genre: state.genre
     };
-
-    fetch(`${serviceConfig.baseURL}/api/movies`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.statusText;
-      })
-      .then((result) => {
-        NotificationManager.success("Successfuly added movie!");
-        props.history.push(`AllMovies`);
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
+    movieService.createMovie(movieToCreate);
   };
 
   return (
@@ -169,6 +177,7 @@ const NewMovie: React.FC = (props: any) => {
               <FormText className="text-danger">{state.yearError}</FormText>
             </FormGroup>
             <FormGroup>
+            
               <FormControl
                 as="select"
                 className="add-new-form"
@@ -229,7 +238,7 @@ const NewMovie: React.FC = (props: any) => {
               disabled={state.submitted || !state.canSubmit}
               block
             >
-              Add
+              Add Movie
             </Button>
           </form>
         </Col>

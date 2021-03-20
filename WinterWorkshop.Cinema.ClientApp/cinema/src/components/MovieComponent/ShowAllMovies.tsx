@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { NotificationManager } from "react-notifications";
-import { serviceConfig } from "../../../appSettings";
+import { serviceConfig } from "../../appSettings";
 import { Row, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -9,17 +9,20 @@ import {
   faInfoCircle,
   faLightbulb,
 } from "@fortawesome/free-solid-svg-icons";
-import Spinner from "../../Spinner";
-import "./../../../index.css";
+import Spinner from "../../components/Spinner";
+import "../../index.css";
 import {
   isAdmin,
   isSuperUser,
   isUser,
   isGuest,
-} from "./../../helpers/authCheck";
+} from "../helpers/authCheck";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { IMovie, ITag } from "../../../models";
+import { IMovie, ITag } from "../../models/index";
+
+
+import { movieService } from './../Services/movieService';
 
 interface IState {
   movies: IMovie[];
@@ -69,6 +72,7 @@ const ShowAllMovies: React.FC = (props: any) => {
 
   toast.configure();
 
+  
   let userShouldSeeWholeTable;
   const shouldUserSeeWholeTable = () => {
     if (userShouldSeeWholeTable === undefined) {
@@ -167,7 +171,9 @@ const ShowAllMovies: React.FC = (props: any) => {
       };
 
       setState({ ...state, isLoading: true });
-      fetch(`${serviceConfig.baseURL}/api/movies/all`, requestOptions)
+      // znaci ovde getujem sve filmove, isCurrent = true
+      // 
+      fetch(`${serviceConfig.baseURL}/api/movies/AllMovies/false`, requestOptions)
         .then((response) => {
           if (!response.ok) {
             return Promise.reject(response);
@@ -214,33 +220,21 @@ const ShowAllMovies: React.FC = (props: any) => {
     }
   };
 
-  const removeMovie = (id: string) => {
-    const requestOptions = {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
+  const removeMovie =  async(id: string) => {
 
-    fetch(`${serviceConfig.baseURL}/api/movies/${id}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.statusText;
-      })
-      .then((result) => {
-        NotificationManager.success("Successfuly removed movie!");
-        const newState = state.movies.filter((movie) => {
-          return movie.id !== id;
-        });
-        setState({ ...state, movies: newState });
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
+    // e sada prvo apiCall, pa onda ako je prosao, onda brisem 
+    // na reactu !!!
+     var result = await movieService.removeMovie(id);
+     if(result === undefined)
+     {
+
+     }
+     else{
+      var moviesDeleted= state.movies.filter( movie => movie.id != id );
+      setState({...state, movies: moviesDeleted});
+     }
+
+    
   };
 
   const getTagsByMovieId = (
@@ -396,59 +390,15 @@ const ShowAllMovies: React.FC = (props: any) => {
     }
   };
 
-  const searchMovie = (tag: string) => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
+  const searchMovie = async(tag: string) => {
 
-    setState({ ...state, isLoading: true });
-    fetch(`${serviceConfig.baseURL}/api/Movies/bytag/${tag}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({ ...state, movies: data, isLoading: false });
-        } else {
-          const { title } = state;
-          const requestOptions = {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-            },
-          };
+    var moviesSearch = await movieService.searcMovie(tag);
 
-          setState({ ...state, isLoading: true });
-          fetch(
-            `${serviceConfig.baseURL}/api/Movies/bytitle/${title}`,
-            requestOptions
-          )
-            .then((response) => {
-              if (!response.ok) {
-                return Promise.reject(response);
-              }
-              return response.json();
-            })
-            .then((data) => {
-              if (data) {
-                setState({ ...state, movies: data, isLoading: false });
-              }
-            });
-        }
-      })
-      .catch((response) => {
-        setState({ ...state, isLoading: false });
-        NotificationManager.error("Movie doesn't exists.");
-        setState({ ...state, submitted: false });
-      });
+    if(moviesSearch != undefined)
+    {
+      setState({ ...state, movies: moviesSearch, isLoading: false });
+    }
+   
   };
 
   let inputValue;
@@ -474,7 +424,7 @@ const ShowAllMovies: React.FC = (props: any) => {
   return (
     <React.Fragment>
       <Row className="no-gutters pt-2">
-        <h1 className="form-header form-heading">All Movies</h1>
+        <h1 className="form-header form-heading">Search all Movies by tags or title</h1>
       </Row>
       <Row>
         <form

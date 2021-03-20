@@ -37,14 +37,14 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public Movie Delete(object id)
         {
-            Movie existing = _cinemaContext.Movies.Find(id);
+            var  existingMovie = _cinemaContext.Movies.Where(movie=> movie.Id == (Guid)id).Include(tm => tm.TagsMovies).FirstOrDefault();
 
-            if (existing == null)
+            if (existingMovie == null)
             {
                 return null;
             }
 
-            var result = _cinemaContext.Movies.Remove(existing);
+            var result = _cinemaContext.Movies.Remove(existingMovie);
 
             return result.Entity;
         }
@@ -109,12 +109,13 @@ namespace WinterWorkShop.Cinema.Repositories
         public async Task<IEnumerable<Movie>> SearchMoviesByTags(string query)
         {
 
-            
+            // moram u servisu da prvo proverim dali taj
+            //tag postoji posto ovde primam samo ako postoji
             var searchTag =  _cinemaContext.Tags
                 .Where(t => t.TagValue == query)
                 .SingleOrDefault();
             
-
+           
             var listMovies = await _cinemaContext.TagsMovies
                         .Where(tm => tm.TagId == searchTag.TagId)
                         .Include(m => m.Movie)

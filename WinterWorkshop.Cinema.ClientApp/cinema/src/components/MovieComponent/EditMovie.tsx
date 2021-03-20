@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter,useHistory } from "react-router-dom";
 import {
   FormGroup,
   FormControl,
@@ -10,8 +10,10 @@ import {
   FormText,
 } from "react-bootstrap";
 import { NotificationManager } from "react-notifications";
-import { serviceConfig } from "../../../appSettings";
+import { serviceConfig } from "../../appSettings";
 import { YearPicker } from "react-dropdown-date";
+
+import { movieService } from '../Services/movieService';
 
 interface IState {
   title: string;
@@ -26,6 +28,7 @@ interface IState {
 }
 
 const EditMovie: React.FC = (props: any) => {
+  const history = useHistory();
   const { id } = props.match.params;
 
   const [state, setState] = useState<IState>({
@@ -40,38 +43,22 @@ const EditMovie: React.FC = (props: any) => {
     canSubmit: true,
   });
 
-  const getMovie = (movieId: string) => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
+  const getMovie = async(movieId: string) => {
 
-    fetch(`${serviceConfig.baseURL}/api/movies/${movieId}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({
-            ...state,
-            title: data.title,
-            year: data.year,
-            rating: Math.round(data.rating),
-            current: data.current,
-            id: data.id + "",
-          });
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
+    var movie = await movieService.searchMovieById(movieId);
+    if(movie != undefined)
+    {
+      debugger
+      setState({
+        ...state,
+        title: movie.title,
+        year: movie.year,
+        rating: Math.round(movie.rating),
+        current: movie.current,
+        id: movie.id + "",
       });
+    }
+    
   };
 
   useEffect(() => {
@@ -80,8 +67,8 @@ const EditMovie: React.FC = (props: any) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setState({ ...state, [id]: value });
     validate(id, value);
+    setState({ ...state, [id]: value });
   };
 
   const validate = (id: string, value: string) => {
@@ -128,7 +115,7 @@ const EditMovie: React.FC = (props: any) => {
     validate("year", year);
   };
 
-  const updateMovie = () => {
+  const updateMovie = async() => {
     const data = {
       Title: state.title,
       Year: +state.year,
@@ -136,30 +123,8 @@ const EditMovie: React.FC = (props: any) => {
       Rating: +state.rating,
     };
 
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-      body: JSON.stringify(data),
-    };
-
-    fetch(`${serviceConfig.baseURL}/api/movies/${state.id}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.statusText;
-      })
-      .then((result) => {
-        props.history.goBack();
-        NotificationManager.success("Successfuly edited movie!");
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
+   await movieService.updateMovie(id,data);
+   history.push('/dashboard/AllMovies');
   };
 
   return (

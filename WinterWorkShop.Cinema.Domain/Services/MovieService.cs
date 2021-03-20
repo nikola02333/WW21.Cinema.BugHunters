@@ -450,7 +450,29 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<MovieDomainModel>> SearchMoviesByTag(string query)
         {
-           
+
+            // prvo da vidim da li je tag broj ili string
+            // da znam  koji search da koristim
+            Tag tagExists= null;
+            bool isIntString = query.All(char.IsDigit);
+            if(isIntString)
+            {
+                tagExists = _tagsRepository.GetTagByYear( Int32.Parse(query));
+            }
+            else
+            {
+                tagExists = _tagsRepository.GetTagByValue(query);
+            }
+            if(tagExists== null)
+            {
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage =Messages.MOVIE_SEARCH_BY_TAG_NOT_FOUND
+                };
+            }
+            //var tagExists = _tagsRepository.ge
+
             var items = await _moviesRepository.SearchMoviesByTags(query);
 
             var movies = items.Select(movie => 
@@ -464,6 +486,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                  }).ToList();
             return new GenericResult<MovieDomainModel> {
             
+                IsSuccessful= true,
                 DataList= movies
             };
         }

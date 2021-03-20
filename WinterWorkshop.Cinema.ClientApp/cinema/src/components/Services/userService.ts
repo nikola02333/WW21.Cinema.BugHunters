@@ -1,13 +1,8 @@
-import { serviceConfig } from "../../../appSettings"
+import { serviceConfig } from "../../appSettings"
 import { NotificationManager } from "react-notifications";
-
-interface IUserToCreateModel{
+import {IUserToCreateModel} from '../../models/IUserToCreateModel';
   
-  userName: string;
-  firstName: string;
-  lastName: string;
-  
-}
+ 
 export const userService = {
     login,
     singUp,
@@ -50,7 +45,7 @@ function getUserName(userName: string) : any
     });
 }
 
-function singUp(userToCreate: IUserToCreateModel)
+async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
 {
   console.log(JSON.stringify(userToCreate))
 
@@ -62,21 +57,14 @@ function singUp(userToCreate: IUserToCreateModel)
     body: JSON.stringify(userToCreate)
   };
 
-  fetch(
+ var data = await fetch(
       
     `${serviceConfig.baseURL}/api/users/Create`,
     requestOptions
   )
 
     .then((response) => {
-  /*
-      if (!response.ok) {
-       
-        
-        debugger
-        //return Promise.reject(response);
-      }
-    */ 
+
       return response.json();
     })
    
@@ -88,11 +76,14 @@ function singUp(userToCreate: IUserToCreateModel)
         NotificationManager.error(`${data.errorMessage}`);
       }
       
-      return data;  
+     return data;
     })
     .then((data) => {
-     
+      
+      console.log(data)
+
         NotificationManager.success(`User, ${data.firstName} succesfuly register!`);
+        return data;
     })
     .catch((response) => {
 
@@ -100,6 +91,8 @@ function singUp(userToCreate: IUserToCreateModel)
       
       NotificationManager.error(response.message || response.statusText);
     });
+
+    return data;
 }
 
 function login (userName:string)  {

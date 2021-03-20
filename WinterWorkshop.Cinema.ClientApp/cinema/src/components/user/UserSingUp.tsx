@@ -5,7 +5,7 @@ import { Navbar, Nav, Form, FormControl, Button } from "react-bootstrap";
 import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../appSettings";
 
-import {userService} from '../Services/userService/userService';
+import {userService} from '../Services/userService';
 import  {IUserToCreateModel} from '../../models/IUserToCreateModel';
   
 
@@ -63,7 +63,7 @@ useEffect( ()=> {
         
       };
     
-      const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+      const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     
      
@@ -76,7 +76,10 @@ useEffect( ()=> {
       };
       if (state.userName && state.firstName &&  state.lastName) {
         
-        userService.singUp(userToCreate);
+        // zasto je data undefind???
+       var data= await userService.singUp(userToCreate);
+
+       debugger
       } else {
         NotificationManager.error("Please fill in data");
         setState({ ...state, submitted: false });
