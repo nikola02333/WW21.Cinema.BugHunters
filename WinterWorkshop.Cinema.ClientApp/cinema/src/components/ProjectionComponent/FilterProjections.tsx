@@ -1,160 +1,105 @@
-import React, { useEffect, useState , useContext} from "react";
+import React, { useEffect, useState , memo, useMemo} from "react";
 import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../appSettings";
 import { withRouter } from "react-router-dom";
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import "./../../index.css";
-import { IAuditorium, IProjection, ICinema, IMovie } from "../../models";
-import {ProjectionContext} from "./ProjectionProvider";
 
-const FilterProjections : React.FC = () =>{
-    
-    const context = useContext(ProjectionContext);
-    const state = context[0];
-    const setState = context[1];
+import SelectAuditoriums from "./SelectFilters/SelectAuditoriums"
+import SelectCinenma from "./SelectFilters/SelectCinemas"
+import SelectMovies from "./SelectFilters/SelectMovies"
+import * as Service from "./ProjectionService"
+import {IMovie, IProjection, IAuditorium,  ICinema} from "../../models";
 
+import { classicNameResolver } from "typescript";
 
-    const getAuditoriumsBySelectedCinema = (selectedCinemaId: string) => {
-        setState({ ...state, cinemaId: selectedCinemaId });
-    
-        const requestOptions = {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-          },
-        };
-    
-        setState({ ...state, isLoading: true });
-        fetch(
-          `${serviceConfig.baseURL}/api/Auditoriums/bycinemaid/${selectedCinemaId}`,
-          requestOptions
-        )
-          .then((response) => {
-            if (!response.ok) {
-              return Promise.reject(response);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (data) {
-              setState({
-                ...state,
-                filteredAuditoriums: data,
-                isLoading: false,
-                selectedCinema: true,
-              });
-            }
-          })
-          .catch((response) => {
-            NotificationManager.error(response.message || response.statusText);
-            setState({ ...state, isLoading: false });
-          });
-      };
+interface IState {
 
-      const getMoviesBySelectedAuditorium = (selectedAuditoriumId: string) => {
-        setState({ ...state, auditoriumId: selectedAuditoriumId });
-        const requestOptions = {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-          },
-        };
-    
-        setState({ ...state, isLoading: true });
-        fetch(
-          `${serviceConfig.baseURL}/api/Movies/byauditoriumid/${selectedAuditoriumId}`,
-          requestOptions
-        )
-          .then((response) => {
-            if (!response.ok) {
-              return Promise.reject(response);
-            }
-            return response.json();
-          })
-          .then((data) => {
-            if (data) {
-              setState({
-                ...state,
-                filteredMovies: data,
-                isLoading: false,
-                selectedAuditorium: true,
-              });
-            }
-          })
-          .catch((response) => {
-            NotificationManager.error(response.message || response.statusText);
-            setState({ ...state, isLoading: false });
-          });
-      };
+  dateTime: string;
+  id: string;
+  current: boolean;
+  tag: string;
+  titleError: string;
+  yearError: string;
+  submitted: boolean;
+  isLoading: boolean;
+  selectedCinema: boolean;
+  selectedAuditorium: boolean;
+  selectedMovie: boolean;
+  selectedDate: boolean;
+  date: Date;
+  cinemaId: string;
+  auditoriumId: string;
+  movieId: string;
+  name: string;
+}
 
-      const fillFilterWithCinemas = () => {
-        return state.cinemas.map((cinema) => {
-          return (
-            <option value={cinema.id} key={cinema.id}>
-              {cinema.name}
-            </option>
-          );
-        });
-      };
+interface Props{
+  movies: IMovie[],
+  setMovies,
+  info: IState,
+  setInfo
+}
+
+const FilterProjections = memo((props : Props) =>{
     
-      const fillFilterWithAuditoriums = () => {
-          console.log("AUDITORIUM FUNKCIJA RENDER");
-        if (state.selectedCinema) {
-          return state.filteredAuditoriums.map((auditorium) => {
-            return <option key={auditorium.id} value={auditorium.id}>{auditorium.name}</option>;
-          });
-        } else {
-          return state.auditoriums.map((auditorium) => {
-            return (
-              <option   value={auditorium.id} key={auditorium.id}>
-                {auditorium.name}
-              </option>
-            );
-          });
-        }
-      };
+    const[cinemas,setCinemas]=useState({
+      cinemas: [
+        { id: "",
+         name: "",
+        }]
+    });
+    const[auditoriums,setAuditoriums]=useState({
+      auditoriums: [
+        {
+          id: "",
+          name: "",
+        },
+      ]
+    });
+    const[filteredData,setFilteredData]=useState({
+      filteredAuditoriums: [
+        {
+          id: "",
+          name: "",
+        },
+      ],
+      filteredMovies: [
+        {
+          id: "",
+          bannerUrl: "",
+          title: "",
+          rating: 0,
+          year: "",
+        },
+      ]
+    });
+
+    useEffect(() => {
+      Service.getCurrentMoviesAndProjections(props.setInfo,props.setMovies);
+      Service.getAllCinemas(props.setInfo,setCinemas);
+      Service.getAllAuditoriums(props.setInfo,setAuditoriums);
+    }, []);
     
+    const infoCinema = useMemo(()=>props.info,[props.info.selectedCinema,props.info.selectedAuditorium]);
+
     console.log("render FILTER");
     return(
+    
         <form
         id="name"
-        name={state.name}
+        name={props.info.name}
         // onSubmit={handleSubmit}
         className="filter"
       >
         <span className="filter-heading">Filter by:</span>
-        <select
-          onChange={(e) => getAuditoriumsBySelectedCinema(e.target.value)}
-          name="cinemaId"
-          id="cinema"
-          className="select-dropdown"
-        >
-          <option value="none">Cinema</option>
-          {fillFilterWithCinemas()}
-        </select>
-        <select
-          onChange={(e) => getMoviesBySelectedAuditorium(e.target.value)}
-          name="auditoriumId"
-          id="auditorium"
-          className="select-dropdown"
-          
-        >
-          <option value="none">Auditorium</option>
-          {fillFilterWithAuditoriums()}
-        </select>
-        <select
         
-          name="movieId"
-          id="movie"
-          className="select-dropdown"
-          
-        >
-           {/* <option value="" selected disabled hidden>Movie</option>  */}
-          <option value="none">Movie</option>
-          {/* {fillFilterWithMovies()} */}
-        </select>
+        <SelectCinenma cinemas={cinemas.cinemas} setInfo={props.setInfo} setFilteredData={setFilteredData}/>
+
+        <SelectAuditoriums selectedCinema={props.info.selectedCinema} filteredAuditoriums={filteredData.filteredAuditoriums} auditoriums={auditoriums.auditoriums} setInfo={props.setInfo} setFilteredData={setFilteredData}/>
+        
+        <SelectMovies info={infoCinema} filteredMovies={filteredData.filteredMovies} movies={props.movies}/>
+        
         <input
         //   onChange={(e) =>
         //     // setState({ ...state, selectedDate: true, dateTime: e.target.value })
@@ -169,12 +114,13 @@ const FilterProjections : React.FC = () =>{
           id="filter-button"
           className="btn-search"
           type="submit"
-          onClick={() => setState({ ...state, submitted: true })}
+          onClick={() => props.setInfo({ ...props.info, submitted: true })}
         >
           Submit
         </button>
       </form>
+     
     );
-};
+});
 
 export default FilterProjections;
