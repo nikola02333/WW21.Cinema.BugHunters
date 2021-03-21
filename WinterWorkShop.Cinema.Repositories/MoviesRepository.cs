@@ -21,6 +21,8 @@ namespace WinterWorkShop.Cinema.Repositories
         Task<Movie> ActivateDeactivateMovie(Movie movieToActivateDeactivate);
 
         Task<IEnumerable<Movie>> GetMoviesByAuditoriumId(int id);
+
+        Task<IEnumerable<Movie>> GetMoviesByCinemaId(int id);
         Task<IEnumerable<Movie>> SearchMoviesByTags(string query);
 
         void Detach(object entity);
@@ -147,5 +149,11 @@ namespace WinterWorkShop.Cinema.Repositories
             _cinemaContext.Entry(entity).State = EntityState.Deleted;
         }
 
+        public async Task<IEnumerable<Movie>> GetMoviesByCinemaId(int id)
+        {
+            var movies = await _cinemaContext.Movies.Where(x => x.Projections.Any(p => p.Auditorium.CinemaId == id)).ToListAsync();
+
+            return movies;
+        }
     }
 }
