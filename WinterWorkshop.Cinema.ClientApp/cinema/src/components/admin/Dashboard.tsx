@@ -32,7 +32,7 @@ const Dashboard: React.FC = () => {
   return (
     <Row className="justify-content-center no-gutters">
       {checkRole()}
-      <Col className="pt-2 app-content-main">
+      <Col lg={10} className="pt-2 app-content-main">
         <Switch>
           <PrivateRouteAdminAndSuperUser
             path="/dashboard/NewMovie"

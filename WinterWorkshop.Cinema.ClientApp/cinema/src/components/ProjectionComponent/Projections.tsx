@@ -16,7 +16,7 @@ const Projections : React.FC = (props: any) => {
     movies: [
       {
         id: "",
-        bannerUrl: "",
+        coverPicture: "",
         title: "",
         rating: 0,
         year: "",
@@ -95,6 +95,7 @@ const Projections : React.FC = (props: any) => {
         })
         .then((data) => {
           if (data) {
+            console.log(data)
             setInfo((prev)=>({ ...prev, movies: data, isLoading: false }));
             setMovies((prev)=>({ ...prev, movies: data }));
           }
@@ -121,25 +122,29 @@ const Projections : React.FC = (props: any) => {
         });
   
         return (
-          <Card.Body key={movie.id}>
-            <Card.Img style={{width: 250, height: 'auto'}} src="https://i.pinimg.com/564x/75/47/d7/7547d70ae8714e715dd4e3b118898438.jpg" />
-            {/* <div>
-              <img className="img-style" src={movie.bannerUrl}></img>
-            </div> */}
-            <Card.Title>
+          <Container key={movie.id} className="shadow rounded mt-1">
+          <Row >
+            <Col md={4} className=" rounded mt-3">
+            <img className="img-responsive img-fluid" style={{  borderRadius:5}} src={movie.coverPicture} />
+            </Col>
+            <Col md={8} className=" mt-3">
+              <Col md={12}>
               <span className="card-title-font">{movie.title}</span>
-              {getRoundedRating(movie.rating)}
-            </Card.Title>
-            <hr />
-            <Card.Subtitle className="mb-2 text-muted">
+               {getRoundedRating(movie.rating)}
+              </Col>
+
+              <Col md={12} className="mb-2 text-muted">
               Year of production: {movie.year}
-            </Card.Subtitle>
-            <hr />
-            <Card.Text>
-              <span className="mb-2 font-weight-bold">Projection times:</span>
-            </Card.Text>
+              </Col>
+            </Col>
+          </Row>
+          <Row className="mt-2 mb-5">
+            <Col md={12} className="pb-5">
+            <span className="mb-2 font-weight-bold mr-2">Projection times:</span>
             {projectionButton}
-          </Card.Body>
+            </Col>
+          </Row>
+          </Container>
         );
       });
     };
@@ -195,11 +200,7 @@ const Projections : React.FC = (props: any) => {
         <Container>
           <h1 className="projections-title">Current projections</h1>
           <FilterProjections movies={movies.movies} setMovies={setMovies} info={info} setInfo={setInfo}/>
-          <Row className="justify-content-center">
-            <Col>
-            <Card key={1} className="card-width">{checkIfFiltered()}</Card>
-            </Col>
-          </Row>
+          {checkIfFiltered()}
         </Container>
       );
 };
