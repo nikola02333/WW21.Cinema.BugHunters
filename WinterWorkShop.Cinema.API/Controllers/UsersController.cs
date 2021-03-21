@@ -25,7 +25,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
      
-        [Authorize(Roles = Role.Admin)]
+        //[Authorize(Roles = Role.Admin)]
         [HttpGet]
         public async Task<ActionResult<UserDomainModel>> GetAsync()
         {
@@ -70,7 +70,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
             {
                 FirstName = createUser.FirstName,
                 LastName= createUser.LastName,
-                 Role= createUser.Role,
+                 Role= "user",
                   UserName= createUser.UserName,
             };
 
@@ -193,7 +193,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 UserName= userToUpdate.UserName,
                  FirstName= userToUpdate.FirstName,
                   LastName = userToUpdate.LastName,
-                   Role= userToUpdate.Role
+                   Role= "user"
             };
             var user = await _userService.UpdateUserAsync(userId, userUpdate);
 

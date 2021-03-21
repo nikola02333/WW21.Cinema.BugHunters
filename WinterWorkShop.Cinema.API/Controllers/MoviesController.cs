@@ -285,11 +285,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("SearchMoviesByTag")]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> SearchMoviesByTags( [FromQuery]string query)
         {
-
-         
-            string query2 = ControllerContext.HttpContext.Request.QueryString.Value;
-            var queryParameters = QueryHelpers.ParseQuery(query);
-
             var movies = await _movieService.SearchMoviesByTag(query);
             return  Ok(movies.DataList);
         }

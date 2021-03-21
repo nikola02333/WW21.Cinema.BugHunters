@@ -35,12 +35,14 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public Tag Delete(object id)
         {
-            throw new NotImplementedException();
+           var tagToRemove= _cinemaContext.Tags.Find(id);
+
+            return _cinemaContext.Tags.Remove(tagToRemove).Entity;
         }
 
-        public Task<IEnumerable<Tag>> GetAllAsync()
+        public async Task<IEnumerable<Tag>> GetAllAsync()
         {
-            throw new NotImplementedException();
+            return await _cinemaContext.Tags.ToListAsync();
         }
 
         public async Task<Tag> GetByIdAsync(object id)
@@ -83,7 +85,10 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public Tag Update(Tag obj)
         {
-            throw new NotImplementedException();
+            var updatedEntry = _cinemaContext.Tags.Attach(obj).Entity;
+            _cinemaContext.Entry(obj).State = EntityState.Modified;
+
+            return updatedEntry;
         }
     }
 }
