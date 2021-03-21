@@ -33,6 +33,7 @@ interface IState {
 }
 
 const Projection: React.FC = (props: any) => {
+
   const [state, setState] = useState<IState>({
     movies: [
       {
@@ -115,15 +116,14 @@ const Projection: React.FC = (props: any) => {
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-
-    setState({ ...state, submitted: true });
+    setState((prev)=>({ ...prev, submitted: true }));
     const { cinemaId, auditoriumId, movieId, dateTime } = state;
 
     if (cinemaId || auditoriumId || movieId || dateTime) {
       getCurrentFilteredMoviesAndProjections();
     } else {
       NotificationManager.error("Not found.");
-      setState({ ...state, submitted: false });
+      setState((prev)=>({ ...prev, submitted: false }));
     }
   };
 
@@ -137,7 +137,7 @@ const Projection: React.FC = (props: any) => {
   };
 
   const getCurrentMoviesAndProjections = () => {
-    setState({ ...state, submitted: false });
+    setState((prev)=>({ ...prev, submitted: false }));
 
     const requestOptions = {
       method: "GET",
@@ -147,7 +147,7 @@ const Projection: React.FC = (props: any) => {
       },
     };
 
-    setState({ ...state, isLoading: true });
+    setState((prev)=>({ ...prev, isLoading: true }));
     fetch(
       `${serviceConfig.baseURL}/api/movies/AllMovies/${true}`,
       requestOptions
@@ -160,20 +160,19 @@ const Projection: React.FC = (props: any) => {
       })
       .then((data) => {
         if (data) {
-          setState({ ...state, movies: data, isLoading: false });
+          setState((prev)=>({ ...prev, movies: data, isLoading: false }));
         }
-        console.log("Curren movies");
-        console.log(data);
+        
       })
       .catch((response) => {
-        setState({ ...state, isLoading: false });
+        setState((prev)=>({ ...prev, isLoading: false }));
         NotificationManager.error(response.message || response.statusText);
       });
   };
 
   const getCurrentFilteredMoviesAndProjections = () => {
     const { cinemaId, auditoriumId, movieId, dateTime } = state;
-
+    
     const requestOptions = {
       method: "GET",
       headers: {
@@ -182,7 +181,7 @@ const Projection: React.FC = (props: any) => {
       },
     };
 
-    setState({ ...state, isLoading: true });
+    setState((prev)=>({ ...prev, isLoading: true }));
     let query = "";
     if (cinemaId) {
       query = `cinemaId=${cinemaId}`;
@@ -199,6 +198,7 @@ const Projection: React.FC = (props: any) => {
     if (query.length) {
       query = `?${query}`;
     }
+    console.log(query);
     fetch(
       `${serviceConfig.baseURL}/api/projections/filter${query}`,
       requestOptions
@@ -222,12 +222,12 @@ const Projection: React.FC = (props: any) => {
               }
             }
           }
-          console.log(data);
-          setState({ ...state, filteredProjections: data, isLoading: false });
+         
+          setState((prev)=>({ ...prev, filteredProjections: data, isLoading: false }));
         }
       })
       .catch((response) => {
-        setState({ ...state, isLoading: false });
+        setState((prev)=>({ ...prev, isLoading: false }));
         NotificationManager.error(response.message || response.statusText);
       });
   };
@@ -241,7 +241,7 @@ const Projection: React.FC = (props: any) => {
       },
     };
 
-    setState({ ...state, isLoading: true });
+    setState((prev)=>({ ...prev, isLoading: true }));
     fetch(`${serviceConfig.baseURL}/api/auditoriums/all`, requestOptions)
       .then((response) => {
         if (!response.ok) {
@@ -251,14 +251,13 @@ const Projection: React.FC = (props: any) => {
       })
       .then((data) => {
         if (data) {
-          setState({ ...state, auditoriums: data, isLoading: false });
+          setState((prev)=>({ ...prev, auditoriums: data, isLoading: false }));
         }
-        console.log("all auditoriums");
-        console.log(data);
+        
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, isLoading: false });
+        setState((prev)=>({ ...prev, isLoading: false }));
       });
   };
 
@@ -270,8 +269,7 @@ const Projection: React.FC = (props: any) => {
         Authorization: `Bearer ${localStorage.getItem("jwt")}`,
       },
     };
-
-    setState({ ...state, isLoading: true });
+    setState((prev)=>({ ...prev, isLoading: true }));
     fetch(`${serviceConfig.baseURL}/api/Cinemas/all`, requestOptions)
       .then((response) => {
         if (!response.ok) {
@@ -281,18 +279,17 @@ const Projection: React.FC = (props: any) => {
       })
       .then((data) => {
         if (data) {
-          setState({
-            ...state,
+          setState((prev)=>({
+            ...prev,
             cinemas: data,
             isLoading: false,
-          });
-          console.log("All Cinemas");
-        console.log(data);
+          }));
+          
         }
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, isLoading: false });
+        setState((prev)=>({ ...prev, isLoading: false }));
       });
   };
 
@@ -327,6 +324,7 @@ const Projection: React.FC = (props: any) => {
   };
 
   const fillFilterWithAuditoriums = () => {
+   
     if (state.selectedCinema) {
       return state.filteredAuditoriums.map((auditorium) => {
         return <option key={auditorium.id} value={auditorium.id}>{auditorium.name}</option>;
@@ -420,7 +418,15 @@ const Projection: React.FC = (props: any) => {
   };
 
   const getAuditoriumsBySelectedCinema = (selectedCinemaId: string) => {
-    setState({ ...state, cinemaId: selectedCinemaId });
+    if(selectedCinemaId !== "none"){
+      var obj=[{
+        id: "",
+        bannerUrl: "",
+        title: "",
+        rating: 0,
+        year: "",
+      }];
+    setState((prev)=>({ ...prev, cinemaId: selectedCinemaId , filteredMovies:obj}));
 
     const requestOptions = {
       method: "GET",
@@ -430,7 +436,7 @@ const Projection: React.FC = (props: any) => {
       },
     };
 
-    setState({ ...state, isLoading: true });
+    setState((prev)=>({ ...prev, isLoading: true }));
     fetch(
       `${serviceConfig.baseURL}/api/Auditoriums/bycinemaid/${selectedCinemaId}`,
       requestOptions
@@ -443,22 +449,26 @@ const Projection: React.FC = (props: any) => {
       })
       .then((data) => {
         if (data) {
-          setState({
-            ...state,
+          setState((prev)=>({
+            ...prev,
             filteredAuditoriums: data,
             isLoading: false,
             selectedCinema: true,
-          });
+          }));
         }
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, isLoading: false });
+        setState((prev)=>({ ...prev, isLoading: false }));
       });
+    }else{
+      setState((prev)=>({ ...prev, cinemaId: ""}));
+    }
+
   };
 
   const getMoviesBySelectedAuditorium = (selectedAuditoriumId: string) => {
-    setState({ ...state, auditoriumId: selectedAuditoriumId });
+    setState((prev)=>({ ...prev, auditoriumId: selectedAuditoriumId }));
     const requestOptions = {
       method: "GET",
       headers: {
@@ -467,7 +477,7 @@ const Projection: React.FC = (props: any) => {
       },
     };
 
-    setState({ ...state, isLoading: true });
+    setState((prev)=>({ ...prev, isLoading: true }));
     fetch(
       `${serviceConfig.baseURL}/api/Movies/byauditoriumid/${selectedAuditoriumId}`,
       requestOptions
@@ -480,17 +490,18 @@ const Projection: React.FC = (props: any) => {
       })
       .then((data) => {
         if (data) {
-          setState({
-            ...state,
+          setState((prev) =>({
+            ...prev,
             filteredMovies: data,
             isLoading: false,
             selectedAuditorium: true,
-          });
+          }));
+         
         }
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, isLoading: false });
+        setState((prev)=>({ ...prev, isLoading: false }));
       });
   };
 
@@ -532,22 +543,23 @@ const Projection: React.FC = (props: any) => {
           {fillFilterWithAuditoriums()}
         </select>
         <select
-          onChange={(e) =>
-            setState({ ...state, selectedMovie: true, movieId: e.target.value })
+          onChange={(e) =>{
+            e.persist();
+            setState((prev)=>({ ...prev, selectedMovie: true, movieId: e.target.value }))}
+            
           }
           name="movieId"
           id="movie"
           className="select-dropdown"
-          
         >
-           {/* <option value="" selected disabled hidden>Movie</option>  */}
           <option value="none">Movie</option>
           {fillFilterWithMovies()}
         </select>
         <input
-          onChange={(e) =>
-            setState({ ...state, selectedDate: true, dateTime: e.target.value })
-          }
+        onChange={(e) =>{
+            e.persist();
+            setState((prev)=>({ ...prev, selectedDate: true, dateTime: e.target.value }))
+          }}
           name="dateTime"
           type="date"
           id="date"
@@ -558,14 +570,14 @@ const Projection: React.FC = (props: any) => {
           id="filter-button"
           className="btn-search"
           type="submit"
-          onClick={() => setState({ ...state, submitted: true })}
+          onClick={() => setState((prev)=>({ ...prev, submitted: true }))}
         >
           Submit
         </button>
       </form>
       <Row className="justify-content-center">
         <Col>
-          <Card key={1} className="card-width">{checkIfFiltered()}</Card>
+          {checkIfFiltered()}
         </Col>
       </Row>
     </Container>
