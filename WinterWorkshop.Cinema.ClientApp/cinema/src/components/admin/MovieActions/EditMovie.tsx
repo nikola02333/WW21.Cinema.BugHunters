@@ -49,7 +49,7 @@ const EditMovie: React.FC = (props: any) => {
       },
     };
 
-    fetch(`${serviceConfig.baseURL}/api/movies/${movieId}`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/movies/GetById/${movieId}`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);
@@ -145,7 +145,7 @@ const EditMovie: React.FC = (props: any) => {
       body: JSON.stringify(data),
     };
 
-    fetch(`${serviceConfig.baseURL}/api/movies/${state.id}`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/movies/update/${state.id}`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);

@@ -167,7 +167,7 @@ const ShowAllMovies: React.FC = (props: any) => {
       };
 
       setState({ ...state, isLoading: true });
-      fetch(`${serviceConfig.baseURL}/api/movies/all`, requestOptions)
+      fetch(`${serviceConfig.baseURL}/api/movies/AllMovies/${true}`, requestOptions)
         .then((response) => {
           if (!response.ok) {
             return Promise.reject(response);
