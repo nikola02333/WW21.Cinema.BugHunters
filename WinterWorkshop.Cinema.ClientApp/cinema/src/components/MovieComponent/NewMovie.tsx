@@ -117,7 +117,7 @@ const NewMovie: React.FC = (props: any) => {
    
   };
 
-  const addMovie = (splitTags: string[]) => {
+  const addMovie = async(splitTags: string[]) => {
     const data = {
       Title: state.title,
       Year: +state.year,
@@ -137,7 +137,7 @@ const NewMovie: React.FC = (props: any) => {
       CoverPicture: state.bannerUrl,
       genre: state.genre
     };
-    movieService.createMovie(movieToCreate);
+   await movieService.createMovie(movieToCreate);
   };
 
   return (
