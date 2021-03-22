@@ -37,7 +37,7 @@ const Header: React.FC = (props: any) => {
   return (
     <Navbar bg="dark" expand="lg">
       <Navbar.Brand className="text-info font-weight-bold text-capitalize">
-        <Link className="text-decoration-none" to="/dashboard/Projection">
+        <Link className="text-decoration-none" to="/dashboard/Projections">
           Cinema 9
         </Link>
       </Navbar.Brand>

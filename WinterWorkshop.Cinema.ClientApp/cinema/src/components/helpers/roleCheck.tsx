@@ -131,7 +131,7 @@ export const checkRole = () => {
           </NavLink>
         </Row>
         <Row className="justify-content-center mt-2">
-          <NavLink activeClassName="active-link" to="/dashboard/Projection">
+          <NavLink activeClassName="active-link" to="/dashboard/Projections">
             <FontAwesomeIcon
               className="text-primary mr-1"
               icon={faPlayCircle}
@@ -219,7 +219,7 @@ export const checkRole = () => {
           </NavLink>
         </Row>
         <Row className="justify-content-center mt-2">
-          <NavLink activeClassName="active-link" to="/dashboard/Projection">
+          <NavLink activeClassName="active-link" to="/dashboard/Projections">
             <FontAwesomeIcon
               className="text-primary mr-1"
               icon={faPlayCircle}
@@ -258,7 +258,7 @@ export const checkRole = () => {
           </span>
         </Row>
         <Row className="justify-content-center mt-2">
-          <NavLink activeClassName="active-link" to="/dashboard/Projection">
+          <NavLink activeClassName="active-link" to="/dashboard/Projections">
             <FontAwesomeIcon
               className="text-primary mr-1"
               icon={faPlayCircle}
@@ -302,7 +302,7 @@ export const checkRole = () => {
           </span>
         </Row>
         <Row className="justify-content-center mt-2">
-          <NavLink activeClassName="active-link" to="/dashboard/Projection">
+          <NavLink activeClassName="active-link" to="/dashboard/Projections">
             <FontAwesomeIcon
               className="text-primary mr-1"
               icon={faPlayCircle}
