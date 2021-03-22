@@ -379,9 +379,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
-        public async Task<GenericResult<MovieDomainModel>> GetTopTenMoviesAsync(string searchCriteria, int year)
+        public async Task<GenericResult<MovieDomainModel>> GetTopTenMoviesAsync()
         {
-            var topTenMovies =await _moviesRepository.GetTopTenMovies(searchCriteria, year);
+            var topTenMovies =await _moviesRepository.GetTopTenMovies();
 
             var movies = topTenMovies.Select(movie => new MovieDomainModel
             {

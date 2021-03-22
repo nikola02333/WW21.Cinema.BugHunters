@@ -119,111 +119,44 @@ const ShowAllMovies: React.FC = (props: any) => {
       });
   };
 
-  const changeCurrent = (
+  const changeCurrent = async(
     e: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>,
     id: string
   ) => {
     e.preventDefault();
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
 
-    fetch(
-      `${serviceConfig.baseURL}/api/movies/changecurrent/${id}`,
-      requestOptions
-    )
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.statusText;
-      })
-      .then((result) => {
-        NotificationManager.success(
-          "Successfuly changed current status for movie!"
-        );
-        const newState = state.movies.filter((movie) => {
-          return movie.id !== id;
-        });
-        setState({ ...state, movies: newState });
-        setTimeout(() => {
-          window.location.reload();
-        }, 2000);
-      })
-      .catch(() => {
-        NotificationManager.error("This movie has projections!");
-        setState({ ...state, submitted: false });
-      });
+  
+   let result = await movieService.changeCurrent(id);
+   if(result === undefined)
+   {
+    NotificationManager.error('Error while changing current state of the movie');
+   }
+   else{
+    const newState = state.movies.filter((movie) => {
+      return movie.id !== id;
+    });
+    setState({ ...state, movies: newState });
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
+   }
   };
 
-  const getProjections = () => {
-    if (isAdmin() === true || isSuperUser() === true) {
-      const requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
+  const getProjections = async() => {
+    
+    if (isAdmin() === true || isSuperUser() === true || isUser()== true) {
+      
 
       setState({ ...state, isLoading: true });
-      // znaci ovde getujem sve filmove, isCurrent = true
+     
+      var movies= await movieService.getAllMovies();
+      setState({ ...state, movies: movies, isLoading: false });
       // 
-      fetch(`${serviceConfig.baseURL}/api/movies/AllMovies/false`, requestOptions)
-        .then((response) => {
-          if (!response.ok) {
-            return Promise.reject(response);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data) {
-            setState({ ...state, movies: data, isLoading: false });
-          }
-        })
-        .catch((response) => {
-          setState({ ...state, isLoading: false });
-          NotificationManager.error(response.message || response.statusText);
-          setState({ ...state, submitted: false });
-        });
-    } else {
-      const requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        },
-      };
-
-      setState({ ...state, isLoading: true });
-      fetch(`${serviceConfig.baseURL}/api/movies/AllMovies/${true}`, requestOptions)
-        .then((response) => {
-          if (!response.ok) {
-            return Promise.reject(response);
-          }
-          return response.json();
-        })
-        .then((data) => {
-          if (data) {
-            setState({ ...state, movies: data, isLoading: false });
-          }
-        })
-        .catch((response) => {
-          setState({ ...state, isLoading: false });
-          NotificationManager.error(response.message || response.statusText);
-          setState({ ...state, submitted: false });
-        });
     }
   };
 
   const removeMovie =  async(id: string) => {
 
-    // e sada prvo apiCall, pa onda ako je prosao, onda brisem 
-    // na reactu !!!
      var result = await movieService.removeMovie(id);
      if(result === undefined)
      {

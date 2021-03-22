@@ -269,7 +269,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             };
 
 
-            _mockMovieService.Setup(src => src.GetTopTenMoviesAsync("year", 2000)).ReturnsAsync(expectedMovies);
+            _mockMovieService.Setup(src => src.GetTopTenMoviesAsync()).ReturnsAsync(expectedMovies);
 
 
             //Act
@@ -315,7 +315,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             };
 
-            _mockMovieService.Setup(src => src.GetTopTenMoviesAsync("year",2000)).ReturnsAsync(expectedMovies);
+            _mockMovieService.Setup(src => src.GetTopTenMoviesAsync()).ReturnsAsync(expectedMovies);
 
             //Act
 
@@ -354,15 +354,15 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var result = await _moviesController.CreateMovieAsync(movieToCreate);
 
 
-            var movieResult = ((BadRequestObjectResult)result).Value;
+            var movieResult = ((BadRequestObjectResult)result.Result).Value;
 
             var errorResponse = ((SerializableError)movieResult).GetValueOrDefault("Title");
             var message = (string[])errorResponse;
 
-            var errorStatusCode = (BadRequestObjectResult)result;
+            var errorStatusCode = (BadRequestObjectResult)result.Result;
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
             Assert.AreEqual(message[0], expectedErrorMessage);
             Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
 
@@ -399,13 +399,13 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var result = await _moviesController.CreateMovieAsync(movieToCreate);
 
 
-            var movieResult = ((BadRequestObjectResult)result).Value;
+            var movieResult = ((BadRequestObjectResult)result.Result).Value;
 
             var errorMessage = (ErrorResponseModel)movieResult;
-            var errorStatusCode = (BadRequestObjectResult)result;
+            var errorStatusCode = (BadRequestObjectResult)result.Result;
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
             Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
             Assert.AreEqual(expectedErrorMessage, errorMessage.ErrorMessage);
 
@@ -448,12 +448,12 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var result = await _moviesController.CreateMovieAsync(movieToCreate);
 
 
-            var movieResult = ((CreatedAtActionResult)result).Value;
+            var movieResult = ((CreatedAtActionResult)result.Result).Value;
 
-            var errorStatusCode = (CreatedAtActionResult)result;
+            var errorStatusCode = (CreatedAtActionResult)result.Result;
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(CreatedAtActionResult));
+            Assert.IsInstanceOfType(result.Result, typeof(CreatedAtActionResult));
             Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
            Assert.AreEqual(movieDomainModel.IsSuccessful, isSuccesfull);
 
@@ -481,15 +481,15 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var result = await _moviesController.UpdateMovieAsync(Guid.NewGuid(),movieToUpdate);
 
 
-            var movieResult = ((BadRequestObjectResult)result).Value;
+            var movieResult = ((BadRequestObjectResult)result.Result).Value;
 
             var errorResponse = ((SerializableError)movieResult).GetValueOrDefault("Title");
             var message = (string[])errorResponse;
 
-            var errorStatusCode = (BadRequestObjectResult)result;
+            var errorStatusCode = (BadRequestObjectResult)result.Result;
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
             Assert.AreEqual(message[0], expectedErrorMessage);
             Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
 
@@ -519,13 +519,13 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var result =await _moviesController.UpdateMovieAsync(Guid.Empty, movieToUpdateModel);
 
-            var movieResultMessage = ((BadRequestObjectResult)result).Value;
+            var movieResultMessage = ((BadRequestObjectResult)result.Result).Value;
 
 
-            var errorStatusCode = (BadRequestObjectResult)result;
+            var errorStatusCode = (BadRequestObjectResult)result.Result;
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
             Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
             Assert.AreEqual(expectedMessage, movieResultMessage);
 
@@ -550,13 +550,13 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var result = await _moviesController.UpdateMovieAsync(Guid.NewGuid(), It.IsNotNull<UpdateMovieModel>());
 
 
-            var movieResultMessage = ((BadRequestObjectResult)result).Value;
+            var movieResultMessage = ((BadRequestObjectResult)result.Result).Value;
 
             var errorMessage = (ErrorResponseModel)movieResultMessage;
-            var statusCode = (BadRequestObjectResult)result;
+            var statusCode = (BadRequestObjectResult)result.Result;
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
             Assert.AreEqual(expectedStatusCode, statusCode.StatusCode);
             Assert.AreEqual(movieToUpdateModaimMode.ErrorMessage, errorMessage.ErrorMessage);
 
@@ -597,10 +597,10 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
 
 
-            var statusCode = (AcceptedResult)result;
+            var statusCode = (AcceptedResult)result.Result;
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(AcceptedResult));
+            Assert.IsInstanceOfType(result.Result, typeof(AcceptedResult));
             Assert.AreEqual(expectedStatusCode, statusCode.StatusCode);
 
         }
@@ -629,14 +629,14 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var result = await _moviesController.Delete(It.IsNotNull<Guid>());
 
 
-            var movieResult = ((BadRequestObjectResult)result).Value;
+            var movieResult = ((BadRequestObjectResult)result.Result).Value;
 
            
 
-            var errorStatusCode = (BadRequestObjectResult)result;
+            var errorStatusCode = (BadRequestObjectResult)result.Result;
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
             Assert.AreEqual(expectedMessage, movieResult);
             Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
 
@@ -663,13 +663,13 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var result = await _moviesController.Delete(userId);
 
 
-            var movieResultMessage = ((BadRequestObjectResult)result).Value;
+            var movieResultMessage = ((BadRequestObjectResult)result.Result).Value;
 
             var errorMessage = (ErrorResponseModel)movieResultMessage;
-            var statusCode = (BadRequestObjectResult)result;
+            var statusCode = (BadRequestObjectResult)result.Result;
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
             Assert.AreEqual(expectedStatusCode, statusCode.StatusCode);
             Assert.AreEqual(movieToDeleteModel.ErrorMessage, errorMessage.ErrorMessage);
 
@@ -694,11 +694,11 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var result = await _moviesController.Delete(userId);
 
-            var movieResultMessage = ((AcceptedResult)result);
+            var movieResultMessage = ((AcceptedResult)result.Result);
 
 
             //Assert
-            Assert.IsInstanceOfType(result, typeof(AcceptedResult));
+            Assert.IsInstanceOfType(result.Result, typeof(AcceptedResult));
            Assert.AreEqual(expectedStatusCode, movieResultMessage.StatusCode);
 
         }

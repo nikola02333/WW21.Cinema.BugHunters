@@ -32,7 +32,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("GetById/{id:guid}")]
-        public async Task<ActionResult<MovieDomainModel>> GetByIdAsync(Guid id)
+        public async Task<ActionResult<GenericResult<MovieDomainModel>>> GetByIdAsync(Guid id)
         {
            
             GenericResult<MovieDomainModel> movie;
@@ -55,7 +55,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("AllMovies/{isCurrent}")]
-        public async Task<ActionResult<IEnumerable<Movie>>> GetAllAsync(bool? isCurrent)
+        public async Task<ActionResult<GenericResult<MovieDomainModel>>> GetAllAsync(bool? isCurrent)
         {
             
             GenericResult<MovieDomainModel> movieDomainModels;
@@ -67,17 +67,17 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
         [HttpGet]
-        [Route("TopTenMovies/{searchCriteria}/{value}")]
+        [Route("TopTenMovies")]
         public async Task<ActionResult> GetTopTenMoviesAsync()
         {
 
-            var movies =await _movieService.GetTopTenMoviesAsync("serachCriteria", 2000);
+            var movies =await _movieService.GetTopTenMoviesAsync();
             return Ok(movies.DataList);
         }
 
         [HttpGet]
         [Route("byauditoriumid/{auditoriumId:int}")]
-        public async Task<ActionResult> GetByAuditoriumIdAsync(int auditoriumId)
+        public async Task<ActionResult<GenericResult<MovieDomainModel>>> GetByAuditoriumIdAsync(int auditoriumId)
         {
             var movies = await _movieService.GetMoviesByAuditoriumId(auditoriumId);
             if (!movies.IsSuccessful)
@@ -97,7 +97,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         //[Authorize(Roles = "admin")]
         [HttpPost]
-        public async Task<ActionResult> CreateMovieAsync([FromBody] CreateMovieModel movieModel)
+        public async Task<ActionResult<GenericResult<MovieDomainModel>>> CreateMovieAsync([FromBody] CreateMovieModel movieModel)
         {
             if(!ModelState.IsValid)
             {
@@ -156,7 +156,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         //[Authorize(Roles = "admin")]
         [HttpPut]
         [Route("Update/{id}")]
-        public async Task<ActionResult> UpdateMovieAsync(Guid id, [FromBody] UpdateMovieModel movieModel)
+        public async Task<ActionResult<GenericResult<MovieDomainModel>>> UpdateMovieAsync(Guid id, [FromBody] UpdateMovieModel movieModel)
         {
             if(id == Guid.Empty)
             {
@@ -213,7 +213,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         //[Authorize(Roles = "admin")]
         [HttpDelete]
         [Route("Delete/{id}")]
-        public async Task<ActionResult> Delete(Guid id)
+        public async Task<ActionResult<GenericResult<MovieDomainModel>>> Delete(Guid id)
         {
 
             if (id == Guid.Empty)
@@ -316,7 +316,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("byCineamId/{cineamId:int}")]
-        public async Task<ActionResult> GetByCinemaIdAsync(int cineamId)
+        public async Task<ActionResult<GenericResult<MovieDomainModel>>> GetByCinemaIdAsync(int cineamId)
         {
             var movies = await _movieService.GetMoviesByCinemaId(cineamId);
             if (!movies.IsSuccessful)

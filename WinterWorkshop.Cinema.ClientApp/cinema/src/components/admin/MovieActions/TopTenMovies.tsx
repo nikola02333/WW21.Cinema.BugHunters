@@ -6,6 +6,8 @@ import Spinner from "../../Spinner";
 import "./../../../index.css";
 import { IMovie } from "../../../models";
 
+import { movieService } from './../../Services/movieService';
+
 interface IState {
   movies: IMovie[];
   filteredMoviesByYear: IMovie[];
@@ -54,71 +56,18 @@ const TopTenMovies: React.FC = (props: any) => {
   });
 
   useEffect(() => {
-    getProjections();
+    getTopTenMovies();
   }, []);
 
-  const getMovie = (movieId: string) => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
+  
+// setState({ ...state, movies: data, isLoading: false });
+  const getTopTenMovies =  async()=>{
 
-    fetch(`${serviceConfig.baseURL}/api/movies/${movieId}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({
-            ...state,
-            title: data.title,
-            year: data.year,
-            rating: Math.round(data.rating),
-            current: data.current,
-            id: data.id,
-          });
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
-  };
+    setState({ ...state,isLoading: true });
+    var movies = await movieService.getTopTen();
+    setState({ ...state, movies: movies, isLoading: false });
 
-  const getProjections = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    setState({ ...state, isLoading: true });
-    fetch(`${serviceConfig.baseURL}/api/Movies/top`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({ ...state, movies: data, isLoading: false });
-        }
-      })
-      .catch((response) => {
-        setState({ ...state, isLoading: false });
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
-  };
+  }
 
   const fillTableWithDaata = () => {
     if (state.filteredMoviesByYear.length > 0) {
@@ -206,7 +155,6 @@ const TopTenMovies: React.FC = (props: any) => {
     </Table>
   );
   const showTable = state.isLoading ? <Spinner></Spinner> : table;
-
   return (
     <React.Fragment>
       <Row className="no-gutters pt-2">
