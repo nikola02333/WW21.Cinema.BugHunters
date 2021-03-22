@@ -102,7 +102,7 @@ const Projections : React.FC = (props: any) => {
         <Container>
           <h1 className="projections-title">Current projections</h1>
           <FilterProjections handleSubmit={handleSubmit} movies={movies.movies} setMovies={setMovies} info={info} setInfo={setInfo}/>
-          <MovieProjectCard submitted={info.submitted} movies={movies.movies} filteredProjections={projection.filteredProjections}/>
+          <MovieProjectCard props={props} submitted={info.submitted} movies={movies.movies} filteredProjections={projection.filteredProjections}/>
           
         </Container>
       );

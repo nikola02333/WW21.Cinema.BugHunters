@@ -2,7 +2,7 @@ import React from 'react'
 import { Container, Row, Col, Card, Button } from "react-bootstrap";
 import {getRoundedRating,navigateToProjectionDetails} from "./ProjectionFunctions"
 
-const MovieProjectCard = (props:{submitted,movies,filteredProjections}) =>{
+const MovieProjectCard = (props:{submitted,movies,filteredProjections,props}) =>{
 
     const fillTableWithData = () => {
         return props.movies.map((movie) => {
@@ -10,7 +10,7 @@ const MovieProjectCard = (props:{submitted,movies,filteredProjections}) =>{
             return (
               <Button
                 key={projection.id}
-                onClick={() => navigateToProjectionDetails(projection.id, movie.id,props)}
+                onClick={() => navigateToProjectionDetails(projection.id, movie.id,props.props)}
                 className="btn-projection-time"
               >
                 {projection.projectionTime.slice(11, 16)}h
@@ -76,7 +76,7 @@ const MovieProjectCard = (props:{submitted,movies,filteredProjections}) =>{
                   navigateToProjectionDetails(
                     filteredProjection.id,
                     filteredProjection.movieId,
-                    props
+                    props.props
                   )
                 }
                 className="btn-projection-time"
