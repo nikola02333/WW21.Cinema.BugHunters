@@ -131,23 +131,37 @@ const NewCinema: React.FC = (props: any) => {
     setState({ ...state, submitted: true });
     if (state.name && state.address && state.cityName) {
       addCinema();
-    } else {
+    } 
+    else if(state.name && state.address && state.cityName && state.auditName && state.numberOfSeats && state.seatRows)
+    {
+      addCinemaWithAuditoriums();
+    }
+    else {
       NotificationManager.error("Please fill in data");
       setState({ ...state, submitted: false });
     }
   };
 
-  const addCinema = () => {
-    const data = {
-      Name: state.name, 
-      address:state.address,
-      cityName:state.cityName,  
-      createAuditoriumModel:{
-        numberOfSeats: +state.numberOfSeats, 
-        seatRows: +state.seatRows,
-        auditName: state.auditName
-      }   
-    };
+
+    const addCinema = () => {
+      const data = {
+        Name: state.name, 
+        address:state.address,
+        cityName:state.cityName,  
+      }
+      };
+
+      const addCinemaWithAuditoriums = () => {
+        const data = {
+          Name: state.name, 
+          address:state.address,
+          cityName:state.cityName,  
+          createAuditoriumModel:{
+            numberOfSeats: +state.numberOfSeats, 
+            seatRows: +state.seatRows,
+            auditName: state.auditName
+          }   
+        };
 
     const requestOptions = {
       method: "POST",
