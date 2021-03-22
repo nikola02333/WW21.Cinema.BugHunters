@@ -142,11 +142,11 @@ const NewCinema: React.FC = (props: any) => {
       Name: state.name, 
       address:state.address,
       cityName:state.cityName,  
-      numberOfSeats: +state.numberOfSeats, 
-      seatRows: +state.seatRows,
-      auditName: state.auditName
-      
-             
+      createAuditoriumModel:{
+        numberOfSeats: +state.numberOfSeats, 
+        seatRows: +state.seatRows,
+        auditName: state.auditName
+      }   
     };
 
     const requestOptions = {
