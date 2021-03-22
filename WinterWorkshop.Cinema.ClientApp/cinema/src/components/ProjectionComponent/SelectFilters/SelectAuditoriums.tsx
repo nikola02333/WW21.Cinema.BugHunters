@@ -1,13 +1,23 @@
 import React,{memo} from 'react'
 import {getMoviesBySelectedAuditorium} from "../ProjectionService"
 
-const SelectAuditoriums  = memo( (props:{selectedCinema,filteredAuditoriums,auditoriums,setInfo,setFilteredData}) =>{
+const SelectAuditoriums  = memo( (props:{selectedAuditoriumId,selectedCinema,filteredAuditoriums,auditoriums,setInfo,setFilteredData}) =>{
     console.log("FilterAuditoriums")
+
+    var auditoriumIsSame = false;
     const fillFilterWithAuditoriums = () => {
         if (props.selectedCinema) {
-          return props.filteredAuditoriums.map((auditorium) => {
+          const filterAuditoriums =  props.filteredAuditoriums.map((auditorium) => {
+            if(auditorium.id==props.selectedAuditoriumId){
+              auditoriumIsSame=true;
+              console.log("TRUE");
+            }
             return <option key={auditorium.id} value={auditorium.id}>{auditorium.name}</option>;
           });
+          if(!auditoriumIsSame){
+            props.setInfo((prev)=>({...prev,auditoriumId: "",selectedAuditorium: false}));
+          }  
+          return filterAuditoriums;
         } else {
           return props.auditoriums.map((auditorium) => {
             return (
