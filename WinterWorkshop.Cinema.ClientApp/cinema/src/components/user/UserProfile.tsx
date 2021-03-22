@@ -7,7 +7,7 @@ import { withRouter } from "react-router";
 import { IProjection, IUser, IReservation } from "../../models";
 
 
-import {userService} from '../Services/userService/userService';
+import {userService} from '../Services/userService';
 interface IState {
   user: IUser;
   reservations: IReservation[];

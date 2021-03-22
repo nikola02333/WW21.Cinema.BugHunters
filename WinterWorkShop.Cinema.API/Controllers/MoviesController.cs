@@ -66,11 +66,11 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
         [HttpGet]
-        [Route("TopTenMovies")]
+        [Route("TopTenMovies/{searchCriteria}/{value}")]
         public async Task<ActionResult> GetTopTenMoviesAsync()
         {
 
-            var movies =await _movieService.GetTopTenMoviesAsync();
+            var movies =await _movieService.GetTopTenMoviesAsync("serachCriteria", 2000);
             return Ok(movies.DataList);
         }
 
@@ -155,7 +155,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         //[Authorize(Roles = "admin")]
         [HttpPut]
         [Route("Update/{id}")]
-        public async Task<ActionResult> UpdateMovieAsync(Guid id, [FromBody] CreateMovieModel movieModel)
+        public async Task<ActionResult> UpdateMovieAsync(Guid id, [FromBody] UpdateMovieModel movieModel)
         {
             if(id == Guid.Empty)
             {
@@ -186,10 +186,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
             movieToUpdate.Data.Current = movieModel.Current;
             movieToUpdate.Data.Year = movieModel.Year;
             movieToUpdate.Data.Rating = movieModel.Rating;
-            movieToUpdate.Data.Genre = movieModel.Genre;
-            movieToUpdate.Data.CoverPicture = movieModel.CoverPicture;
-            movieToUpdate.Data.UserRaitings = movieModel.UserRaitings;
-            movieToUpdate.Data.HasOscar = movieModel.HasOscar;
+            //movieToUpdate.Data.HasOscar = movieModel.HasOscar;
 
             GenericResult<MovieDomainModel> movieDomainModel;
             try
@@ -282,11 +279,57 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
         [HttpGet]
-        [Route("SearchMoviesByTag")]
+        [Route("SearchMoviesByTag/")]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> SearchMoviesByTags( [FromQuery]string query)
         {
-            var movies = await _movieService.SearchMoviesByTag(query);
-            return  Ok(movies.DataList);
+            GenericResult<MovieDomainModel> movies;
+            try
+            {
+                 movies = await _movieService.SearchMoviesByTag(query);
+
+            }
+            catch (Exception e)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = e.InnerException.Message ?? e.Message,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
+            if (!movies.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = movies.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+                return BadRequest(errorResponse);
+            }
+             
+         return Ok(movies.DataList);
+
+        }
+
+        [HttpGet]
+        [Route("byCineamId/{cineamId:int}")]
+        public async Task<ActionResult> GetByCinemaIdAsync(int cineamId)
+        {
+            var movies = await _movieService.GetMoviesByCinemaId(cineamId);
+            if (!movies.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = movies.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.NotFound
+                };
+
+                return NotFound(errorResponse);
+            }
+
+            return Ok(movies.DataList);
         }
     }
 }

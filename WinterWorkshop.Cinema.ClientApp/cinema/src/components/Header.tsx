@@ -37,15 +37,14 @@ const Header: React.FC = (props: any) => {
   return (
     <Navbar bg="dark" expand="lg">
       <Navbar.Brand className="text-info font-weight-bold text-capitalize">
-        <Link className="text-decoration-none" to="/dashboard/Projection">
+        <Link className="text-decoration-none" to="/dashboard/Projections">
           Cinema 9
         </Link>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" className="text-white" />
       <Navbar.Collapse id="basic-navbar-nav" className="text-white">
         <Nav className="mr-auto text-white"></Nav>
-
-
+        
         <UserComponent></UserComponent>
       </Navbar.Collapse>
     </Navbar>

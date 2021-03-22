@@ -5,7 +5,7 @@ import { Navbar, Nav, Form, FormControl, Button } from "react-bootstrap";
 import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../appSettings";
 
-import {userService} from '../Services/userService/userService';
+import {userService} from '../Services/userService';
 
 interface IState {
     userName: string;
@@ -25,14 +25,15 @@ interface IState {
         shouldHide: true,
       });
     useEffect(() => {
-        setTimeout(() => {
+
           if (localStorage.getItem("userLoggedIn") !== null) {
             hideLoginButtonElement();
             hideSingUpButtonElement();
+           
           } else {
             hideLogoutButtonElement();
+            hideUserProfileButtonElement();
           }
-        }, 500);
       }, []);
 
       const hideSingUpButtonElement = () => {
@@ -42,6 +43,14 @@ interface IState {
         }
        
       };
+      const hideUserProfileButtonElement = () => {
+        let userProfileButton = document.getElementById("userProfile");
+        if (userProfileButton) {
+          userProfileButton.style.display = "none";
+        }
+       
+      };
+      //hideUserProfileButtonElement
       const hideLoginButtonElement = () => {
         let loginButton = document.getElementById("login");
         if (loginButton) {
@@ -168,6 +177,7 @@ interface IState {
         </Form>
         {shouldShowUserProfile() && (
           <Button
+          id="userProfile"
             style={{ backgroundColor: "transparent", marginRight: "10px" }}
             onClick={redirectToUserPage}
           >

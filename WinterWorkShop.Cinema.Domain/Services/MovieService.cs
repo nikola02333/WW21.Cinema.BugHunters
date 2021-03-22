@@ -21,16 +21,18 @@ namespace WinterWorkShop.Cinema.Domain.Services
         private readonly IAuditoriumsRepository _auditoriumsRepository;
         private readonly ITagsRepository _tagsRepository;
         private readonly ITagsMoviesRepository _tagsMoviesRepository;
-
+        private readonly ICinemasRepository _cinemasRepository;
         public MovieService(IMoviesRepository moviesRepository,
                             ITagsRepository tagsRepository,
                             ITagsMoviesRepository tagsMoviesRepository,
-                            IAuditoriumsRepository auditoriumsRepository)
+                            IAuditoriumsRepository auditoriumsRepository,
+                            ICinemasRepository cinemasRepository)
         {
             _moviesRepository = moviesRepository;
            _tagsRepository = tagsRepository;
             _tagsMoviesRepository = tagsMoviesRepository;
             _auditoriumsRepository = auditoriumsRepository;
+            _cinemasRepository = cinemasRepository;
         }
         public async Task AddTagsForMovie(Movie movie)
         {
@@ -377,9 +379,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
-        public async Task<GenericResult<MovieDomainModel>> GetTopTenMoviesAsync()
+        public async Task<GenericResult<MovieDomainModel>> GetTopTenMoviesAsync(string searchCriteria, int year)
         {
-            var topTenMovies =await _moviesRepository.GetTopTenMovies();
+            var topTenMovies =await _moviesRepository.GetTopTenMovies(searchCriteria, year);
 
             var movies = topTenMovies.Select(movie => new MovieDomainModel
             {
@@ -450,7 +452,29 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<MovieDomainModel>> SearchMoviesByTag(string query)
         {
+
+            // prvo da vidim da li je tag broj ili string
+            // da znam  koji search da koristim
+            Tag tagExists= null;
+            bool isIntString = query.All(char.IsDigit);
+            if(isIntString)
+            {
+                tagExists = _tagsRepository.GetTagByYear( Int32.Parse(query));
+            }
+            else
+            {
+                tagExists = _tagsRepository.GetTagByValue(query);
+            }
+            if(tagExists== null)
+            {
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage =Messages.MOVIE_SEARCH_BY_TAG_NOT_FOUND
+                };
+            }
            
+
             var items = await _moviesRepository.SearchMoviesByTags(query);
 
             var movies = items.Select(movie => 
@@ -464,6 +488,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                  }).ToList();
             return new GenericResult<MovieDomainModel> {
             
+                IsSuccessful= true,
                 DataList= movies
             };
         }
@@ -587,6 +612,43 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
                 _tagsMoviesRepository.Save();
             }
+        }
+
+        public async Task<GenericResult<MovieDomainModel>> GetMoviesByCinemaId(int id)
+        {
+            var cinema =await _cinemasRepository.GetByIdAsync(id);
+            if (cinema == null)
+            {
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.CINEMA_ID_NOT_FOUND
+                };
+            }
+
+            var movies =await _moviesRepository.GetMoviesByCinemaId(id);
+            if(movies == null)
+            {
+                return null;
+            }
+
+            return new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = true,
+                DataList =  movies.Select(item => new MovieDomainModel
+                {
+                    Current = item.Current,
+                    Genre = item.Genre,
+                    Id = item.Id,
+                    Rating = item.Rating ?? 0,
+                    Title = item.Title,
+                    Year = item.Year,
+                    CoverPicture = item.CoverPicture,
+                    HasOscar = item.HasOscar,
+                    UserRaitings = item.UserRaitings ?? 0
+                }).ToList()
+            };
+
         }
      
     }
