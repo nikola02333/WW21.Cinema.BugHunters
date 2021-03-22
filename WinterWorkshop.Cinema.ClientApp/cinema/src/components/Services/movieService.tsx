@@ -24,9 +24,10 @@ async function getTopTen()
                         .then( response => {
                           return response.data;
                         })
-                        .catch(error => {
-                          NotificationManager.error(error.response.data.errorMessage);
-                          });
+                        .catch((error) => {
+      
+                          NotificationManager.error(error.response);
+                        });
                           return movies;
 }
 async function changeCurrent(movieId: string)

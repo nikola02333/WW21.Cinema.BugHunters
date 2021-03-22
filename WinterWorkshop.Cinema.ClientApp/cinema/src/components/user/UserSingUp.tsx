@@ -78,14 +78,13 @@ useEffect( ()=> {
         
        
        var data= await userService.singUp(userToCreate);
+        history.push('/dashboard/Projection');
 
       } else {
         NotificationManager.error("Please fill in data");
         setState({ ...state, submitted: false });
       }
-          //userService.singUp(userToCreate);
       
-          history.push('/dashboard/Projection');
       };
 
       

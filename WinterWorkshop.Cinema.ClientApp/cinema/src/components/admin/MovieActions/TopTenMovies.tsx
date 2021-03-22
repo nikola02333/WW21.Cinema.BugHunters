@@ -65,13 +65,14 @@ const TopTenMovies: React.FC = (props: any) => {
 
     setState({ ...state,isLoading: true });
     var movies = await movieService.getTopTen();
-    setState({ ...state, movies: movies, isLoading: false });
+    console.log(movies);
+    setState(prevState=> ({ ...prevState, movies: movies, isLoading: false }));
 
   }
 
   const fillTableWithDaata = () => {
-    if (state.filteredMoviesByYear.length > 0) {
-      return state.filteredMoviesByYear.map((filteredMovie) => {
+    if (state.movies.length > 0) {
+      return state.movies.map((filteredMovie) => {
         return (
           <tr key={filteredMovie.id}>
             <td>{filteredMovie.title}</td>
