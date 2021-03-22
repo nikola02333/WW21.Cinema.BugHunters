@@ -129,12 +129,12 @@ const NewCinema: React.FC = (props: any) => {
     e.preventDefault();
 
     setState({ ...state, submitted: true });
-    if (state.name && state.address && state.cityName) {
+    if (state.name && state.address && state.cityName && state.auditName && state.numberOfSeats && state.seatRows) {
       addCinema();
     } 
-    else if(state.name && state.address && state.cityName && state.auditName && state.numberOfSeats && state.seatRows)
+    else if(state.name && state.address && state.cityName)
     {
-      addCinemaWithAuditoriums();
+      addCinemaWithoutAuditorium();
     }
     else {
       NotificationManager.error("Please fill in data");
@@ -143,26 +143,19 @@ const NewCinema: React.FC = (props: any) => {
   };
 
 
-    const addCinema = () => {
+  const addCinema = () => {
+
       const data = {
         Name: state.name, 
         address:state.address,
         cityName:state.cityName,  
-      }
-      };
-
-      const addCinemaWithAuditoriums = () => {
-        const data = {
-          Name: state.name, 
-          address:state.address,
-          cityName:state.cityName,  
-          createAuditoriumModel:{
-            numberOfSeats: +state.numberOfSeats, 
-            seatRows: +state.seatRows,
-            auditName: state.auditName
-          }   
-        };
-
+        createAuditoriumModel:{
+          numberOfSeats: +state.numberOfSeats, 
+          seatRows: +state.seatRows,
+          auditName: state.auditName
+        }   
+    };
+    
     const requestOptions = {
       method: "POST",
       headers: {
@@ -188,6 +181,41 @@ const NewCinema: React.FC = (props: any) => {
         setState({ ...state, submitted: false });
       });
   };
+
+
+  const addCinemaWithoutAuditorium = () => {
+
+    const data = {
+      Name: state.name, 
+      address:state.address,
+      cityName:state.cityName,   
+  };
+  
+  const requestOptions = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
+    body: JSON.stringify(data),
+  };
+
+  fetch(`${serviceConfig.baseURL}/api/cinemas/create`, requestOptions)
+    .then((response) => {
+      if (!response.ok) {
+        return Promise.reject(response);
+      }
+      return response.statusText;
+    })
+    .then((result) => {
+      NotificationManager.success("Successfuly added cinema!");
+      props.history.push(`AllCinemas`);
+    })
+    .catch((response) => {
+      NotificationManager.error(response.message || response.statusText);
+      setState({ ...state, submitted: false });
+    });
+};
 
   const renderRows = (rows: number, seats: number) => {
     const rowsRendered: JSX.Element[] = [];
