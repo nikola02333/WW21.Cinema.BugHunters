@@ -263,11 +263,11 @@ namespace WinterWorkShop.Cinema.Tests.Services
         {
             var expectedMovies = new List<Movie>();
 
-            _mockMovieRepository.Setup(srvc => srvc.GetTopTenMovies()).ReturnsAsync(expectedMovies);
+            _mockMovieRepository.Setup(srvc => srvc.GetTopTenMovies("year", 2000)).ReturnsAsync(expectedMovies);
 
             // Act
 
-            var result = await _moviesService.GetTopTenMoviesAsync();
+            var result = await _moviesService.GetTopTenMoviesAsync("year", 2000);
 
             //Arrange
             Assert.IsInstanceOfType(result, typeof(GenericResult<MovieDomainModel>));
@@ -291,11 +291,11 @@ namespace WinterWorkShop.Cinema.Tests.Services
              new Movie{ Current= true, Genre = "comedy", Id = Guid.NewGuid(), Rating= 8, Title="New_Movie10", Year=1999}
             };
 
-            _mockMovieRepository.Setup(srvc => srvc.GetTopTenMovies()).ReturnsAsync(expectedMovies);
+            _mockMovieRepository.Setup(srvc => srvc.GetTopTenMovies("year", 2000)).ReturnsAsync(expectedMovies);
 
             // Act
 
-            var result = await _moviesService.GetTopTenMoviesAsync();
+            var result = await _moviesService.GetTopTenMoviesAsync("year", 2000);
 
             //Arrange
             Assert.IsInstanceOfType(result, typeof(GenericResult<MovieDomainModel>));
@@ -535,5 +535,17 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
             Assert.AreEqual(isSuccesful, message.IsSuccessful);
         }
+
+        [TestMethod]
+        public async Task SearchMovieByTag_When_isIntString_False_And_Tag_Does_Not_Exists_Returns_IsSuccessful_False()
+        {
+            var isSuccesful = false;
+            var expectMessage = Messages.MOVIE_SEARCH_BY_TAG_NOT_FOUND;
+
+            _mockTagsRepository.Setup(srvc => srvc.GetTagByValue(It.IsAny<string>())).Returns(default(Tag));
+
+            
+        }
+
     }
 }

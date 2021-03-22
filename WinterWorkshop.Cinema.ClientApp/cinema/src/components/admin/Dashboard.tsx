@@ -4,9 +4,9 @@ import { Switch, Route } from "react-router-dom";
 import "./../../index.css";
 
 // Admin actions
-import NewMovie from "./MovieActions/NewMovie";
-import EditMovie from "./MovieActions/EditMovie";
-import ShowAllMovies from "./MovieActions/ShowAllMovies";
+import NewMovie from "../MovieComponent/NewMovie";
+import EditMovie from "../MovieComponent/EditMovie";
+import ShowAllMovies from "../MovieComponent/ShowAllMovies";
 import TopTenMovies from "./MovieActions/TopTenMovies";
 import NewCinema from "./CinemaActions/NewCinema";
 import EditCinema from "./CinemaActions/EditCinema";

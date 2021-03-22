@@ -44,8 +44,7 @@ const Header: React.FC = (props: any) => {
       <Navbar.Toggle aria-controls="basic-navbar-nav" className="text-white" />
       <Navbar.Collapse id="basic-navbar-nav" className="text-white">
         <Nav className="mr-auto text-white"></Nav>
-
-
+        
         <UserComponent></UserComponent>
       </Navbar.Collapse>
     </Navbar>

@@ -46,6 +46,7 @@
         public const string MOVIE_UPDATE_ERROR = "Error occured while updating  movie.";
         public const string MOVIE_ACTIVATE_DEACTIVATE_ERROR = "Error occured while activate-deactivate  movie.";
         public const string MOVIE_NOT_IN_AUDITORIUM = "Movie is not showing in given auditorium";
+        public const string MOVIE_SEARCH_BY_TAG_NOT_FOUND = "Movie search by tag not found";
         #endregion
 
         #region Projections
