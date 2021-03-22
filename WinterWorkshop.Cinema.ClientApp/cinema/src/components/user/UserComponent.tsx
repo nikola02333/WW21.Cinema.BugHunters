@@ -107,11 +107,9 @@ interface IState {
         }));
         const { userName } = state;
         if (userName) {
-          //login();
           userService.login(userName);
         } else {
 
-          //setState({ ...state, submitted: false });
           setState( (prev) => ({
             ...prev, submitted: false
           }));
