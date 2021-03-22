@@ -38,7 +38,7 @@ const Projection: React.FC = (props: any) => {
     movies: [
       {
         id: "",
-        bannerUrl: "",
+        coverPicture: "",
         title: "",
         rating: 0,
         year: "",
@@ -71,7 +71,7 @@ const Projection: React.FC = (props: any) => {
     filteredMovies: [
       {
         id: "",
-        bannerUrl: "",
+        coverPicture: "",
         title: "",
         rating: 0,
         year: "",
@@ -82,7 +82,7 @@ const Projection: React.FC = (props: any) => {
         id: "",
         movieId: "",
         projectionTime: "",
-        bannerUrl: "",
+        coverPicture: "",
         auditoriumName: "",
         movieTitle: "",
         movieRating: 0,
@@ -218,7 +218,7 @@ const Projection: React.FC = (props: any) => {
           for (let i = 0; i < movies.length; i++) {
             for (let j = 0; j < filteredMovies.length; j++) {
               if (movies[i].id === data[j].movieId) {
-                data[j].bannerUrl = movies[i].bannerUrl;
+                data[j].coverPicture = movies[i].coverPicture;
               }
             }
           }
@@ -357,7 +357,7 @@ const Projection: React.FC = (props: any) => {
       return (
         <Card.Body key={movie.id}>
           <div>
-            <img className="img-style" src={movie.bannerUrl}></img>
+            <img className="img-style" src={movie.coverPicture}></img>
           </div>
           <Card.Title>
             <span className="card-title-font">{movie.title}</span>
@@ -382,7 +382,7 @@ const Projection: React.FC = (props: any) => {
       return (
         <Card.Body key={filteredProjection.movieId}>
           <div className="banner-img">
-            <img className="img-style" src={filteredProjection.bannerUrl}></img>
+            <img className="img-style" src={filteredProjection.coverPicture}></img>
           </div>
           <Card.Title>
             <span className="card-title-font">
@@ -421,7 +421,7 @@ const Projection: React.FC = (props: any) => {
     if(selectedCinemaId !== "none"){
       var obj=[{
         id: "",
-        bannerUrl: "",
+        coverPicture: "",
         title: "",
         rating: 0,
         year: "",

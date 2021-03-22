@@ -26,7 +26,7 @@ const TopTenMovies: React.FC = (props: any) => {
     movies: [
       {
         id: "",
-        bannerUrl: "",
+        coverPicture: "",
         title: "",
         year: "",
         rating: 0,
@@ -35,7 +35,7 @@ const TopTenMovies: React.FC = (props: any) => {
     filteredMoviesByYear: [
       {
         id: "",
-        bannerUrl: "",
+        coverPicture: "",
         title: "",
         year: "",
         rating: 0,

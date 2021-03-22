@@ -45,7 +45,7 @@ const ShowAllMovies: React.FC = (props: any) => {
     movies: [
       {
         id: "",
-        bannerUrl: "",
+        coverPicture: "",
         title: "",
         year: "",
         current: false,

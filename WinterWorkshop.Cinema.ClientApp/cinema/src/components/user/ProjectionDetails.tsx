@@ -14,7 +14,6 @@ import {
   IProjectionNEW,
 } from "../../models";
 import Projection from "./Projection";
-import { debug } from "console";
 
 interface IState {
   projections: IProjectionNEW;
@@ -49,7 +48,7 @@ const ProjectionDetails: React.FC = () => {
     },
     movie: {
       id: "",
-      bannerUrl: "",
+      coverPicture: "",
       title: "",
       rating: 0,
       year: "",
@@ -104,12 +103,11 @@ const ProjectionDetails: React.FC = () => {
         Authorization: "Bearer " + localStorage.getItem("jwt"),
       },
     };
-
     fetch(
       `${serviceConfig.baseURL}/api/projections/byprojectionid/` + id, requestOptions
     )
       .then((response) => {
-        if (!response.ok) {
+        if (!response.status) {
           return Promise.reject(response);
         }
         return response.json();
@@ -123,11 +121,7 @@ const ProjectionDetails: React.FC = () => {
             slicedTime: data.projectionTime.slice(11, 16),
             moviesId: data.movieId,
           }));
-          console.log("Projection");
           console.log(data);
-          
-          console.log("projection from stat");
-          console.log(state.projections);
 
           getReservedSeats(requestOptions, id);
           getSeatsForAuditorium(data.auditoriumId);
@@ -144,7 +138,6 @@ const ProjectionDetails: React.FC = () => {
 
   const getReservedSeats = (requestOptions: RequestInit, id: string) => {
      fetch(
-      // `${serviceConfig.baseURL}/api/reservations/getbyprojectionid/${id}`,
       `${serviceConfig.baseURL}/api/seats/reservedByProjectionId/${id}`,
       requestOptions
     )
@@ -272,7 +265,7 @@ const ProjectionDetails: React.FC = () => {
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState((prev)=>({ ...state, submitted: false }));
+        setState((prev)=>({ ...prev, submitted: false }));
       });
   };
 
@@ -656,7 +649,7 @@ const ProjectionDetails: React.FC = () => {
         <Card.Subtitle className="mb-2 text-muted">
           Year of production: {state.movie.year}
           <span className="float-right">
-            Time of projection: {state.slicedTime}h
+            Time of projection: {state.projections.projectionTime.slice(11, 16)}h
           </span>
         </Card.Subtitle>
         <hr />
@@ -679,9 +672,9 @@ const ProjectionDetails: React.FC = () => {
                         <td className="payment-table__cell">
                           <span>{state.currentReservationSeats.length}</span>
                         </td>
-                        <td className="payment-table__cell">350,00 RSD</td>
+                        <td className="payment-table__cell">{state.projections.price},00 RSD</td>
                         <td className="payment-table__cell">
-                          {state.currentReservationSeats.length * 350},00 RSD
+                          {state.currentReservationSeats.length * state.projections.price},00 RSD
                         </td>
                       </tr>
                     </tbody>

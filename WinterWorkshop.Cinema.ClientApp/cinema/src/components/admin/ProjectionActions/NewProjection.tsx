@@ -39,7 +39,7 @@ const NewProjection: React.FC = (props: any) => {
     movies: [
       {
         id: "",
-        bannerUrl: "",
+        coverPicture: "",
         rating: 0,
         title: "",
         year: "",

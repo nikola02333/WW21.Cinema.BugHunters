@@ -3,7 +3,7 @@ export interface IProjection {
   projectionTime: string;
   movieId: string;
   auditoriumName: string;
-  bannerUrl?: string;
+  coverPicture?: string;
   movieTitle?: string;
   movieRating?: number;
   movieYear?: string;
@@ -24,8 +24,9 @@ export interface IMovie {
   title: string;
   rating: number;
   year: string;
-  bannerUrl?: string;
+  coverPicture?: string;
   current?: boolean;
+  hasOscar?:boolean;
   projections?: IProjection[];
 }
 
