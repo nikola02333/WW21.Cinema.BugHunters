@@ -263,11 +263,11 @@ namespace WinterWorkShop.Cinema.Tests.Services
         {
             var expectedMovies = new List<Movie>();
 
-            _mockMovieRepository.Setup(srvc => srvc.GetTopTenMovies()).ReturnsAsync(expectedMovies);
+            _mockMovieRepository.Setup(srvc => srvc.GetTopTenMovies("year", 2000)).ReturnsAsync(expectedMovies);
 
             // Act
 
-            var result = await _moviesService.GetTopTenMoviesAsync();
+            var result = await _moviesService.GetTopTenMoviesAsync("year", 2000);
 
             //Arrange
             Assert.IsInstanceOfType(result, typeof(GenericResult<MovieDomainModel>));
@@ -291,11 +291,11 @@ namespace WinterWorkShop.Cinema.Tests.Services
              new Movie{ Current= true, Genre = "comedy", Id = Guid.NewGuid(), Rating= 8, Title="New_Movie10", Year=1999}
             };
 
-            _mockMovieRepository.Setup(srvc => srvc.GetTopTenMovies()).ReturnsAsync(expectedMovies);
+            _mockMovieRepository.Setup(srvc => srvc.GetTopTenMovies("year", 2000)).ReturnsAsync(expectedMovies);
 
             // Act
 
-            var result = await _moviesService.GetTopTenMoviesAsync();
+            var result = await _moviesService.GetTopTenMoviesAsync("year", 2000);
 
             //Arrange
             Assert.IsInstanceOfType(result, typeof(GenericResult<MovieDomainModel>));

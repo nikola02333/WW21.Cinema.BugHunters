@@ -269,7 +269,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             };
 
 
-            _mockMovieService.Setup(src => src.GetTopTenMoviesAsync()).ReturnsAsync(expectedMovies);
+            _mockMovieService.Setup(src => src.GetTopTenMoviesAsync("year", 2000)).ReturnsAsync(expectedMovies);
 
 
             //Act
@@ -315,7 +315,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             };
 
-            _mockMovieService.Setup(src => src.GetTopTenMoviesAsync()).ReturnsAsync(expectedMovies);
+            _mockMovieService.Setup(src => src.GetTopTenMoviesAsync("year",2000)).ReturnsAsync(expectedMovies);
 
             //Act
 
