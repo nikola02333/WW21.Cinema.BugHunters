@@ -46,6 +46,7 @@
         public const string MOVIE_UPDATE_ERROR = "Error occured while updating  movie.";
         public const string MOVIE_ACTIVATE_DEACTIVATE_ERROR = "Error occured while activate-deactivate  movie.";
         public const string MOVIE_NOT_IN_AUDITORIUM = "Movie is not showing in given auditorium";
+        public const string MOVIE_SEARCH_BY_TAG_NOT_FOUND = "Movie search by tag not found";
         #endregion
 
         #region Projections
@@ -82,6 +83,12 @@
         public const string TICKET_CREATION_ERROR = "Error occured while creating new ticket, please try again.";
         public const string TICKET_GET_ALL_TICKETS_ERROR = "Error occured while getting all tickets, please try again.";
         public const string TICKET_DELTE_ERROR = "Error occured while deleting ticket, please try again.";
+        #endregion
+
+        #region Tags       
+        public const string TAG_DOES_NOT_EXIST = "Error occured while getting tag by Id, please try again.";
+        public const string TAG_DELTE_ERROR = "Error occured while deleting tag, please try again.";
+
         #endregion
     }
 }

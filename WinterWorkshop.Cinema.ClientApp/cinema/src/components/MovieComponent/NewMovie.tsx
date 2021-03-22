@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 import {
   FormGroup,
@@ -10,78 +10,57 @@ import {
   FormText,
 } from "react-bootstrap";
 import { NotificationManager } from "react-notifications";
-import { serviceConfig } from "../../../appSettings";
+import { serviceConfig } from "../../appSettings";
 import { YearPicker } from "react-dropdown-date";
+
+import { movieService } from './../Services/movieService';
+import { IMovieToCreateModel } from './../../models/IMovieToCreateModel';
+import { stat } from "fs";
 
 interface IState {
   title: string;
   year: string;
-  rating: number;
-  id: string;
+  rating: string;
   current: boolean;
   titleError: string;
-  yearError: string;
   submitted: boolean;
   canSubmit: boolean;
+  tags: string;
+  bannerUrl: string;
+  yearError: string;
+  genre: string;
+  genreError: string;
 }
 
-const EditMovie: React.FC = (props: any) => {
-  const { id } = props.match.params;
-
+const NewMovie: React.FC = (props: any) => {
   const [state, setState] = useState<IState>({
     title: "",
     year: "",
-    rating: 0,
-    id: "",
+    rating: "",
     current: false,
     titleError: "",
-    yearError: "",
     submitted: false,
     canSubmit: true,
+    tags: "",
+    bannerUrl: "",
+    yearError: "",
+    genre: "romance",
+  genreError: ""
   });
-
-  const getMovie = (movieId: string) => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    fetch(`${serviceConfig.baseURL}/api/movies/${movieId}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({
-            ...state,
-            title: data.title,
-            year: data.year,
-            rating: Math.round(data.rating),
-            current: data.current,
-            id: data.id + "",
-          });
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
-  };
-
-  useEffect(() => {
-    getMovie(id);
-  }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setState({ ...state, [id]: value });
     validate(id, value);
+    setState({ ...state, [id]: value });
+  
+  };
+
+  const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setState({ ...state, tags: e.target.value });
+  };
+
+  const handleBannerUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setState({ ...state, bannerUrl: e.target.value });
   };
 
   const validate = (id: string, value: string) => {
@@ -96,27 +75,36 @@ const EditMovie: React.FC = (props: any) => {
         setState({ ...state, titleError: "", canSubmit: true });
       }
     }
+    if (id === "genre") {
+      if (value === "") {
+        setState({
+          ...state,
+          genreError: "Fill in movie genre",
+          canSubmit: false,
+        });
+      } else {
+        setState({ ...state, genreError: "", canSubmit: true });
+      }
+    }
 
     if (id === "year") {
       const yearNum = +value;
       if (!value || value === "" || yearNum < 1895 || yearNum > 2100) {
-        setState({
-          ...state,
-          yearError: "Please chose valid year",
-          canSubmit: false,
-        });
+        setState({ ...state, yearError: "Please chose valid year" });
       } else {
-        setState({ ...state, yearError: "", canSubmit: true });
+        setState({ ...state, yearError: "" });
       }
     }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    let splitTags = state.tags.split(",");
 
     setState({ ...state, submitted: true });
-    if (state.title && state.year && state.rating) {
-      updateMovie();
+    const { title, year, rating } = state;
+    if (title && year && rating && splitTags[0] !== "") {
+      addMovie(splitTags);
     } else {
       NotificationManager.error("Please fill in data");
       setState({ ...state, submitted: false });
@@ -124,49 +112,39 @@ const EditMovie: React.FC = (props: any) => {
   };
 
   const handleYearChange = (year: string) => {
-    setState({ ...state, year: year });
     validate("year", year);
+    setState({ ...state, year: year });
+   
   };
 
-  const updateMovie = () => {
+  const addMovie = async(splitTags: string[]) => {
     const data = {
       Title: state.title,
       Year: +state.year,
       Current: state.current === true,
       Rating: +state.rating,
+      Tags: splitTags,
+      BannerUrl: state.bannerUrl,
+      genre: state.genre
     };
-
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-      body: JSON.stringify(data),
+    var movieToCreate : IMovieToCreateModel = {
+ 
+      Title: state.title,
+      Year: +state.year,
+      Current: ( (state.current === true) ? true: false),
+      Rating: +state.rating,
+      Tags: state.tags,
+      CoverPicture: state.bannerUrl,
+      genre: state.genre
     };
-
-    fetch(`${serviceConfig.baseURL}/api/movies/${state.id}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.statusText;
-      })
-      .then((result) => {
-        props.history.goBack();
-        NotificationManager.success("Successfuly edited movie!");
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
+   await movieService.createMovie(movieToCreate);
   };
 
   return (
     <Container>
       <Row>
         <Col>
-          <h1 className="form-header">Edit Existing Movie</h1>
+          <h1 className="form-header">Add New Movie</h1>
           <form onSubmit={handleSubmit}>
             <FormGroup>
               <FormControl
@@ -175,6 +153,7 @@ const EditMovie: React.FC = (props: any) => {
                 placeholder="Movie Title"
                 value={state.title}
                 onChange={handleChange}
+                className="add-new-form"
               />
               <FormText className="text-danger">{state.titleError}</FormText>
             </FormGroup>
@@ -182,7 +161,7 @@ const EditMovie: React.FC = (props: any) => {
               <YearPicker
                 defaultValue={"Select Movie Year"}
                 start={1895}
-                end={2120}
+                end={2100}
                 reverse
                 required={true}
                 disabled={false}
@@ -192,17 +171,19 @@ const EditMovie: React.FC = (props: any) => {
                 }}
                 id={"year"}
                 name={"year"}
-                classes={"form-control"}
+                classes={"form-control add-new-form"}
                 optionClasses={"option classes"}
               />
               <FormText className="text-danger">{state.yearError}</FormText>
             </FormGroup>
             <FormGroup>
+            
               <FormControl
                 as="select"
+                className="add-new-form"
                 placeholder="Rating"
                 id="rating"
-                value={state.rating.toString()}
+                value={state.rating}
                 onChange={handleChange}
               >
                 <option value="1">1</option>
@@ -219,6 +200,7 @@ const EditMovie: React.FC = (props: any) => {
             </FormGroup>
             <FormGroup>
               <FormControl
+                className="add-new-form"
                 as="select"
                 placeholder="Current"
                 id="current"
@@ -229,12 +211,34 @@ const EditMovie: React.FC = (props: any) => {
                 <option value="false">Not Current</option>
               </FormControl>
             </FormGroup>
+            <FormControl
+              id="tags"
+              type="text"
+              placeholder="Movie Tags"
+              value={state.tags}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                handleTagsChange(e);
+              }}
+              className="add-new-form"
+            />
+            <FormControl
+              id="bannerUrl"
+              type="text"
+              placeholder="Banner Url"
+              value={state.bannerUrl}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                handleBannerUrlChange(e);
+              }}
+              className="add-new-form"
+            />
+            <FormText className="text-danger">{state.titleError}</FormText>
             <Button
+              className="btn-add-new"
               type="submit"
               disabled={state.submitted || !state.canSubmit}
               block
             >
-              Edit Movie
+              Add Movie
             </Button>
           </form>
         </Col>
@@ -243,4 +247,4 @@ const EditMovie: React.FC = (props: any) => {
   );
 };
 
-export default withRouter(EditMovie);
+export default withRouter(NewMovie);

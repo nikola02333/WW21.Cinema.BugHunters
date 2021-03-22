@@ -8,6 +8,16 @@ export interface IProjection {
   movieRating?: number;
   movieYear?: string;
 }
+export interface IProjectionNEW {
+  auditoriumId: number;
+  auditoriumName: string;
+  duration: number;
+  id: string;
+  movieId: string;
+  movieTitle: string;
+  price: number;
+  projectionTime: string;
+}
 
 export interface IMovie {
   id: string;

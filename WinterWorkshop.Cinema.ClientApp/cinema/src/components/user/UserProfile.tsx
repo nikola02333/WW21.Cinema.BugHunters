@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../appSettings";
-import { Row } from "react-bootstrap";
+import { Row,Button } from "react-bootstrap";
 import { getUserName, getRole } from "../helpers/authCheck";
 import { withRouter } from "react-router";
 import { IProjection, IUser, IReservation } from "../../models";
 
+
+import {userService} from '../Services/userService';
 interface IState {
   user: IUser;
   reservations: IReservation[];
@@ -32,10 +34,22 @@ const UserProfile: React.FC = () => {
 
   useEffect(() => {
     getUserByUsername();
+    hideSingUpButtonElement();
   }, []);
 
+  const hideSingUpButtonElement = () => {
+    let singUpButton = document.getElementById("singUp");
+    if (singUpButton) {
+      singUpButton.style.display = "none";
+    }
+   
+  };
   const getUserByUsername = () => {
     let userName = getUserName();
+
+    //let data = userService.getUserName(userName);
+    //setState({ ...state, user: data });
+    debugger
 
     const requestOptions = {
       method: "GET",
@@ -66,6 +80,7 @@ const UserProfile: React.FC = () => {
         NotificationManager.error(response.message || response.statusText);
         setState({ ...state, submitted: false });
       });
+      
   };
 
   const getReservationsByUserId = (userId: string) => {
@@ -133,7 +148,10 @@ const UserProfile: React.FC = () => {
 
   return (
     <React.Fragment>
-      <Row className="no-gutters pt-2">
+     <div className="container">
+    <div className="row">
+    <div className="col-md-auto">
+      <Row className="no-gutters pt-3">
         <h1 className="form-header form-heading">
           Hello, {state.user.firstName}!
         </h1>
@@ -161,11 +179,17 @@ const UserProfile: React.FC = () => {
                 <p className="card-text">
                   <strong>Status: </strong> {getRole()}
                 </p>
+                <Button type="submit" variant="danger" id="delete" >Delete User</Button>
+                <Button type="submit"  variant="primary" id="edit" >Save User</Button>
               </div>
             </div>
           </div>
         </div>
+       
       </Row>
+      </div>
+        </div>
+        </div>
     </React.Fragment>
   );
 };
