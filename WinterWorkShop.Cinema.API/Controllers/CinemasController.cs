@@ -132,7 +132,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpDelete]
         [Route("Delete/{id}")]
-        public ActionResult DeleteCinema(int id)
+        public async Task<ActionResult> DeleteCinema(int id)
         {
 
             if (id.GetType() !=typeof(int))
@@ -146,7 +146,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return BadRequest(errorResponse);
             }
 
-            var result = _cinemaService.DeleteCinema(id);
+            var result = await _cinemaService.DeleteCinemaAsync(id);
 
 
             if (!result.IsSuccessful)

@@ -16,7 +16,6 @@ import { ICinema } from "../../../models";
 
 interface IState {
   cinemaId: string;
-
   auditName: string;
   seatRows: number;
   numberOfSeats: number;
