@@ -143,6 +143,7 @@ export const getAllCinemas = (setInfo,setCinemas) => {
     }else{
       setInfo((prev)=>({
         ...prev,
+        cinemaId: "",
         selectedCinema: false
       }))
     }
@@ -150,7 +151,7 @@ export const getAllCinemas = (setInfo,setCinemas) => {
 
   export const getMoviesBySelectedCinema = (selectedCineamId: string, setInfo, setFilteredData) => {
     if(selectedCineamId!=="none"){
-    // setInfo((prev)=>({...prev, cinemaId: selectedCineamId }));
+    setInfo((prev)=>({...prev, cinemaId: selectedCineamId }));
     const requestOptions = {
       method: "GET",
       headers: {
@@ -190,6 +191,7 @@ export const getAllCinemas = (setInfo,setCinemas) => {
     }else{
       setInfo((prev)=>({
         ...prev,
+        cinemaId: "",
         selectedCineam: false
       }))
     }
@@ -237,7 +239,72 @@ export const getAllCinemas = (setInfo,setCinemas) => {
     }else{
       setInfo((prev)=>({
         ...prev,
+        auditoriumId: "",
         selectedAuditorium: false
       }))
     }
   };
+
+ export const getCurrentFilteredMoviesAndProjections = (info,setInfo,moviesState,setProjections) => {
+    const { cinemaId, auditoriumId, movieId, dateTime } = info;
+    
+    const requestOptions = {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+      },
+    };
+
+    setInfo((prev)=>({ ...prev, isLoading: true }));
+    let query = "";
+    if (cinemaId) {
+      query = `cinemaId=${cinemaId}`;
+    }
+    if (auditoriumId) {
+      query += `${query.length ? "&" : ""}auditoriumId=${auditoriumId}`;
+    }
+    if (movieId) {
+      query += `${query.length ? "&" : ""}movieId=${movieId}`;
+    }
+    if (dateTime) {
+      query += `${query.length ? "&" : ""}dateTime=${dateTime}`;
+    }
+    if (query.length) {
+      query = `?${query}`;
+    }
+    console.log(query);
+    fetch(
+      `${serviceConfig.baseURL}/api/projections/filter${query}`,
+      requestOptions
+    )
+      .then((response) => {
+        if (!response.ok) {
+          return Promise.reject(response);
+        }
+
+        return response.json();
+      })
+      .then((data) => {
+        if (data) {
+          let movies = moviesState.movies;
+          let filteredMovies = data;
+
+          for (let i = 0; i < movies.length; i++) {
+            for (let j = 0; j < filteredMovies.length; j++) {
+              if (movies[i].id === data[j].movieId) {
+                data[j].coverPicture = movies[i].coverPicture;
+              }
+            }
+          }
+         
+          setProjections((prev)=>({ ...prev, filteredProjections: data, isLoading: false }));
+        }
+      })
+      .catch((response) => {
+        setInfo((prev)=>({ ...prev, isLoading: false }));
+        NotificationManager.error(response.message || response.statusText);
+      });
+  };
+
+  
