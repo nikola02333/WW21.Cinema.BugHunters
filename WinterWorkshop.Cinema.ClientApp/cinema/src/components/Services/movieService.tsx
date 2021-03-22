@@ -44,7 +44,7 @@ async function changeCurrent(movieId: string)
 }
 async function updateMovie(movieId: string, movieToUpdate : IMovieToUpdateModel)
 {
-  var movieUpdated = await API.put(`/api/movies/Update/${movieId}`, movieToUpdate)
+ return await API.put(`/api/movies/Update/${movieId}`, movieToUpdate)
                               .then( (res)=> {
                                 NotificationManager.success("Movie updated successfuly");
                                 return res.data;
@@ -52,7 +52,6 @@ async function updateMovie(movieId: string, movieToUpdate : IMovieToUpdateModel)
                               .catch(error => {
                                 NotificationManager.error(error.response.data.errorMessage);
                                 });
-            return movieToUpdate;
 }
 async function searchMovieById(movieId: string)
 {
@@ -115,30 +114,29 @@ function getCurrentMovies()
 }
 async function getAllMovies()
 {
-    let movies= await API.get(`${serviceConfig.baseURL}/api/movies/AllMovies/false`)
+    return await API.get(`${serviceConfig.baseURL}/api/movies/AllMovies/false`)
                           .then( response=> {
                             return response.data;
                           })
                           .catch((response) => {
                             NotificationManager.error(response.message || response.statusText);
                           });
-  return movies;
       
   }
   
  async function searcMovie(tagToSearch: any): Promise<any>
 {
-  var result =
-     await API.get(`/api/movies/SearchMoviesByTag?query=${tagToSearch}`,{timeout: 50000})
+  
+  return   await API.get(`/api/movies/SearchMoviesByTag?query=${tagToSearch}`,{timeout: 50000})
       .then( (response)=> {
 
        return response.data;
       })
       .catch(error => {
-      NotificationManager.error(error.response.data.errorMessage);
+      NotificationManager.error(error.response);
       });   
-      return result; 
 }
+
 function createMovie(moveModel: IMovieToCreateModel) : any
 {
   const requestOptions = {

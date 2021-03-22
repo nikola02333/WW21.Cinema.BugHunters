@@ -15,6 +15,7 @@ interface IState {
   
   const UserComponent: React.FC = (props: any) => {
 
+  
     const history = useHistory();
     const [state, setState] = useState<IState>({
         userName: "",
@@ -182,7 +183,7 @@ interface IState {
           }
         >
           <Button  type="submit" variant="outline-danger" id="logout">
-         {"Logout " + getUserName()}
+         {"Logout "+ getUserName()  }
           </Button>
         </Form>
         </>
