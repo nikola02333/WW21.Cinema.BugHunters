@@ -38,7 +38,8 @@ interface Props{
   movies: IMovie[],
   setMovies,
   info: IState,
-  setInfo
+  setInfo,
+  handleSubmit
 }
 
 const FilterProjections = memo((props : Props) =>{
@@ -89,16 +90,16 @@ const FilterProjections = memo((props : Props) =>{
         <form
         id="name"
         name={props.info.name}
-        // onSubmit={handleSubmit}
+        onSubmit={props.handleSubmit}
         className="filter"
       >
         <span className="filter-heading">Filter by:</span>
         
         <SelectCinenma cinemas={cinemas.cinemas} setInfo={props.setInfo} setFilteredData={setFilteredData}/>
 
-        <SelectAuditoriums selectedCinema={props.info.selectedCinema} filteredAuditoriums={filteredData.filteredAuditoriums} auditoriums={auditoriums.auditoriums} setInfo={props.setInfo} setFilteredData={setFilteredData}/>
+        <SelectAuditoriums selectedCinema={props.info.selectedCinema} selectedAuditoriumId={props.info.auditoriumId} filteredAuditoriums={filteredData.filteredAuditoriums} auditoriums={auditoriums.auditoriums} setInfo={props.setInfo} setFilteredData={setFilteredData}/>
         
-        <SelectMovies info={infoCinema} filteredMovies={filteredData.filteredMovies} movies={props.movies}/>
+        <SelectMovies info={infoCinema} setInfo={props.setInfo} filteredMovies={filteredData.filteredMovies} movies={props.movies}/>
         
         <input
         //   onChange={(e) =>
@@ -114,7 +115,7 @@ const FilterProjections = memo((props : Props) =>{
           id="filter-button"
           className="btn-search"
           type="submit"
-          onClick={() => props.setInfo({ ...props.info, submitted: true })}
+          onClick={() => props.setInfo((prev)=>({ ...prev, submitted: true }))}
         >
           Submit
         </button>
