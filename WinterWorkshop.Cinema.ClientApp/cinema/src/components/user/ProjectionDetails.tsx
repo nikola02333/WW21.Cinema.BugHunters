@@ -116,13 +116,13 @@ const ProjectionDetails: React.FC = () => {
       })
       .then((data) => {
         if (data) {
-          setState({
-            ...state,
+          setState((prev)=>({
+            ...prev,
             projections: data ,
             auditId: data.auditoriumId,
             slicedTime: data.projectionTime.slice(11, 16),
             moviesId: data.movieId,
-          });
+          }));
           console.log("Projection");
           console.log(data);
           
@@ -137,13 +137,13 @@ const ProjectionDetails: React.FC = () => {
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
+        setState((prev)=>({ ...prev, submitted: false }));
       });
       
   };
 
   const getReservedSeats = (requestOptions: RequestInit, id: string) => {
-    const reservedSeats = fetch(
+     fetch(
       // `${serviceConfig.baseURL}/api/reservations/getbyprojectionid/${id}`,
       `${serviceConfig.baseURL}/api/seats/reservedByProjectionId/${id}`,
       requestOptions
@@ -156,17 +156,17 @@ const ProjectionDetails: React.FC = () => {
       })
       .then((data) => {
         if (data) {
-          setState({
-            ...state,
+          setState((prev)=>({
+            ...prev,
             reservedSeats: data,
-          });
+          }));
           console.log("getReservedSeats");
           console.log(data);
         }
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
+        setState((prev)=>({ ...prev, submitted: false }));
       });
   };
 
@@ -191,19 +191,19 @@ const ProjectionDetails: React.FC = () => {
       })
       .then((data) => {
         if (data) {
-          setState({
-            ...state,
+          setState((prev)=>({
+            ...prev,
             seats: data,
             maxRow: data.maxRow,
             maxNumberOfRow: data.maxNumber,
-          });
+          }));
           console.log("getSeatsForAuditorium");
           console.log(data);
         }
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
+        setState((prev)=>({ ...prev, submitted: false }));
       });
   };
 
@@ -230,14 +230,14 @@ const ProjectionDetails: React.FC = () => {
       })
       .then((data) => {
         if (data) {
-          setState({ ...state, userId: data.id });
+          setState((prev)=>({ ...prev, userId: data.id }));
           console.log("getUserByUsername");
           console.log(data);
         }
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
+        setState((prev)=>({ ...prev, submitted: false }));
       });
   };
 
@@ -262,17 +262,17 @@ const ProjectionDetails: React.FC = () => {
       })
       .then((data) => {
         if (data) {
-          setState({
-            ...state,
+          setState((prev)=>({
+            ...prev,
             seats: data as ISeats[],
-          });
+          }));
           console.log("getSeats");
           console.log(data);
         }
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
+        setState((prev)=>({ ...state, submitted: false }));
       });
   };
 
@@ -295,17 +295,17 @@ const ProjectionDetails: React.FC = () => {
       })
       .then((data) => {
         if (data) {
-          setState({
-            ...state,
+          setState((prev)=>({
+            ...prev,
             movie: data as IMovie,
-          });
+          }));
           console.log("getMovie");
           console.log(data);
         }
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
+        setState((prev)=>({ ...prev, submitted: false }));
       });
   };
 
@@ -334,7 +334,7 @@ const ProjectionDetails: React.FC = () => {
       })
       .catch((response) => {
         NotificationManager.warning("Insufficient founds.");
-        setState({ ...state, submitted: false });
+        setState((prev)=>({ ...prev, submitted: false }));
       });
   };
 
@@ -386,7 +386,7 @@ const ProjectionDetails: React.FC = () => {
         })
         .catch((response) => {
           NotificationManager.error(response.message || response.statusText);
-          setState({ ...state, submitted: false });
+          setState((prev)=>({ ...prev, submitted: false }));
         });
     } else {
       NotificationManager.error("Please log in to make reservation.");
@@ -605,15 +605,15 @@ const ProjectionDetails: React.FC = () => {
                     }, 150);
                   }
                 }
-                setState({
-                  ...state,
+                setState((prev)=>({
+                  ...prev,
                   currentReservationSeats: currentReservationSeats,
-                });
+                }));
               }
-              setState({
-                ...state,
+              setState((prev)=>({
+                ...prev,
                 currentReservationSeats: currentReservationSeats,
-              });
+              }));
             }}
             className={
               seatTaken
@@ -647,7 +647,7 @@ const ProjectionDetails: React.FC = () => {
     return (
       <Card.Body>
         <Card.Title>
-          <span className="card-title-font">{state.movie.title}</span>
+          <span className="card-title-font">FILM: {state.movie.title}</span>
           <span className="float-right">
             {getRoundedRating(state.movie.rating)}
           </span>

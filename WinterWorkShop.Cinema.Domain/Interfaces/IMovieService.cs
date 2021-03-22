@@ -29,7 +29,8 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
 
         void AddTagsForMovie(MovieDomainModel movieDomainModel);
 
-
         Task<GenericResult<MovieDomainModel>> SearchMoviesByTag(string query);
+
+        Task<GenericResult<MovieDomainModel>> GetMoviesByCinemaId(int id);
     }
 }

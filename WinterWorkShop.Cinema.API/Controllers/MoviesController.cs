@@ -312,5 +312,24 @@ namespace WinterWorkShop.Cinema.API.Controllers
          return Ok(movies.DataList);
 
         }
+
+        [HttpGet]
+        [Route("byCineamId/{cineamId:int}")]
+        public async Task<ActionResult> GetByCinemaIdAsync(int cineamId)
+        {
+            var movies = await _movieService.GetMoviesByCinemaId(cineamId);
+            if (!movies.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = movies.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.NotFound
+                };
+
+                return NotFound(errorResponse);
+            }
+
+            return Ok(movies.DataList);
+        }
     }
 }

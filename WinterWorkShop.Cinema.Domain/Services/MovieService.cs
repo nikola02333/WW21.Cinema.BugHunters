@@ -21,16 +21,18 @@ namespace WinterWorkShop.Cinema.Domain.Services
         private readonly IAuditoriumsRepository _auditoriumsRepository;
         private readonly ITagsRepository _tagsRepository;
         private readonly ITagsMoviesRepository _tagsMoviesRepository;
-
+        private readonly ICinemasRepository _cinemasRepository;
         public MovieService(IMoviesRepository moviesRepository,
                             ITagsRepository tagsRepository,
                             ITagsMoviesRepository tagsMoviesRepository,
-                            IAuditoriumsRepository auditoriumsRepository)
+                            IAuditoriumsRepository auditoriumsRepository,
+                            ICinemasRepository cinemasRepository)
         {
             _moviesRepository = moviesRepository;
            _tagsRepository = tagsRepository;
             _tagsMoviesRepository = tagsMoviesRepository;
             _auditoriumsRepository = auditoriumsRepository;
+            _cinemasRepository = cinemasRepository;
         }
         public async Task AddTagsForMovie(Movie movie)
         {
@@ -610,6 +612,43 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
                 _tagsMoviesRepository.Save();
             }
+        }
+
+        public async Task<GenericResult<MovieDomainModel>> GetMoviesByCinemaId(int id)
+        {
+            var cinema =await _cinemasRepository.GetByIdAsync(id);
+            if (cinema == null)
+            {
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.CINEMA_ID_NOT_FOUND
+                };
+            }
+
+            var movies =await _moviesRepository.GetMoviesByCinemaId(id);
+            if(movies == null)
+            {
+                return null;
+            }
+
+            return new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = true,
+                DataList =  movies.Select(item => new MovieDomainModel
+                {
+                    Current = item.Current,
+                    Genre = item.Genre,
+                    Id = item.Id,
+                    Rating = item.Rating ?? 0,
+                    Title = item.Title,
+                    Year = item.Year,
+                    CoverPicture = item.CoverPicture,
+                    HasOscar = item.HasOscar,
+                    UserRaitings = item.UserRaitings ?? 0
+                }).ToList()
+            };
+
         }
      
     }
