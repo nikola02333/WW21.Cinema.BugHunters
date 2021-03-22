@@ -145,6 +145,7 @@ const NewCinema: React.FC = (props: any) => {
       numberOfSeats: +state.numberOfSeats, 
       seatRows: +state.seatRows,
       auditName: state.auditName
+      
              
     };
 
