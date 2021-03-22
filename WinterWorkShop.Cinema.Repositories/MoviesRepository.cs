@@ -16,7 +16,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         Task<Movie> GetMovieByNameAsync(string movieName);
 
-        Task<IEnumerable<Movie>> GetTopTenMovies();
+        Task<IEnumerable<Movie>> GetTopTenMovies(string searchCriteria, int year);
 
         Task<Movie> ActivateDeactivateMovie(Movie movieToActivateDeactivate);
 
@@ -99,8 +99,16 @@ namespace WinterWorkShop.Cinema.Repositories
            return await _cinemaContext.Movies.Where(movie => movie.Title == movieName).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Movie>> GetTopTenMovies()
+        public async Task<IEnumerable<Movie>> GetTopTenMovies(string searchCriteria, int year)
         {
+            switch(searchCriteria)
+            {
+                case "year":
+                 return   await _cinemaContext.Movies.Where(m=> m.Year == year).OrderByDescending(m => m.Rating).Take(10).ToListAsync();
+
+                case "genre":
+                    return await _cinemaContext.Movies.Where(m=> m.Genre =="comedy").OrderByDescending(m => m.Rating).Take(10).ToListAsync();
+            }
             var topTenMovies =await _cinemaContext.Movies.OrderByDescending(m => m.Rating).Take(10).ToListAsync();
 
             return topTenMovies;

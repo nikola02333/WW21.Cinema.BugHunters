@@ -66,11 +66,11 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
         [HttpGet]
-        [Route("TopTenMovies")]
+        [Route("TopTenMovies/{searchCriteria}/{value}")]
         public async Task<ActionResult> GetTopTenMoviesAsync()
         {
 
-            var movies =await _movieService.GetTopTenMoviesAsync();
+            var movies =await _movieService.GetTopTenMoviesAsync("serachCriteria", 2000);
             return Ok(movies.DataList);
         }
 
