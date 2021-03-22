@@ -17,32 +17,34 @@ import { faCouch } from "@fortawesome/free-solid-svg-icons";
 interface IState {
   name: string;
   address:string;
-  cityName:string;
-  nameError: string;
-  auditName: string;
-  seatRows: number;
+  cityName:string; 
+  auditName: string,
+  seatRows: number,
   numberOfSeats: number;
   auditNameError: string;
   seatRowsError: string;
   numOfSeatsError: string;
+  nameError: string; 
   submitted: boolean;
   canSubmit: boolean;
-}
+
+};
 
 const NewCinema: React.FC = (props: any) => {
   const [state, setState] = useState<IState>({
     name: "",
     address:"",
     cityName:"",
-    nameError:"",
+    nameError:"",   
     auditName:"",
     seatRows: 0,
-    numberOfSeats: 0,
+    numberOfSeats: 0,  
     auditNameError: "",
     seatRowsError: "",
     numOfSeatsError: "",
     submitted: false,
     canSubmit: true,
+    
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,20 +74,21 @@ const NewCinema: React.FC = (props: any) => {
           canSubmit: false,
         });
       } else {
-        setState({ ...state, auditNameError: "", canSubmit: true });
+        setState({ ...state,auditNameError: "", canSubmit: true });
       }
     }
       if (id === "cityName") {
         if (value === "") {
           setState({
             ...state,
-            auditNameError: "Fill in cinema city name",
+           auditNameError: "Fill in cinema city name",
             canSubmit: false,
           });
         } else {
           setState({ ...state, auditNameError: "", canSubmit: true });
         }
       }
+      
     if (id === "auditName") {
       if (value === "") {
         setState({
@@ -101,31 +104,32 @@ const NewCinema: React.FC = (props: any) => {
       if (seatsNum > 20 || seatsNum < 1) {
         setState({
           ...state,
-          numOfSeatsError: "Seats number can be in between 1 and 20.",
+         numOfSeatsError: "Seats number can be in between 1 and 20.",
           canSubmit: false,
         });
       } else {
-        setState({ ...state, numOfSeatsError: "", canSubmit: true });
+        setState({ ...state,numOfSeatsError: "", canSubmit: true });
       }
     } else if (id === "seatRows") {
       const seatsNum = +value;
       if (seatsNum > 20 || seatsNum < 1) {
         setState({
           ...state,
-          seatRowsError: "Seats number can be in between 1 and 20.",
+         seatRowsError: "Seats number can be in between 1 and 20.",
           canSubmit: false,
         });
       } else {
-        setState({ ...state, seatRowsError: "", canSubmit: true });
+        setState({ ...state,seatRowsError: "", canSubmit: true });
       }
     }
+    
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setState({ ...state, submitted: true });
-    if (state.name && state.address && state.cityName && state.auditName && state.numberOfSeats && state.seatRows) {
+    if (state.name && state.address && state.cityName) {
       addCinema();
     } else {
       NotificationManager.error("Please fill in data");
@@ -137,10 +141,11 @@ const NewCinema: React.FC = (props: any) => {
     const data = {
       Name: state.name, 
       address:state.address,
-      cityName:state.cityName,
-      numberOfSeats: +state.numberOfSeats,
+      cityName:state.cityName,  
+      numberOfSeats: +state.numberOfSeats, 
       seatRows: +state.seatRows,
-      auditName: state.auditName,
+      auditName: state.auditName
+             
     };
 
     const requestOptions = {
