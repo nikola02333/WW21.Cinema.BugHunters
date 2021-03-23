@@ -20,6 +20,7 @@ namespace WinterWorkShop.Cinema.Data
 
         
         public string Role { get; set; }
+        public int Points { get; set; }
 
         public virtual ICollection<Ticket> Tickets { get; set; }
     }

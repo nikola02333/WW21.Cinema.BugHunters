@@ -20,7 +20,7 @@ export const movieService = {
 async function getTopTen()
 {
   //TopTenMovies
-  var movies = await API.get(`${serviceConfig.baseURL}/api/movies/TopTenMovies`)
+  return await API.get(`${serviceConfig.baseURL}/api/movies/TopTenMovies`)
                         .then( response => {
                           return response.data;
                         })
@@ -28,18 +28,17 @@ async function getTopTen()
       
                           NotificationManager.error(error.response);
                         });
-                          return movies;
+                         
 }
 async function changeCurrent(movieId: string)
 {
-  var result = await API.post(`${serviceConfig.baseURL}/api/movies/ActivateMovie/${movieId}`)
+  return await API.post(`${serviceConfig.baseURL}/api/movies/ActivateMovie/${movieId}`)
                         .then( response=> {
                           return response.data;
                         })
                         .catch(error => {
                           NotificationManager.error(error.response.data.errorMessage);
                           });
-      return result;
 
 }
 async function updateMovie(movieId: string, movieToUpdate : IMovieToUpdateModel)
@@ -78,39 +77,22 @@ function removeMovie(id: string)
        
         return id;
       })
-      .catch( (resp)=> {
-        console.log(resp);
-        return undefined;
-      });
+      .catch(error => {
+        NotificationManager.error(error.response.data.errorMessage);
+        });
 
     }
 }
-function getCurrentMovies()
+async function getCurrentMovies()
 {
-    const requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        }
-      };
-  
-      fetch(`${serviceConfig.baseURL}/api/movies/AllMovies`, requestOptions)
-        .then((response) => {
-          if (!response.ok) {
-            return Promise.reject(response);
-          }
-          return response;
-        })
-        .then((response) => {
-              return response.json();
-            })
-        .then((result) => {
-          NotificationManager.success("Successfuly added movie!");
-        })
-        .catch((response) => {
-          NotificationManager.error(response.message || response.statusText);
-        });
+  return await API.get(`${serviceConfig.baseURL}/api/movies/AllMovies/true`)
+                  .then( response=> {
+                    return response.data;
+                  })
+                  .catch(error => {
+                    NotificationManager.error(error.response.data.errorMessage);
+                    });
+    
 }
 async function getAllMovies()
 {
@@ -118,9 +100,9 @@ async function getAllMovies()
                           .then( response=> {
                             return response.data;
                           })
-                          .catch((response) => {
-                            NotificationManager.error(response.message || response.statusText);
-                          });
+                          .catch(error => {
+                            NotificationManager.error(error.response.data.errorMessage);
+                            });
       
   }
   
@@ -137,33 +119,15 @@ async function getAllMovies()
       });   
 }
 
-function createMovie(moveModel: IMovieToCreateModel) : any
-{
-  const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-      body: JSON.stringify(moveModel),
-    };
-
-    fetch(`${serviceConfig.baseURL}/api/movies`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response;
-      })
-      .then((response) => {
-            return response.json();
+async function createMovie(moveModel: IMovieToCreateModel) 
+  {
+  
+      await API.post(`${serviceConfig.baseURL}/api/movies`, JSON.stringify(moveModel))
+          .then( response=> {
+               NotificationManager.success("Successfuly added movie!");
           })
-      .then((result) => {
-        NotificationManager.success("Successfuly added movie!");
-        //props.history.push(`AllMovies`);
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        //setState({ ...state, submitted: false });
-      });
+          .catch(error => {
+            NotificationManager.error(error.response.data.errorMessage);
+            });
+        
 }

@@ -23,6 +23,10 @@ interface IState {
         token: false,
         shouldHide: true,
       });
+
+      useEffect( ()=> {
+        
+      },[]);
     useEffect(() => {
 
           if (localStorage.getItem("userLoggedIn") !== null) {

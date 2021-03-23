@@ -30,6 +30,7 @@ const Movie: React.FC<IProps> =({editMovie,changeCurrent,removeMovie,...props}) 
 
     let userShouldSeeWholeTable;
     const shouldUserSeeWholeTable = () => {
+      
       if (userShouldSeeWholeTable === undefined) {
         userShouldSeeWholeTable = !isGuest() && !isUser();
       }

@@ -534,8 +534,56 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
         }
 
+        [TestMethod]
+        public async Task IncrementBonusPointsForUser_When_UserId_Not_Found_Returns_IsSuccesful_False()
+        {
+            var isSuccesful = false;
+            var expectedMessage = Messages.USER_ID_NULL;
+
+            var userId = Guid.NewGuid();
+
+            _mockUserRepository.Setup(srvc => srvc.GetByIdAsync(userId)).ReturnsAsync(default(User));
+
+            
+
+            var result = await _userService.IncrementBonusPointsForUser(userId);
+
+            // Assert
+
+            Assert.IsInstanceOfType(result, typeof(GenericResult<UserDomainModel>));
+            Assert.AreEqual(expectedMessage, result.ErrorMessage);
+            Assert.AreEqual(isSuccesful, result.IsSuccessful);
 
 
 
+        }
+
+        [TestMethod]
+        public async Task IncrementBonusPointsForUser_When_Called_Returns_IsSuccesful_True()
+        {
+            var isSuccesful = true;
+
+            var userId = Guid.NewGuid();
+
+            var userResult = new GenericResult<UserDomainModel>
+            {
+                IsSuccessful= true,
+
+            };
+            var userToReturn = new User
+            {
+
+            };
+            _mockUserRepository.Setup(srvc => srvc.GetByIdAsync(userId)).ReturnsAsync(userToReturn);
+
+
+
+            var result = await _userService.IncrementBonusPointsForUser(userId);
+
+            // Assert
+
+            Assert.IsInstanceOfType(result, typeof(GenericResult<UserDomainModel>));
+            Assert.AreEqual(isSuccesful, result.IsSuccessful);
+        }
     }
 }

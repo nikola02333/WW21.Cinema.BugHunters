@@ -2,38 +2,37 @@ import { serviceConfig } from "../../appSettings"
 import { NotificationManager } from "react-notifications";
 import {IUserToCreateModel} from '../../models/IUserToCreateModel';
   
+
 import API from '../../axios';
+import { IUser } from './../../models/index';
 
 export const userService = {
     login,
     singUp,
-    getUserName
+    getUserByUsername,
+    getTokenForGuest
    
 };
-function getUserName(userName: string) : any
+ async function getTokenForGuest()
+ {
+   return await API.get(`${serviceConfig.baseURL}/get-token/`)
+                    .then( response => {
+                      return response.data;
+                    })
+                    .catch((response) => {
+                      NotificationManager.error(response.message || response.statusText);
+                    });
+
+ } 
+async function getUserByUsername(userName: string) : Promise<IUser>
 {
   
-  API.get(`${serviceConfig.baseURL}/api/users/byusername/${userName}`)
+ return await API.get(`${serviceConfig.baseURL}/api/users/byusername/${userName}`)
     .then((response) => {
-      console.log(response);
-      if (!response.status) {
-        return;
-      }
-      return response.data.json();
+      return response.data;
     })
-    .then((data) => {
-      if (data) {
-        //setState({ ...state, user: data });
-
-       // getReservationsByUserId(state.user.id);
-       // jedino ovde return data
-       
-       return data;
-      }
-    })
-    .catch((response) => {
-      NotificationManager.error(response.message || response.statusText);
-      //setState({ ...state, submitted: false });
+    .catch((error) => {
+      NotificationManager.error(error.response.data.errorMessage || error.response.data.statusText);
     });
 }
 
@@ -43,7 +42,6 @@ async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
 
  var data =await API.post(`${serviceConfig.baseURL}/api/users/Create`, JSON.stringify(userToCreate))
     .then((response) => {
-      debugger
       return response.data;
     })
     .then((data) => {

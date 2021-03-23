@@ -70,13 +70,13 @@ const Movies: React.FC = (props: any) => {
   };
 
   const getMovies = async() => {
-    if (isAdmin() === true || isSuperUser() === true || isUser()== true) {
+     //if (isAdmin() === true || isSuperUser() === true) {
       
       setState({ ...state, isLoading: true });
      
       var movies= await movieService.getAllMovies();
       setState({ ...state, movies: movies, isLoading: false });
-    }
+   
   };
 
   const removeMovie =  async(id: string) => {
@@ -172,7 +172,9 @@ const Movies: React.FC = (props: any) => {
           </button>
         </form>
       </Row>
+<Row className="no-gutters pr-5 pl-5">
   
+</Row>
     {state.isLoading ? <Spinner></Spinner> :
     (<Movie 
     movies={state.movies}

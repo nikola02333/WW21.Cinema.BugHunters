@@ -61,6 +61,7 @@ namespace WinterWorkShop.Cinema.Repositories
         public Tag GetTagByValue(string tagValue)
         {
             return  _cinemaContext.Tags.Where(tag => tag.TagValue == tagValue).SingleOrDefault();
+            //return _cinemaContext.Tags.Where(tag => tag.TagValue.Contains(tagValue) ==true ).SingleOrDefault();
         }
 
         public Tag GetTagByRating(double tagRating)
