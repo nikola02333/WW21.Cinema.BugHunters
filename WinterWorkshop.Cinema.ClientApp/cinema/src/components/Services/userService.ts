@@ -1,6 +1,7 @@
 import { serviceConfig } from "../../appSettings"
 import { NotificationManager } from "react-notifications";
 import {IUserToCreateModel} from '../../models/IUserToCreateModel';
+import * as authChech from "../helpers/authCheck";
   
  
 export const userService = {
@@ -126,6 +127,39 @@ function login (userName:string)  {
         setTimeout(() => {
           window.location.reload();
         }, 500);
+      }
+    })
+    .catch((response) => {
+      NotificationManager.error(response.message || response.statusText);
+    });
+};
+
+export const getUserByUsername = (setState) => {
+  let ussName = authChech.getUserName();
+
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
+  };
+
+  fetch(
+    `${serviceConfig.baseURL}/api/users/byusername/${ussName}`,
+    requestOptions
+  )
+    .then((response) => {
+      if (!response.ok) {
+        return;
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data) {
+        setState((prev)=>({ ...prev, userId: data.id }));
+        console.log("getUserByUsername");
+        console.log(data);
       }
     })
     .catch((response) => {
