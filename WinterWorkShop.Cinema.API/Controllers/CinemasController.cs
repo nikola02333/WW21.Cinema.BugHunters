@@ -45,8 +45,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
 
-
-
                 return BadRequest(errorResponse);
             }
 
@@ -66,8 +64,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     ErrorMessage = response.ErrorMessage,
                     StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
-
-
 
                 return BadRequest(errorResponse);
             }
@@ -93,8 +89,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     ErrorMessage = insertedCinema.ErrorMessage,
                     StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
-
-
 
                 return BadRequest(errorResponse);
             }
@@ -122,35 +116,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
                         };
 
                         return BadRequest(errorResponse);
-
                     }
                 }
-
-               
-                /*
-                var auditoriumDomainModel = new AuditoriumDomainModel
-                {
-                    CinemaId = insertedCinema.Data.Id,
-                    Name = cinema.createAuditoriumModel.auditName,
-
-                };
-
-                var auditorium = await _auditoriumService.CreateAuditorium(auditoriumDomainModel, cinema.createAuditoriumModel.seatRows, cinema.createAuditoriumModel.numberOfSeats);
-
-                if (!auditorium.IsSuccessful)
-                {
-                    ErrorResponseModel errorResponse = new ErrorResponseModel
-                    {
-                        ErrorMessage = insertedCinema.ErrorMessage,
-                        StatusCode = System.Net.HttpStatusCode.BadRequest
-                    };
-
-                    return BadRequest(errorResponse);
-
-                }*/
-            }
-           
-
+            }         
             return CreatedAtAction(nameof(GetCinemaById),
                 new { Id = insertedCinema.Data.Id },
                 insertedCinema.DataList);
@@ -175,7 +143,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             var result = await _cinemaService.DeleteCinemaAsync(id);
 
-
             if (!result.IsSuccessful)
             {
                 ErrorResponseModel errorResponse = new ErrorResponseModel
@@ -183,15 +150,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     ErrorMessage = result.ErrorMessage,
                     StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
-
-
-
                 return BadRequest(errorResponse);
             }
-
-
-            return Accepted(result.Data);
-        
+            return Accepted(result.Data);       
         }
 
         [HttpPut]
@@ -208,15 +169,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     ErrorMessage = result.ErrorMessage,
                     StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
-
-
-
                 return BadRequest(errorResponse);
             }
-
             return Accepted(result.Data);
         }
-
-
     }
 }
