@@ -238,41 +238,43 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var createTicketModel = new CreateTicketModel
             {
                 ProjectionId = Guid.NewGuid(),
-                SeatId= Guid.NewGuid(),
+                SeatId=new List<Guid> { Guid.NewGuid() },
                 UserId= Guid.NewGuid()
             };
 
             var ticketReposnseModel = new GenericResult<TicketDomainModel>
             {
                 IsSuccessful = true,
-                Data = new TicketDomainModel
-                {
-                    Created = DateTime.Now.AddDays(1),
-                    Id = Guid.NewGuid(),
-                    Projection = new ProjectionDomainModel
+                DataList = new List<TicketDomainModel>{
+                    new TicketDomainModel
                     {
-                        Id = createTicketModel.ProjectionId,
-                        AuditoriumName = "Auditorium Name",
-                        AuditoriumId = 1,
-                        MovieId = Guid.NewGuid(),
-                        MovieTitle = "NazivFilma",
-                        ProjectionTime = DateTime.Now.AddDays(1),
-                        Duration = 90
-                    },
-                    Seat = new SeatDomainModel
-                    {
-                        AuditoriumId = 1,
-                        Id = createTicketModel.SeatId,
-                        Number = 2,
-                        Row = 1
-                    },
-                    User = new UserDomainModel
-                    {
-                        Id = createTicketModel.UserId,
-                        FirstName = "Sasa 2",
-                        LastName = "Gataric 2",
-                        UserName = "sasag 2",
-                        Role = "admin"
+                        Created = DateTime.Now.AddDays(1),
+                        Id = Guid.NewGuid(),
+                        Projection = new ProjectionDomainModel
+                        {
+                            Id = createTicketModel.ProjectionId,
+                            AuditoriumName = "Auditorium Name",
+                            AuditoriumId = 1,
+                            MovieId = Guid.NewGuid(),
+                            MovieTitle = "NazivFilma",
+                            ProjectionTime = DateTime.Now.AddDays(1),
+                            Duration = 90
+                        },
+                        Seat = new SeatDomainModel
+                        {
+                            AuditoriumId = 1,
+                            Id = createTicketModel.SeatId[0],
+                            Number = 2,
+                            Row = 1
+                        },
+                        User = new UserDomainModel
+                        {
+                            Id = createTicketModel.UserId,
+                            FirstName = "Sasa 2",
+                            LastName = "Gataric 2",
+                            UserName = "sasag 2",
+                            Role = "admin"
+                        }
                     }
                 }
             };
@@ -286,7 +288,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             //Assert
             Assert.IsNotNull(ticketCreated);
             Assert.IsInstanceOfType(result.Result, typeof(CreatedAtActionResult));
-            Assert.AreEqual(ticketCreated, ticketReposnseModel.Data);
+            Assert.AreEqual(ticketCreated, ticketReposnseModel.DataList);
             Assert.AreEqual(expectedStatusCode, resultResponse.StatusCode);
 
         }
@@ -299,7 +301,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var expectedErrorMessage = "The ProjectionId field is required.";
             var createTicketModel = new CreateTicketModel
             {
-                SeatId = Guid.NewGuid(),
+                SeatId = new List<Guid> { Guid.NewGuid() },
                 UserId = Guid.NewGuid()
             };
 
@@ -333,7 +335,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var createTicketModel = new CreateTicketModel
             {
-                SeatId = Guid.NewGuid(),
+                SeatId = new List<Guid> { Guid.NewGuid() },
                 UserId = Guid.NewGuid()
             };
 
@@ -364,7 +366,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var createTicketModel = new CreateTicketModel
             {
-                SeatId = Guid.NewGuid(),
+                SeatId = new List<Guid> { Guid.NewGuid() },
                 UserId = Guid.NewGuid()
             };
 
