@@ -13,6 +13,8 @@ namespace WinterWorkShop.Cinema.Repositories
         Task<User> GetByUserNameAsync(string username);
 
         Task<bool> CheckUsername(string usernameToCreate);
+
+        // guid UserID
         void Attach(User user);
     }
     public class UsersRepository : IUsersRepository
@@ -92,5 +94,7 @@ namespace WinterWorkShop.Cinema.Repositories
             }
             return false;
         }
+
+       
     }
 }

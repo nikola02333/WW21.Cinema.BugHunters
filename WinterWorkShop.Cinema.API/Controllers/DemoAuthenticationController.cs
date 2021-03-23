@@ -57,5 +57,16 @@ namespace WinterWorkShop.Cinema.API.Controllers
             return Unauthorized();
             
         }
+        [HttpGet]
+        [Route("/get-token")]
+        public  ActionResult GenerateToken()
+        {
+           
+                var jwt = JwtTokenGenerator
+                .Generate("","guest",Guid.NewGuid(), _configuration["Tokens:Issuer"], _configuration["Tokens:Key"]);
+
+                return Ok(new { token = jwt, firstName = "guest"});
+           
+        }
     }
 }
