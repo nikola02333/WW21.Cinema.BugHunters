@@ -27,7 +27,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
      
         //[Authorize(Roles = Role.Admin)]
         [HttpGet]
-        public async Task<ActionResult<UserDomainModel>> GetAsync()
+        public async Task<ActionResult<GenericResult<UserDomainModel>>> GetAsync()
         {
             GenericResult<UserDomainModel> userDomainModels;
 
@@ -39,7 +39,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("GetById/{id}")]
-        public async Task<ActionResult<UserDomainModel>> GetbyIdAsync(Guid id)
+        public async Task<ActionResult<GenericResult<UserDomainModel>>> GetbyIdAsync(Guid id)
         {
             GenericResult<UserDomainModel> user;
 
@@ -60,7 +60,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
        
         [HttpPost]
         [Route("Create")]
-        public async Task<ActionResult<UserDomainModel>> CreateUserAsync(CreateUserModel createUser)
+        public async Task<ActionResult<GenericResult<UserDomainModel>>> CreateUserAsync(CreateUserModel createUser)
         {
             if(!ModelState.IsValid)
             {
@@ -107,7 +107,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
        
         [HttpGet]
         [Route("byusername/{username}")]
-        public async Task<ActionResult<UserDomainModel>> GetbyUserNameAsync(string username)
+        public async Task<ActionResult<GenericResult<UserDomainModel>>> GetbyUserNameAsync(string username)
         {
             if(String.IsNullOrEmpty(username))
             {
@@ -142,7 +142,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpDelete]
         [Route("Delete/{userId}")]
-        public async Task<ActionResult<UserDomainModel>> DeleteUser(Guid userId)
+        public async Task<ActionResult<GenericResult<UserDomainModel>>> DeleteUser(Guid userId)
         {
             if(userId == null || userId == Guid.Empty)
             {
@@ -171,7 +171,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpPut]
         [Route("Update/{userId}")]
-        public async Task<ActionResult<UserDomainModel>> UpdateUserAsync(Guid userId, CreateUserModel userToUpdate)
+        public async Task<ActionResult<GenericResult<UserDomainModel>>> UpdateUserAsync(Guid userId, CreateUserModel userToUpdate)
         {
             if (userId == null)
             {

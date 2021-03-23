@@ -118,20 +118,12 @@ const NewMovie: React.FC = (props: any) => {
   };
 
   const addMovie = async(splitTags: string[]) => {
-    const data = {
-      Title: state.title,
-      Year: +state.year,
-      Current: state.current === true,
-      Rating: +state.rating,
-      Tags: splitTags,
-      BannerUrl: state.coverPicture,
-      genre: state.genre
-    };
+   
     var movieToCreate : IMovieToCreateModel = {
  
       Title: state.title,
       Year: +state.year,
-      Current: ( (state.current === true) ? true: false),
+      Current: ( (state.current.toString() === 'true') ? true: false),
       Rating: +state.rating,
       Tags: state.tags,
       CoverPicture: state.coverPicture,

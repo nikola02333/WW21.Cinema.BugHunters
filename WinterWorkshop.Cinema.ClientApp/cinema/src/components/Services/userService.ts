@@ -3,7 +3,8 @@ import { NotificationManager } from "react-notifications";
 import {IUserToCreateModel} from '../../models/IUserToCreateModel';
 import * as authChech from "../helpers/authCheck";
   
- 
+import API from '../../axios';
+
 export const userService = {
     login,
     singUp,
@@ -12,23 +13,14 @@ export const userService = {
 };
 function getUserName(userName: string) : any
 {
-  const requestOptions = {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-    },
-  };
-
-  fetch(
-    `${serviceConfig.baseURL}/api/users/byusername/${userName}`,
-    requestOptions
-  )
+  
+  API.get(`${serviceConfig.baseURL}/api/users/byusername/${userName}`)
     .then((response) => {
-      if (!response.ok) {
+      console.log(response);
+      if (!response.status) {
         return;
       }
-      return response.json();
+      return response.data.json();
     })
     .then((data) => {
       if (data) {
@@ -50,34 +42,10 @@ async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
 {
   console.log(JSON.stringify(userToCreate))
 
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify(userToCreate)
-  };
-
- var data = await fetch(
-      
-    `${serviceConfig.baseURL}/api/users/Create`,
-    requestOptions
-  )
-
+ var data =await API.post(`${serviceConfig.baseURL}/api/users/Create`, JSON.stringify(userToCreate))
     .then((response) => {
-
-      return response.json();
-    })
-   
-    .then((data) => {
-    
-      if(data.statusCode === 400)
-      {
-        // ovde je bug, ispisuje  gresku i success !!
-        NotificationManager.error(`${data.errorMessage}`);
-      }
-      
-     return data;
+      debugger
+      return response.data;
     })
     .then((data) => {
       
@@ -86,52 +54,34 @@ async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
         NotificationManager.success(`User, ${data.firstName} succesfuly register!`);
         return data;
     })
-    .catch((response) => {
-
-      //  kako da ovde uzmem data , a ne response
+    .catch((error) => {
       
-      NotificationManager.error(response.message || response.statusText);
+      NotificationManager.error(error.response.data.errorMessage);
     });
 
     return data;
 }
 
 function login (userName:string)  {
-  const requestOptions = {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({'UserName' :userName})
-  };
 
-  fetch(
-      //
-    `${serviceConfig.baseURL}/get-token`,
-    requestOptions
-  )
-    .then((response) => {
-      if (!response.ok) {
-        return Promise.reject(response);
-      }
-      return response.json();
-    })
-   
-    .then((data) => {
-        
-      if (data.token) {
-        localStorage.setItem("jwt", data.token);
-        localStorage.setItem("userLoggedIn", "true");
-        NotificationManager.success(`Welcome, ${data.firstName}!`);
-        
-        setTimeout(() => {
-          window.location.reload();
-        }, 500);
-      }
-    })
-    .catch((response) => {
-      NotificationManager.error(response.message || response.statusText);
-    });
+  API.post( `${serviceConfig.baseURL}/get-token`,{'UserName' :userName})
+          .then( response=> {
+           return response.data
+          })
+          .then( data =>{
+            if (data.token) {
+              localStorage.setItem("jwt", data.token);
+              localStorage.setItem("userLoggedIn", "true");
+              NotificationManager.success(`Welcome, ${data.firstName}!`);
+              
+              setTimeout(() => {
+                window.location.reload();
+              }, 500);
+            }
+          })
+          .catch((error) => {
+            NotificationManager.error(error.response.data.errorMessage);
+          });
 };
 
 export const getUserByUsername = (setState) => {

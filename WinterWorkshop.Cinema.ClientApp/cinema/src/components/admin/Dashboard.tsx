@@ -6,7 +6,7 @@ import "./../../index.css";
 // Admin actions
 import NewMovie from "../MovieComponent/NewMovie";
 import EditMovie from "../MovieComponent/EditMovie";
-import ShowAllMovies from "../MovieComponent/ShowAllMovies";
+//import ShowAllMovies from "../MovieComponent/ShowAllMovies";
 import TopTenMovies from "./MovieActions/TopTenMovies";
 import NewCinema from "./CinemaActions/NewCinema";
 import EditCinema from "./CinemaActions/EditCinema";
@@ -26,9 +26,9 @@ import { PrivateRouteAdmin } from "../hoc/privateRouteAdmin";
 import { PrivateRouteAdminSuperUserAndUser } from "../hoc/privateRouteAdminSuperUserAndUser";
 import Projections from "./../ProjectionComponent/Projections";
 import TicketReservation from "./../TicketReservationConmponent/TicketReservation"
+import Movies from './../MovieComponent/Movies';
 
 // higher order component
-
 const Dashboard: React.FC = () => {
   return (
     <Row className="justify-content-center no-gutters">
@@ -39,9 +39,9 @@ const Dashboard: React.FC = () => {
             path="/dashboard/NewMovie"
             component={NewMovie}
           />
-          <Route path="/dashboard/AllMovies" component={ShowAllMovies} />
+          <Route path="/dashboard/AllMovies" component={Movies} />
           <Route path="/dashboard/TopTenMovies" component={TopTenMovies} />
-          <Route path="/dashboard/NewCinema" component={NewCinema} />
+         
           <PrivateRouteAdminAndSuperUser
             path="/dashboard/EditMovie/:id"
             component={EditMovie}
