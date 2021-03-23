@@ -29,6 +29,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
         // NOT FOR PRODUCTION USE!!!
         // you will need a robust auth implementation for production
         // i.e. try IdentityServer4
+
+
+     
         [HttpPost]
         [Route("/get-token")]
         public async Task<ActionResult> GenerateToken([FromBody]UserLoginModel userLogin)
