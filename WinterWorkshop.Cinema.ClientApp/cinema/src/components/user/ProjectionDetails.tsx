@@ -13,7 +13,8 @@ import {
   ISeats,
   IProjectionNEW,
 } from "../../models";
-import Projection from "./Projection";
+
+
 
 interface IState {
   projections: IProjectionNEW;
@@ -302,9 +303,7 @@ const ProjectionDetails: React.FC = () => {
       });
   };
 
-  const tryReservation = (
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) => {
+  const tryReservation = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     const requestOptions = {
       method: "POST",
