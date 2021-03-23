@@ -172,7 +172,7 @@ const Movies: React.FC = (props: any) => {
           </button>
         </form>
       </Row>
-    {/*<Row className="no-gutters pr-5 pl-5">{showTable}</Row>*/}
+  
     {state.isLoading ? <Spinner></Spinner> :
     (<Movie 
     movies={state.movies}

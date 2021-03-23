@@ -286,7 +286,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
             GenericResult<MovieDomainModel> movies;
             try
             {
-                 movies = await _movieService.SearchMoviesByTag(query);
+                movies = await _movieService.SearchMoviesByTag(query);
 
             }
             catch (Exception e)

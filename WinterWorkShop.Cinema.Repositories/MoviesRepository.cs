@@ -23,7 +23,7 @@ namespace WinterWorkShop.Cinema.Repositories
         Task<IEnumerable<Movie>> GetMoviesByAuditoriumId(int id);
 
         Task<IEnumerable<Movie>> GetMoviesByCinemaId(int id);
-        Task<IEnumerable<Movie>> SearchMoviesByTags(string query);
+        Task<IEnumerable<Movie>> SearchMoviesByTags(string tagValue);
 
         void Detach(object entity);
     }
@@ -106,22 +106,24 @@ namespace WinterWorkShop.Cinema.Repositories
             return topTenMovies;
         }
 
-        public async Task<IEnumerable<Movie>> SearchMoviesByTags(string query)
+        public async Task<IEnumerable<Movie>> SearchMoviesByTags(string tagValue)
         {
-
-            // moram u servisu da prvo proverim dali taj
-            //tag postoji posto ovde primam samo ako postoji
-            var searchTag =  _cinemaContext.Tags
-                .Where(t => t.TagValue == query)
-                .SingleOrDefault();
-            
            
-            var listMovies = await _cinemaContext.TagsMovies
-                        .Where(tm => tm.TagId == searchTag.TagId)
+            var searchTags = _cinemaContext.Tags
+                .Where(t => t.TagValue == tagValue)
+                .ToList();
+
+
+            IEnumerable<Movie> listMovies = null;
+            foreach (var tag in searchTags)
+            {
+                listMovies= await _cinemaContext.TagsMovies
+                        .Where(tm => tm.TagId == tag.TagId)
                         .Include(m => m.Movie)
                         .Select(m => m.Movie)
-                        .ToListAsync();
-
+                         .ToListAsync();
+            }
+         
 
             return listMovies;
         }
