@@ -205,11 +205,15 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 Address = "Perleska 167",
                 CityName = "Paris",
                 Name = "Cineplex",
-                createAuditoriumModel = new CreateAuditoriumModel
+                createAuditoriumModel = new List<CreateAuditoriumModel>
                 {
-                    auditName = "New Auditorium",
+                    new CreateAuditoriumModel
+                    {
+                      auditName = "New Auditorium",
                     numberOfSeats = 2,
                     seatRows = 2
+                    }
+            
 
                 }
 
@@ -249,16 +253,19 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 Address = "Perleska 167",
                 CityName = "Paris",
                 Name = "Cineplex",
-                 
 
-                 createAuditoriumModel=new CreateAuditoriumModel
-                 { 
-                 
-                  auditName="New auditorium",
-                  numberOfSeats=2,
-                   seatRows=2
-                 }
 
+                createAuditoriumModel = new List<CreateAuditoriumModel>
+                {
+                    new CreateAuditoriumModel
+                    {
+                      auditName = "New Auditorium",
+                    numberOfSeats = 2,
+                    seatRows = 2
+                    }
+
+
+                }
             };
 
          
@@ -328,12 +335,14 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 Name = "Cineplex",
 
 
-                createAuditoriumModel = new CreateAuditoriumModel
+                createAuditoriumModel = new List<CreateAuditoriumModel>
                 {
-
-                    auditName = "New auditorium",
+                    new CreateAuditoriumModel
+                    {
+                     auditName = "New auditorium",
                     numberOfSeats = 2,
                     seatRows = 2
+                    }
                 }
 
             };
