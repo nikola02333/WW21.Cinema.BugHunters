@@ -97,7 +97,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
                 return BadRequest(errorResponse);
             }
-            return CreatedAtAction("GetById", new { Id = createTicket.Data.Id }, createTicket.Data);
+            return CreatedAtAction("GetById", new { Id = createTicket.DataList[0].Id }, createTicket.DataList);
         }
 
         [HttpDelete]
