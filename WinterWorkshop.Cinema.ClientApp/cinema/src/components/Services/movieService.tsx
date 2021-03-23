@@ -12,13 +12,39 @@ export const movieService = {
     getCurrentMovies,
     removeMovie,
     searchMovieById,
-    updateMovie
+    updateMovie,
+    changeCurrent,
+    getTopTen
    
 };
+async function getTopTen()
+{
+  //TopTenMovies
+  var movies = await API.get(`${serviceConfig.baseURL}/api/movies/TopTenMovies`)
+                        .then( response => {
+                          return response.data;
+                        })
+                        .catch((error) => {
+      
+                          NotificationManager.error(error.response);
+                        });
+                          return movies;
+}
+async function changeCurrent(movieId: string)
+{
+  var result = await API.post(`${serviceConfig.baseURL}/api/movies/ActivateMovie/${movieId}`)
+                        .then( response=> {
+                          return response.data;
+                        })
+                        .catch(error => {
+                          NotificationManager.error(error.response.data.errorMessage);
+                          });
+      return result;
 
+}
 async function updateMovie(movieId: string, movieToUpdate : IMovieToUpdateModel)
 {
-  var movieUpdated = await API.put(`/api/movies/Update/${movieId}`, movieToUpdate)
+ return await API.put(`/api/movies/Update/${movieId}`, movieToUpdate)
                               .then( (res)=> {
                                 NotificationManager.success("Movie updated successfuly");
                                 return res.data;
@@ -26,7 +52,6 @@ async function updateMovie(movieId: string, movieToUpdate : IMovieToUpdateModel)
                               .catch(error => {
                                 NotificationManager.error(error.response.data.errorMessage);
                                 });
-            return movieToUpdate;
 }
 async function searchMovieById(movieId: string)
 {
@@ -87,49 +112,31 @@ function getCurrentMovies()
           NotificationManager.error(response.message || response.statusText);
         });
 }
-function getAllMovies()
+async function getAllMovies()
 {
-    const requestOptions = {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-        }
-      };
-  
-      fetch(`${serviceConfig.baseURL}/api/movies/AllMovies/true`, requestOptions)
-        .then((response) => {
-          if (!response.ok) {
-            return Promise.reject(response);
-          }
-          return response;
-        })
-        .then((response) => {
-              return response.json();
-            })
-        .then((result) => {
-          NotificationManager.success("Successfuly added movie!");
-          //props.history.push(`AllMovies`);
-        })
-        .catch((response) => {
-          NotificationManager.error(response.message || response.statusText);
-          //setState({ ...state, submitted: false });
-        });
+    return await API.get(`${serviceConfig.baseURL}/api/movies/AllMovies/false`)
+                          .then( response=> {
+                            return response.data;
+                          })
+                          .catch((response) => {
+                            NotificationManager.error(response.message || response.statusText);
+                          });
+      
   }
   
  async function searcMovie(tagToSearch: any): Promise<any>
 {
-  var result =
-     await API.get(`/api/movies/SearchMoviesByTag?query=${tagToSearch}`,{timeout: 50000})
+  
+  return   await API.get(`/api/movies/SearchMoviesByTag?query=${tagToSearch}`,{timeout: 50000})
       .then( (response)=> {
 
        return response.data;
       })
       .catch(error => {
-      NotificationManager.error(error.response.data.errorMessage);
+      NotificationManager.error(error.response);
       });   
-      return result; 
 }
+
 function createMovie(moveModel: IMovieToCreateModel) : any
 {
   const requestOptions = {

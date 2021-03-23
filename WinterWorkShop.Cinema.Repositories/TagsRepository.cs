@@ -11,11 +11,15 @@ namespace WinterWorkShop.Cinema.Repositories
 {
     public interface ITagsRepository : IRepository<Tag> 
     {
+        Task<IEnumerable<Tag>> GetTagsByValue(string tagValue);
+
         Tag GetTagByValue(string tagValue);
 
         Tag GetTagByYear(int tagYear);
 
         Tag GetTagByRating(double tagRating);
+
+        Task<IEnumerable<Tag>> GetTagsByTagNameAndTagValue(string tagName, string tagValue);
 
         void Attach(Tag tag);
     }
@@ -50,10 +54,13 @@ namespace WinterWorkShop.Cinema.Repositories
             return await _cinemaContext.Tags.FindAsync(id);
         }
 
+        public async Task<IEnumerable<Tag>> GetTagsByValue(string tagValue)
+        {
+            return await _cinemaContext.Tags.Where(tag => tag.TagValue == tagValue).ToListAsync();
+        }
         public Tag GetTagByValue(string tagValue)
         {
-
-            return  _cinemaContext.Tags.Where(tag => tag.TagValue == tagValue).FirstOrDefault();
+            return  _cinemaContext.Tags.Where(tag => tag.TagValue == tagValue).SingleOrDefault();
         }
 
         public Tag GetTagByRating(double tagRating)
@@ -89,6 +96,12 @@ namespace WinterWorkShop.Cinema.Repositories
             _cinemaContext.Entry(obj).State = EntityState.Modified;
 
             return updatedEntry;
+        }
+
+        public async Task<IEnumerable<Tag>> GetTagsByTagNameAndTagValue(string tagName, string tagValue)
+        {
+            var result = await _cinemaContext.Tags.Where(t => t.TagName == tagName).Where(t => t.TagValue == tagValue).ToListAsync();
+            return result;
         }
     }
 }
