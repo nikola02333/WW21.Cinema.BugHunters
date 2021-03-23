@@ -45,8 +45,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
 
-
-
                 return BadRequest(errorResponse);
             }
 
@@ -66,8 +64,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     ErrorMessage = response.ErrorMessage,
                     StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
-
-
 
                 return BadRequest(errorResponse);
             }
@@ -94,36 +90,35 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
 
-
-
                 return BadRequest(errorResponse);
             }
 
             if (cinema.createAuditoriumModel != null)
+
             {
-                var auditoriumDomainModel = new AuditoriumDomainModel
+                foreach (var audit in cinema.createAuditoriumModel)
                 {
-                    CinemaId = insertedCinema.Data.Id,
-                    Name = cinema.createAuditoriumModel.auditName,
-
-                };
-
-                var auditorium = await _auditoriumService.CreateAuditorium(auditoriumDomainModel, cinema.createAuditoriumModel.seatRows, cinema.createAuditoriumModel.numberOfSeats);
-
-                if (!auditorium.IsSuccessful)
-                {
-                    ErrorResponseModel errorResponse = new ErrorResponseModel
+                    var auditoriumDomainModel = new AuditoriumDomainModel
                     {
-                        ErrorMessage = insertedCinema.ErrorMessage,
-                        StatusCode = System.Net.HttpStatusCode.BadRequest
+                        CinemaId = insertedCinema.Data.Id,
+                        Name = audit.auditName
+
                     };
 
-                    return BadRequest(errorResponse);
+                    var auditorium = await _auditoriumService.CreateAuditorium(auditoriumDomainModel, audit.seatRows, audit.numberOfSeats);
 
+                    if (!auditorium.IsSuccessful)
+                    {
+                        ErrorResponseModel errorResponse = new ErrorResponseModel
+                        {
+                            ErrorMessage = insertedCinema.ErrorMessage,
+                            StatusCode = System.Net.HttpStatusCode.BadRequest
+                        };
+
+                        return BadRequest(errorResponse);
+                    }
                 }
-            }
-           
-
+            }         
             return CreatedAtAction(nameof(GetCinemaById),
                 new { Id = insertedCinema.Data.Id },
                 insertedCinema.DataList);
@@ -132,7 +127,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpDelete]
         [Route("Delete/{id}")]
-        public ActionResult DeleteCinema(int id)
+        public async Task<ActionResult> DeleteCinema(int id)
         {
 
             if (id.GetType() !=typeof(int))
@@ -146,8 +141,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return BadRequest(errorResponse);
             }
 
-            var result = _cinemaService.DeleteCinema(id);
-
+            var result = await _cinemaService.DeleteCinemaAsync(id);
 
             if (!result.IsSuccessful)
             {
@@ -156,15 +150,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     ErrorMessage = result.ErrorMessage,
                     StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
-
-
-
                 return BadRequest(errorResponse);
             }
-
-
-            return Accepted(result.Data);
-        
+            return Accepted(result.Data);       
         }
 
         [HttpPut]
@@ -181,15 +169,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     ErrorMessage = result.ErrorMessage,
                     StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
-
-
-
                 return BadRequest(errorResponse);
             }
-
             return Accepted(result.Data);
         }
-
-
     }
 }

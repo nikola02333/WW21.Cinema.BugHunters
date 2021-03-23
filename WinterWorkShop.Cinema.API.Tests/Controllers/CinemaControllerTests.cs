@@ -414,14 +414,14 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             };
            
 
-            _mockCinemaService.Setup(srvc => srvc.DeleteCinema(cinemaId))
-                             .Returns(DeletedCinema);
+            _mockCinemaService.Setup(srvc => srvc.DeleteCinemaAsync(cinemaId))
+                             .ReturnsAsync(DeletedCinema);
 
             // Act
             var result = _cinemaController.DeleteCinema(cinemaId);
 
 
-            var resultResponse = (AcceptedResult)result;
+            var resultResponse = (AcceptedResult)result.Result;
 
             //Assert
             Assert.IsInstanceOfType(result, typeof(AcceptedResult));

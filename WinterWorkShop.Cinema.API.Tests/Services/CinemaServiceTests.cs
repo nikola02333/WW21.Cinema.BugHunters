@@ -32,7 +32,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             {
                 _mockAuditoriumRepository = new Mock<IAuditoriumsRepository>();
                 _mockCinemaRepository = new Mock<ICinemasRepository>();
-                _cinemaService = new CinemaService(_mockCinemaRepository.Object);
+                _cinemaService = new CinemaService(_mockCinemaRepository.Object, _mockAuditoriumRepository.Object);
             }
 
             [TestMethod]
@@ -322,12 +322,12 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
                 //Act
                 _mockCinemaRepository.Setup(srvc => srvc.Delete(cinemaId)).Returns(cinemaToUpdate);
-                var result =_cinemaService.DeleteCinema(cinemaToUpdateModel.Id);
+                var result =_cinemaService.DeleteCinemaAsync(cinemaToUpdateModel.Id);
 
                 //Assert
-                Assert.IsInstanceOfType(result.Data, typeof(CinemaDomainModel));
-                Assert.AreEqual(result.IsSuccessful, true);
-                Assert.AreEqual(result.Data.Id, cinemaId);
+                Assert.IsInstanceOfType(result.Result.Data, typeof(CinemaDomainModel));
+                Assert.AreEqual(result.Result.IsSuccessful, true);
+                Assert.AreEqual(result.Result.Data.Id, cinemaId);
             }
         }
     }

@@ -41,6 +41,8 @@ const NewAuditorium: React.FC = (props: any) => {
       {
         id: "",
         name: "",
+        address:"",
+        cityName:""
       },
     ],
     cinemaIdError: "",
@@ -60,7 +62,7 @@ const NewAuditorium: React.FC = (props: any) => {
       },
     };
 
-    fetch(`${serviceConfig.baseURL}/api/Cinemas/all`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/cinemas/all`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);
@@ -69,7 +71,7 @@ const NewAuditorium: React.FC = (props: any) => {
       })
       .then((data) => {
         if (data) {
-          setState({ ...state, cinemas: data });
+          setState({ ...state, cinemas: data});
         }
       })
       .catch((response) => {
@@ -80,12 +82,14 @@ const NewAuditorium: React.FC = (props: any) => {
 
   useEffect(() => {
     getCinemas();
-  }, [getCinemas]);
+  },[]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+
     const { id, value } = e.target;
-    setState({ ...state, [id]: value });
     validate(id, value);
+    setState({ ...state, [id]: value });
+    
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -168,7 +172,7 @@ const NewAuditorium: React.FC = (props: any) => {
       body: JSON.stringify(data),
     };
 
-    fetch(`${serviceConfig.baseURL}/api/auditoriums`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/auditoriums/create`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);
@@ -187,10 +191,12 @@ const NewAuditorium: React.FC = (props: any) => {
 
   const onCinemaChange = (cinemas: ICinema[]) => {
     if (cinemas[0]) {
-      setState({ ...state, cinemaId: cinemas[0].id });
       validate("cinemaId", cinemas[0].id);
+      setState({ ...state, cinemaId: cinemas[0].id });
+      
     } else {
       validate("cinemaId", null);
+      
     }
   };
 
@@ -226,8 +232,8 @@ const NewAuditorium: React.FC = (props: any) => {
                 type="text"
                 placeholder="Auditorium Name"
                 value={state.auditName}
-                onChange={handleChange}
                 className="add-new-form"
+                onChange={handleChange}             
               />
               <FormText className="text-danger">
                 {state.auditNameError}
@@ -241,7 +247,7 @@ const NewAuditorium: React.FC = (props: any) => {
                 placeholder="Choose a cinema..."
                 id="browser"
                 onChange={(e: ICinema[]) => {
-                  onCinemaChange(e);
+                onCinemaChange(e);
                 }}
               />
               <FormText className="text-danger">{state.cinemaIdError}</FormText>
