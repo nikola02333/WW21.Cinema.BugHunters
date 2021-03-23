@@ -100,7 +100,34 @@ namespace WinterWorkShop.Cinema.API.Controllers
             }
 
             if (cinema.createAuditoriumModel != null)
+
             {
+                foreach (var audit in cinema.createAuditoriumModel)
+                {
+                    var auditoriumDomainModel = new AuditoriumDomainModel
+                    {
+                        CinemaId = insertedCinema.Data.Id,
+                        Name = audit.auditName
+
+                    };
+
+                    var auditorium = await _auditoriumService.CreateAuditorium(auditoriumDomainModel, audit.seatRows, audit.numberOfSeats);
+
+                    if (!auditorium.IsSuccessful)
+                    {
+                        ErrorResponseModel errorResponse = new ErrorResponseModel
+                        {
+                            ErrorMessage = insertedCinema.ErrorMessage,
+                            StatusCode = System.Net.HttpStatusCode.BadRequest
+                        };
+
+                        return BadRequest(errorResponse);
+
+                    }
+                }
+
+               
+                /*
                 var auditoriumDomainModel = new AuditoriumDomainModel
                 {
                     CinemaId = insertedCinema.Data.Id,
@@ -120,7 +147,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
                     return BadRequest(errorResponse);
 
-                }
+                }*/
             }
            
 
