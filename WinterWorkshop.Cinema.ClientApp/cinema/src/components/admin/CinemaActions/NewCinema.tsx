@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,Fragment } from "react";
 import { withRouter } from "react-router-dom";
 import {
   FormGroup,
@@ -13,6 +13,10 @@ import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../../appSettings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCouch } from "@fortawesome/free-solid-svg-icons";
+import { ImportsNotUsedAsValues } from "typescript";
+
+
+
 
 interface IState {
   name: string;
@@ -46,6 +50,7 @@ const NewCinema: React.FC = (props: any) => {
     canSubmit: true,
     
   });
+
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -142,18 +147,18 @@ const NewCinema: React.FC = (props: any) => {
     }
   };
 
-
+ 
   const addCinema = () => {
 
       const data = {
         Name: state.name, 
         address:state.address,
         cityName:state.cityName,  
-        createAuditoriumModel:{
+        createAuditoriumModel:[{
           numberOfSeats: +state.numberOfSeats, 
           seatRows: +state.seatRows,
           auditName: state.auditName
-        }   
+        }] 
     };
     
     const requestOptions = {
@@ -237,7 +242,7 @@ const NewCinema: React.FC = (props: any) => {
     return renderedSeats;
   };
 
-  
+ 
   return (
     <Container>
       <Row>
@@ -303,7 +308,9 @@ const NewCinema: React.FC = (props: any) => {
               <FormText className="text-danger">
                 {state.numOfSeatsError}
               </FormText>
+             
             </FormGroup>
+           
             <Button
               className="btn-add-new"
               type="submit"
