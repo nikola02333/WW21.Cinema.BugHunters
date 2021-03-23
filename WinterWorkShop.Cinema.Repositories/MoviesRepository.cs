@@ -16,14 +16,14 @@ namespace WinterWorkShop.Cinema.Repositories
 
         Task<Movie> GetMovieByNameAsync(string movieName);
 
-        Task<IEnumerable<Movie>> GetTopTenMovies(string searchCriteria, int year);
+        Task<IEnumerable<Movie>> GetTopTenMovies();
 
         Task<Movie> ActivateDeactivateMovie(Movie movieToActivateDeactivate);
 
         Task<IEnumerable<Movie>> GetMoviesByAuditoriumId(int id);
 
         Task<IEnumerable<Movie>> GetMoviesByCinemaId(int id);
-        Task<IEnumerable<Movie>> SearchMoviesByTags(string query);
+        Task<IEnumerable<Movie>> SearchMoviesByTags(string tagValue);
 
         void Detach(object entity);
     }
@@ -39,12 +39,9 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public Movie Delete(object id)
         {
-            var  existingMovie = _cinemaContext.Movies.Where(movie=> movie.Id == (Guid)id).Include(tm => tm.TagsMovies).FirstOrDefault();
+            var  existingMovie = _cinemaContext.Movies.Where(movie=> movie.Id == (Guid)id).Include(tm => tm.TagsMovies).ThenInclude(t=>t.Tag).FirstOrDefault();
 
-            if (existingMovie == null)
-            {
-                return null;
-            }
+            
 
             var result = _cinemaContext.Movies.Remove(existingMovie);
 
@@ -101,37 +98,32 @@ namespace WinterWorkShop.Cinema.Repositories
            return await _cinemaContext.Movies.Where(movie => movie.Title == movieName).FirstOrDefaultAsync();
         }
 
-        public async Task<IEnumerable<Movie>> GetTopTenMovies(string searchCriteria, int year)
+        public async Task<IEnumerable<Movie>> GetTopTenMovies()
         {
-            switch(searchCriteria)
-            {
-                case "year":
-                 return   await _cinemaContext.Movies.Where(m=> m.Year == year).OrderByDescending(m => m.Rating).Take(10).ToListAsync();
-
-                case "genre":
-                    return await _cinemaContext.Movies.Where(m=> m.Genre =="comedy").OrderByDescending(m => m.Rating).Take(10).ToListAsync();
-            }
+            
             var topTenMovies =await _cinemaContext.Movies.OrderByDescending(m => m.Rating).Take(10).ToListAsync();
 
             return topTenMovies;
         }
 
-        public async Task<IEnumerable<Movie>> SearchMoviesByTags(string query)
+        public async Task<IEnumerable<Movie>> SearchMoviesByTags(string tagValue)
         {
-
-            // moram u servisu da prvo proverim dali taj
-            //tag postoji posto ovde primam samo ako postoji
-            var searchTag =  _cinemaContext.Tags
-                .Where(t => t.TagValue == query)
-                .SingleOrDefault();
-            
            
-            var listMovies = await _cinemaContext.TagsMovies
-                        .Where(tm => tm.TagId == searchTag.TagId)
+            var searchTags = _cinemaContext.Tags
+                .Where(t => t.TagValue == tagValue)
+                .ToList();
+
+
+            IEnumerable<Movie> listMovies = null;
+            foreach (var tag in searchTags)
+            {
+                listMovies= await _cinemaContext.TagsMovies
+                        .Where(tm => tm.TagId == tag.TagId)
                         .Include(m => m.Movie)
                         .Select(m => m.Movie)
-                        .ToListAsync();
-
+                         .ToListAsync();
+            }
+         
 
             return listMovies;
         }

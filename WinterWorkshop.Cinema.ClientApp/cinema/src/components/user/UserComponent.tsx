@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { withRouter,useHistory } from "react-router-dom";
-import { Link } from "react-router-dom";
 import { Navbar, Nav, Form, FormControl, Button } from "react-bootstrap";
-import { NotificationManager } from "react-notifications";
-import { serviceConfig } from "../../appSettings";
 
 import {userService} from '../Services/userService';
+import {getUserName} from '../helpers/authCheck';
 
 interface IState {
     userName: string;
@@ -17,6 +15,7 @@ interface IState {
   
   const UserComponent: React.FC = (props: any) => {
 
+  
     const history = useHistory();
     const [state, setState] = useState<IState>({
         userName: "",
@@ -90,8 +89,6 @@ interface IState {
       
         const { value } = e.target;
         
-        //setState({ ...state, userName: value });
-
         setState( (prev) => ({
           ...prev,  userName: value
         }));
@@ -101,17 +98,14 @@ interface IState {
       const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
     
-        //setState({ ...state, submitted: true });
         setState( (prev) => ({
           ...prev, submitted: true
         }));
         const { userName } = state;
         if (userName) {
-          //login();
           userService.login(userName);
         } else {
 
-          //setState({ ...state, submitted: false });
           setState( (prev) => ({
             ...prev, submitted: false
           }));
@@ -122,14 +116,13 @@ interface IState {
   const handleSubmitLogout = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     localStorage.removeItem("userLoggedIn");
+    localStorage.removeItem("jwt");
 
-    //setState({ ...state, submitted: true });
     setState( (prev) => ({
       ...prev, submitted: true
     }));
 
 
-    //setState({ ...state, token: false });
     setState( (prev) => ({
       ...prev, token: false
     }));
@@ -148,7 +141,6 @@ interface IState {
       console.log(state.userName);
 
     return (
-        
         <>
           <Form
           inline
@@ -162,7 +154,7 @@ interface IState {
             onChange={handleChange}
             className="mr-sm-2"
           />
-          <Button type="submit" variant="outline-success" id="login">
+          <Button className="mr-sm-2" type="submit" variant="outline-success" id="login">
             Login
           </Button>
         </Form>
@@ -181,7 +173,7 @@ interface IState {
             style={{ backgroundColor: "transparent", marginRight: "10px" }}
             onClick={redirectToUserPage}
           >
-            {/*getUserName()*/ "userProfile"}
+            {/*getUserName()*/ "Profile Details"}
           </Button>
         )}
         <Form
@@ -191,7 +183,7 @@ interface IState {
           }
         >
           <Button  type="submit" variant="outline-danger" id="logout">
-         {"Logout" + state.userName}
+         {"Logout "+ getUserName()  }
           </Button>
         </Form>
         </>

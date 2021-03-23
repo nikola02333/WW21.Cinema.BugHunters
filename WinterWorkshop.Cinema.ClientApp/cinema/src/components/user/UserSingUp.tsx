@@ -76,17 +76,15 @@ useEffect( ()=> {
       };
       if (state.userName && state.firstName &&  state.lastName) {
         
-        // zasto je data undefind???
+       
        var data= await userService.singUp(userToCreate);
+        history.push('/dashboard/Projection');
 
-       debugger
       } else {
         NotificationManager.error("Please fill in data");
         setState({ ...state, submitted: false });
       }
-          //userService.singUp(userToCreate);
       
-          history.push('/dashboard/Projection');
       };
 
       

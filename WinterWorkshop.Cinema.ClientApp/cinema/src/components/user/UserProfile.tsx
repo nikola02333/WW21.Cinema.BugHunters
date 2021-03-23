@@ -49,7 +49,6 @@ const UserProfile: React.FC = () => {
 
     //let data = userService.getUserName(userName);
     //setState({ ...state, user: data });
-    debugger
 
     const requestOptions = {
       method: "GET",
