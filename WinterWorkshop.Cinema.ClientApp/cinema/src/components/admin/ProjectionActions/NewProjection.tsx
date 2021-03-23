@@ -49,6 +49,8 @@ const NewProjection: React.FC = (props: any) => {
       {
         id: "",
         name: "",
+        numberOfSeats:0,
+        seatRows: 0
       },
     ],
     canSubmit: true,

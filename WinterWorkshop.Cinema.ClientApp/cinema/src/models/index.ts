@@ -32,12 +32,16 @@ export interface IMovie {
 export interface ICinema {
   id: string;
   name: string;
+  address:string;
+  cityName:string;
 }
 
 export interface IAuditorium {
   id: string;
   name: string;
   cinemaId?: string;
+  numberOfSeats:number;
+  seatRows: number;
 }
 
 export interface ISeats {

@@ -18,6 +18,8 @@ interface IParams {
 interface IState {
   name: string;
   id: string;
+  address: string;
+  cityName: string;
   nameError: string;
   submitted: boolean;
   canSubmit: boolean;
@@ -29,6 +31,8 @@ const EditCinema: React.FC = (props: any) => {
   const [state, setState] = useState<IState>({
     name: "",
     id: "",
+    address:"",
+    cityName:"",
     nameError: "",
     submitted: false,
     canSubmit: true,
@@ -40,8 +44,9 @@ const EditCinema: React.FC = (props: any) => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
-    setState({ ...state, [id]: value });
     validate(id, value);
+    setState({ ...state, [id]: value });
+    
   };
 
   const validate = (id: string, value: string) => {
@@ -56,13 +61,35 @@ const EditCinema: React.FC = (props: any) => {
         setState({ ...state, nameError: "", canSubmit: true });
       }
     }
+    if (id === "cityName") {
+      if (value === "") {
+        setState({
+          ...state,
+          nameError: "Fill in cinema city name.",
+          canSubmit: false,
+        });
+      } else {
+        setState({ ...state, nameError: "", canSubmit: true });
+      }
+    }
+    if (id === "address") {
+      if (value === "") {
+        setState({
+          ...state,
+          nameError: "Fill in cinema address.",
+          canSubmit: false,
+        });
+      } else {
+        setState({ ...state, nameError: "", canSubmit: true });
+      }
+    }
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setState({ ...state, submitted: true });
-    if (state.name) {
+    if (state.name && state.address && state.cityName) {
       updateCinema();
     } else {
       NotificationManager.error("Please fill in data");
@@ -79,7 +106,7 @@ const EditCinema: React.FC = (props: any) => {
       },
     };
 
-    fetch(`${serviceConfig.baseURL}/api/cinemas/${cinemaId}`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/cinemas/GetById/${cinemaId}`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);
@@ -88,7 +115,8 @@ const EditCinema: React.FC = (props: any) => {
       })
       .then((data) => {
         if (data) {
-          setState({ ...state, name: data.name, id: data.id });
+          setState({ ...state, name: data.name, id: data.id ,address:data.address,cityName:data.cityName});
+         
         }
       })
       .catch((response) => {
@@ -100,6 +128,8 @@ const EditCinema: React.FC = (props: any) => {
   const updateCinema = () => {
     const data = {
       Name: state.name,
+      address:state.address,
+      cityName:state.cityName
     };
 
     const requestOptions = {
@@ -138,8 +168,22 @@ const EditCinema: React.FC = (props: any) => {
               <FormControl
                 id="name"
                 type="text"
-                placeholder="Cinema Name"
+                placeholder="Cinema name"
                 value={state.name}
+                onChange={handleChange}
+              />
+               <FormControl
+                id="address"
+                type="text"
+                placeholder="Cinema address"
+                value={state.address}
+                onChange={handleChange}
+              />
+               <FormControl
+                id="cityName"
+                type="text"
+                placeholder="Cinema city mame"
+                value={state.cityName}
                 onChange={handleChange}
               />
               <FormText className="text-danger">{state.nameError}</FormText>

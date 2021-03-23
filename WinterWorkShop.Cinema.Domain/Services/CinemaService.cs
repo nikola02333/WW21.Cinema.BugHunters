@@ -13,10 +13,12 @@ namespace WinterWorkShop.Cinema.Domain.Services
     public class CinemaService : ICinemaService
     {
         private readonly ICinemasRepository _cinemasRepository;
+        private readonly IAuditoriumsRepository _auditoriumsRepository;
 
-        public CinemaService(ICinemasRepository cinemasRepository)
+        public CinemaService(ICinemasRepository cinemasRepository, IAuditoriumsRepository auditoriumsRepository)
         {
             _cinemasRepository = cinemasRepository;
+            _auditoriumsRepository = auditoriumsRepository;
         }
 
         public async Task<GenericResult<CinemaDomainModel>> GetAllAsync()
@@ -98,9 +100,19 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
-        public GenericResult<CinemaDomainModel> DeleteCinema(int id)
+        public async Task<GenericResult<CinemaDomainModel>> DeleteCinemaAsync(int id)
         {
-           
+
+            var existingAuditoriums =await _auditoriumsRepository.GetAllByCinemaIdAsync(id);
+   
+
+            foreach(var auditorium in existingAuditoriums)
+            {
+                _auditoriumsRepository.Delete(auditorium.Id);
+            }
+        
+          
+            var existingCinema = await _cinemasRepository.GetByIdAsync(id);
 
             var deletedCinema = _cinemasRepository.Delete(id);
 

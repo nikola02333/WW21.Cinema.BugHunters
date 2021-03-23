@@ -24,6 +24,6 @@ namespace WinterWorkShop.Cinema.API.Models
         [StringLength(50, ErrorMessage = Messages.CINEMA_PROPERTIE_CITY_NAME_REQUIERED)]
         public string CityName { get; set; }
 
-        public CreateAuditoriumModel? createAuditoriumModel  { get; set; }
+        public List<CreateAuditoriumModel?> createAuditoriumModel  { get; set; }
     }
 }
