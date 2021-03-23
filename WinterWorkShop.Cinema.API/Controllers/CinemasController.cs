@@ -152,7 +152,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 };
                 return BadRequest(errorResponse);
             }
-            return Accepted(result.Data);       
+            return Accepted();       
         }
 
         [HttpPut]

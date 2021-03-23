@@ -207,14 +207,11 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 Name = "Cineplex",
                 createAuditoriumModel = new List<CreateAuditoriumModel>
                 {
-                    new CreateAuditoriumModel
-                    {
-                      auditName = "New Auditorium",
+                    new CreateAuditoriumModel{
+                    auditName = "New Auditorium",
                     numberOfSeats = 2,
                     seatRows = 2
                     }
-            
-
                 }
 
             };
@@ -257,15 +254,13 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
                 createAuditoriumModel = new List<CreateAuditoriumModel>
                 {
-                    new CreateAuditoriumModel
-                    {
-                      auditName = "New Auditorium",
+                    new CreateAuditoriumModel{
+                    auditName = "New Auditorium",
                     numberOfSeats = 2,
                     seatRows = 2
                     }
-
-
                 }
+
             };
 
          
@@ -292,7 +287,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 {
                     Id = 1,
                     CinemaId = CreateCinemaResponseModel.Data.Id,
-                    Name = cinemaToCreate.createAuditoriumModel.auditName,
+                    Name = cinemaToCreate.createAuditoriumModel[0].auditName,
                    SeatsList = new List<SeatDomainModel>()
 
 
@@ -306,7 +301,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             
 
-            _mockAuditoriumService.Setup(srvc => srvc.CreateAuditorium(It.IsNotNull<AuditoriumDomainModel>(), cinemaToCreate.createAuditoriumModel.seatRows, cinemaToCreate.createAuditoriumModel.numberOfSeats)).ReturnsAsync(CreateAuditoriumResponseModel);
+            _mockAuditoriumService.Setup(srvc => srvc.CreateAuditorium(It.IsNotNull<AuditoriumDomainModel>(), cinemaToCreate.createAuditoriumModel[0].seatRows, cinemaToCreate.createAuditoriumModel[0].numberOfSeats)).ReturnsAsync(CreateAuditoriumResponseModel);
 
           
             // Act
@@ -337,9 +332,8 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
                 createAuditoriumModel = new List<CreateAuditoriumModel>
                 {
-                    new CreateAuditoriumModel
-                    {
-                     auditName = "New auditorium",
+                    new CreateAuditoriumModel{
+                    auditName = "New Auditorium",
                     numberOfSeats = 2,
                     seatRows = 2
                     }
@@ -371,7 +365,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 {
                     Id = 1,
                     CinemaId = CreateCinemaResponseModel.Data.Id,
-                    Name = cinemaToCreate.createAuditoriumModel.auditName,
+                    Name = cinemaToCreate.createAuditoriumModel[0].auditName,
                     SeatsList = new List<SeatDomainModel>()
 
 
@@ -385,7 +379,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
 
 
-            _mockAuditoriumService.Setup(srvc => srvc.CreateAuditorium(It.IsNotNull<AuditoriumDomainModel>(), cinemaToCreate.createAuditoriumModel.seatRows, cinemaToCreate.createAuditoriumModel.numberOfSeats)).ReturnsAsync(CreateAuditoriumResponseModel);
+            _mockAuditoriumService.Setup(srvc => srvc.CreateAuditorium(It.IsNotNull<AuditoriumDomainModel>(), cinemaToCreate.createAuditoriumModel[0].seatRows, cinemaToCreate.createAuditoriumModel[0].numberOfSeats)).ReturnsAsync(CreateAuditoriumResponseModel);
 
 
             // Act
@@ -427,10 +421,10 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                              .ReturnsAsync(DeletedCinema);
 
             // Act
-            var result = _cinemaController.DeleteCinema(cinemaId);
+            var result =await _cinemaController.DeleteCinema(cinemaId);
 
 
-            var resultResponse = (AcceptedResult)result.Result;
+            var resultResponse = (AcceptedResult)result;
 
             //Assert
             Assert.IsInstanceOfType(result, typeof(AcceptedResult));
