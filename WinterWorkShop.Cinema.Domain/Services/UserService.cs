@@ -45,7 +45,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 FirstName = userToCreate.FirstName,
                  LastName= userToCreate.LastName,
                   UserName= userToCreate.UserName.ToLower(),
-                   Role= userToCreate.Role.ToLower()
+                   Role= userToCreate.Role.ToLower(),
+                   Points= 0
             };
 
             var userResult = await _usersRepository.InsertAsync(user);
@@ -114,6 +115,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 LastName = item.LastName,
                 UserName = item.UserName,
                 Role = item.Role,
+                BonusPoints= item.Points.ToString()
             }).ToList();
 
            return  new GenericResult<UserDomainModel> 
@@ -173,11 +175,43 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 UserName = user.UserName,
-                Role = user.Role
+                Role = user.Role,
+                BonusPoints = user.Points.ToString()
+                
                 }
             };
 
             return domainModel;
+        }
+
+        public async Task<GenericResult<UserDomainModel>> IncrementBonusPointsForUser(Guid userId)
+        {
+            var userExists = await _usersRepository.GetByIdAsync(userId);
+            if(userExists == null)
+            {
+                return new GenericResult<UserDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.USER_ID_NULL
+                };
+            }
+
+            userExists.Points++;
+            _usersRepository.Update(userExists);
+            _usersRepository.Save();
+
+            return new GenericResult<UserDomainModel>
+            {
+                IsSuccessful = true,
+                Data = new UserDomainModel 
+                {
+                   UserName= userExists.UserName,
+                    BonusPoints= userExists.Points.ToString(),
+                     FirstName= userExists.FirstName,
+                      LastName= userExists.LastName,
+                       Id= userExists.Id
+                }
+            };
         }
 
         public async Task<GenericResult<UserDomainModel>> UpdateUserAsync(Guid userId, UserDomainModel userToUpdate)

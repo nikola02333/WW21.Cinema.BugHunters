@@ -24,6 +24,7 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
 
         Task<GenericResult<UserDomainModel>> UpdateUserAsync(Guid userId, UserDomainModel userToUpdate);
 
+        Task<GenericResult<UserDomainModel>> IncrementBonusPointsForUser(Guid userId);
         Task<bool> CheckUsername(string usernameToCreate);
     }
 }
