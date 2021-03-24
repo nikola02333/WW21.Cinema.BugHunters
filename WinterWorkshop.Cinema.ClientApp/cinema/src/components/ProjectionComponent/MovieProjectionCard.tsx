@@ -21,10 +21,10 @@ const MovieProjectCard = (props:{submitted,movies,filteredProjections,props}) =>
           return (
             <Container key={movie.id} className="shadow rounded mt-1">
             <Row >
-              <Col md={4} className=" rounded mt-3">
+              <Col md={3} className=" rounded mt-3">
               <img className="img-responsive img-fluid" style={{  borderRadius:5}} src={movie.coverPicture} />
               </Col>
-              <Col md={8} className=" mt-3">
+              <Col md={9} className=" mt-3">
                 <Col md={12}>
                 <span className="card-title-font">{movie.title}</span>
                  {getRoundedRating(movie.rating)}
@@ -51,10 +51,10 @@ const MovieProjectCard = (props:{submitted,movies,filteredProjections,props}) =>
           return (
             <Container key={filteredProjection.id} className="shadow rounded mt-1">
             <Row >
-              <Col md={4} className=" rounded mt-3">
+              <Col md={3} className=" rounded mt-3">
               <img className="img-responsive img-fluid" style={{  borderRadius:5}} src={filteredProjection.coverPicture} />
               </Col>
-              <Col md={8} className=" mt-3">
+              <Col md={9} className=" mt-3">
                 <Col md={12}>
                 <span className="card-title-font">{filteredProjection.movieTitle} -{" "}
                 {filteredProjection.auditoriumName}</span>
