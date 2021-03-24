@@ -11,7 +11,7 @@ import {
 import ProjectionDetails from "./ProjectionDetails";
 import * as Service from "../Services/SeatsService";
 import ShowAuditorium from "./ShowAuditorium";
-import {getUserByUsername} from "../Services/userService";
+import {getUserByUsernameReservatino} from "../Services/userService";
 import InfoTable from "./InfoTable";
 import {tryReservation} from "../Services/ReservationService";
 interface IcurrentReservationSeats{
@@ -44,7 +44,7 @@ const TicketReservation:React.FC = (props) =>{
       });
 
     useEffect(()=>{
-      getUserByUsername(setInfo);
+      getUserByUsernameReservatino(setInfo);
     },[]);
  
      function getSeatData(auditoriumId,projectionId){

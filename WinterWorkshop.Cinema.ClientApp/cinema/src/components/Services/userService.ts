@@ -82,7 +82,7 @@ function login (userName:string)  {
           });
 };
 
-export const getUserByUsername = (setState) => {
+export const getUserByUsernameReservatino = (setState) => {
   let ussName = authChech.getUserName();
 
   const requestOptions = {

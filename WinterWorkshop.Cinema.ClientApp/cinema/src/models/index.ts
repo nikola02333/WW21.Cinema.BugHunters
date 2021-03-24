@@ -41,8 +41,8 @@ export interface IAuditorium {
   id: string;
   name: string;
   cinemaId?: string;
-  numberOfSeats:number;
-  seatRows: number;
+  numberOfSeats?:number;
+  seatRows?: number;
 }
 
 export interface ISeats {

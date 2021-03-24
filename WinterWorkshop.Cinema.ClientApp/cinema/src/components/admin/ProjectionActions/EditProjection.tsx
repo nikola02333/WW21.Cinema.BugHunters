@@ -161,7 +161,7 @@ const EditProjection: React.FC = (props: any) => {
       },
     };
 
-    fetch(`${serviceConfig.baseURL}/api/Movies/current`, requestOptions)
+    fetch(`${serviceConfig.baseURL}/api/Movies/AllMovies/${false}`, requestOptions)
       .then((response) => {
         if (!response.ok) {
           return Promise.reject(response);
