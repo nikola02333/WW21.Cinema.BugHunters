@@ -13,7 +13,7 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
         Task<GenericResult<CinemaDomainModel>> GetAllAsync();
         Task<GenericResult<CinemaDomainModel>> AddCinemaAsync(CinemaDomainModel newCinema);
 
-        GenericResult<CinemaDomainModel> DeleteCinema(int id);
+        Task<GenericResult<CinemaDomainModel>> DeleteCinemaAsync(int id);
         Task<GenericResult<CinemaDomainModel>> GetCinemaById(int id);
 
         Task<GenericResult<CinemaDomainModel>> UpdateCinema(CinemaDomainModel updateCinema);

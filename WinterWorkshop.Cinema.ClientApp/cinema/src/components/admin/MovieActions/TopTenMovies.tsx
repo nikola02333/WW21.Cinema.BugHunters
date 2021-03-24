@@ -164,9 +164,11 @@ const TopTenMovies: React.FC = (props: any) => {
       <Row className="year-filter">
         <span className="filter-heading">Filter by:</span>
         <select
-          onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+        
+          /*/onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
             getTopTenMoviesByYear(e.target.value)
           }
+        */
           name="movieYear"
           id="movieYear"
           className="select-dropdown"

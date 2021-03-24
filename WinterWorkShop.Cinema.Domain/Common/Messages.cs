@@ -74,6 +74,7 @@
         public const string USER_ID_NULL = "Error occured while getting user by Id, please try again.";
         public const string USER_CREATION_ERROR = "Error occured while creating new user, please try again.";
         public const string USER_CREATION_ERROR_USERNAME_EXISTS = "Error occured while creating new user, username exists.";
+        public const string USER_INCREMENT_POINTS_ERROR = "Error occured while  incrementing user points.";
         #endregion
 
         #region Ticket       

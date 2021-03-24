@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../appSettings";
-import { Row,Button } from "react-bootstrap";
+import { Row,Button, Container } from "react-bootstrap";
 import { getUserName, getRole } from "../helpers/authCheck";
 import { withRouter } from "react-router";
 import { IProjection, IUser, IReservation } from "../../models";
@@ -36,6 +36,29 @@ const UserProfile: React.FC = () => {
     getUserByUsername();
     hideSingUpButtonElement();
   }, []);
+
+  useEffect(  ()=> {
+    
+    let userName= getUserName();
+    async function fetchUserByUsername(){
+    let data = await userService.getUserByUsername(userName);
+
+     let user123 :IUser= {
+       id : data.id,
+       firstName: data.firstName,
+       lastName : data.lastName,
+       bonusPoints: data.bonusPoints
+     }
+      setState((prevState)=> ({...prevState, user: data}));
+
+    }
+    if(userName != null)
+    {
+      fetchUserByUsername()
+    }
+    
+   
+  },[]);
 
   const hideSingUpButtonElement = () => {
     let singUpButton = document.getElementById("singUp");
@@ -146,8 +169,7 @@ const UserProfile: React.FC = () => {
   };
 
   return (
-    <React.Fragment>
-     <div className="container">
+     <div className="container d-flex justify-content-center ">
     <div className="row">
     <div className="col-md-auto">
       <Row className="no-gutters pt-3">
@@ -178,8 +200,10 @@ const UserProfile: React.FC = () => {
                 <p className="card-text">
                   <strong>Status: </strong> {getRole()}
                 </p>
-                <Button type="submit" variant="danger" id="delete" >Delete User</Button>
-                <Button type="submit"  variant="primary" id="edit" >Save User</Button>
+                <div className="d-flex justify-content-center">
+                <Button type="submit" className="mx-1" variant="danger" id="delete" >Delete User</Button>
+                <Button type="submit" className="mx-1" variant="primary" id="edit" >Save User</Button>
+                </div>
               </div>
             </div>
           </div>
@@ -189,7 +213,6 @@ const UserProfile: React.FC = () => {
       </div>
         </div>
         </div>
-    </React.Fragment>
   );
 };
 

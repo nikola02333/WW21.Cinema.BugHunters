@@ -19,7 +19,7 @@ export const getRole = () => {
 export const getUserName = () => {
   let decodedToken = getDecodedToken();
   if (!decodedToken) {
-    return;
+    return '';
   }
 
   return decodedToken.sub;

@@ -210,5 +210,33 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             return Accepted();
         }
+        [HttpPost]
+        [Route("IncrementPoints/{userId}")]
+        public async Task<ActionResult<GenericResult<UserDomainModel>>> IncrementBonusPointsForUser(Guid userId)
+        {
+            if(userId == Guid.Empty)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = Messages.USER_ID_NULL,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+                return BadRequest(errorResponse);
+            }
+
+           var userResult= await _userService.IncrementBonusPointsForUser(userId);
+
+            if(!userResult.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = Messages.USER_INCREMENT_POINTS_ERROR,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+                return BadRequest(errorResponse);
+            }
+
+            return Accepted();
+        }
     }
 }

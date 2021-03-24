@@ -52,20 +52,21 @@ const Projection: React.FC = (props: any) => {
         ],
       },
     ],
-    cinemas: [
-      { id: "",
-       name: "",
-      }],
+    cinemas: [{ id: "", name: "",address:"",cityName:"" }],
     auditoriums: [
       {
         id: "",
         name: "",
+        numberOfSeats:0,
+        seatRows: 0
       },
     ],
     filteredAuditoriums: [
       {
         id: "",
         name: "",
+        numberOfSeats:0,
+        seatRows: 0
       },
     ],
     filteredMovies: [
@@ -109,9 +110,9 @@ const Projection: React.FC = (props: any) => {
   });
 
   useEffect(() => {
-    getCurrentMoviesAndProjections();
     getAllCinemas();
     getAllAuditoriums();
+    getCurrentMoviesAndProjections();
   }, []);
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {

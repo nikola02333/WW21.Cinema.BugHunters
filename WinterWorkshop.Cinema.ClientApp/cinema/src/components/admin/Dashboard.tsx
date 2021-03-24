@@ -46,10 +46,10 @@ const Dashboard: React.FC = () => {
             path="/dashboard/EditMovie/:id"
             component={EditMovie}
           />
-          <PrivateRouteAdmin
+           <PrivateRouteAdmin
             path="/dashboard/NewCinema"
             component={NewCinema}
-          />
+          /> 
           <PrivateRouteAdmin
             path="/dashboard/AllCinemas"
             component={ShowAllCinemas}
@@ -58,10 +58,10 @@ const Dashboard: React.FC = () => {
             path="/dashboard/EditCinema/:id"
             component={EditCinema}
           />
-          <PrivateRouteAdmin
+         <PrivateRouteAdmin
             path="/dashboard/NewAuditorium"
             component={NewAuditorium}
-          />
+          /> 
           <PrivateRouteAdmin
             path="/dashboard/EditAuditorium"
             component={EditAuditorium}

@@ -21,8 +21,10 @@ namespace WinterWorkShop.Cinema.Repositories
         }
 
         public Data.Cinema Delete(object id)
+
+
         {
-            Data.Cinema existing = _cinemaContext.Cinemas.Include(a=>a.Auditoriums).Where(c => c.Id ==(int)id).FirstOrDefault();
+            Data.Cinema existing = _cinemaContext.Cinemas.Where(c => c.Id ==(int)id).FirstOrDefault();
 
             var result = _cinemaContext.Cinemas.Remove(existing);
 

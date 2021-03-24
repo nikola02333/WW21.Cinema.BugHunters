@@ -19,8 +19,6 @@ namespace WinterWorkShop.Cinema.Repositories
 
         Tag GetTagByRating(double tagRating);
 
-        Task<IEnumerable<Tag>> GetTagsByTagNameAndTagValue(string tagName, string tagValue);
-
         void Attach(Tag tag);
     }
     public class TagsRepository : ITagsRepository
@@ -61,6 +59,7 @@ namespace WinterWorkShop.Cinema.Repositories
         public Tag GetTagByValue(string tagValue)
         {
             return  _cinemaContext.Tags.Where(tag => tag.TagValue == tagValue).SingleOrDefault();
+            //return _cinemaContext.Tags.Where(tag => tag.TagValue.Contains(tagValue) ==true ).SingleOrDefault();
         }
 
         public Tag GetTagByRating(double tagRating)
@@ -98,10 +97,6 @@ namespace WinterWorkShop.Cinema.Repositories
             return updatedEntry;
         }
 
-        public async Task<IEnumerable<Tag>> GetTagsByTagNameAndTagValue(string tagName, string tagValue)
-        {
-            var result = await _cinemaContext.Tags.Where(t => t.TagName == tagName).Where(t => t.TagValue == tagValue).ToListAsync();
-            return result;
-        }
+        
     }
 }

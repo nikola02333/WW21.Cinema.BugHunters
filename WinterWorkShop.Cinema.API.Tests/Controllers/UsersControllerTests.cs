@@ -545,6 +545,81 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 
         }
 
-       
+        [TestMethod]
+        public async Task IncrementBonusPointsForUser_When_UserId_Not_Guid_Returns_BadRequest()
+        {
+
+            var expectedStatusCode = 400;
+            var expectedMessage = Messages.USER_ID_NULL;
+
+            // ACT
+            var result = await _userController.IncrementBonusPointsForUser(Guid.Empty);
+
+
+            var usersResult = ((BadRequestObjectResult)result.Result).Value;
+
+            var message = (ErrorResponseModel)usersResult;
+
+            var errorStatusCode = (BadRequestObjectResult)result.Result;
+
+            //Assert
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+
+            Assert.AreEqual(expectedMessage, message.ErrorMessage);
+            Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task IncrementBonusPointsForUser_When_Called_Retun_Acepted()
+        {
+
+            var expectedStatusCode = 202;
+            var userId = Guid.NewGuid();
+            var incrementResult = new GenericResult<UserDomainModel>
+            {
+                IsSuccessful = true,
+
+            };
+            _mockUserService.Setup(srvc => srvc.IncrementBonusPointsForUser(userId)).ReturnsAsync(incrementResult);
+            // ACT
+            var result = await _userController.IncrementBonusPointsForUser(userId);
+
+
+            var usersResult = ((AcceptedResult)result.Result);
+
+
+            //Assert
+            Assert.IsInstanceOfType(result.Result, typeof(AcceptedResult));
+
+            Assert.AreEqual(expectedStatusCode, usersResult.StatusCode);
+        }
+
+        [TestMethod]
+        public async Task IncrementBonusPointsForUser_When_IsSuccessful_False_Retunrs_BadRerqest()
+        {
+
+            var expectedStatusCode = 400;
+            var expectedMessage = Messages.USER_INCREMENT_POINTS_ERROR;
+            var userId = Guid.NewGuid();
+            var incrementResult = new GenericResult<UserDomainModel>
+            {
+                IsSuccessful = false,
+                ErrorMessage= Messages.USER_INCREMENT_POINTS_ERROR
+
+            };
+            _mockUserService.Setup(srvc => srvc.IncrementBonusPointsForUser(userId)).ReturnsAsync(incrementResult);
+            // ACT
+            var result = await _userController.IncrementBonusPointsForUser(userId);
+
+
+            var usersResult = ((BadRequestObjectResult)result.Result).Value;
+
+            var message = (ErrorResponseModel)usersResult;
+            var errorStatusCode = (BadRequestObjectResult)result.Result;
+            //Assert
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(expectedMessage, message.ErrorMessage);
+            Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
+        }
     }
 }
