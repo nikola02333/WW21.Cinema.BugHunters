@@ -100,7 +100,16 @@ async function getAllMovies()
                           .then( response=> {
                             return response.data;
                           })
-                         
+                          .catch(err => {
+                            if (err.response) {
+                              NotificationManager.error(err.response.data.errorMessage);
+                            } else if (err.request) {
+                              NotificationManager.error("Server Error");
+                            } else {
+                              // anything else
+                            }
+                        });
+                          /*
                           .catch(error => {
                            
                             if (error.status) {
@@ -108,7 +117,7 @@ async function getAllMovies()
                               NotificationManager.error(error.response.data.errorMessage);
                             }
                             
-                            });
+                            });*/
       
   }
   

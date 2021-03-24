@@ -75,6 +75,10 @@ const Movies: React.FC = (props: any) => {
       setState({ ...state, isLoading: true });
      
       var movies= await movieService.getAllMovies();
+      if(movies === undefined)
+      {
+        return;
+      }
       setState({ ...state, movies: movies, isLoading: false });
    
   };
