@@ -130,8 +130,6 @@ const ShowAllCinemas: React.FC = (props: any) => {
           <th>City name</th>
           <th></th>
           <th></th>
-          <th></th>
-          <th></th>
         </tr>
       </thead>
       <tbody>{rowsData}</tbody>
