@@ -86,7 +86,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public async Task<IEnumerable<Seat>> GetSeatsByAuditoriumIdAsync(int auditoriumId)
         {
-            var seats =await _cinemaContext.Seats.Where(x => x.AuditoriumId == auditoriumId).ToListAsync();
+            var seats =await _cinemaContext.Seats.Where(x => x.AuditoriumId == auditoriumId).OrderBy(x=>x.Row).ThenBy(x=>x.Number).ToListAsync();
 
             return seats;
         }

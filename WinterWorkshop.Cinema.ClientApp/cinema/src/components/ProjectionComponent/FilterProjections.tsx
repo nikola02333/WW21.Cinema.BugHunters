@@ -68,7 +68,7 @@ const FilterProjections = memo((props : Props) =>{
       filteredMovies: [
         {
           id: "",
-          bannerUrl: "",
+          coverPicture: "",
           title: "",
           rating: 0,
           year: "",

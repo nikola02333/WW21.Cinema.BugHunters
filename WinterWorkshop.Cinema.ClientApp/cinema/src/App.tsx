@@ -8,7 +8,6 @@ import { NotificationContainer } from 'react-notifications';
 // components
 import Header from './components/Header';
 import ProjectionDetails from './components/user/ProjectionDetails';
-import Projection from './components/user/Projection';
 import Projections from './components/ProjectionComponent/Projections'
 import Dashboard from './components/admin/Dashboard';
 import UserProfile from "../src/components/user/UserProfile";

@@ -26,9 +26,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [HttpGet]
         public async Task<ActionResult<GenericResult<TicketDomainModel>>> GetAsync()
         {
-            GenericResult<TicketDomainModel> ticketDomainModels;
-
-            ticketDomainModels = await _ticketService.GetAllAsync();
+            var ticketDomainModels = await _ticketService.GetAllAsync();
 
             return Ok(ticketDomainModels.DataList);
         }
@@ -37,9 +35,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("{id:guid}")]
         public async Task<ActionResult<GenericResult<TicketDomainModel>>> GetByIdAsync(Guid id)
         {
-            GenericResult<TicketDomainModel> ticketDomainModels;
+            
 
-            ticketDomainModels = await _ticketService.GetTicketByIdAsync(id);
+           var ticketDomainModels = await _ticketService.GetTicketByIdAsync(id);
 
             if (!ticketDomainModels.IsSuccessful)
             {
@@ -53,6 +51,27 @@ namespace WinterWorkShop.Cinema.API.Controllers
             }
 
             return Ok(ticketDomainModels.Data);
+        }
+
+        [HttpGet]
+        [Route("GetByUserId/{id:guid}")]
+        public async Task<ActionResult<GenericResult<TicketDomainModel>>> GetByUserIdAsync(Guid id)
+        {
+
+            var ticketDomainModels = await _ticketService.GetTicketByUserIdAsync(id);
+
+            if (!ticketDomainModels.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = ticketDomainModels.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
+            return Ok(ticketDomainModels.DataList);
         }
 
         [HttpPost]
@@ -97,7 +116,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
                 return BadRequest(errorResponse);
             }
-            return CreatedAtAction("GetById", new { Id = createTicket.Data.Id }, createTicket.Data);
+            return CreatedAtAction("GetById", new { Id = createTicket.DataList[0].Id }, createTicket.DataList);
         }
 
         [HttpDelete]

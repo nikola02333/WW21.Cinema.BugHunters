@@ -6,5 +6,5 @@ export const getRoundedRating = (rating: number) => {
   };
 
 export const navigateToProjectionDetails = (id: string, movieId: string, props) => {
-    props.history.push(`projectiondetails/${id}/${movieId}`);
+    props.history.push(`TicketReservation/${id}/${movieId}`);
   };

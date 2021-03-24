@@ -68,7 +68,6 @@ namespace WinterWorkShop.Cinema.API
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<ILevi9PaymentService, Levi9PaymentService>();
             services.AddTransient<ITicketService, TicketService>();
-            services.AddTransient<ITicketServiceFunction, TicketService>();
 
 
             services.AddTransient<ITagService, TagService>();

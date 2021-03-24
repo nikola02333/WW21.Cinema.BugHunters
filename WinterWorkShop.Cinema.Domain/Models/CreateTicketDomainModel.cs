@@ -6,7 +6,7 @@ namespace WinterWorkShop.Cinema.Domain.Models
 {
     public class CreateTicketDomainModel
     {
-        public Guid SeatId { get; set; }
+        public List<Guid> SeatId { get; set; }
 
         public Guid UserId { get; set; }
 
