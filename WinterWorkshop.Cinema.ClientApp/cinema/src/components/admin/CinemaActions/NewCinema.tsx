@@ -116,7 +116,7 @@ const NewCinema: React.FC = (props: any) => {
                     fieldKey={[field.fieldKey, 'seatRows']}
                     rules={[{ required: true, message: 'Missing number of rows' }]}
                   >
-                    <InputNumber min={1}   placeholder="Number of rows" />
+                    <InputNumber min={1}   placeholder="Rows" />
                   </Form.Item>
                   <Form.Item
                     {...field}
@@ -124,7 +124,7 @@ const NewCinema: React.FC = (props: any) => {
                     fieldKey={[field.fieldKey, 'numberOfSeats']}
                     rules={[{ required: true, message: 'Missing number of seats' }]}
                   >
-                    <InputNumber min={1}    placeholder="Number of seats" />
+                    <InputNumber min={1}    placeholder="Seats" />
                   </Form.Item>
                   <MinusCircleOutlined onClick={() => remove(field.name)} />
                 </Space>
@@ -146,21 +146,6 @@ const NewCinema: React.FC = (props: any) => {
         </Col>
       </Row>
       <Row className="mt-2">
-        {/* <Col className="justify-content-center align-content-center">
-          <h2 className="form-header">Auditorium Preview</h2>
-          <div>
-            <Row className="justify-content-center">
-              <table className="table-cinema-auditorium">
-                <tbody>{renderRows(state.seatRows, state.numberOfSeats)}</tbody>
-              </table>
-            </Row>
-            <Row className="justify-content-center mb-4">
-              <div className="text-center text-white font-weight-bold cinema-screen">
-                CINEMA SCREEN
-              </div>
-            </Row>
-          </div>
-        </Col> */}
       </Row>
      
     </Container>
