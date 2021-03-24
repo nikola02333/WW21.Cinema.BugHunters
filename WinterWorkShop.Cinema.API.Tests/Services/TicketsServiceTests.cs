@@ -90,13 +90,13 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _createTicketDomainModel = new CreateTicketDomainModel
             {
                 ProjectionId = Guid.NewGuid(),
-                SeatId = Guid.NewGuid(),
+                SeatId = new List<Guid> { Guid.NewGuid() },
                 UserId = Guid.NewGuid(),
             };
-            _reservedSeats = new List<Seat> { new Seat { Id = _createTicketDomainModel.SeatId, AuditoriumId = 1, Number = 2, Row = 2 } };
+            _reservedSeats = new List<Seat> { new Seat { Id = _createTicketDomainModel.SeatId[0], AuditoriumId = 1, Number = 2, Row = 2 } };
             _seatById = new Seat
             {
-                Id = _createTicketDomainModel.SeatId,
+                Id = _createTicketDomainModel.SeatId[0],
                 AuditoriumId = 1,
                 Number = 2,
                 Row = 2
@@ -291,36 +291,38 @@ namespace WinterWorkShop.Cinema.Tests.Services
             var genericResult = new GenericResult<TicketDomainModel>
             {
                 IsSuccessful = true,
-                Data = new TicketDomainModel
-                {
-                    Created = _ticketCreated,
-                    Id = _ticketId,
-                    Price = 300,
-                    Projection = new ProjectionDomainModel
+                DataList =new List<TicketDomainModel>{
+                    new TicketDomainModel
                     {
-                        ProjectionTime = _date,
-                        MovieTitle = "Film",
-                        MovieId = _movieId,
-                        Id = _createTicketDomainModel.ProjectionId,
+                        Created = _ticketCreated,
+                        Id = _ticketId,
+                        Price = 300,
+                        Projection = new ProjectionDomainModel
+                        {
+                            ProjectionTime = _date,
+                            MovieTitle = "Film",
+                            MovieId = _movieId,
+                            Id = _createTicketDomainModel.ProjectionId,
+                            AuditoriumId = 1,
+                        Duration = 100,
+                            AuditoriumName = "Auditorium"
+                    },
+                        Seat = new SeatDomainModel
+                    {
+                            Id = _createTicketDomainModel.SeatId[0],
                         AuditoriumId = 1,
-                    Duration = 100,
-                        AuditoriumName = "Auditorium"
-                },
-                    Seat = new SeatDomainModel
-                {
-                        Id = _createTicketDomainModel.SeatId,
-                    AuditoriumId = 1,
-                    Number = 2,
-                    Row = 2
-                },
-                    User = new UserDomainModel
-                {
-                        Id = _createTicketDomainModel.UserId,
-                    FirstName = "sasa",
-                    LastName = "gataric",
-                        UserName = "sasag",
-                        Role = "admin"
-                        
+                        Number = 2,
+                        Row = 2
+                    },
+                        User = new UserDomainModel
+                    {
+                            Id = _createTicketDomainModel.UserId,
+                        FirstName = "sasa",
+                        LastName = "gataric",
+                            UserName = "sasag",
+                            Role = "admin"
+
+                        }
                     }
                 }
             };
@@ -357,11 +359,11 @@ namespace WinterWorkShop.Cinema.Tests.Services
             };
 
 
-            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_reservedSeatsEmpty);
-            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.SeatId)).ReturnsAsync(_seatById);
-            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.UserId)).ReturnsAsync(_userById);
-            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_projectionById);
-            _mockSeatsRepository.Setup(repo => repo.GetSeatInProjectionAuditoriumAsync(_createTicketDomainModel.SeatId, _createTicketDomainModel.ProjectionId)).ReturnsAsync(_seatById);
+            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(It.IsAny<Guid>())).ReturnsAsync(_reservedSeatsEmpty);
+            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_seatById);
+            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_userById);
+            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_projectionById);
+            _mockSeatsRepository.Setup(repo => repo.GetSeatInProjectionAuditoriumAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(_seatById);
             _mockTicketRepository.Setup(repo => repo.InsertAsync(It.IsAny<Ticket>())).ReturnsAsync(ticketForInsert);
             _mockTicketRepository.Setup(repo => repo.GetByIdAsync(_ticketId)).ReturnsAsync(insertedTicketById);
 
@@ -370,9 +372,9 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _mockTicketRepository.Verify(repo => repo.InsertAsync(It.IsAny<Ticket>()),Times.Once);
 
             //Assert
-            Assert.IsNotNull(resultAction.Data);
+            Assert.IsNotNull(resultAction.DataList);
             Assert.IsInstanceOfType(resultAction, typeof(GenericResult<TicketDomainModel>));
-            Assert.AreEqual(genericResult.Data.Id, resultAction.Data.Id);
+            Assert.AreEqual(genericResult.DataList[0].Id, resultAction.DataList[0].Id);
             Assert.IsTrue(genericResult.IsSuccessful);
         }
 
@@ -409,10 +411,10 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 IsSuccessful = false,
                 ErrorMessage = Messages.SEAT_GET_BY_ID
             };
-            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_reservedSeatsEmpty);
-            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.SeatId)).ReturnsAsync(seatById);
-            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.UserId)).ReturnsAsync(_userById);
-            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_projectionById);
+            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(It.IsAny<Guid>())).ReturnsAsync(_reservedSeatsEmpty);
+            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(seatById);
+            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_userById);
+            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_projectionById);
 
             //Act
             var resultAction = await _ticketService.CreateTicketAsync(_createTicketDomainModel);
@@ -434,12 +436,12 @@ namespace WinterWorkShop.Cinema.Tests.Services
             var genericResult = new GenericResult<TicketDomainModel>
             {
                 IsSuccessful = false,
-                ErrorMessage = Messages.SEAT_GET_BY_ID + Messages.USER_ID_NULL
+                ErrorMessage = Messages.USER_ID_NULL+ Messages.SEAT_GET_BY_ID 
             };
-            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_reservedSeatsEmpty);
-            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.SeatId)).ReturnsAsync(seatById);
-            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.UserId)).ReturnsAsync(userById);
-            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_projectionById);
+            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(It.IsAny<Guid>())).ReturnsAsync(_reservedSeatsEmpty);
+            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(seatById);
+            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(userById);
+            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_projectionById);
 
           
             //Act
@@ -463,12 +465,12 @@ namespace WinterWorkShop.Cinema.Tests.Services
             var genericResult = new GenericResult<TicketDomainModel>
             {
                 IsSuccessful = false,
-                ErrorMessage = Messages.SEAT_GET_BY_ID + Messages.USER_ID_NULL + Messages.PROJECTION_GET_BY_ID
+                ErrorMessage = Messages.USER_ID_NULL + Messages.PROJECTION_GET_BY_ID + Messages.SEAT_GET_BY_ID 
             };
-            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_reservedSeatsEmpty);
-            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.SeatId)).ReturnsAsync(seatById);
-            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.UserId)).ReturnsAsync(userById);
-            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(projectionById);
+            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(It.IsAny<Guid>())).ReturnsAsync(_reservedSeatsEmpty);
+            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(seatById);
+            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(userById);
+            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(projectionById);
 
             //Act
             var resultAction = await _ticketService.CreateTicketAsync(_createTicketDomainModel);
@@ -489,11 +491,11 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 IsSuccessful = false,
                 ErrorMessage = Messages.SEAT_NOT_IN_AUDITORIUM_OF_PROJECTION
             };
-            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_reservedSeatsEmpty);
-            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.SeatId)).ReturnsAsync(_seatById);
-            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.UserId)).ReturnsAsync(_userById);
-            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_projectionById);
-            _mockSeatsRepository.Setup(repo => repo.GetSeatInProjectionAuditoriumAsync(_createTicketDomainModel.SeatId, _createTicketDomainModel.ProjectionId)).ReturnsAsync(seatByIdNotInProjection);
+            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(It.IsAny<Guid>())).ReturnsAsync(_reservedSeatsEmpty);
+            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_seatById);
+            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_userById);
+            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_projectionById);
+            _mockSeatsRepository.Setup(repo => repo.GetSeatInProjectionAuditoriumAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(seatByIdNotInProjection);
 
             //Act
             var resultAction = await _ticketService.CreateTicketAsync(_createTicketDomainModel);
@@ -515,11 +517,11 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 IsSuccessful = false,
                 ErrorMessage = Messages.TICKET_CREATION_ERROR
             };
-            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_reservedSeatsEmpty);
-            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.SeatId)).ReturnsAsync(_seatById);
-            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.UserId)).ReturnsAsync(_userById);
-            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_projectionById);
-            _mockSeatsRepository.Setup(repo => repo.GetSeatInProjectionAuditoriumAsync(_createTicketDomainModel.SeatId, _createTicketDomainModel.ProjectionId)).ReturnsAsync(_seatById);
+            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(It.IsAny<Guid>())).ReturnsAsync(_reservedSeatsEmpty);
+            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_seatById);
+            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_userById);
+            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_projectionById);
+            _mockSeatsRepository.Setup(repo => repo.GetSeatInProjectionAuditoriumAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(_seatById);
             _mockTicketRepository.Setup(repo => repo.InsertAsync(It.IsAny<Ticket>())).ReturnsAsync(returnInserted);
 
             //Act
@@ -561,13 +563,13 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 User = _userById,
                 Price = 300
             };
-            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_reservedSeatsEmpty);
-            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.SeatId)).ReturnsAsync(_seatById);
-            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.UserId)).ReturnsAsync(_userById);
-            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(_createTicketDomainModel.ProjectionId)).ReturnsAsync(_projectionById);
-            _mockSeatsRepository.Setup(repo => repo.GetSeatInProjectionAuditoriumAsync(_createTicketDomainModel.SeatId, _createTicketDomainModel.ProjectionId)).ReturnsAsync(_seatById);
+            _mockSeatsRepository.Setup(repo => repo.GetReservedSeatsForProjectionAsync(It.IsAny<Guid>())).ReturnsAsync(_reservedSeatsEmpty);
+            _mockSeatsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_seatById);
+            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_userById);
+            _mockProjectionsRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(_projectionById);
+            _mockSeatsRepository.Setup(repo => repo.GetSeatInProjectionAuditoriumAsync(It.IsAny<Guid>(), It.IsAny<Guid>())).ReturnsAsync(_seatById);
             _mockTicketRepository.Setup(repo => repo.InsertAsync(It.IsAny<Ticket>())).ReturnsAsync(ticketForInsert);
-            _mockTicketRepository.Setup(repo => repo.GetByIdAsync(_ticketId)).ReturnsAsync(insertedTicketById);
+            _mockTicketRepository.Setup(repo => repo.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(insertedTicketById);
 
             //Act
             var resultAction = await _ticketService.CreateTicketAsync(_createTicketDomainModel);

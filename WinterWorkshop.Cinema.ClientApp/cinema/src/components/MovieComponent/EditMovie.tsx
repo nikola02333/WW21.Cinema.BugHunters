@@ -48,7 +48,7 @@ const EditMovie: React.FC = (props: any) => {
     var movie = await movieService.searchMovieById(movieId);
     if(movie != undefined)
     {
-      debugger
+     
       setState({
         ...state,
         title: movie.title,

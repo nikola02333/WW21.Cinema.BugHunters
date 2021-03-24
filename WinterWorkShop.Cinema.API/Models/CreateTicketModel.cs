@@ -12,7 +12,7 @@ namespace WinterWorkShop.Cinema.API.Models
     {
         [Required]
         [RegularExpression("^((?!00000000-0000-0000-0000-000000000000).)*$", ErrorMessage = "Cannot use default Guid")]
-        public Guid SeatId { get; set; }
+        public List<Guid> SeatId { get; set; }
 
         [Required]
         [RegularExpression("^((?!00000000-0000-0000-0000-000000000000).)*$", ErrorMessage = "Cannot use default Guid")]

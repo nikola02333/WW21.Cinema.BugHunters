@@ -26,7 +26,7 @@ interface IState {
   submitted: boolean;
   canSubmit: boolean;
   tags: string;
-  bannerUrl: string;
+  coverPicture: string;
   yearError: string;
   genre: string;
   genreError: string;
@@ -42,7 +42,7 @@ const NewMovie: React.FC = (props: any) => {
     submitted: false,
     canSubmit: true,
     tags: "",
-    bannerUrl: "",
+    coverPicture: "",
     yearError: "",
     genre: "romance",
   genreError: ""
@@ -60,7 +60,7 @@ const NewMovie: React.FC = (props: any) => {
   };
 
   const handleBannerUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setState({ ...state, bannerUrl: e.target.value });
+    setState({ ...state, coverPicture: e.target.value });
   };
 
   const validate = (id: string, value: string) => {
@@ -126,7 +126,7 @@ const NewMovie: React.FC = (props: any) => {
       Current: ( (state.current.toString() === 'true') ? true: false),
       Rating: +state.rating,
       Tags: state.tags,
-      CoverPicture: state.bannerUrl,
+      CoverPicture: state.coverPicture,
       genre: state.genre
     };
    await movieService.createMovie(movieToCreate);
@@ -214,10 +214,10 @@ const NewMovie: React.FC = (props: any) => {
               className="add-new-form"
             />
             <FormControl
-              id="bannerUrl"
+              id="coverPicture"
               type="text"
               placeholder="Banner Url"
-              value={state.bannerUrl}
+              value={state.coverPicture}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 handleBannerUrlChange(e);
               }}

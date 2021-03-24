@@ -1,6 +1,7 @@
 import { serviceConfig } from "../../appSettings"
 import { NotificationManager } from "react-notifications";
 import {IUserToCreateModel} from '../../models/IUserToCreateModel';
+import * as authChech from "../helpers/authCheck";
   
 
 import API from '../../axios';
@@ -79,4 +80,37 @@ function login (userName:string)  {
           .catch((error) => {
             NotificationManager.error(error.response.data.errorMessage);
           });
+};
+
+export const getUserByUsernameReservatino = (setState) => {
+  let ussName = authChech.getUserName();
+
+  const requestOptions = {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${localStorage.getItem("jwt")}`,
+    },
+  };
+
+  fetch(
+    `${serviceConfig.baseURL}/api/users/byusername/${ussName}`,
+    requestOptions
+  )
+    .then((response) => {
+      if (!response.ok) {
+        return;
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data) {
+        setState((prev)=>({ ...prev, userId: data.id }));
+        console.log("getUserByUsername");
+        console.log(data);
+      }
+    })
+    .catch((response) => {
+      NotificationManager.error(response.message || response.statusText);
+    });
 };
