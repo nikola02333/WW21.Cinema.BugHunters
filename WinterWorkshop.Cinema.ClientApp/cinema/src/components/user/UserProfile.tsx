@@ -43,6 +43,10 @@ const UserProfile: React.FC = () => {
     async function fetchUserByUsername(){
     let data = await userService.getUserByUsername(userName);
 
+    if(data === undefined)
+    {
+      return;
+    }
      let user123 :IUser= {
        id : data.id,
        firstName: data.firstName,

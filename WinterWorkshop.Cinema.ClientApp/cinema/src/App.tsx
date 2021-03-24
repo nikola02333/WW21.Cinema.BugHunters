@@ -13,7 +13,7 @@ import Dashboard from './components/admin/Dashboard';
 import UserProfile from "../src/components/user/UserProfile";
 import UserSingUp from '../src/components/user/UserSingUp';
 
-
+import Tag from './components/TagComponent/Tag';
 
 function App() {
   return (
@@ -25,6 +25,7 @@ function App() {
         <Route path="/ProjectionDetails/:id" component={ProjectionDetails} />
         <Route path="/Projections" component={Projections} />
         <Route path="/dashboard" component={Dashboard} />
+        <Route path="/AddTag" component={Tag} />
         <Route path="/userprofile" component={UserProfile} />
         <Route path="/newUser" component={UserSingUp} />
       </Switch>

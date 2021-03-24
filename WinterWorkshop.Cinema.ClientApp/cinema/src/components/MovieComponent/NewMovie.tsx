@@ -16,6 +16,7 @@ import { YearPicker } from "react-dropdown-date";
 import { movieService } from './../Services/movieService';
 import { IMovieToCreateModel } from './../../models/IMovieToCreateModel';
 import { stat } from "fs";
+import Tag from '../TagComponent/Tag';
 
 interface IState {
   title: string;
@@ -47,6 +48,10 @@ const NewMovie: React.FC = (props: any) => {
     genre: "romance",
   genreError: ""
   });
+
+  const addTag = ()=>{
+
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -213,6 +218,8 @@ const NewMovie: React.FC = (props: any) => {
               }}
               className="add-new-form"
             />
+
+            <Tag addTag={addTag}/>
             <FormControl
               id="coverPicture"
               type="text"
