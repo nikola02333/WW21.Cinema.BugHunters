@@ -309,7 +309,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
         [TestMethod]
 
-        public async Task GetByCinemaId_Returns_Auditorium()
+        public async Task GetByCinemaId_Returns_Auditoriums()
         {
             int expectedStatusCode = 200;
             int cinemaId = 2;
@@ -392,7 +392,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var expectedErrorMessage = "The name field is required.";
             var numOfSeats = 2;
             var numOfRows = 2;
-            // Username 
+          
             var auditoriumToCreate = new CreateAuditoriumModel
             {
 
@@ -420,7 +420,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task CreateAuditoriumAsync_When_IsSuccesfull_False_Returns_BadRrquest()
+        public async Task CreateAuditoriumAsync_When_IsSuccesfull_False_Returns_BadRequest()
         {
             string expectedMessage = "Error occured while creating new auditorium, please try again.";
             int expectedStatusCode = 400;
@@ -458,7 +458,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task CreateAuditoriumAsync_When_Calle_Handles_Exception_Returns_BadRequest()
+        public async Task CreateAuditoriumAsync_When_Called_Handles_Exception_Returns_BadRequest()
         {
             string expectedMessage = "Inner exception error message.";
             int expectedStatusCode = 400;
@@ -521,7 +521,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         }
 
         [TestMethod]
-        public async Task CreateAuditoriumAsync_When_called_IsSuccessful_True_returns_User()
+        public async Task CreateAuditoriumAsync_When_called_IsSuccessful_True_returns_AUditorium()
         {
 
             int expectedStatusCode = 201;

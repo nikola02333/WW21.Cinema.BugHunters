@@ -118,7 +118,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             }
 
             [TestMethod]
-            public async Task GetCinemaById_If_Id_Exists_Returns_User()
+            public async Task GetCinemaById_If_Id_Exists_Returns_Cinema()
             {
                 int cinemaId = 1;
 
@@ -169,7 +169,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             }
 
             [TestMethod]
-            public async Task AddCinema_Returns_Cinema()
+            public async Task AddCinemaAsync_Returns_Cinema()
             {
                 var cinemaId = default(int);
                 
@@ -214,7 +214,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             }
 
             [TestMethod]
-            public async Task AddCinema_If_Id_Exists_Returns_Cinema_Already_Exists()
+            public async Task AddCinemaAsync_If_Id_Exists_Returns_Cinema_Already_Exists()
             {
                 var cinemaId = 1;
                

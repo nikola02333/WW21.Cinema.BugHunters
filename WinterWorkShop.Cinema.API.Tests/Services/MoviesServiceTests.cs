@@ -224,15 +224,31 @@ namespace WinterWorkShop.Cinema.Tests.Services
             var movieId = Guid.NewGuid();
             var isSuccesful = false;
             var expectedMessage = Messages.MOVIE_DOES_NOT_EXIST;
-
-            
-
-           
-
+              
             _mockMovieRepository.Setup(srvc => srvc.Delete(movieId)).Returns(It.IsNotNull<Movie>());
             // Act
 
             var result =await _moviesService.DeleteMovieAsync(movieId);
+
+            //Arrange
+            Assert.IsInstanceOfType(result, typeof(GenericResult<MovieDomainModel>));
+            Assert.AreEqual(isSuccesful, result.IsSuccessful);
+            Assert.AreEqual(expectedMessage, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public async Task DeleteMovieAsync_When_movieDeleted_Null_Returns_Movie_Delete_Error()
+        {
+            var movieId = Guid.NewGuid();
+            var isSuccesful = false;
+            var movieToDelete = new Movie();
+            var expectedMessage = Messages.MOVIE_DELETE_ERROR;
+
+            _mockMovieRepository.Setup(srvc => srvc.GetByIdAsync(movieId)).ReturnsAsync(movieToDelete);
+            _mockMovieRepository.Setup(srvc => srvc.Delete(movieId)).Returns(It.IsAny<Movie>());
+            // Act
+
+            var result = await _moviesService.DeleteMovieAsync(movieId);
 
             //Arrange
             Assert.IsInstanceOfType(result, typeof(GenericResult<MovieDomainModel>));
