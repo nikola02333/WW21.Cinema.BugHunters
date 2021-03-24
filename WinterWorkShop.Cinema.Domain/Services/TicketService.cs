@@ -11,11 +11,7 @@ using WinterWorkShop.Cinema.Repositories;
 
 namespace WinterWorkShop.Cinema.Domain.Services
 {
-    public interface ITicketServiceFunction
-    {
-        TicketDomainModel createTicketDomainModel(Ticket ticket);
-    }
-    public class TicketService : ITicketService, ITicketServiceFunction
+    public class TicketService : ITicketService
     {
         private readonly ITicketsRepository _ticketsRepository;
         private readonly ISeatsRepository _seatsRepository;
@@ -254,6 +250,37 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Role = ticket.User.Role
                 }
             };
+        }
+
+        public async Task<GenericResult<TicketDomainModel>> GetTicketByUserIdAsync(Guid id)
+        {
+            var user = await _usersRepository.GetByIdAsync(id);
+            if(user == null)
+            {
+                return new GenericResult<TicketDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.USER_NOT_FOUND
+                };
+            }
+
+            var tickets = await _ticketsRepository.GetByUserId(id);
+
+            List<TicketDomainModel> result = new List<TicketDomainModel>();
+            TicketDomainModel model;
+            foreach (var item in tickets)
+            {
+                model = createTicketDomainModel(item);
+                result.Add(model);
+            }
+
+            return new GenericResult<TicketDomainModel>
+            {
+                IsSuccessful = true,
+                DataList = result
+            };
+
+
         }
     }
 }

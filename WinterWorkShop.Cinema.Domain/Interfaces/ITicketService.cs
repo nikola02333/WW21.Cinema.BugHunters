@@ -4,6 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Domain.Models;
 using WinterWorkShop.Cinema.Domain.Common;
+using WinterWorkShop.Cinema.Data.Entities;
 
 namespace WinterWorkShop.Cinema.Domain.Interfaces
 {
@@ -19,6 +20,10 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
 
         Task<GenericResult<TicketDomainModel>> DeleteTicketAsync(Guid id);
 
-        
+        Task<GenericResult<TicketDomainModel>> GetTicketByUserIdAsync(Guid id);
+
+        TicketDomainModel createTicketDomainModel(Ticket ticket);
+
+
     }
 }

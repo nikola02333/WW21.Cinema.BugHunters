@@ -11,7 +11,7 @@ namespace WinterWorkShop.Cinema.Repositories
 {
     public interface ITicketsRepository : IRepository<Ticket>
     {
-
+        Task<IEnumerable<Ticket>> GetByUserId(Guid id);
     }
     public class TicketsRepository : ITicketsRepository
     {
@@ -73,6 +73,15 @@ namespace WinterWorkShop.Cinema.Repositories
         public void SaveAsync()
         {
             _cinemaContext.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Ticket>> GetByUserId(Guid id)
+        {
+            var tickets =await _cinemaContext.Tickets.Where(x=>x.UserId == id).Include(x => x.Projection).ThenInclude(x => x.Movie)
+                                                    .Include(x => x.Projection).ThenInclude(x => x.Auditorium)
+                                                    .Include(x => x.User).Include(x => x.Seat)
+                                                    .ToListAsync();
+            return tickets;
         }
     }
 }
