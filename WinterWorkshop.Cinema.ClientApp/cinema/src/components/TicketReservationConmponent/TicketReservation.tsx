@@ -13,29 +13,26 @@ import * as Service from "../Services/SeatsService";
 import ShowAuditorium from "./ShowAuditorium";
 import {getUserByUsername} from "../Services/userService";
 import InfoTable from "./InfoTable";
+import {tryReservation} from "../Services/ReservationService";
+interface IcurrentReservationSeats{
+  currentSeatId:string
+}
 
-const TicketReservation:React.FC = () =>{
+const TicketReservation:React.FC = (props) =>{
     const [seat,setSeat] = useState({
         maxRow: 0,
         maxNumberOfRow: 0,
         inc: 0,
-        seats: [
-          {
-            id: "",
-            number: 0,
-            row: 0,
-          },
-        ],
+        seats: [],
         reservedSeats: [
             {
-                seatId: "",
+              auditoriumId: 0,
+              id: "",
+              number: 0,
+              row: 0,
             },
         ],
-        currentReservationSeats: [
-            {
-              currentSeatId: "",
-            },
-          ],
+        currentReservationSeats:[],
         clicked: false,
     });
     const [info, setInfo] = useState({
@@ -50,19 +47,22 @@ const TicketReservation:React.FC = () =>{
       getUserByUsername(setInfo);
     },[]);
  
-    const getSeatData=(auditoriumId,projectionId)=>{
-      Service.getReservedSeats(projectionId,setSeat);
-      Service.getSeats(auditoriumId,setSeat);
-      Service.getSeatsForAuditorium(auditoriumId,setSeat);
+     function getSeatData(auditoriumId,projectionId){
+       Service.getReservedSeats(projectionId,setSeat);
+       Service.getSeatsForAuditorium(auditoriumId,setSeat);
+       Service.getSeats(auditoriumId,setSeat);
     };
 
-    
+    function tryReservationF(e){
+      e.persist();
+      tryReservation(e,seat,info);
+    };
 
     return(
-        <Container className="d-flex justify-content-center mt-5">
-            <Col md={12} className="shadow ">
+        <Container  className="d-flex justify-content-center mt-5 ">
+            <Col  xs={12} className="shadow ">
                 <Row className="justify-content-center my-2">
-                    <Col md={10}>
+                    <Col md={10} className="mt-2">
                         <ProjectionDetails setInfo={setInfo} getSeatData={getSeatData}/>
                     </Col>
                 </Row>
@@ -73,7 +73,7 @@ const TicketReservation:React.FC = () =>{
                 <InfoTable currentReservationSeats={seat.currentReservationSeats} projectionPrice={info.projectionPrice}/>
                 </Row>
                 <Row className="justify-content-center my-2">
-                <ShowAuditorium seats={seat} setSeat={setSeat}/>
+                <ShowAuditorium tryReservation={tryReservationF} seats={seat} setSeat={setSeat} />
                 </Row>
                 
             </Col>

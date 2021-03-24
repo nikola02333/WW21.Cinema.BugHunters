@@ -2,8 +2,8 @@ import { serviceConfig } from "../../appSettings"
 import { NotificationManager } from "react-notifications";
 import {Get} from "../helpers/RequestOptions"
 
-export const getReservedSeats = (id: string, setState) => {
-    fetch(
+export async function  getReservedSeats (id: string, setState) {
+    await fetch(
      `${serviceConfig.baseURL}/api/seats/reservedByProjectionId/${id}`,
      Get
    )
@@ -20,7 +20,7 @@ export const getReservedSeats = (id: string, setState) => {
            reservedSeats: data,
          }));
          console.log("getReservedSeats");
-         console.log(data);
+         
        }
      })
      .catch((response) => {
@@ -29,8 +29,8 @@ export const getReservedSeats = (id: string, setState) => {
      });
  };
 
- export const getSeatsForAuditorium = (auditId: string,setState) => {
-    fetch(
+ export async function getSeatsForAuditorium (auditId: string,setState)  {
+   await fetch(
       `${serviceConfig.baseURL}/api/seats/maxNumberOfSeatsByAuditoriumId/${auditId}`,
       Get
     )
@@ -44,12 +44,11 @@ export const getReservedSeats = (id: string, setState) => {
         if (data) {
           setState((prev)=>({
             ...prev,
-            seats: data,
             maxRow: data.maxRow,
             maxNumberOfRow: data.maxNumber,
           }));
           console.log("getSeatsForAuditorium");
-          console.log(data);
+          
         }
       })
       .catch((response) => {
@@ -58,8 +57,8 @@ export const getReservedSeats = (id: string, setState) => {
       });
   };
 
-  export const getSeats = (auditId: string, setState) => {
-    fetch(
+  export async function getSeats (auditId: string, setState) {
+    await fetch(
       `${serviceConfig.baseURL}/api/seats/byauditoriumid/${auditId}`,
       Get
     )

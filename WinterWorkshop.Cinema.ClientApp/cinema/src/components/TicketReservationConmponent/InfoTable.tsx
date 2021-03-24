@@ -1,6 +1,6 @@
 import React,{memo} from 'react'
 
-const InfoTable = memo((props:{currentReservationSeats,projectionPrice}) =>{
+const InfoTable = (props:{currentReservationSeats,projectionPrice}) =>{
     console.log("InfoTable");
     return(
         <table className="payment-table">
@@ -24,5 +24,5 @@ const InfoTable = memo((props:{currentReservationSeats,projectionPrice}) =>{
             </tbody>
         </table>
     );
-});
+};
 export default InfoTable;
