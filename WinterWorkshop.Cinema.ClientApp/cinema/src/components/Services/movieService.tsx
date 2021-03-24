@@ -100,9 +100,14 @@ async function getAllMovies()
                           .then( response=> {
                             return response.data;
                           })
+                         
                           .catch(error => {
                            
-                            NotificationManager.error(error.response.data.errorMessage || "Server error");
+                            if (error.status) {
+                              // network error
+                              NotificationManager.error(error.response.data.errorMessage);
+                            }
+                            
                             });
       
   }

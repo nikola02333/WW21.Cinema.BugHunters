@@ -24,9 +24,7 @@ interface IState {
         shouldHide: true,
       });
 
-      useEffect( ()=> {
-        
-      },[]);
+     
     useEffect(() => {
 
           if (localStorage.getItem("userLoggedIn") !== null) {
@@ -131,6 +129,7 @@ interface IState {
       ...prev, token: false
     }));
     
+    history.push('/dashboard/Projections');
     window.location.reload();
     //getTokenForGuest();
   };

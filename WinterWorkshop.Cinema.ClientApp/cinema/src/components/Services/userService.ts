@@ -11,9 +11,11 @@ export const userService = {
     login,
     singUp,
     getUserByUsername,
-    getTokenForGuest
+    getTokenForGuest,
+    
    
 };
+
  async function getTokenForGuest()
  {
    return await API.get(`${serviceConfig.baseURL}/get-token/`)
@@ -47,8 +49,6 @@ async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
     })
     .then((data) => {
       
-      console.log(data)
-
         NotificationManager.success(`User, ${data.firstName} succesfuly register!`);
         return data;
     })
