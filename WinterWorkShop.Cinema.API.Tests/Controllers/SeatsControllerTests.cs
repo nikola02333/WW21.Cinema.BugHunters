@@ -292,5 +292,54 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
             Assert.AreEqual(resultResponse.StatusCode, expectedStatusCode);
         }
+
+        [TestMethod]
+        public async Task GetMaxNumbersOfSeatsAsync_If_Is_Successsful__False_Return_BadRequest()
+        {
+            //Arrange
+            int expectedStatusCode = 400;
+       
+            var expectedSeats = new GenericResult<SeatsMaxNumbersDomainModel>
+            {
+                IsSuccessful = false,
+            };
+
+            _mockSeatService.Setup(srvc => srvc.GetMaxNumbersOfSeatsByAuditoriumIdAsync(It.IsNotNull<int>())).ReturnsAsync(expectedSeats);
+
+            //Act
+            var result = await _seatsController.GetMaxNumbersOfSeatsAsync(It.IsNotNull<int>());
+            var seatsResult = (BadRequestObjectResult)result.Result;
+      
+            //Assert
+            Assert.IsNotNull(seatsResult);
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+            Assert.AreEqual( expectedStatusCode, seatsResult.StatusCode);
+           
+        }
+
+
+        [TestMethod]
+        public async Task GetMaxNumbersOfSeatsAsync_If_Is_Successsful__True_Return_OkObjectRequest()
+        {
+            //Arrange
+            int expectedStatusCode = 200;
+            bool isSuccessful = true;
+            var expectedSeats = new GenericResult<SeatsMaxNumbersDomainModel>
+            {
+                IsSuccessful = true,
+                Data= new SeatsMaxNumbersDomainModel { }
+            };
+
+            _mockSeatService.Setup(srvc => srvc.GetMaxNumbersOfSeatsByAuditoriumIdAsync(It.IsNotNull<int>())).ReturnsAsync(expectedSeats);
+
+            //Act
+            var result = await _seatsController.GetMaxNumbersOfSeatsAsync(It.IsNotNull<int>());
+            var seatsResult = (OkObjectResult)result.Result;
+        
+            //Assert
+            Assert.IsNotNull(seatsResult);
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
+            Assert.AreEqual(expectedStatusCode, seatsResult.StatusCode);
+        }
     }
 }

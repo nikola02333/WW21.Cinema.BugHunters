@@ -726,5 +726,44 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Assert.AreEqual(expectedResultCount, result.DataList.Count);
             Assert.IsTrue(result.IsSuccessful);
         }
+
+
+        [TestMethod]
+        public async Task ProjectionService_GetByIdAsync_If_IsSuccessful_True_Returns_Projection()
+        {
+            //Arrange
+            var isSuccessful = true;
+
+            _mockProjectionsRepository.Setup(x => x.GetByIdAsync(It.IsNotNull<Guid>())).ReturnsAsync(_projection);
+           
+            //Act
+            var result = await _projectionsService.GetByIdAsync(_projection.Id);
+
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(isSuccessful, result.IsSuccessful);
+            Assert.IsInstanceOfType(result, typeof(GenericResult<ProjectionDomainModel>));
+        }
+
+        [TestMethod]
+        public async Task ProjectionService_GetByIdAsync_If_Projection_Is_Null_Returns_Error_Message()
+        {
+            //Arrange
+            var isSuccessful = false ;
+            var expectedErrorMessage = Messages.PROJECTION_GET_BY_ID;
+            Projection projection = null;
+            _mockProjectionsRepository.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(projection);
+
+            //Act
+            var result = await _projectionsService.GetByIdAsync(It.IsAny<Guid>());
+     
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(isSuccessful, result.IsSuccessful);
+            Assert.AreEqual(expectedErrorMessage, result.ErrorMessage);
+            Assert.IsInstanceOfType(result, typeof(GenericResult<ProjectionDomainModel>));
+        }
     }
 }

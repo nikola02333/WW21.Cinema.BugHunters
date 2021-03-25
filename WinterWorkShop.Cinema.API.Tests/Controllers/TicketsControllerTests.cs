@@ -488,5 +488,61 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
 
         }
+
+        [TestMethod]
+        public async Task GetByUserIdAsync_When_IsSuccessful_False_Returns_BadRequest()
+        {
+            //Arrange
+            int expectedStatusCode = 400;
+            var expectedId = new Guid();
+            var expectedErrorMessage = Messages.USER_NOT_FOUND;
+
+            var expectedTicket = new GenericResult<TicketDomainModel>
+            {
+                IsSuccessful = false,
+                ErrorMessage = Messages.USER_NOT_FOUND
+            };
+
+            _mockTicketService.Setup(srvc => srvc.GetTicketByUserIdAsync(expectedId))
+                .ReturnsAsync(expectedTicket);
+
+            // Act
+            var result = await _ticketController.GetByUserIdAsync(expectedId);
+            var ticketResult = ((BadRequestObjectResult)result.Result).Value;
+            var error = (ErrorResponseModel)ticketResult;
+
+            //Assert
+            Assert.IsNotNull(ticketResult);
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(expectedStatusCode, ((BadRequestObjectResult)result.Result).StatusCode);
+            Assert.AreEqual(expectedErrorMessage, error.ErrorMessage);
+        }
+
+        [TestMethod]
+        public async Task GetByUserIdAsync_When_IsSuccessful_True_Returns_OkObjectResult()
+        {
+            //Arrange
+            int expectedStatusCode = 200;
+            var expectedId = new Guid();
+
+            var expectedTicket = new GenericResult<TicketDomainModel>
+            {
+                IsSuccessful = true,
+                DataList =new List<TicketDomainModel> { }
+            };
+
+            _mockTicketService.Setup(srvc => srvc.GetTicketByUserIdAsync(expectedId))
+                .ReturnsAsync(expectedTicket);
+
+            // Act
+            var result = await _ticketController.GetByUserIdAsync(expectedId);
+            var ticketResult = ((OkObjectResult)result.Result).Value;
+            
+
+            //Assert
+            Assert.IsNotNull(ticketResult);
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
+            Assert.AreEqual(expectedStatusCode, ((OkObjectResult)result.Result).StatusCode);
+        }
     }
 }
