@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import TodoForm from "./TagForm";
 //import { RiCloseCircleLine } from "react-icons/ri";
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 interface ITag {
   id: string;
   name: string;
@@ -31,12 +32,14 @@ const Tag = ({ tags, removeTag, updateTag }:IProps) => {
   if (edit.id) {
     return <TodoForm  onSubmit={submitUpdate} />;
   }
+
+   
 const toReturn =  tags.map((tag, index) => (
    <div className={"todo-row"} key={index}>
     <div key={tag.id}>{tag.name}</div>
     <div className="icons">
       <div>
-      <i className="fas fa-trash-alt"></i>
+      <FontAwesomeIcon icon={faTrash} />
       </div>
       <div
         onClick={() => removeTag(tag.id)}

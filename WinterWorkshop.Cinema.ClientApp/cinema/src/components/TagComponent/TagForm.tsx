@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import { FormControl, FormGroup } from "react-bootstrap";
 
 interface IState{
   input:string;
@@ -34,23 +35,20 @@ const TagForm :React.FC<IProps>= ({ onSubmit,...props}) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="todo-form">
-     
-        <>
-          <input
+    
+        <FormGroup>
+          <FormControl
             placeholder="Add tag"
             value={input.input}
             onChange={handleChange}
             name="text"
-            className="todo-input"
-            
+           
+            autoComplete="off"
           />
-          <button onClick={handleSubmit} className="todo-button">
+          <button onClick={handleSubmit} >
             Add tag
           </button>
-        </>
-      )
-    </form>
+        </FormGroup>
   );
 };
 

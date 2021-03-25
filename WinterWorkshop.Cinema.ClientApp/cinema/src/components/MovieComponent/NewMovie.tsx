@@ -53,6 +53,7 @@ const NewMovie: React.FC = (props: any) => {
 
   
 
+  console.log('tagovi: '+JSON.stringify(state.tagss));
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     validate(id, value);
@@ -222,8 +223,11 @@ const NewMovie: React.FC = (props: any) => {
               className="add-new-form"
             />
 
-            {/*<Tag addTag={addTag}/>*/}
-            <TagsList tags={state.tagss}/>
+           
+            <div className="d-flex justify-content-center">
+            <TagsList setState={setState} tags={state.tagss}/>
+            </div>
+         
             <FormControl
               id="coverPicture"
               type="text"

@@ -10,11 +10,12 @@ interface ITag{
   name: string;
 }
  interface IProps{
+   
   tags :ITag[];
+  setState :any;
  }
 const TagsList :React.FC<IProps> = (props) => {
   const [tags, setTags] = useState <ITag[]> (
-   //[]
    props.tags
   );
 
@@ -25,6 +26,8 @@ const TagsList :React.FC<IProps> = (props) => {
     }
     const newTags = [...tags,tag ];
     setTags(newTags);
+    props.setState(prevState=> ({...prevState,tagss: newTags}));
+
     console.log(...tags);
   };
 
@@ -46,7 +49,6 @@ const TagsList :React.FC<IProps> = (props) => {
 
   return (
     <>
-      <h1>Add tags:</h1>
       <TagForm  onSubmit={addTag} />
       <Tag tags={tags} removeTag={removeTag} updateTag={updateTag} />
     </>
