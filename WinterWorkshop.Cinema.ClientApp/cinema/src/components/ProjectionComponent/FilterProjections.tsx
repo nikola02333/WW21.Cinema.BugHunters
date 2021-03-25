@@ -1,4 +1,4 @@
-import React, { useEffect, useState , memo, useMemo} from "react";
+import React, { useEffect, useState , memo, useMemo,Dispatch,SetStateAction} from "react";
 import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../appSettings";
 import { withRouter } from "react-router-dom";
@@ -10,55 +10,43 @@ import SelectCinenma from "./SelectFilters/SelectCinemas"
 import SelectMovies from "./SelectFilters/SelectMovies"
 import * as Service from "./ProjectionService"
 import {IMovie, IProjection, IAuditorium,  ICinema} from "../../models";
-
+import {IInfoState,IStateMovies} from "./Projections"
 import { classicNameResolver } from "typescript";
-
-interface IState {
-
-  dateTime: string;
-  id: string;
-  current: boolean;
-  tag: string;
-  titleError: string;
-  yearError: string;
-  submitted: boolean;
-  isLoading: boolean;
-  selectedCinema: boolean;
-  selectedAuditorium: boolean;
-  selectedMovie: boolean;
-  selectedDate: boolean;
-  date: Date;
-  cinemaId: string;
-  auditoriumId: string;
-  movieId: string;
-  name: string;
+interface IProps{
+  movies: IMovie[];
+  setMovies: Dispatch<SetStateAction<IStateMovies>>;
+  info: IInfoState;
+  setInfo: Dispatch<SetStateAction<IInfoState>>;
+  handleSubmit : (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
-interface Props{
-  movies: IMovie[],
-  setMovies,
-  info: IState,
-  setInfo,
-  handleSubmit
+interface IFilteredData{
+  filteredAuditoriums:IAuditorium[];
+  filteredMovies:IMovie[];
 }
 
-const FilterProjections = memo((props : Props) =>{
+const FilterProjections:React.FC<IProps> = memo(({movies,setMovies,info,setInfo,handleSubmit}) =>{
     
-    const[cinemas,setCinemas]=useState({
+    const[cinemas,setCinemas]=useState<{cinemas: ICinema[]}>({
       cinemas: [
         { id: "",
          name: "",
+         address:"",
+        cityName:"",
         }]
     });
-    const[auditoriums,setAuditoriums]=useState({
+    const[auditoriums,setAuditoriums]=useState<{auditoriums: IAuditorium[]}>({
       auditoriums: [
         {
           id: "",
           name: "",
+          cinemaId: "",
+          numberOfSeats: 0,
+          seatRows: 0
         },
       ]
     });
-    const[filteredData,setFilteredData]=useState({
+    const[filteredData,setFilteredData]=useState<IFilteredData>({
       filteredAuditoriums: [
         {
           id: "",
@@ -72,34 +60,35 @@ const FilterProjections = memo((props : Props) =>{
           title: "",
           rating: 0,
           year: "",
+          hasOscar:false,
         },
       ]
     });
 
     useEffect(() => {
-      Service.getCurrentMoviesAndProjections(props.setInfo,props.setMovies);
-      Service.getAllCinemas(props.setInfo,setCinemas);
-      Service.getAllAuditoriums(props.setInfo,setAuditoriums);
+      Service.getCurrentMoviesAndProjections(setInfo,setMovies);
+      Service.getAllCinemas(setInfo,setCinemas);
+      Service.getAllAuditoriums(setInfo,setAuditoriums);
     }, []);
     
-    const infoCinema = useMemo(()=>props.info,[props.info.selectedCinema,props.info.selectedAuditorium]);
+    const infoCinema = useMemo(()=>info,[info.selectedCinema,info.selectedAuditorium]);
 
     console.log("render FILTER");
     return(
     
         <form
         id="name"
-        name={props.info.name}
-        onSubmit={props.handleSubmit}
+        name={info.name}
+        onSubmit={handleSubmit}
         className="filter"
       >
         <span className="filter-heading">Filter by:</span>
         
-        <SelectCinenma cinemas={cinemas.cinemas} setInfo={props.setInfo} setFilteredData={setFilteredData}/>
+        <SelectCinenma cinemas={cinemas.cinemas} setInfo={setInfo} setFilteredData={setFilteredData}/>
 
-        <SelectAuditoriums selectedCinema={props.info.selectedCinema} selectedAuditoriumId={props.info.auditoriumId} filteredAuditoriums={filteredData.filteredAuditoriums} auditoriums={auditoriums.auditoriums} setInfo={props.setInfo} setFilteredData={setFilteredData}/>
+        <SelectAuditoriums selectedCinema={info.selectedCinema} selectedAuditoriumId={info.auditoriumId} filteredAuditoriums={filteredData.filteredAuditoriums} auditoriums={auditoriums.auditoriums} setInfo={setInfo} setFilteredData={setFilteredData}/>
         
-        <SelectMovies info={infoCinema} setInfo={props.setInfo} filteredMovies={filteredData.filteredMovies} movies={props.movies}/>
+        <SelectMovies info={infoCinema} setInfo={setInfo} filteredMovies={filteredData.filteredMovies} movies={movies}/>
         
         <input
         //   onChange={(e) =>
@@ -115,7 +104,7 @@ const FilterProjections = memo((props : Props) =>{
           id="filter-button"
           className="btn-search"
           type="submit"
-          onClick={() => props.setInfo((prev)=>({ ...prev, submitted: true }))}
+          onClick={() => setInfo((prev)=>({ ...prev, submitted: true }))}
         >
           Submit
         </button>

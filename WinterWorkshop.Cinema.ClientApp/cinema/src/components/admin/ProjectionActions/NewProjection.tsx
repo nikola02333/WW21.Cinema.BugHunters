@@ -82,7 +82,7 @@ const NewProjection: React.FC = (props: any) => {
           canSubmit: false,
         }));
       } else {
-        setState({ ...state, movieIdError: "", canSubmit: true });
+        setState((prev)=>({ ...prev, movieIdError: "", canSubmit: true }));
       }
     } else if (id === "auditoriumId") {
       if (!value) {
@@ -91,7 +91,7 @@ const NewProjection: React.FC = (props: any) => {
           canSubmit: false,
         }));
       } else {
-        setState({ ...state, auditoriumIdError: "", canSubmit: true });
+        setState((prev)=>({ ...prev, auditoriumIdError: "", canSubmit: true }));
       }
     }
   };
@@ -99,13 +99,14 @@ const NewProjection: React.FC = (props: any) => {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setState({ ...state, submitted: true });
+    setState((prev)=>({ ...prev, submitted: true }));
+    console.log(state);
 
     if (state.movieId && state.auditoriumId && state.projectionTime) {
       addProjection();
     } else {
       NotificationManager.error("Please fill in data");
-      setState({ ...state, submitted: false });
+      setState((prev)=>({ ...prev, submitted: false }));
     }
   };
 
@@ -115,6 +116,7 @@ const NewProjection: React.FC = (props: any) => {
       auditoriumId: state.auditoriumId,
       projectionTime: state.projectionTime,
     };
+    console.log(data)
 
     const requestOptions = {
       method: "POST",
@@ -193,7 +195,7 @@ const NewProjection: React.FC = (props: any) => {
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
+        setState((prev)=>({ ...prev, submitted: false }));
       });
   };
 
@@ -215,8 +217,10 @@ const NewProjection: React.FC = (props: any) => {
     }
   };
 
-  const onDateChange = (date: Date) =>{
-    setState((prev)=>({ ...prev, projectionTime: date.toLocaleTimeString() }));
+  const onDateChange = (e) =>{
+    var date = e.target.value;
+    setState((prev)=>({ ...prev, projectionTime: date }));
+    console.log(date)
   };
   
   return (
@@ -254,11 +258,16 @@ const NewProjection: React.FC = (props: any) => {
               </FormText>
             </FormGroup>
             <FormGroup>
-              <DateTimePicker
-                className="form-control add-new-form"
-                onChange={onDateChange}
-                value={state.projectionTime}
-              />
+                <input
+                  onChange={(e) =>
+                    onDateChange(e)
+                  }
+                  name="dateTime"
+                  type="datetime-local"
+                  id="date"
+                  className="form-control add-new-form"
+                  
+                />
               <FormText className="text-danger">
                 {state.projectionTimeError}
               </FormText>
@@ -267,7 +276,7 @@ const NewProjection: React.FC = (props: any) => {
               className="btn-add-new"
               type="submit"
               disabled={state.submitted || !state.canSubmit}
-              block
+              
             >
               Add
             </Button>

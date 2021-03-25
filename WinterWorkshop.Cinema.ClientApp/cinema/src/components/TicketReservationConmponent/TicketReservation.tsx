@@ -14,15 +14,24 @@ import ShowAuditorium from "./ShowAuditorium";
 import {getUserByUsernameReservatino} from "../Services/userService";
 import InfoTable from "./InfoTable";
 import {tryReservation} from "../Services/ReservationService";
-interface IcurrentReservationSeats{
-  currentSeatId:string
+
+export interface IStateTicketReservation{
+  maxRow:number,
+  maxNumberOfRow:number,
+  reservedSeats:IReservedSeats[],
+  currentReservationSeats: ICurrentReservationSeats[],
+  seats:ISeats[]
+}
+interface IInfo{
+  userId: string,
+  submitted: boolean,
+  projectionPrice:number
 }
 
-const TicketReservation:React.FC = (props) =>{
-    const [seat,setSeat] = useState({
+const TicketReservation:React.FC = () =>{
+    const [seat,setSeat] = useState<IStateTicketReservation>({
         maxRow: 0,
         maxNumberOfRow: 0,
-        inc: 0,
         seats: [],
         reservedSeats: [
             {
@@ -32,12 +41,9 @@ const TicketReservation:React.FC = (props) =>{
               row: 0,
             },
         ],
-        currentReservationSeats:[],
-        clicked: false,
+        currentReservationSeats:[]
     });
-    const [info, setInfo] = useState({
-        
-        inciD: 0,
+    const [info, setInfo] = useState<IInfo>({
         userId: "",
         submitted: false,
         projectionPrice:0
@@ -73,7 +79,7 @@ const TicketReservation:React.FC = (props) =>{
                 <InfoTable currentReservationSeats={seat.currentReservationSeats} projectionPrice={info.projectionPrice}/>
                 </Row>
                 <Row className="justify-content-center my-2">
-                <ShowAuditorium tryReservation={tryReservationF} seats={seat} setSeat={setSeat} />
+                <ShowAuditorium tryReservation={tryReservationF} seat={seat} setSeat={setSeat} />
                 </Row>
                 
             </Col>

@@ -116,7 +116,7 @@ const NewCinema: React.FC = (props: any) => {
                     fieldKey={[field.fieldKey, 'seatRows']}
                     rules={[{ required: true, message: 'Missing number of rows' }]}
                   >
-                    <InputNumber min={1}   placeholder="Number of rows" />
+                    <InputNumber min={1}   placeholder="Rows" />
                   </Form.Item>
                   <Form.Item
                     {...field}
@@ -124,7 +124,7 @@ const NewCinema: React.FC = (props: any) => {
                     fieldKey={[field.fieldKey, 'numberOfSeats']}
                     rules={[{ required: true, message: 'Missing number of seats' }]}
                   >
-                    <InputNumber min={1}    placeholder="Number of seats" />
+                    <InputNumber min={1}    placeholder="Seats" />
                   </Form.Item>
                   <MinusCircleOutlined onClick={() => remove(field.name)} />
                 </Space>

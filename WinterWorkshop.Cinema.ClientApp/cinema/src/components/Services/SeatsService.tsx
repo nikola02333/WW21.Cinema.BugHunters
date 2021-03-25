@@ -47,8 +47,6 @@ export async function  getReservedSeats (id: string, setState) {
             maxRow: data.maxRow,
             maxNumberOfRow: data.maxNumber,
           }));
-          console.log("getSeatsForAuditorium");
-          
         }
       })
       .catch((response) => {

@@ -235,3 +235,10 @@ input[type="date"]::-webkit-clear-button
 .user-info-container{
   width: 500px;
 }
+
+.side-menu-bg{
+  background: linear-gradient(to top, #266894, #293a4b);
+}
+.nav-menu-bg{
+  background: linear-gradient(to top, #293a4b,#1a2530);
+}
