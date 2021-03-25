@@ -1,23 +1,33 @@
-import React,{memo,useEffect, useState} from 'react'
+import React,{memo, useState} from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faCouch } from "@fortawesome/free-solid-svg-icons";
-import { Container, Row, Col } from "react-bootstrap";
+import { Container, Row, Col,Button , Modal} from "react-bootstrap";
 import "./../../index.css";
 import { serviceConfig } from "../../appSettings";
 import { NotificationManager } from "react-notifications";
-import { Button, Modal } from 'antd';
-import 'antd/dist/antd.css';
 import { useHistory } from "react-router-dom";
+import PopUpModel from "./PopUpModel"
+import {IStateTicketReservation} from "./TicketReservation"
+
+interface IProps{
+  seat:IStateTicketReservation,
+  setSeat: React.Dispatch<React.SetStateAction<IStateTicketReservation>>,
+  tryReservation(e) : void
+}
+export interface IStateShowAuditoriums{
+  modalShow:boolean,
+  separately:boolean
+}
 
 
-const ShowAuditorium = memo((props:{seats,setSeat,tryReservation}) => {
+const ShowAuditorium: React.FC<IProps> = memo(({seat,setSeat,tryReservation}) => {
     console.log("ChooseSeats");
     
-    const [state,setState]=useState({
-      loading: false,
-      visible: false,
+    const [state,setState]=useState<IStateShowAuditoriums>({
+      modalShow:false,
       separately:false
     });
+    
 
     const history = useHistory();
 
@@ -34,17 +44,17 @@ const ShowAuditorium = memo((props:{seats,setSeat,tryReservation}) => {
     
     let allButtons: any;
 
-    const renderRows = (rows: number, seats: number) => {
+    const renderRows = (maxRoows: number, maxSeats: number) => {
     
         const rowsRendered: JSX.Element[] = [];
 
-        if (props.seats.seats.length > 0) {
-          for (let i = 0; i < rows; i++) {
-            const startingIndex = i * seats;
-            const maxIndex = (i + 1) * seats;
+        if (seat.seats.length > 0) {
+          for (let i = 0; i < maxRoows; i++) {
+            const startingIndex = i * maxSeats;
+            const maxIndex = (i + 1) * maxSeats;
             
             rowsRendered.push(
-              <tr key={i}>{renderSeats(seats, i, startingIndex, maxIndex)}</tr>
+              <tr key={i}>{renderSeats(maxSeats, i, startingIndex, maxIndex)}</tr>
             );
           }
         }
@@ -52,25 +62,25 @@ const ShowAuditorium = memo((props:{seats,setSeat,tryReservation}) => {
       };
 
     const checkIfSeatIsTaken = (currentSeatId: string) => {
-        return props.seats.reservedSeats.some(seat=>seat.id===currentSeatId);
+        return seat.reservedSeats.some(seat=>seat.id===currentSeatId);
       };
     
       const checkIfSeatIsCurrentlyReserved = (currentSeatId) => {
-        return props.seats.currentReservationSeats.some(reserved=>reserved.currentSeatId === currentSeatId);
+        return seat.currentReservationSeats.some(reserved=>reserved.currentSeatId === currentSeatId);
       };
     
       const getSeatByPosition = (row: number, number: number) => {
-        for (let i = 0; i < props.seats.seats.length; i++) {
-          if (props.seats.seats[i].number === number && props.seats.seats[i].row === row) {
-            return props.seats.seats[i];
+        for (let i = 0; i < seat.seats.length; i++) {
+          if (seat.seats[i].number === number && seat.seats[i].row === row) {
+            return seat.seats[i];
           }
         }
       };
     
       const getSeatById = (seatId: string) => {
-        for (let i = 0; i < props.seats.seats.length; i++) {
-          if (props.seats.seats[i].id === seatId) {
-            return props.seats.seats[i];
+        for (let i = 0; i < seat.seats.length; i++) {
+          if (seat.seats[i].id === seatId) {
+            return seat.seats[i];
           }
         }
       };
@@ -131,12 +141,12 @@ const ShowAuditorium = memo((props:{seats,setSeat,tryReservation}) => {
     let renderedSeats: JSX.Element[] = [];
     let seatIndex = startingIndex;
 
-    if (props.seats.seats.length > 0) {
+    if (seat.seats.length > 0) {
         for (let i = 0; i < seats; i++) {
           
-          let currentSeatId = props.seats.seats[seatIndex].id;
-          let currentlyReserved = props.seats.currentReservationSeats.some((seat) => seat.currentSeatId === currentSeatId);
-          let seatTaken = props.seats.reservedSeats.some((seat) => seat.id === currentSeatId);
+          let currentSeatId = seat.seats[seatIndex].id;
+          let currentlyReserved = seat.currentReservationSeats.some((seat) => seat.currentSeatId === currentSeatId);
+          let seatTaken = seat.reservedSeats.some((seat) => seat.id === currentSeatId);
 
         renderedSeats.push(
           <td key={`row${row}-seat${i}`}>
@@ -153,7 +163,7 @@ const ShowAuditorium = memo((props:{seats,setSeat,tryReservation}) => {
                 let rightSeatIsTaken = false;
                 let leftSeatProperties = getSeatByPosition(currentRow + 1,currentNumber);
                 let rightSeatProperties = getSeatByPosition(currentRow + 1, currentNumber + 2);
-                let currentReservationSeats = props.seats.currentReservationSeats;
+                let currentReservationSeats = seat.currentReservationSeats;
 
                 if (leftSeatProperties) {
                     leftSeatIsCurrentlyReserved = checkIfSeatIsCurrentlyReserved(leftSeatProperties.id);
@@ -168,9 +178,9 @@ const ShowAuditorium = memo((props:{seats,setSeat,tryReservation}) => {
                 }
 
                 if (!checkIfSeatIsCurrentlyReserved(currSeatId)) {
-                    if (props.seats.currentReservationSeats.length !== 0 && 
+                    if (seat.currentReservationSeats.length !== 0 && 
                         getButtonBySeatId(currentSeatId).className !=="seat nice-green-color" && !state.separately) {
-                          showModal();
+                          setState((prev)=>({...prev, modalShow:true}));
                         return;
                     }
 
@@ -182,7 +192,7 @@ const ShowAuditorium = memo((props:{seats,setSeat,tryReservation}) => {
                     markSeatAsGreenish(rightSeatProperties.id);
                     }
 
-                    if (props.seats.currentReservationSeats.includes({currentSeatId}) === false) {
+                    if (seat.currentReservationSeats.includes({currentSeatId}) === false) {
                       console.log("PUSH")
                     currentReservationSeats.push({
                          currentSeatId,
@@ -219,13 +229,13 @@ const ShowAuditorium = memo((props:{seats,setSeat,tryReservation}) => {
                     }
 
                     console.log("KRAJ KLIKAAA");
-                    props.setSeat((prev)=>({
+                    setSeat((prev)=>({
                     ...prev,
                     currentReservationSeats,
                     }));
                 }
                 console.log("KRAJ KLIKA");
-                props.setSeat((prev)=>({
+                setSeat((prev)=>({
                 ...prev,
                 currentReservationSeats,
                 }));
@@ -254,19 +264,19 @@ const ShowAuditorium = memo((props:{seats,setSeat,tryReservation}) => {
 
     return renderedSeats;
     };
-    
 
-    const { visible, loading } = state;
+    
+    
     return( 
         <Container >
             <Row className="justify-content-center ">
-              <Button type="primary" shape="round" className="mb-3" onClick={(e) => props.tryReservation(e)}>
+              <Button type="primary" className="mb-3" onClick={(e) => tryReservation(e)}>
               Confirm<FontAwesomeIcon className="text-white mr-1 fa-1x btn-payment__icon" icon={faShoppingCart}/>
               </Button>
             </Row>
             <Row className="justify-content-center ">
             <table className="">
-                    <tbody>{renderRows(props.seats.maxRow,props.seats.maxNumberOfRow)}</tbody>
+                    <tbody>{renderRows(seat.maxRow,seat.maxNumberOfRow)}</tbody>
             </table>
             </Row>
             <Row className="justify-content-center my-2">
@@ -274,26 +284,8 @@ const ShowAuditorium = memo((props:{seats,setSeat,tryReservation}) => {
             CINEMA SCREEN
             </div>
             </Row>
-            <Modal
-              visible={visible}
-              title="Information"
-              onCancel={handleCancel}
-              footer={[
-                <Button key="back" onClick={handleCancel}>
-                  Return
-                </Button>,
-                <Button key="separately" loading={loading} 
-                onClick={()=>{setState((prev)=>({...prev,separately:true})); handleCancel();}}>
-                  Buy separately
-                </Button>,
-                <Button key="projection" type="primary" loading={loading} onClick={()=>{handleCancel(); history.push('/dashboard/Projections');}}>
-                  Projection
-                </Button>
-              ]}
-            >
-              <p>You can buy tickets separately or change projection time.</p>
-              
-        </Modal>
+            <PopUpModel show={state.modalShow} setState={setState} history={history}/>
+            
            
         </Container>
     );

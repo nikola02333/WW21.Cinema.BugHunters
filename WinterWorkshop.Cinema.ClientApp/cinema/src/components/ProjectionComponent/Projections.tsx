@@ -7,14 +7,37 @@ import "./../../index.css";
 import { IAuditorium, IProjection, ICinema, IMovie } from "../../models";
 import FilterProjections from "./FilterProjections";
 import MovieProjectCard from "./MovieProjectionCard";
-
 import * as Service from "./ProjectionService"
+export interface IStateMovies{
+  movies:IMovie[];
+}
+interface IProjectionState{
+  filteredProjections:IProjection[];
+}
 
-
+export interface IInfoState{
+  cinemaId: string;
+  auditoriumId: string;
+  movieId: string;
+  dateTime: string;
+  id: string;
+  name: string;
+  current: boolean;
+  tag: string;
+  titleError: string;
+  yearError: string;
+  submitted: boolean;
+  isLoading: boolean;
+  selectedCinema: boolean;
+  selectedAuditorium: boolean;
+  selectedMovie: boolean;
+  selectedDate: boolean;
+  date: Date
+}
 
 const Projections : React.FC = (props: any) => {
 
-  const [movies,setMovies]=useState({
+  const [movies,setMovies]=useState<IStateMovies>({
     movies: [
       {
         id: "",
@@ -24,32 +47,36 @@ const Projections : React.FC = (props: any) => {
         year: "",
         projections: [
           {
+            auditoriumId: 0,
+            auditoriumName: "",
+            duration: 0,
             id: "",
             movieId: "",
+            movieTitle: "",
+            price: 0,
             projectionTime: "",
-            auditoriumName: "",
           },
         ],
       },
     ]
   });
 
-  const [projection,setProjection]=useState({
+  const [projection,setProjection]=useState<IProjectionState>({
     filteredProjections: [
       {
+        auditoriumId: 0,
+        auditoriumName: "",
+        duration: 0,
         id: "",
         movieId: "",
-        projectionTime: "",
-        coverPicture: "",
-        auditoriumName: "",
         movieTitle: "",
-        movieRating: 0,
-        movieYear: "",
+        price: 0,
+        projectionTime: "",
       },
     ],
   });
 
-  const [info, setInfo] = useState({
+  const [info, setInfo] = useState<IInfoState>({
     cinemaId: "",
     auditoriumId: "",
     movieId: "",
@@ -79,7 +106,6 @@ const Projections : React.FC = (props: any) => {
       const { cinemaId, auditoriumId, movieId, dateTime } = info;
   
       if (cinemaId || auditoriumId || movieId || dateTime) {
-        console.log("PRETRAGA");
         Service.getCurrentFilteredMoviesAndProjections(info,setInfo,movies,setProjection);
       } else {
         if(!cinemaId && !auditoriumId && !movieId ){
@@ -93,16 +119,13 @@ const Projections : React.FC = (props: any) => {
       }
     };
 
-    
-
-    
     console.log("PROJECTIONS")
     
     return (
         <Container>
           <h1 className="projections-title">Current projections</h1>
           <FilterProjections handleSubmit={handleSubmit} movies={movies.movies} setMovies={setMovies} info={info} setInfo={setInfo}/>
-          <MovieProjectCard props={props} submitted={info.submitted} movies={movies.movies} filteredProjections={projection.filteredProjections}/>
+          <MovieProjectCard submitted={info.submitted} movies={movies.movies} filteredProjections={projection.filteredProjections}/>
           
         </Container>
       );
