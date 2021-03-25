@@ -16,6 +16,8 @@ import { movieService } from './../Services/movieService';
 import { IMovieToCreateModel } from './../../models/IMovieToCreateModel';
 import TagsList from '../TagComponent/TagsList';
 import {ITag} from '../../models/ITag';
+import ActorList from './../ActorComponent/ActorList';
+import { IActor } from './../../models/IActor';
 interface IState {
   title: string;
   year: string;
@@ -31,6 +33,7 @@ interface IState {
   genreError: string;
   tagss: ITag[];
   Actors:string;
+  Actorss:IActor[];
   ActorsError:string;
   description:string;
   descriptionError:string;
@@ -54,7 +57,8 @@ const NewMovie: React.FC = (props: any) => {
   description:"",
   descriptionError:"",
   Actors:"",
-  ActorsError:""
+  ActorsError:"",
+  Actorss:[]
   });
 
   
@@ -132,9 +136,7 @@ const NewMovie: React.FC = (props: any) => {
    
   };
 
-  const addTag =() =>{
-
-  };
+ 
   const addMovie = async() => {
    
     var movieToCreate : IMovieToCreateModel = {
@@ -262,6 +264,10 @@ const NewMovie: React.FC = (props: any) => {
             <TagsList setState={setState} tags={state.tagss}/>
             </div>
          
+         
+            <div className="d-flex justify-content-center">
+            <ActorList setState={setState} actors={state.Actorss}/>
+            </div>
             <FormControl
               id="coverPicture"
               type="text"
