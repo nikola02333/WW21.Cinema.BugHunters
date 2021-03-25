@@ -10,12 +10,10 @@ import {
   FormText,
 } from "react-bootstrap";
 import { NotificationManager } from "react-notifications";
-import { serviceConfig } from "../../appSettings";
 import { YearPicker } from "react-dropdown-date";
 
 import { movieService } from './../Services/movieService';
 import { IMovieToCreateModel } from './../../models/IMovieToCreateModel';
-import { stat } from "fs";
 import TagsList from '../TagComponent/TagsList';
 import {ITag} from '../../models/ITag';
 interface IState {
@@ -32,6 +30,10 @@ interface IState {
   genre: string;
   genreError: string;
   tagss: ITag[];
+  Actors:string;
+  ActorsError:string;
+  description:string;
+  descriptionError:string;
 }
 
 const NewMovie: React.FC = (props: any) => {
@@ -46,9 +48,13 @@ const NewMovie: React.FC = (props: any) => {
     tags: "",
     coverPicture: "",
     yearError: "",
-    genre: "romance",
+    genre: "",
   genreError: "",
-  tagss:[]
+  tagss:[],
+  description:"",
+  descriptionError:"",
+  Actors:"",
+  ActorsError:""
   });
 
   
@@ -71,7 +77,9 @@ const NewMovie: React.FC = (props: any) => {
 
   const validate = (id: string, value: string) => {
     if (id === "title") {
+      
       if (value === "") {
+        debugger;
         setState({
           ...state,
           titleError: "Fill in movie title",
@@ -105,13 +113,14 @@ const NewMovie: React.FC = (props: any) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let splitTags = state.tags.split(",");
 
+    // ovde sad treba tagove da izvucem iz statea
     setState({ ...state, submitted: true });
     const { title, year, rating } = state;
-    if (title && year && rating && splitTags[0] !== "") {
-      addMovie(splitTags);
+    if (title && year && rating ) {
+      addMovie();
     } else {
+     
       NotificationManager.error("Please fill in data");
       setState({ ...state, submitted: false });
     }
@@ -126,7 +135,7 @@ const NewMovie: React.FC = (props: any) => {
   const addTag =() =>{
 
   };
-  const addMovie = async(splitTags: string[]) => {
+  const addMovie = async() => {
    
     var movieToCreate : IMovieToCreateModel = {
  
@@ -134,9 +143,11 @@ const NewMovie: React.FC = (props: any) => {
       Year: +state.year,
       Current: ( (state.current.toString() === 'true') ? true: false),
       Rating: +state.rating,
-      Tags: state.tags,
+      Tags: state.tagss.map(tag=> tag.name).join(','),
       CoverPicture: state.coverPicture,
-      genre: state.genre
+      Genre: state.genre,
+      Actors:'',
+      Description:''
     };
    await movieService.createMovie(movieToCreate);
   };
@@ -212,6 +223,29 @@ const NewMovie: React.FC = (props: any) => {
                 <option value="false">Not Current</option>
               </FormControl>
             </FormGroup>
+            <FormGroup>
+              <FormControl
+                id="genre"
+                type="text"
+                placeholder="Genre"
+                value={state.genre}
+                onChange={handleChange}
+                className="add-new-form"
+              />
+              <FormText className="text-danger">{state.genreError}</FormText>
+            </FormGroup>
+            <FormGroup>
+              <FormControl
+                id="description"
+                type="text"
+                placeholder="About Movie"
+                value={state.description}
+                onChange={handleChange}
+                className="add-new-form"
+              />
+              <FormText className="text-danger">{state.description}</FormText>
+            </FormGroup>
+
             <FormControl
               id="tags"
               type="text"

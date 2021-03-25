@@ -159,14 +159,12 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 {
                     Current = item.Current,
                     Id = item.Id,
-                    Rating = item.Rating ?? 0,
+                    Rating = item.Rating,
                     Title = item.Title,
                     Year = item.Year,
                     Genre = item.Genre,
                     CoverPicture = item.CoverPicture,
-                    HasOscar = item.HasOscar,
-                    UserRaitings = item.UserRaitings ?? 0
-
+                    HasOscar = item.HasOscar
                 };
                 result.Add(model);
             }
@@ -196,13 +194,12 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 Id = movie.Id,
                 Current = movie.Current,
-                Rating = movie.Rating ?? 0,
+                Rating = movie.Rating,
                 Title = movie.Title,
                 Year = movie.Year,
                 Genre = movie.Genre,
                 CoverPicture = movie.CoverPicture,
                 HasOscar = movie.HasOscar,
-                UserRaitings = movie.UserRaitings ?? 0
             };
 
             return  new GenericResult<MovieDomainModel>
@@ -243,12 +240,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Current = item.Current,
                     Genre = item.Genre,
                     Id = item.Id,
-                    Rating = item.Rating ?? 0,
+                    Rating = item.Rating,
                     Title = item.Title,
                     Year = item.Year,
                     CoverPicture = item.CoverPicture,
                     HasOscar = item.HasOscar,
-                    UserRaitings = item.UserRaitings ?? 0
                 }).ToList()
             };
 
@@ -265,25 +261,24 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Genre= newMovie.Genre,
                 CoverPicture = newMovie.CoverPicture,
                 HasOscar = newMovie.HasOscar,
-                UserRaitings = newMovie.UserRaitings
             };
 
             var movie = await _moviesRepository.InsertAsync(movieToCreate);
 
             _moviesRepository.Save();
             _moviesRepository.Detach(movie);
-         
+
             MovieDomainModel domainModel = new MovieDomainModel()
             {
                 Id = movie.Id,
                 Title = movie.Title,
                 Current = movie.Current,
                 Year = movie.Year,
-                Genre= movie.Genre,
-                Rating = movie.Rating ?? 0,
+                Genre = movie.Genre,
+                Rating = movie.Rating,
                 CoverPicture = movie.CoverPicture,
                 HasOscar = movie.HasOscar,
-                UserRaitings = movie.UserRaitings ?? 0
+                Tags = newMovie.Tags
             };
 
             return new GenericResult<MovieDomainModel> 
@@ -305,7 +300,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Genre= updateMovie.Genre,
                 CoverPicture = updateMovie.CoverPicture,
                 HasOscar = updateMovie.HasOscar,
-                UserRaitings = updateMovie.UserRaitings 
             };
             
             var movieUpdated = _moviesRepository.Update(movieToUpdate);
@@ -320,10 +314,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Current = movieUpdated.Current,
                 Year = movieUpdated.Year,
                 Genre= movieToUpdate.Genre,
-                Rating = movieUpdated.Rating ?? 0,
+                Rating = movieUpdated.Rating,
                 CoverPicture = movieUpdated.CoverPicture,
                 HasOscar = movieUpdated.HasOscar,
-                UserRaitings = movieUpdated.UserRaitings ?? 0
             };
 
             return new GenericResult<MovieDomainModel>
@@ -364,11 +357,10 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Title = movieToDelete.Title,
                 Current = movieToDelete.Current,
                 Year = movieToDelete.Year,
-                Rating = movieToDelete.Rating ?? 0,
+                Rating = movieToDelete.Rating,
                 Genre = movieToDelete.Genre,
                 CoverPicture = movieToDelete.CoverPicture,
                 HasOscar = movieToDelete.HasOscar,
-                UserRaitings = movieToDelete.UserRaitings ?? 0
 
             };
 
@@ -388,12 +380,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
                  Current= movie.Current,
                  Genre= movie.Genre,
                  Id= movie.Id,
-                 Rating= movie.Rating?? 0,
+                 Rating= movie.Rating,
                  Title= movie.Title,
                  Year= movie.Year,
                  CoverPicture = movie.CoverPicture,
                  HasOscar = movie.HasOscar,
-                 UserRaitings = movie.UserRaitings ?? 0
             }).ToList();
             return new GenericResult<MovieDomainModel> 
             { 
@@ -439,12 +430,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
                  Current= updatedMovie.Current,
                  Genre= updatedMovie.Genre,
                  Id= updatedMovie.Id,
-                 Rating= updatedMovie.Rating ?? 0,
+                 Rating= updatedMovie.Rating,
                  Title= updatedMovie.Title,
                  Year= updatedMovie.Year,
                 CoverPicture = updatedMovie.CoverPicture,
                 HasOscar = updatedMovie.HasOscar,
-                UserRaitings = updatedMovie.UserRaitings ?? 0
             }
             };
 
@@ -477,7 +467,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                             Current= movie.Current, 
                              Genre= movie.Genre,
                               Id= movie.Id,
-                               Rating= movie.Rating ?? 0,
+                               Rating= movie.Rating,
                                 Title= movie.Title,
                                  Year= movie.Year
                         }).ToList();
@@ -499,8 +489,47 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 HasOscar = movieDomainModel.HasOscar,
                 Rating = movieDomainModel.Rating
             };
+            foreach (var tag in movieDomainModel.Tags)
+            {
+                var tagExists = _tagsRepository.GetTagByValue(tag);
+
+                if (tagExists != null)
+                {
+                    var tagsMovies = new TagsMovies
+                    {
+                        Movie = movie,
+                        Tag = tagExists,
+                        MovieId = movie.Id,
+                        TagId = tagExists.TagId
+                    };
+
+                    _tagsRepository.Attach(tagExists);
+                    await _tagsMoviesRepository.InsertAsync(tagsMovies);
+                }
+                else
+                {
+                    var tagToCreate = new Tag
+                    {
+                        TagValue = tag,
+                        //tagName treba da bude NUll
+                        TagName = ""
+                    };
+                    var newTag = await _tagsRepository.InsertAsync(tagToCreate);
+
+                    var tagsMovies = new TagsMovies
+                    {
+                        Movie = movie,
+                        Tag = newTag,
+                        TagId = newTag.TagId
+                    };
+                    await _tagsMoviesRepository.InsertAsync(tagsMovies);
+
+                    _tagsMoviesRepository.Save();
+                }
+            }
+            // sada ovde mi treba neki foreach da prolazi kroz tagove
             var tagExistGenre = _tagsRepository.GetTagByValue(movie.Genre);
-            var tagExistYear = _tagsRepository.GetTagByYear(movie.Year);
+            var tagExistYear = _tagsRepository.GetTagByValue(movie.Year.ToString());
             var tagExistTitle = _tagsRepository.GetTagByValue(movie.Title);
 
             if (tagExistGenre != null)
@@ -635,12 +664,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Current = item.Current,
                     Genre = item.Genre,
                     Id = item.Id,
-                    Rating = item.Rating ?? 0,
+                    Rating = item.Rating,
                     Title = item.Title,
                     Year = item.Year,
                     CoverPicture = item.CoverPicture,
                     HasOscar = item.HasOscar,
-                    UserRaitings = item.UserRaitings ?? 0
                 }).ToList()
             };
 

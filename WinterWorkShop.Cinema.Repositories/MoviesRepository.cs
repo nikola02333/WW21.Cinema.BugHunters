@@ -110,7 +110,7 @@ namespace WinterWorkShop.Cinema.Repositories
         {
            
             var searchTags = _cinemaContext.Tags
-                 .Where(t => t.TagValue.Contains(tagValue) )
+                 .Where(t => t.TagValue==tagValue )
                 //.Where(t => t.TagValue == tagValue)
                 .ToList();
 
