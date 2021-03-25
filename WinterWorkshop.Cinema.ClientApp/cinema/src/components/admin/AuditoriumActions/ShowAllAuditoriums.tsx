@@ -27,6 +27,10 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
     isLoading: true,
   });
 
+  useEffect(() => {
+    getAuditoriums();
+  }, []);
+
   const getAuditoriums = () => {
     const requestOptions = {
       method: "GET",
@@ -36,7 +40,7 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
       },
     };
 
-    setState({ ...state, isLoading: true });
+    setState((prev)=>({...prev, isLoading: true }));
     fetch(`${serviceConfig.baseURL}/api/auditoriums/all`, requestOptions)
       .then((response) => {
         if (!response.ok) {
@@ -46,18 +50,16 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
       })
       .then((data) => {
         if (data) {
-          setState({auditoriums: data, isLoading: false });
+          setState((prev)=>({...prev, auditoriums: data, isLoading: false }));
         }
       })
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, isLoading: false });
+        setState((prev)=>({...prev, isLoading: false }));
       });
   };
 
-  useEffect(() => {
-    getAuditoriums();
-  }, [getAuditoriums]);
+ 
 
   const removeAuditorium = (auditoriumId: string) => {
     const requestOptions = {
@@ -68,7 +70,7 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
       },
     };
 
-    setState({ ...state, isLoading: true });
+    setState((prev)=>({...prev, isLoading: true }));
     fetch(
       `${serviceConfig.baseURL}/api/Auditoriums/${auditoriumId}`,
       requestOptions
@@ -83,7 +85,7 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
 
       .catch((response) => {
         NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, isLoading: false });
+        setState((prev)=>({...prev, isLoading: false }));
       });
 
     setTimeout(() => window.location.reload(), 1000);

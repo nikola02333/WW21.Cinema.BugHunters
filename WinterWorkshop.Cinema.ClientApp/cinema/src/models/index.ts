@@ -7,6 +7,9 @@ export interface IProjection {
   movieTitle?: string;
   movieRating?: number;
   movieYear?: string;
+  auditoriumId:number;
+  duration:number;
+  price:number;
 }
 export interface IProjectionNEW {
   auditoriumId: number;
@@ -49,6 +52,7 @@ export interface ISeats {
   id: string;
   number: number;
   row: number;
+  auditoriumId: number;
 }
 
 export interface ICurrentReservationSeats {
@@ -56,7 +60,10 @@ export interface ICurrentReservationSeats {
 }
 
 export interface IReservedSeats {
-  seatId: string;
+  id: string,
+  auditoriumId: number,
+  number: number,
+  row: number,
 }
 
 export interface IUser {
