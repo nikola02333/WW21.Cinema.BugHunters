@@ -1,13 +1,18 @@
 import React,{useState,useEffect,memo} from 'react';
-import {IMovie,IProjectionNEW} from "../../models";
+import {IMovie,IProjection} from "../../models";
 import { Container, Row, Col, Card } from "react-bootstrap";
 import {getRoundedRating} from "../helpers/functions";
 import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../appSettings";
 
+interface IState {
+  projections:IProjection
+  movie:IMovie
+}
+
 const ProjectionDeatils = (props:{setInfo,getSeatData})=>{
 
-    const [state, setState]= useState({
+    const [state, setState]= useState<IState>({
         projections:{
             auditoriumId: 0,
             auditoriumName: "",

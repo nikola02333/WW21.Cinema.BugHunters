@@ -36,7 +36,7 @@ interface IState {
 }
 
 const ProjectionDetails: React.FC = () => {
-  const [state, setState] = useState<IState>({
+  const [state, setState] = useState({
     projections: {
       auditoriumId: 0,
       auditoriumName: "",
@@ -77,7 +77,10 @@ const ProjectionDetails: React.FC = () => {
     ],
     reservedSeats: [
       {
-        seatId: "",
+        auditoriumId: 0,
+        id: "",
+        number: 0,
+        row: 0,
       },
     ],
     userId: "",
@@ -291,7 +294,7 @@ const ProjectionDetails: React.FC = () => {
         if (data) {
           setState((prev)=>({
             ...prev,
-            movie: data as IMovie,
+            movie: data ,
           }));
           console.log("getMovie");
           console.log(data);
@@ -402,7 +405,7 @@ const ProjectionDetails: React.FC = () => {
 
   const checkIfSeatIsTaken = (currentSeatId: string) => {
     for (let i = 0; i < state.reservedSeats.length; i++) {
-      if (state.reservedSeats[i].seatId === currentSeatId) {
+      if (state.reservedSeats[i].id === currentSeatId) {
         return true;
       }
     }
@@ -490,7 +493,7 @@ const ProjectionDetails: React.FC = () => {
             (seat) => seat.currentSeatId === currentSeatId
           ).length > 0;
         let seatTaken =
-          state.reservedSeats.filter((seat) => seat.seatId === currentSeatId)
+          state.reservedSeats.filter((seat) => seat.id === currentSeatId)
             .length > 0;
 
         renderedSeats.push(
