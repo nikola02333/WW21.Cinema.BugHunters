@@ -4,6 +4,7 @@ import {IMovieToUpdateModel} from '../../models/IMovieToUpdateModel';
 import { IMovieToCreateModel } from './../../models/IMovieToCreateModel';
 
 import API from '../../axios';
+import { AxiosResponse, AxiosError } from 'axios';
 
 export const movieService = {
     createMovie,
@@ -98,6 +99,7 @@ async function getAllMovies()
 {
     return await API.get(`${serviceConfig.baseURL}/api/movies/AllMovies/false`)
                           .then( response=> {
+                           
                             return response.data;
                           })
                           .catch(err => {
@@ -126,12 +128,18 @@ async function getAllMovies()
   
   return   await API.get(`/api/movies/SearchMoviesByTag?query=${tagToSearch}`,{timeout: 50000})
       .then( (response)=> {
-
+       
        return response.data;
       })
-      .catch(error => {
-      NotificationManager.error(error.response);
-      });   
+      .catch(err => {
+        if (err.response) {
+          NotificationManager.error(err.response.data.errorMessage);
+        } else if (err.request) {
+          NotificationManager.error("Server Error");
+        } else {
+          // anything else
+        }
+    });  
 }
 
 async function createMovie(moveModel: IMovieToCreateModel) 
@@ -141,8 +149,14 @@ async function createMovie(moveModel: IMovieToCreateModel)
           .then( response=> {
                NotificationManager.success("Successfuly added movie!");
           })
-          .catch(error => {
-            NotificationManager.error(error.response.data.errorMessage);
-            });
+          .catch(err => {
+            if (err.response) {
+              NotificationManager.error(err.response.data.errorMessage);
+            } else if (err.request) {
+              NotificationManager.error("Server Error");
+            } else {
+              // anything else
+            }
+        });
         
 }
