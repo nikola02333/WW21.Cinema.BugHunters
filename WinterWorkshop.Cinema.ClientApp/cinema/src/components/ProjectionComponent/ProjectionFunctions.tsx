@@ -5,6 +5,6 @@ export const getRoundedRating = (rating: number) => {
     return <span className="float-right">Rating: {result}/10</span>;
   };
 
-export const navigateToProjectionDetails = (id: string, movieId: string, props) => {
-    props.history.push(`TicketReservation/${id}/${movieId}`);
+export const navigateToProjectionDetails = (id: string, movieId: string,history) => {
+    history.push(`TicketReservation/${id}/${movieId}`);
   };

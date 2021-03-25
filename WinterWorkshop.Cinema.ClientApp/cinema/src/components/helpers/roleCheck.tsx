@@ -17,7 +17,7 @@ import { isAdmin, isSuperUser, isUser } from "./authCheck";
 export const checkRole = () => {
   if (isAdmin()) {
     return (
-      <Col lg={2} className="dashboard-navigation">
+      <Col lg={2} className="dashboard-navigation side-menu-bg">
         <Row className="justify-content-center mt-2">
           <span className="fa-2x text-white">
             <FontAwesomeIcon className="text-white mr-2 fa-1x" icon={faFilm} />
@@ -144,7 +144,7 @@ export const checkRole = () => {
   }
   if (isSuperUser() === true) {
     return (
-      <Col lg={2} className="dashboard-navigation">
+      <Col lg={2} className="dashboard-navigation side-menu-bg">
         <Row className="justify-content-center mt-2">
           <span className="fa-2x text-white">
             <FontAwesomeIcon className="text-white mr-2 fa-1x" icon={faFilm} />
@@ -232,7 +232,7 @@ export const checkRole = () => {
   }
   if (isUser() === true) {
     return (
-      <Col lg={2} className="dashboard-navigation">
+      <Col lg={2} className="dashboard-navigation side-menu-bg">
         <Row className="justify-content-center mt-2">
           <span className="fa-2x text-white">
             <FontAwesomeIcon className="text-white mr-2 fa-1x" icon={faFilm} />
