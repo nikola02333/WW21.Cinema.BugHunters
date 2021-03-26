@@ -30,17 +30,6 @@ const ShowAuditorium: React.FC<IProps> = memo(({seat,setSeat,tryReservation}) =>
     
 
     const history = useHistory();
-
-    const showModal = () => {
-      setState((prev)=>({
-        ...prev,
-        visible: true
-      }));
-    };
-  
-    const handleCancel = () => {
-      setState((prev)=>({...prev, visible: false }));
-    };
     
     let allButtons: any;
 

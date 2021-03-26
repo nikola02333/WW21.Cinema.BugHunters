@@ -276,7 +276,7 @@ export const checkRole = () => {
     );
   } else {
     return (
-      <Col lg={2} className="dashboard-navigation">
+      <Col lg={2} className="dashboard-navigation side-menu-bg">
         <Row className="justify-content-center mt-2">
           <span className="fa-2x text-white">
             <FontAwesomeIcon className="text-white mr-2 fa-1x" icon={faFilm} />
@@ -301,7 +301,7 @@ export const checkRole = () => {
             Projection
           </span>
         </Row>
-        <Row className="justify-content-center mt-2">
+        <Row className="justify-content-center my-2">
           <NavLink activeClassName="active-link" to="/dashboard/Projections">
             <FontAwesomeIcon
               className="text-primary mr-1"

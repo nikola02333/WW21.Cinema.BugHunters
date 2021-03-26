@@ -1,8 +1,10 @@
-import React,{useEffect, useState} from 'react'
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import React,{useEffect, useState,memo,useMemo,useCallback} from 'react'
+import { Container, Row, Col, Card, Button ,Image,Table,OverlayTrigger,Tooltip} from "react-bootstrap";
 import {getRoundedRating,navigateToProjectionDetails} from "./ProjectionFunctions"
 import { IAuditorium, IProjection, ICinema, IMovie } from "../../models";
 import {useHistory} from "react-router-dom";
+import _, { map } from 'underscore';
+import Projection from '../user/Projection';
 
 
 interface IProps{
@@ -10,22 +12,38 @@ interface IProps{
   movies: IMovie[];
   filteredProjections:IProjection[];
 }
+export interface IProjectionByAuditoriumId {
+  auditorium: IProjection[];
+}
+interface IState{
+  movieId:string;
+  projections:IProjectionByAuditoriumId[];
+}
 
-const MovieProjectCard:React.FC<IProps> = ({submitted,movies,filteredProjections}) =>{
+const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjections}) =>{
   const history =useHistory();
 
-  const [state,setState]=useState({
-    projection:[]
-  });
-  useEffect(() => {
-    const objectMap = filteredProjections.reduce(function(o, i) {
-      if (!o[i.movieId]) o[i.movieId] = [];
-      o[i.movieId].push(i)
-  
-      return o;
-  },{});
-  console.log(objectMap);
-  }, [filteredProjections])
+  const [state,setState]=useState<IState[]>([]);
+
+  const filter = () => {
+    var grouped = _.chain(filteredProjections).groupBy("movieId").map(function(offers, movieId) {
+      // Optionally remove product_id from each record
+       var cleanOffers = _.map(offers, function(it) {
+        return _.omit(it, "movieId");
+      });
+    var groupedAud=  _.chain(cleanOffers).groupBy("auditoriumId").map(function(offers, auditoriumId) {
+       var auditorium = _.map(offers);
+          return {auditorium};
+       }).value();
+    
+      return {
+        movieId: movieId,
+        projections: groupedAud
+      };
+    }).value();
+    return grouped;
+  };
+  const filterCallBack = useCallback(() => filter(), [state]);
     
   const fillTableWithData = () => {
         return movies.map((movie) => {
@@ -42,12 +60,12 @@ const MovieProjectCard:React.FC<IProps> = ({submitted,movies,filteredProjections
           });
     
           return (
-            <Container key={movie.id} className="shadow rounded mt-1">
+            <Container key={movie.id} className="shadow rounded my-3">
             <Row >
-              <Col md={3} className=" rounded mt-3">
-              <img className="img-responsive img-fluid" style={{  borderRadius:5}} src={movie.coverPicture} />
+              <Col md={3} className="  my-3">
+              <Image  className=" img-responsive img-fluid" style={{  borderRadius:5}} src={movie.coverPicture} />
               </Col>
-              <Col md={9} className=" mt-3">
+              <Col md={9} className=" my-3">
                 <Col md={12}>
                 <span className="card-title-font">{movie.title}</span>
                  {getRoundedRating(movie.rating)}
@@ -58,67 +76,118 @@ const MovieProjectCard:React.FC<IProps> = ({submitted,movies,filteredProjections
                 </Col>
               </Col>
             </Row>
-            <Row className="mt-2 mb-5">
-              <Col md={12} className="pb-5">
-              <span className="mb-2 font-weight-bold mr-2">Projection times:</span>
-              {projectionButton}
-              </Col>
-            </Row>
             </Container>
           );
         });
       };
 
-    const fillTableWithFilteredProjections = () => {
-      return filteredProjections.map((filteredProjection) => {
-        return (
-          <Container key={filteredProjection.id} className="shadow rounded mt-1">
-          <Row >
-            <Col md={3} className=" rounded mt-3">
-            <img className="img-responsive img-fluid" style={{  borderRadius:5}} src={filteredProjection.coverPicture} />
-            </Col>
-            <Col md={9} className=" mt-3">
-              <Col md={12}>
-              <span className="card-title-font">{filteredProjection.movieTitle}
-              </span>
-              {filteredProjection.movieRating &&
-              getRoundedRating(filteredProjection.movieRating)}
-              </Col>
+    
 
-              <Col md={12} className="mb-2 text-muted">
-              Year of production: {filteredProjection.movieYear}
-              </Col>
-            </Col>
-          </Row>
-          <Row className="mt-2 mb-5">
-            <Col md={12} className="pb-5">
-            <span className="mb-2 font-weight-bold mr-2">{filteredProjection.auditoriumName}</span>
-            
-            <span className="mb-2 font-weight-bold mr-2">Projection times:</span>
-            <Button
-              key={filteredProjection.id}
-              onClick={() =>
-                navigateToProjectionDetails(
-                  filteredProjection.id,
-                  filteredProjection.movieId,
-                  history
-                )
-              }
-              className="btn-projection-time"
-            >
-              {filteredProjection.projectionTime.slice(11, 16)}h
-            </Button>
-            </Col>
-          </Row>
-          </Container>
-          
+    const fill = () => {
+      // if(filteredProjections.length===0){
+      //   return(
+      //     <></>
+      //   );
+      // }
+      console.log(filteredProjections);
+      var grouped = _.chain(filteredProjections).groupBy("movieId").map(function(offers, movieId) {
+          var cleanOffers = _.map(offers, function(it) {
+          return _.omit(it, "movieId");
+        });
+      var groupedAud=  _.chain(cleanOffers).groupBy("auditoriumId").map(function(offers, auditoriumId) {
+          var auditorium = _.map(offers);
+            return {auditorium};
+          }).value();
+      
+        return {
+          movieId: movieId,
+          projections: groupedAud
+        };
+      }).value();
+      
+      return grouped.map((filteredProjection: IState)  => {
+      var movie = movies.find(x => x.id === filteredProjection.movieId) as IMovie;
+      
+      const projectionButton = filteredProjection.projections.map((projectio,index) => {
+      
+      const bottonsAudit= projectio.auditorium.map((audit,index)=>{
+            if(index===0){
+              return (<>
+                <Col xs={2} className={"mx-1   justify-content-start"}>
+              <span className="font-weight-bold">{audit.auditoriumName}</span> 
+                </Col>
+                <Col xs={1} className={"mx-1  p-0 justify-content-start"}>
+                <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">{audit.projectionTime.slice(0, 10)}</Tooltip>}>
+                <Button
+                  key={audit.id}
+                  onClick={() => navigateToProjectionDetails(audit.id, movie.id,history)}
+                  className=" btn-sm"
+                >
+                  {audit.projectionTime.slice(11, 16)}h
+                </Button>
+                </OverlayTrigger>
+                </Col>
+                
+                </>
+              );
+            }
+              return (
+                <Col xs={1} className={"mx-1  p-0 justify-content-start"}>
+                  <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">{audit.projectionTime.slice(0, 10)}</Tooltip>}>
+                    <Button
+                    key={audit.id}
+                    onClick={() => navigateToProjectionDetails(audit.id, movie.id,history)}
+                    className="btn-sm">
+                      {audit.projectionTime.slice(11, 16)}h
+                    </Button>
+                  </OverlayTrigger>
+                </Col>
+              );
+            })
+        return (
+              <Row key={movie.id+index} className="justify-content-start my-2 mb-3">{bottonsAudit}</Row>
         );
       });
-    };
+
+
+          return(
+          <Container key={filteredProjection.movieId} className="shadow rounded my-3">
+            <Row >
+              <Col md={3} className="justify-content-start my-3">
+              <img className="img-responsive img-fluid" style={{  borderRadius:5}} src={movie.coverPicture} />
+              </Col>
+              <Col md={9} className=" my-3">
+                <Col md={12}>
+                <span className="card-title-font">{movie.title}
+                </span>
+                {movie.rating &&
+                getRoundedRating(movie.rating)}
+                </Col>
+
+                <Col md={12} className="mb-2 text-muted">
+                Year of production: {movie.year}
+                </Col>
+              </Col>
+            </Row>
+            <Row >
+              <Col md={12} className="mb-2">
+              <span className="p-0 font-weight-bold ">Projection times:</span> 
+              </Col>
+            </Row> 
+            <Row>
+              <Col xs={12}>
+                {projectionButton}
+              </Col>
+            </Row>
+          </Container>
+          )
+        }
+        )};
 
     const checkIfFiltered = () => {
+      console.log(submitted);
       if (submitted) {
-        return fillTableWithFilteredProjections();
+        return fill();
       } else {
         return fillTableWithData();
       }
@@ -128,5 +197,8 @@ const MovieProjectCard:React.FC<IProps> = ({submitted,movies,filteredProjections
         <div>{checkIfFiltered()}</div>
     );
 
-}
+});
 export default MovieProjectCard;
+
+
+                

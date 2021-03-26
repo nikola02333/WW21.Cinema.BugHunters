@@ -12,6 +12,9 @@ import * as Service from "./ProjectionService"
 import {IMovie, IProjection, IAuditorium,  ICinema} from "../../models";
 import {IInfoState,IStateMovies} from "./Projections"
 import { classicNameResolver } from "typescript";
+import DatePicker from 'DatePicker';
+
+
 interface IProps{
   movies: IMovie[];
   setMovies: Dispatch<SetStateAction<IStateMovies>>;
@@ -28,61 +31,37 @@ interface IFilteredData{
 const FilterProjections:React.FC<IProps> = memo(({movies,setMovies,info,setInfo,handleSubmit}) =>{
     
     const[cinemas,setCinemas]=useState<{cinemas: ICinema[]}>({
-      cinemas: [
-        { id: "",
-         name: "",
-         address:"",
-        cityName:"",
-        }]
+      cinemas: []
     });
     const[auditoriums,setAuditoriums]=useState<{auditoriums: IAuditorium[]}>({
-      auditoriums: [
-        {
-          id: "",
-          name: "",
-          cinemaId: "",
-          numberOfSeats: 0,
-          seatRows: 0
-        },
-      ]
+      auditoriums: []
     });
     const[filteredData,setFilteredData]=useState<IFilteredData>({
-      filteredAuditoriums: [
-        {
-          id: "",
-          name: "",
-        },
-      ],
-      filteredMovies: [
-        {
-          id: "",
-          coverPicture: "",
-          title: "",
-          rating: 0,
-          year: "",
-          hasOscar:false,
-        },
-      ]
+      filteredAuditoriums: [],
+      filteredMovies: []
     });
+    const [btnColor, onbtnColor] = useState(false);
 
     useEffect(() => {
-      Service.getCurrentMoviesAndProjections(setInfo,setMovies);
-      Service.getAllCinemas(setInfo,setCinemas);
-      Service.getAllAuditoriums(setInfo,setAuditoriums);
+     Service.getCurrentMoviesAndProjections(setInfo,setMovies);
+     Service.getAllCinemas(setInfo,setCinemas);
+     Service.getAllAuditoriums(setInfo,setAuditoriums);
+    console.log("FIlter Data")
     }, []);
     
     const infoCinema = useMemo(()=>info,[info.selectedCinema,info.selectedAuditorium]);
 
+
     console.log("render FILTER");
     return(
-    
-        <form
+        <form 
         id="name"
         name={info.name}
         onSubmit={handleSubmit}
         className="filter"
-      >
-        <span className="filter-heading">Filter by:</span>
+       >
+         <Row>
+        <span className="filter-heading align-self-center">Filter by:</span>
         
         <SelectCinenma cinemas={cinemas.cinemas} setInfo={setInfo} setFilteredData={setFilteredData}/>
 
@@ -90,24 +69,29 @@ const FilterProjections:React.FC<IProps> = memo(({movies,setMovies,info,setInfo,
         
         <SelectMovies info={infoCinema} setInfo={setInfo} filteredMovies={filteredData.filteredMovies} movies={movies}/>
         
-        <input
-        //   onChange={(e) =>
-        //     // setState({ ...state, selectedDate: true, dateTime: e.target.value })
-        //   }
-          name="dateTime"
-          type="date"
-          id="date"
-          className="input-date select-dropdown"
-          disabled
-        />
+          <DatePicker
+              type="element"
+              // value={info.date}
+              onChange={date => {if(date!==null){onbtnColor(true);
+                                  setInfo((prev)=>({...prev ,dateTime:date,selectedDate:true}));
+                                }else {
+                                  onbtnColor(false);
+                                  setInfo((prev)=>({...prev ,dateTime:date,selectedDate:false}));}
+              }}>
+              <button type="button" 
+              className={btnColor ? "btn btn-info mr-2": "btn btn-outline-primary mr-2" }>📅</button>
+            </DatePicker>
+            
+       
         <button
           id="filter-button"
-          className="btn-search"
+          className="btn-search "
           type="submit"
           onClick={() => setInfo((prev)=>({ ...prev, submitted: true }))}
         >
           Submit
         </button>
+        </Row>
       </form>
      
     );
