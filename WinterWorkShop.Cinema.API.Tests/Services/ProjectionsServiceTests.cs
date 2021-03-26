@@ -112,7 +112,6 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 Rating = 8,
                 Title = "New_Movie1",
                 Year = 1999,
-                UserRaitings = 9,
                 HasOscar=true,
                 CoverPicture="/slika"
             };

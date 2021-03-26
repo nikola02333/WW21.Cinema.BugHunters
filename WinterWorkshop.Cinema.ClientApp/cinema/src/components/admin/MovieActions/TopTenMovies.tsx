@@ -66,6 +66,10 @@ const TopTenMovies: React.FC = (props: any) => {
     setState({ ...state,isLoading: true });
     var movies = await movieService.getTopTen();
     console.log(movies);
+    if(movies === undefined)
+    {
+      return;
+    }
     setState(prevState=> ({ ...prevState, movies: movies, isLoading: false }));
 
   }

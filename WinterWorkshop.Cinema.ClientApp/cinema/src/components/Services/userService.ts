@@ -11,18 +11,26 @@ export const userService = {
     login,
     singUp,
     getUserByUsername,
-    getTokenForGuest
+    getTokenForGuest,
+    
    
 };
+
  async function getTokenForGuest()
  {
    return await API.get(`${serviceConfig.baseURL}/get-token/`)
                     .then( response => {
                       return response.data;
                     })
-                    .catch((response) => {
-                      NotificationManager.error(response.message || response.statusText);
-                    });
+                    .catch(err => {
+                      if (err.response) {
+                        NotificationManager.error(err.response.data.errorMessage);
+                      } else if (err.request) {
+                        NotificationManager.error("Server Error");
+                      } else {
+                        // anything else
+                      }
+                  });
 
  } 
 async function getUserByUsername(userName: string) : Promise<IUser>
@@ -32,9 +40,15 @@ async function getUserByUsername(userName: string) : Promise<IUser>
     .then((response) => {
       return response.data;
     })
-    .catch((error) => {
-      NotificationManager.error(error.response.data.errorMessage || error.response.data.statusText);
-    });
+    .catch(err => {
+      if (err.response) {
+        NotificationManager.error(err.response.data.errorMessage);
+      } else if (err.request) {
+        NotificationManager.error("Server Error");
+      } else {
+        // anything else
+      }
+  });
 }
 
 async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
@@ -47,15 +61,18 @@ async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
     })
     .then((data) => {
       
-      console.log(data)
-
         NotificationManager.success(`User, ${data.firstName} succesfuly register!`);
         return data;
     })
-    .catch((error) => {
-      
-      NotificationManager.error(error.response.data.errorMessage);
-    });
+    .catch(err => {
+      if (err.response) {
+        NotificationManager.error(err.response.data.errorMessage);
+      } else if (err.request) {
+        NotificationManager.error("Server Error");
+      } else {
+        // anything else
+      }
+  });
 
     return data;
 }
@@ -77,9 +94,15 @@ function login (userName:string)  {
               }, 500);
             }
           })
-          .catch((error) => {
-            NotificationManager.error(error.response.data.errorMessage);
-          });
+          .catch(err => {
+            if (err.response) {
+              NotificationManager.error(err.response.data.errorMessage);
+            } else if (err.request) {
+              NotificationManager.error("Server Error");
+            } else {
+              // anything else
+            }
+        });
 };
 
 export const getUserByUsernameReservatino = (setState) => {
@@ -110,7 +133,13 @@ export const getUserByUsernameReservatino = (setState) => {
         console.log(data);
       }
     })
-    .catch((response) => {
-      NotificationManager.error(response.message || response.statusText);
-    });
+    .catch(err => {
+      if (err.response) {
+        NotificationManager.error(err.response.data.errorMessage);
+      } else if (err.request) {
+        NotificationManager.error("Server Error");
+      } else {
+        // anything else
+      }
+  });
 };
