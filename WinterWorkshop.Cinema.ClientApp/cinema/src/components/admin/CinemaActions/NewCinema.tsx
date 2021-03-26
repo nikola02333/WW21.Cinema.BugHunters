@@ -15,8 +15,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCouch } from "@fortawesome/free-solid-svg-icons";
 import { Form, Input, Button, Space, Select,InputNumber } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-
-
+import {cinemaService} from './../../Services/cinemaService';
+import {ICinemaToCreateModel} from './../../../models/ICinemaToCreateModel';
 
 interface IState {
   createCinema:{
@@ -34,7 +34,7 @@ const NewCinema: React.FC = (props: any) => {
       name: "",
       address:"",
       cityName:"",
-      createAuditoriumModel:[],
+      createAuditoriumModel:[]
     },
     submitted: false
   });
@@ -51,34 +51,21 @@ const NewCinema: React.FC = (props: any) => {
   },[state.submitted])
 
  
-  const addCinema = () => {
-      const data = state.createCinema;
-      console.log(state.createCinema)
-    console.log(data)
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-      body: JSON.stringify(data),
-    };
-
-    fetch(`${serviceConfig.baseURL}/api/cinemas/create`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
+  const addCinema = async() => {
+      
+    var cinemaToCreate :ICinemaToCreateModel={
+      createCinema:{
+        name: state.createCinema.name,
+        address:state.createCinema.address,
+        cityName:state.createCinema.cityName,
+        createAuditoriumModel:[{
+         auditName:state.createCinema.createAuditoriumModel.auditName,
+         seatRows:state.createCinema.createAuditoriumModel.seatRows,
+         numberOfSeats:state.createCinema.createAuditoriumModel.numberOfSeats
+        }]
         }
-        return response.statusText;
-      })
-      .then((result) => {
-        NotificationManager.success("Successfuly added cinema!");
-        props.history.push(`AllCinemas`);
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
+    };
+    await cinemaService.addCinema(cinemaToCreate);
   };
 
 
