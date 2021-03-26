@@ -75,6 +75,10 @@ const Movies: React.FC = (props: any) => {
       setState({ ...state, isLoading: true });
      
       var movies= await movieService.getAllMovies();
+      if(movies === undefined)
+      {
+        return;
+      }
       setState({ ...state, movies: movies, isLoading: false });
    
   };
@@ -101,7 +105,6 @@ const Movies: React.FC = (props: any) => {
   const searchMovie = async(tag: string) => {
 
     var moviesSearch = await movieService.searcMovie(tag);
-
     if(moviesSearch != undefined)
     {
       setState({ ...state, movies: moviesSearch, isLoading: false });

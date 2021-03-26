@@ -10,13 +10,14 @@ import {
   FormText,
 } from "react-bootstrap";
 import { NotificationManager } from "react-notifications";
-import { serviceConfig } from "../../appSettings";
 import { YearPicker } from "react-dropdown-date";
 
 import { movieService } from './../Services/movieService';
 import { IMovieToCreateModel } from './../../models/IMovieToCreateModel';
-import { stat } from "fs";
-
+import TagsList from '../TagComponent/TagsList';
+import {ITag} from '../../models/ITag';
+import ActorList from './../ActorComponent/ActorList';
+import { IActor } from './../../models/IActor';
 interface IState {
   title: string;
   year: string;
@@ -30,6 +31,12 @@ interface IState {
   yearError: string;
   genre: string;
   genreError: string;
+  tagss: ITag[];
+  Actors:string;
+  Actorss:IActor[];
+  ActorsError:string;
+  description:string;
+  descriptionError:string;
 }
 
 const NewMovie: React.FC = (props: any) => {
@@ -44,10 +51,19 @@ const NewMovie: React.FC = (props: any) => {
     tags: "",
     coverPicture: "",
     yearError: "",
-    genre: "romance",
-  genreError: ""
+    genre: "",
+  genreError: "",
+  tagss:[],
+  description:"",
+  descriptionError:"",
+  Actors:"",
+  ActorsError:"",
+  Actorss:[]
   });
 
+  
+
+  console.log('tagovi: '+JSON.stringify(state.tagss));
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     validate(id, value);
@@ -65,6 +81,7 @@ const NewMovie: React.FC = (props: any) => {
 
   const validate = (id: string, value: string) => {
     if (id === "title") {
+      
       if (value === "") {
         setState({
           ...state,
@@ -99,13 +116,14 @@ const NewMovie: React.FC = (props: any) => {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    let splitTags = state.tags.split(",");
 
+    // ovde sad treba tagove da izvucem iz statea
     setState({ ...state, submitted: true });
     const { title, year, rating } = state;
-    if (title && year && rating && splitTags[0] !== "") {
-      addMovie(splitTags);
+    if (title && year && rating ) {
+      addMovie();
     } else {
+     
       NotificationManager.error("Please fill in data");
       setState({ ...state, submitted: false });
     }
@@ -117,7 +135,8 @@ const NewMovie: React.FC = (props: any) => {
    
   };
 
-  const addMovie = async(splitTags: string[]) => {
+ 
+  const addMovie = async() => {
    
     var movieToCreate : IMovieToCreateModel = {
  
@@ -125,10 +144,13 @@ const NewMovie: React.FC = (props: any) => {
       Year: +state.year,
       Current: ( (state.current.toString() === 'true') ? true: false),
       Rating: +state.rating,
-      Tags: state.tags,
+      Tags: state.tagss.map(tag=> tag.name).join(','),
       CoverPicture: state.coverPicture,
-      genre: state.genre
+      Genre: state.genre,
+      Actors: state.Actorss.map(actor=> actor.name).join(','),
+      Description:''
     };
+    debugger;
    await movieService.createMovie(movieToCreate);
   };
 
@@ -203,6 +225,29 @@ const NewMovie: React.FC = (props: any) => {
                 <option value="false">Not Current</option>
               </FormControl>
             </FormGroup>
+            <FormGroup>
+              <FormControl
+                id="genre"
+                type="text"
+                placeholder="Genre"
+                value={state.genre}
+                onChange={handleChange}
+                className="add-new-form"
+              />
+              <FormText className="text-danger">{state.genreError}</FormText>
+            </FormGroup>
+            <FormGroup>
+              <FormControl
+                id="description"
+                type="text"
+                placeholder="About Movie"
+                value={state.description}
+                onChange={handleChange}
+                className="add-new-form"
+              />
+              <FormText className="text-danger">{state.description}</FormText>
+            </FormGroup>
+
             <FormControl
               id="tags"
               type="text"
@@ -213,6 +258,16 @@ const NewMovie: React.FC = (props: any) => {
               }}
               className="add-new-form"
             />
+
+           
+            <div className="d-flex justify-content-center">
+            <TagsList setState={setState} tags={state.tagss}/>
+            </div>
+         
+         
+            <div className="d-flex justify-content-center">
+            <ActorList setState={setState} actors={state.Actorss}/>
+            </div>
             <FormControl
               id="coverPicture"
               type="text"

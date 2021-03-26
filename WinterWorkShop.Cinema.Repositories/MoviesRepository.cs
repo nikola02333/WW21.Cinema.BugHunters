@@ -39,7 +39,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public Movie Delete(object id)
         {
-            var  existingMovie = _cinemaContext.Movies.Where(movie=> movie.Id == (Guid)id).Include(tm => tm.TagsMovies).ThenInclude(t=>t.Tag).FirstOrDefault();
+            var  existingMovie = _cinemaContext.Movies.Where(movie=> movie.Id == (Guid)id).Include(tm => tm.TagsMovies).ThenInclude(t=>t.Tag) .FirstOrDefault();
 
             
 
@@ -110,21 +110,21 @@ namespace WinterWorkShop.Cinema.Repositories
         {
            
             var searchTags = _cinemaContext.Tags
-                 .Where(t => t.TagValue.Contains(tagValue) )
-                //.Where(t => t.TagValue == tagValue)
+                 .Where(t => t.TagValue ==tagValue)
+                   //.Where(t => t.TagValue.Contains(tagValue))
                 .ToList();
 
 
-            IEnumerable<Movie> listMovies = null;
+            List<Movie> listMovies = null;
             foreach (var tag in searchTags)
             {
-                listMovies= await _cinemaContext.TagsMovies
+                listMovies = await _cinemaContext.TagsMovies
                         .Where(tm => tm.TagId == tag.TagId)
                         .Include(m => m.Movie)
                         .Select(m => m.Movie)
                          .ToListAsync();
+
             }
-         
 
             return listMovies;
         }

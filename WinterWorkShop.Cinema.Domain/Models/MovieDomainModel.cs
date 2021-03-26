@@ -13,7 +13,11 @@ namespace WinterWorkShop.Cinema.Domain.Models
         public double Rating { get; set; }
         public int Year { get; set; }
         public bool HasOscar { get; set; }
-        public double UserRaitings { get; set; }
         public string CoverPicture { get; set; }
+        public string Description { get; set; }
+
+        public string[] Tags { get; set; }
+
+        public string[] Actors { get; set; }
     }
 }

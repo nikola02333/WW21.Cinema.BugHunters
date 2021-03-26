@@ -43,6 +43,10 @@ const UserProfile: React.FC = () => {
     async function fetchUserByUsername(){
     let data = await userService.getUserByUsername(userName);
 
+    if(data === undefined)
+    {
+      return;
+    }
      let user123 :IUser= {
        id : data.id,
        firstName: data.firstName,
@@ -67,77 +71,39 @@ const UserProfile: React.FC = () => {
     }
    
   };
-  const getUserByUsername = () => {
+  const getUserByUsername = async() => {
     let userName = getUserName();
 
-    //let data = userService.getUserName(userName);
-    //setState({ ...state, user: data });
+  // setState({ ...state, user: data });
 
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    fetch(
-      `${serviceConfig.baseURL}/api/users/byusername/${userName}`,
-      requestOptions
-    )
-      .then((response) => {
-        if (!response.ok) {
-          return;
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({ ...state, user: data });
-
-          getReservationsByUserId(state.user.id);
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
-      
+  //getReservationsByUserId(state.user.id);
+    if( userName!= null)
+    {
+      const user = await userService.getUserByUsername(userName);
+      if(user != null)
+      {
+        setState({ ...state, user: user });
+      }
+    }
+    
   };
 
   const getReservationsByUserId = (userId: string) => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    fetch(
-      `${serviceConfig.baseURL}/api/reservations/byuserid/${userId}`,
-      requestOptions
-    )
-      .then((response) => {
-        if (!response.ok) {
-          return;
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
+    /**
+     *  if (data) {
           setState({ ...state, reservations: data });
           state.reservations.map((reservation) => {
             getProjectionById(reservation.projectionId);
           });
         }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
+     */
+   
   };
 
+  const EditUser = ()=>{
+
+    
+  };
   const getProjectionById = (projectionId: string) => {
     const requestOptions = {
       method: "GET",
@@ -202,7 +168,7 @@ const UserProfile: React.FC = () => {
                 </p>
                 <div className="d-flex justify-content-center">
                 <Button type="submit" className="mx-1" variant="danger" id="delete" >Delete User</Button>
-                <Button type="submit" className="mx-1" variant="primary" id="edit" >Save User</Button>
+                <Button type="button" onClick={()=>EditUser()} className="mx-1" variant="primary" id="edit" >Edit User</Button>
                 </div>
               </div>
             </div>
