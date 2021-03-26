@@ -23,9 +23,8 @@ const ActorList :React.FC<IProps> = (props) => {
     }
     const newActors = [...actors,actor ];
     setActors(newActors);
-    props.setState(prevState=> ({...prevState,actors: newActors}));
+    props.setState(prevState=> ({...prevState,Actorss: newActors}));
 
-    console.log(...actors);
   };
 
  
@@ -33,6 +32,7 @@ const ActorList :React.FC<IProps> = (props) => {
     const removedArr = [...actors].filter((actor) => actor.id !== id);
 
     setActors(removedArr);
+    props.setState(prevState=> ({...prevState, Actorss: removedArr}));
   };
 
   return (

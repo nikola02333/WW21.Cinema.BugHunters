@@ -104,11 +104,7 @@ const Movies: React.FC = (props: any) => {
 
   const searchMovie = async(tag: string) => {
 
-    debugger;
-    let d=5;
     var moviesSearch = await movieService.searcMovie(tag);
-    debugger;
-    let a =4;
     if(moviesSearch != undefined)
     {
       setState({ ...state, movies: moviesSearch, isLoading: false });

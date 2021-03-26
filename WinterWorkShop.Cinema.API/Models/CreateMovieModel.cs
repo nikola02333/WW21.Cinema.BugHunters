@@ -32,6 +32,8 @@ namespace WinterWorkShop.Cinema.API.Models
 
         public string Tags { get; set; }
 
+        public string Actors { get; set; }
+
         public string Description { get; set; }
 
     }

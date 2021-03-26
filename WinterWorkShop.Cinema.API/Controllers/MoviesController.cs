@@ -15,7 +15,7 @@ using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MoviesController : ControllerBase
@@ -112,6 +112,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 Genre = movieModel.Genre,
                 CoverPicture = movieModel.CoverPicture,
                 Tags = movieModel.Tags.Split(","),
+                Actors = movieModel.Actors.Split(","),
                 //hadKodovano
                 HasOscar = false
             };
@@ -124,7 +125,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                  
               if(createMovie.IsSuccessful)
                 {
-                    // ovde mi treba i CreateMovieModel !!!
+                    // sada ovde ubacujem i actore!!!
                     _movieService.AddTagsForMovie(createMovie.Data);
                 }
                 

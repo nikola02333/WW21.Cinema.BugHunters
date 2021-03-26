@@ -25,10 +25,15 @@ async function getTopTen()
                         .then( response => {
                           return response.data;
                         })
-                        .catch((error) => {
-      
-                          NotificationManager.error(error.response);
-                        });
+                        .catch(err => {
+                          if (err.response) {
+                            NotificationManager.error(err.response.data.errorMessage);
+                          } else if (err.request) {
+                            NotificationManager.error("Server Error");
+                          } else {
+                            // anything else
+                          }
+                      });
                          
 }
 async function changeCurrent(movieId: string)
@@ -37,9 +42,15 @@ async function changeCurrent(movieId: string)
                         .then( response=> {
                           return response.data;
                         })
-                        .catch(error => {
-                          NotificationManager.error(error.response.data.errorMessage);
-                          });
+                        .catch(err => {
+                          if (err.response) {
+                            NotificationManager.error(err.response.data.errorMessage);
+                          } else if (err.request) {
+                            NotificationManager.error("Server Error");
+                          } else {
+                            // anything else
+                          }
+                      });
 
 }
 async function updateMovie(movieId: string, movieToUpdate : IMovieToUpdateModel)
@@ -49,9 +60,15 @@ async function updateMovie(movieId: string, movieToUpdate : IMovieToUpdateModel)
                                 NotificationManager.success("Movie updated successfuly");
                                 return res.data;
                               })
-                              .catch(error => {
-                                NotificationManager.error(error.response.data.errorMessage);
-                                });
+                              .catch(err => {
+                                if (err.response) {
+                                  NotificationManager.error(err.response.data.errorMessage);
+                                } else if (err.request) {
+                                  NotificationManager.error("Server Error");
+                                } else {
+                                  // anything else
+                                }
+                            });
 }
 async function searchMovieById(movieId: string)
 {
@@ -59,9 +76,15 @@ async function searchMovieById(movieId: string)
                         .then( (response)=> {
                           return response.data;
                         })
-                        .catch(error => {
-                          NotificationManager.error(error.response.data.errorMessage);
-                          });
+                        .catch(err => {
+                          if (err.response) {
+                            NotificationManager.error(err.response.data.errorMessage);
+                          } else if (err.request) {
+                            NotificationManager.error("Server Error");
+                          } else {
+                            // anything else
+                          }
+                      });
     
     return movie;
 }
@@ -78,9 +101,15 @@ function removeMovie(id: string)
        
         return id;
       })
-      .catch(error => {
-        NotificationManager.error(error.response.data.errorMessage);
-        });
+      .catch(err => {
+        if (err.response) {
+          NotificationManager.error(err.response.data.errorMessage);
+        } else if (err.request) {
+          NotificationManager.error("Server Error");
+        } else {
+          // anything else
+        }
+    });
 
     }
 }
@@ -90,9 +119,15 @@ async function getCurrentMovies()
                   .then( response=> {
                     return response.data;
                   })
-                  .catch(error => {
-                    NotificationManager.error(error.response.data.errorMessage);
-                    });
+                  .catch(err => {
+                    if (err.response) {
+                      NotificationManager.error(err.response.data.errorMessage);
+                    } else if (err.request) {
+                      NotificationManager.error("Server Error");
+                    } else {
+                      // anything else
+                    }
+                });
     
 }
 async function getAllMovies()

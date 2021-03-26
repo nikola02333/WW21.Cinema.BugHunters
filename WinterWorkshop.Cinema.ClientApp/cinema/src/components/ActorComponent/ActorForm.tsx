@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState } from "react";
 import { FormControl, FormGroup } from "react-bootstrap";
 
 
@@ -25,7 +25,6 @@ const ActorForm :React.FC<IProps>= ({ onSubmit,...props}) => {
       id: Math.floor(Math.random() * 10000),
       name: input.input,
     });
-    // 
     setInput({input:""});
   };
 
@@ -37,7 +36,6 @@ const ActorForm :React.FC<IProps>= ({ onSubmit,...props}) => {
             value={input.input}
             onChange={handleChange}
             name="text"
-           
             autoComplete="off"
           />
           <button onClick={handleSubmit} >

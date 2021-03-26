@@ -17,5 +17,7 @@ namespace WinterWorkShop.Cinema.Domain.Models
         public string Description { get; set; }
 
         public string[] Tags { get; set; }
+
+        public string[] Actors { get; set; }
     }
 }

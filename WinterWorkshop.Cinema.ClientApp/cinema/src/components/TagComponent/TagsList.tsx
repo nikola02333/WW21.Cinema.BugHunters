@@ -43,8 +43,9 @@ const TagsList :React.FC<IProps> = (props) => {
 
   const removeTag = (id) => {
     const removedArr = [...tags].filter((todo) => todo.id !== id);
-
+    debugger;
     setTags(removedArr);
+    props.setState(prevState=> ({...prevState,tagss: removedArr}));
   };
 
   return (

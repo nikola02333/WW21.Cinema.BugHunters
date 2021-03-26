@@ -278,7 +278,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Rating = movie.Rating,
                 CoverPicture = movie.CoverPicture,
                 HasOscar = movie.HasOscar,
-                Tags = newMovie.Tags
+                Tags = newMovie.Tags,
+                Actors= newMovie.Actors
             };
 
             return new GenericResult<MovieDomainModel> 
@@ -489,6 +490,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 HasOscar = movieDomainModel.HasOscar,
                 Rating = movieDomainModel.Rating
             };
+
+            // ovde dodajem tagove koje je Korisnik uneo !!! moze u drugu funkciju da se prebaci
+            // samo  kod atach-a mi je pukao kod, zbog vec jednog trakovanog u ef, nzm zasto nemg opet da kreiram taj scenario
             foreach (var tag in movieDomainModel.Tags)
             {
                 var tagExists = _tagsRepository.GetTagByValue(tag);
@@ -527,6 +531,50 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     _tagsMoviesRepository.Save();
                 }
             }
+            // sad za actore 
+
+            foreach (var actor in movieDomainModel.Actors)
+            {
+                var actorExists = _tagsRepository.GetTagByValue(actor);
+
+                if (actorExists != null)
+                {
+                    var actorTagsMovies = new TagsMovies
+                    {
+                        Movie = movie,
+                        Tag = actorExists,
+                        MovieId = movie.Id,
+                        TagId = actorExists.TagId
+                    };
+
+                    _tagsRepository.Attach(actorExists);
+                    await _tagsMoviesRepository.InsertAsync(actorTagsMovies);
+                }
+                else
+                {
+                    var actorTagToCreate = new Tag
+                    {
+                        TagValue = actor,
+                        //tagName treba da bude NUll
+                        TagName = ""
+                    };
+                    var newTagActor = await _tagsRepository.InsertAsync(actorTagToCreate);
+
+                    var tagsMovies = new TagsMovies
+                    {
+                        Movie = movie,
+                        Tag = newTagActor,
+                        TagId = newTagActor.TagId
+                    };
+                    await _tagsMoviesRepository.InsertAsync(tagsMovies);
+
+                    _tagsMoviesRepository.Save();
+                }
+            }
+
+
+
+
             // sada ovde mi treba neki foreach da prolazi kroz tagove
             var tagExistGenre = _tagsRepository.GetTagByValue(movie.Genre);
             var tagExistYear = _tagsRepository.GetTagByValue(movie.Year.ToString());

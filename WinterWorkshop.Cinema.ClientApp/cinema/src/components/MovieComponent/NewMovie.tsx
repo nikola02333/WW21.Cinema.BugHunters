@@ -83,7 +83,6 @@ const NewMovie: React.FC = (props: any) => {
     if (id === "title") {
       
       if (value === "") {
-        debugger;
         setState({
           ...state,
           titleError: "Fill in movie title",
@@ -148,9 +147,10 @@ const NewMovie: React.FC = (props: any) => {
       Tags: state.tagss.map(tag=> tag.name).join(','),
       CoverPicture: state.coverPicture,
       Genre: state.genre,
-      Actors:'',
+      Actors: state.Actorss.map(actor=> actor.name).join(','),
       Description:''
     };
+    debugger;
    await movieService.createMovie(movieToCreate);
   };
 
