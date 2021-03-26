@@ -6,5 +6,7 @@ export interface IMovieToCreateModel
       Rating: number;
       Tags: string;
       CoverPicture: string;
-      genre: string;
+      Genre: string;
+      Actors: string;
+      Description:string;
 }

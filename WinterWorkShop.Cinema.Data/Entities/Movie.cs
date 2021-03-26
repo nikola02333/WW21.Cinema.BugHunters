@@ -17,11 +17,9 @@ namespace WinterWorkShop.Cinema.Data
 
         public bool HasOscar { get; set; }
 
-        public double? Rating { get; set; }
+        public double Rating { get; set; }
 
         public bool Current { get; set; }
-
-        public double? UserRaitings { get; set; }
 
         public string    Genre { get; set; }
         public string CoverPicture { get; set; }

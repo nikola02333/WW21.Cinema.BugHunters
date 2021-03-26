@@ -17,9 +17,10 @@ import {
 
  interface IProps {
   movies:IMovie[];
-  editMovie(movieId) : void
-  removeMovie(movieId) : void
-  changeCurrent( 
+  // validation?: (flag: any) => boolean;
+  editMovie? : { (movieId) : void}
+  removeMovie? (movieId) : void
+  changeCurrent? ( 
       e: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>,
     id: string) :void
   
@@ -58,7 +59,7 @@ const Movie: React.FC<IProps> =({editMovie,changeCurrent,removeMovie,...props}) 
           {shouldUserSeeWholeTable() && (
             <td
               className="text-center cursor-pointer"
-              onClick={() => editMovie(movie.id)}
+              onClick={() => editMovie?.(movie.id)}
             >
               <FontAwesomeIcon className="text-info mr-2 fa-1x" icon={faEdit} />
             </td>
@@ -66,7 +67,7 @@ const Movie: React.FC<IProps> =({editMovie,changeCurrent,removeMovie,...props}) 
           {shouldUserSeeWholeTable() && (
             <td
               className="text-center cursor-pointer"
-              onClick={() => removeMovie(movie.id)}
+              onClick={() => removeMovie?.(movie.id)}
             >
               <FontAwesomeIcon
                 className="text-danger mr-2 fa-1x"
@@ -79,7 +80,7 @@ const Movie: React.FC<IProps> =({editMovie,changeCurrent,removeMovie,...props}) 
               className="text-center cursor-pointer"
               onClick={(
                 e: React.MouseEvent<HTMLTableDataCellElement, MouseEvent>
-              ) => changeCurrent(e, movie.id)}
+              ) => changeCurrent?.(e, movie.id)}
             >
               <FontAwesomeIcon
                 className={

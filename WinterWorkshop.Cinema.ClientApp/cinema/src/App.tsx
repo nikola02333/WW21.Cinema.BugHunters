@@ -25,6 +25,7 @@ function App() {
         <Route path="/ProjectionDetails/:id" component={ProjectionDetails} />
         <Route path="/Projections" component={Projections} />
         <Route path="/dashboard" component={Dashboard} />
+        
         <Route path="/userprofile" component={UserProfile} />
         <Route path="/newUser" component={UserSingUp} />
       </Switch>

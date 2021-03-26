@@ -57,6 +57,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
             return Unauthorized();
             
         }
+
         [HttpGet]
         [Route("/get-token")]
         public  ActionResult GenerateToken()
