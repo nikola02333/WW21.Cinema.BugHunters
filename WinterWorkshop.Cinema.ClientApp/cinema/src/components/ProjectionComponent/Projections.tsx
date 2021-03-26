@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState,useMemo } from "react";
 import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../appSettings";
 import { withRouter } from "react-router-dom";
@@ -19,7 +19,7 @@ export interface IInfoState{
   cinemaId: string;
   auditoriumId: string;
   movieId: string;
-  dateTime: string;
+  dateTime: Date;
   id: string;
   name: string;
   current: boolean;
@@ -32,55 +32,23 @@ export interface IInfoState{
   selectedAuditorium: boolean;
   selectedMovie: boolean;
   selectedDate: boolean;
-  date: Date
 }
 
 const Projections : React.FC = (props: any) => {
 
   const [movies,setMovies]=useState<IStateMovies>({
-    movies: [
-      {
-        id: "",
-        coverPicture: "",
-        title: "",
-        rating: 0,
-        year: "",
-        projections: [
-          {
-            auditoriumId: 0,
-            auditoriumName: "",
-            duration: 0,
-            id: "",
-            movieId: "",
-            movieTitle: "",
-            price: 0,
-            projectionTime: "",
-          },
-        ],
-      },
-    ]
+    movies: []
   });
 
   const [projection,setProjection]=useState<IProjectionState>({
-    filteredProjections: [
-      {
-        auditoriumId: 0,
-        auditoriumName: "",
-        duration: 0,
-        id: "",
-        movieId: "",
-        movieTitle: "",
-        price: 0,
-        projectionTime: "",
-      },
-    ],
+    filteredProjections: [],
   });
 
   const [info, setInfo] = useState<IInfoState>({
     cinemaId: "",
     auditoriumId: "",
     movieId: "",
-    dateTime: "",
+    dateTime: new Date(),
     id: "",
     name: "",
     current: false,
@@ -93,7 +61,6 @@ const Projections : React.FC = (props: any) => {
     selectedAuditorium: false,
     selectedMovie: false,
     selectedDate: false,
-    date: new Date()
   });
 
     useEffect(()=>{
@@ -102,13 +69,12 @@ const Projections : React.FC = (props: any) => {
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
-      setInfo((prev)=>({ ...prev, submitted: true }));
       const { cinemaId, auditoriumId, movieId, dateTime } = info;
-  
+
       if (cinemaId || auditoriumId || movieId || dateTime) {
         Service.getCurrentFilteredMoviesAndProjections(info,setInfo,movies,setProjection);
       } else {
-        if(!cinemaId && !auditoriumId && !movieId ){
+        if(!cinemaId && !auditoriumId && !movieId && !dateTime ){
           NotificationManager.error("All movies");
         }else{
           NotificationManager.error("Not found.");
@@ -117,15 +83,26 @@ const Projections : React.FC = (props: any) => {
         setInfo((prev)=>({ ...prev, submitted: false }));
         setProjection((prev)=>({ ...prev,setProjection:[]  }));
       }
+
+      console.log("              handleSubmit");
     };
 
     console.log("PROJECTIONS")
-    
+
+    const infoMemo = useMemo(()=>info.submitted,[info.submitted,projection.filteredProjections]);
+    const moviesMemo = useMemo(()=>movies.movies,[movies.movies]);
+    const filterProjectionsMemo = useMemo(()=>projection.filteredProjections,[projection.filteredProjections]);
+   
     return (
         <Container>
+          <Row className="justify-content-center">
           <h1 className="projections-title">Current projections</h1>
+          </Row>
+         
+          <Row className="justify-content-center">
           <FilterProjections handleSubmit={handleSubmit} movies={movies.movies} setMovies={setMovies} info={info} setInfo={setInfo}/>
-          <MovieProjectCard submitted={info.submitted} movies={movies.movies} filteredProjections={projection.filteredProjections}/>
+          </Row>
+          <MovieProjectCard submitted={infoMemo} movies={moviesMemo} filteredProjections={filterProjectionsMemo}/>
           
         </Container>
       );
