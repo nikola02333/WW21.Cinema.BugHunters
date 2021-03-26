@@ -16,14 +16,14 @@ namespace WinterWorkShop.Cinema.API.Controllers
     public class ImdbsController : ControllerBase
     {
         [HttpGet]
-        [Route("TegTopTenMovies")]
-        public async Task<ActionResult<GenericResult<MovieDomainModel>>> GetTopTenMovies()
+        [Route("TegTopTenMovies/{searchMovie}")]
+        public async Task<ActionResult> GetTopTenMovies( [FromQuery]string searchMovie)
         {
           
             var apiLib = new ApiLib("k_9szm9guo");
-            var data = await apiLib.SearchMovieAsync("Inception 2010");
+            var data = await apiLib.TitleAsync( searchMovie + "/FullActor,Images,Ratings");
 
-            return null;
+            return Ok(data);
         }
     }
 }
