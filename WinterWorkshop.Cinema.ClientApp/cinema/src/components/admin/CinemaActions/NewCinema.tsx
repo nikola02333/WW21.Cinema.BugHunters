@@ -52,20 +52,9 @@ const NewCinema: React.FC = (props: any) => {
 
  
   const addCinema = async() => {
-    console.log("Adding cinema");
     var cinemaToCreate :ICinemaToCreateModel={
-      createCinema:{
-        name: state.createCinema.name,
-        address:state.createCinema.address,
-        cityName:state.createCinema.cityName,
-        createAuditoriumModel:[{
-         auditName:state.createCinema.createAuditoriumModel.auditName,
-         seatRows:state.createCinema.createAuditoriumModel.seatRows,
-         numberOfSeats:state.createCinema.createAuditoriumModel.numberOfSeats
-        }]
-        }
+      createCinema:state.createCinema
     };
-    console.log("Adding cinema");
     await cinemaService.addCinema(cinemaToCreate);
   };
 
