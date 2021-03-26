@@ -109,10 +109,12 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 Rating = movieModel.Rating,
                 Title = movieModel.Title,
                 Year = movieModel.Year,
-                Genre= movieModel.Genre,
-                CoverPicture= movieModel.CoverPicture,
-                UserRaitings = movieModel.UserRaitings,
-                HasOscar = movieModel.HasOscar
+                Genre = movieModel.Genre,
+                CoverPicture = movieModel.CoverPicture,
+                Tags = movieModel.Tags.Split(","),
+                Actors = movieModel.Actors.Split(","),
+                //hadKodovano
+                HasOscar = false
             };
 
             GenericResult<MovieDomainModel> createMovie;
@@ -123,6 +125,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                  
               if(createMovie.IsSuccessful)
                 {
+                    // sada ovde ubacujem i actore!!!
                     _movieService.AddTagsForMovie(createMovie.Data);
                 }
                 

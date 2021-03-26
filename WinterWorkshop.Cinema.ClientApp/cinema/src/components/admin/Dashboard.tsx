@@ -30,6 +30,7 @@ import Movies from './../MovieComponent/Movies';
 
 // higher order component
 const Dashboard: React.FC = () => {
+  
   return (
     <Row className="justify-content-center no-gutters">
       {checkRole()}

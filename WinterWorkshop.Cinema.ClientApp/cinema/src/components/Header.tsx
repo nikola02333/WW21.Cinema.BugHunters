@@ -2,8 +2,6 @@ import React, { useEffect, useState } from "react";
 import { withRouter } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Navbar, Nav, Form, FormControl, Button } from "react-bootstrap";
-import { NotificationManager } from "react-notifications";
-import { serviceConfig } from "../appSettings";
 
 import UserComponent from './user/UserComponent';
 import {
@@ -11,6 +9,7 @@ import {
   isGuest,
   getUserName,
 } from "../../src/components/helpers/authCheck";
+import { userService } from "./Services/userService";
 
 interface IState {
   username: string;
@@ -26,19 +25,38 @@ const Header: React.FC = (props: any) => {
     token: false,
     shouldHide: true,
   });
+   
+  useEffect( ()=> {
 
+    if(localStorage.getItem("userLoggedIn") === null)
+    {
+      getTokenForGuest();
+    }
+  },[]);
+
+  const getTokenForGuest =async()=>{
+
+    let guestTOken = await userService.getTokenForGuest();
+    
+    if(guestTOken != null)
+    {
+    localStorage.setItem("jwt", guestTOken.token);
+
+    }
+  };
   useEffect(() => {
     let tokenExp = getTokenExp();
     let currentTimestamp = +new Date();
     if (!tokenExp || tokenExp * 1000 < currentTimestamp) {
-      //getTokenForGuest();
+      getTokenForGuest();
     }
   }, []);
+
   return (
     <Navbar className="nav-menu-bg" expand="lg">
       <Navbar.Brand className="text-info font-weight-bold text-capitalize">
         <Link className="text-decoration-none" to="/dashboard/Projections">
-          Cinema 9
+          Ticket Rezervation by BugHunters
         </Link>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" className="text-white" />

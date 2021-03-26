@@ -4,6 +4,7 @@ import {IMovieToUpdateModel} from '../../models/IMovieToUpdateModel';
 import { IMovieToCreateModel } from './../../models/IMovieToCreateModel';
 
 import API from '../../axios';
+import { AxiosResponse, AxiosError } from 'axios';
 
 export const movieService = {
     createMovie,
@@ -24,10 +25,15 @@ async function getTopTen()
                         .then( response => {
                           return response.data;
                         })
-                        .catch((error) => {
-      
-                          NotificationManager.error(error.response);
-                        });
+                        .catch(err => {
+                          if (err.response) {
+                            NotificationManager.error(err.response.data.errorMessage);
+                          } else if (err.request) {
+                            NotificationManager.error("Server Error");
+                          } else {
+                            // anything else
+                          }
+                      });
                          
 }
 async function changeCurrent(movieId: string)
@@ -36,9 +42,15 @@ async function changeCurrent(movieId: string)
                         .then( response=> {
                           return response.data;
                         })
-                        .catch(error => {
-                          NotificationManager.error(error.response.data.errorMessage);
-                          });
+                        .catch(err => {
+                          if (err.response) {
+                            NotificationManager.error(err.response.data.errorMessage);
+                          } else if (err.request) {
+                            NotificationManager.error("Server Error");
+                          } else {
+                            // anything else
+                          }
+                      });
 
 }
 async function updateMovie(movieId: string, movieToUpdate : IMovieToUpdateModel)
@@ -48,9 +60,15 @@ async function updateMovie(movieId: string, movieToUpdate : IMovieToUpdateModel)
                                 NotificationManager.success("Movie updated successfuly");
                                 return res.data;
                               })
-                              .catch(error => {
-                                NotificationManager.error(error.response.data.errorMessage);
-                                });
+                              .catch(err => {
+                                if (err.response) {
+                                  NotificationManager.error(err.response.data.errorMessage);
+                                } else if (err.request) {
+                                  NotificationManager.error("Server Error");
+                                } else {
+                                  // anything else
+                                }
+                            });
 }
 async function searchMovieById(movieId: string)
 {
@@ -58,9 +76,15 @@ async function searchMovieById(movieId: string)
                         .then( (response)=> {
                           return response.data;
                         })
-                        .catch(error => {
-                          NotificationManager.error(error.response.data.errorMessage);
-                          });
+                        .catch(err => {
+                          if (err.response) {
+                            NotificationManager.error(err.response.data.errorMessage);
+                          } else if (err.request) {
+                            NotificationManager.error("Server Error");
+                          } else {
+                            // anything else
+                          }
+                      });
     
     return movie;
 }
@@ -77,9 +101,15 @@ function removeMovie(id: string)
        
         return id;
       })
-      .catch(error => {
-        NotificationManager.error(error.response.data.errorMessage);
-        });
+      .catch(err => {
+        if (err.response) {
+          NotificationManager.error(err.response.data.errorMessage);
+        } else if (err.request) {
+          NotificationManager.error("Server Error");
+        } else {
+          // anything else
+        }
+    });
 
     }
 }
@@ -89,21 +119,42 @@ async function getCurrentMovies()
                   .then( response=> {
                     return response.data;
                   })
-                  .catch(error => {
-                    NotificationManager.error(error.response.data.errorMessage);
-                    });
+                  .catch(err => {
+                    if (err.response) {
+                      NotificationManager.error(err.response.data.errorMessage);
+                    } else if (err.request) {
+                      NotificationManager.error("Server Error");
+                    } else {
+                      // anything else
+                    }
+                });
     
 }
 async function getAllMovies()
 {
     return await API.get(`${serviceConfig.baseURL}/api/movies/AllMovies/false`)
                           .then( response=> {
+                           
                             return response.data;
                           })
+                          .catch(err => {
+                            if (err.response) {
+                              NotificationManager.error(err.response.data.errorMessage);
+                            } else if (err.request) {
+                              NotificationManager.error("Server Error");
+                            } else {
+                              // anything else
+                            }
+                        });
+                          /*
                           .catch(error => {
                            
-                            NotificationManager.error(error.response.data.errorMessage || "Server error");
-                            });
+                            if (error.status) {
+                              // network error
+                              NotificationManager.error(error.response.data.errorMessage);
+                            }
+                            
+                            });*/
       
   }
   
@@ -112,12 +163,18 @@ async function getAllMovies()
   
   return   await API.get(`/api/movies/SearchMoviesByTag?query=${tagToSearch}`,{timeout: 50000})
       .then( (response)=> {
-
+       
        return response.data;
       })
-      .catch(error => {
-      NotificationManager.error(error.response);
-      });   
+      .catch(err => {
+        if (err.response) {
+          NotificationManager.error(err.response.data.errorMessage);
+        } else if (err.request) {
+          NotificationManager.error("Server Error");
+        } else {
+          // anything else
+        }
+    });  
 }
 
 async function createMovie(moveModel: IMovieToCreateModel) 
@@ -127,8 +184,14 @@ async function createMovie(moveModel: IMovieToCreateModel)
           .then( response=> {
                NotificationManager.success("Successfuly added movie!");
           })
-          .catch(error => {
-            NotificationManager.error(error.response.data.errorMessage);
-            });
+          .catch(err => {
+            if (err.response) {
+              NotificationManager.error(err.response.data.errorMessage);
+            } else if (err.request) {
+              NotificationManager.error("Server Error");
+            } else {
+              // anything else
+            }
+        });
         
 }
