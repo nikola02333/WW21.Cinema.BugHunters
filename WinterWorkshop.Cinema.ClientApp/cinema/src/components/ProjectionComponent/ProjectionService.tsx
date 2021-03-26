@@ -3,7 +3,7 @@ import { serviceConfig } from "../../appSettings";
 
 
 export const getCurrentMoviesAndProjections = (setInfo,setMovies) => {
-    setInfo((prev)=>({ ...prev, submitted: false }));
+    // setInfo((prev)=>({ ...prev, submitted: false }));
 
     const requestOptions = {
       method: "GET",
@@ -298,7 +298,7 @@ export const getAllCinemas = (setInfo,setCinemas) => {
             }
           }
          
-          setProjections((prev)=>({ ...prev, filteredProjections: data, isLoading: false }));
+          setProjections({filteredProjections: data});
         }
       })
       .catch((response) => {

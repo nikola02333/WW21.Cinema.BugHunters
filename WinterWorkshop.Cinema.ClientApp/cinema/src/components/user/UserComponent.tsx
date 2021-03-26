@@ -142,8 +142,6 @@ interface IState {
     history.push('/userprofile');
   };
 
-      console.log(state.userName);
-
     return (
         <>
           <Form
