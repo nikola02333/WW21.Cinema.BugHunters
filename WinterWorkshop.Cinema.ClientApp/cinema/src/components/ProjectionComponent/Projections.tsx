@@ -48,7 +48,7 @@ const Projections : React.FC = (props: any) => {
     cinemaId: "",
     auditoriumId: "",
     movieId: "",
-    dateTime: new Date(),
+    dateTime: new Date(0),
     id: "",
     name: "",
     current: false,
@@ -68,14 +68,15 @@ const Projections : React.FC = (props: any) => {
     },[]);
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+      
       event.preventDefault();
       const { cinemaId, auditoriumId, movieId, dateTime } = info;
 
-      if (cinemaId || auditoriumId || movieId || dateTime) {
+      if (cinemaId || auditoriumId || movieId || ( dateTime && dateTime.getFullYear()!==1970) ) {
         Service.getCurrentFilteredMoviesAndProjections(info,setInfo,movies,setProjection);
       } else {
-        if(!cinemaId && !auditoriumId && !movieId && !dateTime ){
-          NotificationManager.error("All movies");
+        if(!cinemaId && !auditoriumId && !movieId && ( !dateTime || dateTime.getFullYear()===1970) ){
+          NotificationManager.info("All movies");
         }else{
           NotificationManager.error("Not found.");
         }
@@ -83,8 +84,6 @@ const Projections : React.FC = (props: any) => {
         setInfo((prev)=>({ ...prev, submitted: false }));
         setProjection((prev)=>({ ...prev,setProjection:[]  }));
       }
-
-      console.log("              handleSubmit");
     };
 
     console.log("PROJECTIONS")

@@ -61,7 +61,7 @@ const FilterProjections:React.FC<IProps> = memo(({movies,setMovies,info,setInfo,
         className="filter"
        >
          <Row>
-        <span className="filter-heading">Filter by:</span>
+        <span className="filter-heading align-self-center">Filter by:</span>
         
         <SelectCinenma cinemas={cinemas.cinemas} setInfo={setInfo} setFilteredData={setFilteredData}/>
 

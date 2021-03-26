@@ -247,7 +247,6 @@ export const getAllCinemas = (setInfo,setCinemas) => {
 
  export const getCurrentFilteredMoviesAndProjections = (info,setInfo,moviesState,setProjections) => {
     const { cinemaId, auditoriumId, movieId, dateTime } = info;
-    
     const requestOptions = {
       method: "GET",
       headers: {
@@ -267,8 +266,8 @@ export const getAllCinemas = (setInfo,setCinemas) => {
     if (movieId) {
       query += `${query.length ? "&" : ""}movieId=${movieId}`;
     }
-    if (dateTime) {
-      query += `${query.length ? "&" : ""}dateTime=${dateTime}`;
+    if (dateTime && dateTime.getFullYear()!==1970 ) {
+      query += `${query.length ? "&" : ""}dateTime=${dateTime.toISOString()}`;
     }
     if (query.length) {
       query = `?${query}`;
