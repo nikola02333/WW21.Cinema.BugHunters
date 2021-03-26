@@ -27,7 +27,7 @@ async function updateCinema(cinemaId: string, cinemaToUpdate : ICinemaToUpdateMo
 
 async function  getCinemaById(cinemaId: string)
 {
- return await API.put(`/api/cinemas/GetById/${cinemaId}`)
+ return await API.get(`/api/cinemas/GetById/${cinemaId}`)
                               .then( (res)=> {
                                 return res.data;
                               })
@@ -68,11 +68,13 @@ async function getCinemas()
  
 async function addCinema(cinematoCreateModel: ICinemaToCreateModel) 
 {
+  console.log(cinematoCreateModel);
     await API.post(`${serviceConfig.baseURL}/api/cinemas/create`, JSON.stringify(cinematoCreateModel))
         .then( response=> {
              NotificationManager.success("Successfuly added cinema!");
         })
         .catch(error => {
+          debugger
           NotificationManager.error(error.response.data.errorMessage);
           });    
 }

@@ -19,22 +19,16 @@ import {cinemaService} from './../../Services/cinemaService';
 import {ICinemaToCreateModel} from './../../../models/ICinemaToCreateModel';
 
 interface IState {
-  createCinema:{
-    name: string;
-  address:string;
-  cityName:string;
-  createAuditoriumModel;
-  };
-  submitted;
+  createCinema:ICinemaToCreateModel;
+  submitted:boolean;
 };
 
 const NewCinema: React.FC = (props: any) => {
   const [state, setState] = useState<IState>({
     createCinema:{
-      name: "",
+      name:"",
       address:"",
-      cityName:"",
-      createAuditoriumModel:[]
+      cityName:""
     },
     submitted: false
   });
@@ -52,10 +46,8 @@ const NewCinema: React.FC = (props: any) => {
 
  
   const addCinema = async() => {
-    var cinemaToCreate :ICinemaToCreateModel={
-      createCinema:state.createCinema
-    };
-    await cinemaService.addCinema(cinemaToCreate);
+    console.log(state.createCinema);
+    await cinemaService.addCinema(state.createCinema);
   };
 
 

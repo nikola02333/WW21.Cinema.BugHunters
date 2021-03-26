@@ -1,9 +1,9 @@
+import {IAuditorium} from '../models/index';
+
 export interface ICinemaToCreateModel
 {
-createCinema:{
 name: string;
 address:string;
 cityName:string;
-createAuditoriumModel;
-};
+createAuditoriumModel?:IAuditorium;
 }
