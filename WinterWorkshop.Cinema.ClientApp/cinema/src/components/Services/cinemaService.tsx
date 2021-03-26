@@ -44,15 +44,12 @@ function removeCinema(id: string)
       .then( (response)=> {
 
         console.log(response.data);
-
-        NotificationManager.success("Successfuly removed cinema!");
-       
+        NotificationManager.success("Successfuly removed cinema!");     
         return id;
       })
       .catch(error => {
         NotificationManager.error(error.response.data.errorMessage);
         });
-
     }
 }
 
@@ -68,17 +65,14 @@ async function getCinemas()
                             });
       
   }
-
-  
+ 
 async function addCinema(cinematoCreateModel: ICinemaToCreateModel) 
 {
-
     await API.post(`${serviceConfig.baseURL}/api/cinemas/create`, JSON.stringify(cinematoCreateModel))
         .then( response=> {
              NotificationManager.success("Successfuly added cinema!");
         })
         .catch(error => {
           NotificationManager.error(error.response.data.errorMessage);
-          });
-      
+          });    
 }
