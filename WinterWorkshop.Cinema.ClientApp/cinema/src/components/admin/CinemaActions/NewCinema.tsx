@@ -52,7 +52,7 @@ const NewCinema: React.FC = (props: any) => {
 
  
   const addCinema = async() => {
-      
+    console.log("Adding cinema");
     var cinemaToCreate :ICinemaToCreateModel={
       createCinema:{
         name: state.createCinema.name,
@@ -65,6 +65,7 @@ const NewCinema: React.FC = (props: any) => {
         }]
         }
     };
+    console.log("Adding cinema");
     await cinemaService.addCinema(cinemaToCreate);
   };
 
