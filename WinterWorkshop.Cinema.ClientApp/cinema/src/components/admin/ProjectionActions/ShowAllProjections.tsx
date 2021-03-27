@@ -6,8 +6,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "../../Spinner";
 import { IProjection } from "../../../models";
+import {projectionService} from "../../Services/projectionService";
+import ProjectionsTable from "./ProjectionsTabel";
 
-interface IState {
+export interface IState {
   projections: IProjection[];
   isLoading: boolean;
 }
@@ -33,58 +35,23 @@ const ShowAllProjections: React.FC = (props: any) => {
     getProjections();
   }, []);
 
-  const getProjections = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    setState({ ...state, isLoading: true });
-    fetch(`${serviceConfig.baseURL}/api/Projections/all`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({ ...state, projections: data, isLoading: false });
-        }
-      })
-      .catch((response) => {
-        setState({ ...state, isLoading: false });
-        NotificationManager.error(response.message || response.statusText);
-      });
+  const getProjections = async() => {
+    console.log("projection");
+    setState(prev=>({ ...prev, isLoading: true }));
+    var projections = await projectionService.getAllProjections();
+    if(projections === undefined){
+      return;
+    }
+    setState(prev=>({ ...prev,isLoading: false,  projections: projections }));
   };
 
-  const removeProjection = (id: string) => {
-    const requestOptions = {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    setState({ ...state, isLoading: true });
-    fetch(`${serviceConfig.baseURL}/api/Projections/${id}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        NotificationManager.success("Successfully deleted projection.");
-        return response.json();
-      })
-
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, isLoading: false });
-      });
-
+  const removeProjection = async(id: string) => {
+    setState(prev=>({ ...prev, isLoading: true }));
+   const deleted= await projectionService.deleteProjectino(id);
+   if(deleted===undefined){
+    return;
+   }
+    setState(prev=>({ ...prev, isLoading: false }));
     setTimeout(() => window.location.reload(), 1000);
   };
 
@@ -121,22 +88,8 @@ const ShowAllProjections: React.FC = (props: any) => {
     props.history.push(`editProjection/${id}`);
   };
 
-  const rowsData = fillTableWithDaata();
-  const table = (
-    <Table striped bordered hover size="sm" variant="dark">
-      <thead>
-        <tr>
-          <th>Movie Title</th>
-          <th>Auditorium Name</th>
-          <th>Projection Time</th>
-          <th></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>{rowsData}</tbody>
-    </Table>
-  );
-  const showTable = state.isLoading ? <Spinner></Spinner> : table;
+  
+  const showTable = state.isLoading ? <Spinner></Spinner> : <ProjectionsTable setState={setState} projections={state.projections}/>;
   return (
     <React.Fragment>
       <Row className="no-gutters pt-2">
