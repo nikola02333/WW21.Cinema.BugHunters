@@ -150,7 +150,7 @@ const NewMovie: React.FC = (props: any) => {
       Actors: state.Actorss.map(actor=> actor.name).join(','),
       Description:''
     };
-    debugger;
+    
    await movieService.createMovie(movieToCreate);
   };
 
@@ -175,7 +175,7 @@ const NewMovie: React.FC = (props: any) => {
               <YearPicker
                 defaultValue={"Select Movie Year"}
                 start={1895}
-                end={2100}
+                end={2022}
                 reverse
                 required={true}
                 disabled={false}
