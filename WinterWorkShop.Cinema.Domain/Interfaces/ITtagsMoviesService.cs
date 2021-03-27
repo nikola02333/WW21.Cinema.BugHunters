@@ -10,9 +10,11 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
 {
    public interface ITtagsMoviesService
     {
-        Task<GenericResult<TagMovieDomainModel>> AddTagMovie(TagsMovies tagsToAdd);
+        Task<GenericResult<TagMovieDomainModel>> AddTagMovieAsync(TagsMovies tagsToAdd);
 
-        Task<GenericResult<TagMovieDomainModel>> SearchTag(TagDomainModel tagDomainModel);
+        Task<GenericResult<TagMovieDomainModel>> SearchTagAsync(TagDomainModel tagDomainModel);
+
+        Task<GenericResult<TagMovieDomainModel>> GetTagByMovieIDAsync(Guid movieId);
 
     }
 }
