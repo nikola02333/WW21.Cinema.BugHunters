@@ -6,18 +6,23 @@ import {
   Container,
   Row,
   Col,
-  FormText,
+  FormText,FormControl
 } from "react-bootstrap";
 import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../../appSettings";
 import { Typeahead } from "react-bootstrap-typeahead";
 import DateTimePicker from "react-datetime-picker";
 import { IAuditorium, IMovie } from "../../../models";
+import {projectionService} from "../../Services/projectionService";
+import {ICreateProjection} from "../../../models/ProjectionModels";
+import {movieService} from "../../Services/movieService"
+
+
 
 interface IState {
   projectionTime: string;
   movieId: string;
-  auditoriumId: string;
+  auditoriumId: number;
   submitted: boolean;
   projectionTimeError: string;
   movieIdError: string;
@@ -25,13 +30,17 @@ interface IState {
   movies: IMovie[];
   auditoriums: IAuditorium[];
   canSubmit: boolean;
+  price:number;
+  priceError:string;
+  duration:number;
+  durationError:string;
 }
 
 const NewProjection: React.FC = (props: any) => {
   const [state, setState] = useState<IState>({
     projectionTime: "",
     movieId: "",
-    auditoriumId: "",
+    auditoriumId: 0,
     submitted: false,
     projectionTimeError: "",
     movieIdError: "",
@@ -53,10 +62,14 @@ const NewProjection: React.FC = (props: any) => {
       },
     ],
     canSubmit: true,
+    price:1,
+    priceError:"",
+    duration:1,
+    durationError:""
   });
 
   useEffect(() => {
-    getProjections();
+    getMovies();
     getAuditoriums();
   }, []);
 
@@ -93,6 +106,24 @@ const NewProjection: React.FC = (props: any) => {
       } else {
         setState((prev)=>({ ...prev, auditoriumIdError: "", canSubmit: true }));
       }
+    }else if (id === "price") {
+      if (!value) {
+        setState((prev)=>({ ...prev,
+          priceError: "Please insert price",
+          canSubmit: false,
+        }));
+      } else {
+        setState((prev)=>({ ...prev, priceError: "", canSubmit: true }));
+      }
+    }else if (id === "duration") {
+      if (!value) {
+        setState((prev)=>({ ...prev,
+          durationError: "Please insert duration",
+          canSubmit: false,
+        }));
+      } else {
+        setState((prev)=>({ ...prev, durationError: "", canSubmit: true }));
+      }
     }
   };
 
@@ -102,7 +133,7 @@ const NewProjection: React.FC = (props: any) => {
     setState((prev)=>({ ...prev, submitted: true }));
     console.log(state);
 
-    if (state.movieId && state.auditoriumId && state.projectionTime) {
+    if (state.movieId && state.auditoriumId && state.projectionTime && state.price && state.duration) {
       addProjection();
     } else {
       NotificationManager.error("Please fill in data");
@@ -110,65 +141,31 @@ const NewProjection: React.FC = (props: any) => {
     }
   };
 
-  const addProjection = () => {
-    const data = {
-      movieId: state.movieId,
-      auditoriumId: state.auditoriumId,
-      projectionTime: state.projectionTime,
+  const addProjection = async() => {
+    const data:ICreateProjection = {
+      MovieId: state.movieId,
+      AuditoriumId: state.auditoriumId,
+      ProjectionTime: new Date(state.projectionTime) ,
+      Duration: state.duration,
+      Price:state.price
     };
-    console.log(data)
-
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-      body: JSON.stringify(data),
-    };
-
-    fetch(`${serviceConfig.baseURL}/api/projections`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.statusText;
-      })
-      .then((result) => {
+    
+       const created= await projectionService.createProjection(data)
+       if(created===undefined){
+        return;
+       }
         NotificationManager.success("New projection added!");
         props.history.push(`AllProjections`);
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
         setState((prev)=>({ ...prev, submitted: false }));
-      });
   };
 
-  const getProjections = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    fetch(`${serviceConfig.baseURL}/api/Movies/AllMovies/${false}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState((prev)=>({ ...prev, movies: data }));
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState((prev)=>({ ...prev, submitted: false }));
-      });
+  const getMovies = async() => {
+    const movies =await movieService.getAllMovies();
+    if(movies===undefined){
+      setState((prev)=>({ ...prev, submitted: false }));
+      return;
+    }
+    setState((prev)=>({ ...prev, movies: movies }));
   };
 
   const getAuditoriums = () => {
@@ -199,21 +196,37 @@ const NewProjection: React.FC = (props: any) => {
       });
   };
 
-  const onMovieChange = (movies: IMovie[]) => {
-    if (movies[0]) {
-      setState((prev)=>({ ...prev, movieId: movies[0].id }));
-      validate("movieId", movies[0]);
+  const onMovieChange = (id: string) => {
+    if (id) {
+      setState((prev)=>({ ...prev, movieId: id }));
+      validate("movieId", id);
     } else {
       validate("movieId", null);
     }
   };
 
-  const onAuditoriumChange = (auditoriums: IAuditorium[]) => {
-    if (auditoriums[0]) {
-      setState((prev)=>({ ...prev, auditoriumId: auditoriums[0].id }));
-      validate("auditoriumId", auditoriums[0]);
+  const onAuditoriumChange = (id: number) => {
+    if (id!==null) {
+      setState((prev)=>({ ...prev, auditoriumId: id}));
+      validate("auditoriumId", id);
     } else {
       validate("auditoriumId", null);
+    }
+  };
+  const onPriceChange = (price:number) => {
+    if (price>1) {
+      setState((prev)=>({ ...prev, price: price}));
+      validate("price", price);
+    } else {
+      validate("price", null);
+    }
+  };
+  const onDurationChange = (duration:number) => {
+    if (duration>1) {
+      setState((prev)=>({ ...prev, duration:duration }));
+      validate("duration", duration);
+    } else {
+      validate("duration", null);
     }
   };
 
@@ -230,44 +243,86 @@ const NewProjection: React.FC = (props: any) => {
           <h1 className="form-header">Add Projection</h1>
           <form onSubmit={handleSubmit}>
             <FormGroup>
-              <Typeahead
-                labelKey="title"
-                options={state.movies}
+              <FormControl
+                required={true}
+                as="select"
                 placeholder="Choose a movie..."
                 id="movie"
                 className="add-new-form"
                 onChange={(e) => {
-                  onMovieChange(e);
-                }}
-              />
+                  onMovieChange(e.target.value);
+                 }}
+              ><option>Choose a movie...</option>
+                {state.movies.map((movie)=>{
+                return(
+                  <option value={movie.id}>{movie.title}</option>
+                );
+              })}
+              </FormControl>
               <FormText className="text-danger">{state.movieIdError}</FormText>
             </FormGroup>
             <FormGroup>
-              <Typeahead
-                labelKey="name"
+              <FormControl
+                as="select"
                 className="add-new-form"
-                options={state.auditoriums}
                 placeholder="Choose auditorium..."
                 id="auditorium"
                 onChange={(e) => {
-                  onAuditoriumChange(e);
-                }}
+                  onAuditoriumChange(+e.target.value);
+                 }}
+              ><option>Choose a auditorium...</option>
+                {state.auditoriums.map((auditorium)=>{
+                return(
+                  <option value={auditorium.id}>{auditorium.name}</option>
+                );
+              })}
+              </FormControl>
+              <FormText className="text-danger">
+                {state.auditoriumIdError}
+              </FormText>
+            </FormGroup>
+            <FormGroup>
+            <FormControl
+              type="number"
+              min="1"
+              className="add-new-form"
+              placeholder="Projection price"
+              id="price"
+              onChange={(e) => {
+                onPriceChange(+e.target.value);
+              }}
               />
               <FormText className="text-danger">
                 {state.auditoriumIdError}
               </FormText>
             </FormGroup>
             <FormGroup>
-                <input
-                  onChange={(e) =>
-                    onDateChange(e)
-                  }
-                  name="dateTime"
-                  type="datetime-local"
-                  id="date"
-                  className="form-control add-new-form"
-                  
-                />
+              <FormControl
+              min="1"
+              type="number"
+              className="add-new-form"
+              placeholder="Duration in minutes"
+              id="duration"
+              onChange={(e) => {
+                onDurationChange(+e.target.value);
+              }}
+              />
+              <FormText className="text-danger">
+                {state.auditoriumIdError}
+              </FormText>
+            </FormGroup>
+            <FormGroup>
+              <FormControl
+                
+                onChange={(e) =>
+                  onDateChange(e)
+                }
+                name="dateTime"
+                type="datetime-local"
+                id="date"
+                className="add-new-form"
+                
+              />
               <FormText className="text-danger">
                 {state.projectionTimeError}
               </FormText>
