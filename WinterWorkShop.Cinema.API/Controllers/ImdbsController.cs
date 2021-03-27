@@ -16,8 +16,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
     public class ImdbsController : ControllerBase
     {
         [HttpGet]
-        [Route("TegTopTenMovies/{searchMovie}")]
-        public async Task<ActionResult> GetTopTenMovies( [FromQuery]string searchMovie)
+        [Route("GetTopTenMovies/{searchMovie}")]
+        public async Task<ActionResult> GetTopTenMovies( string searchMovie)
         {
           
             var apiLib = new ApiLib("k_9szm9guo");
