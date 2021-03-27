@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Data.Entities;
@@ -52,7 +53,21 @@ namespace WinterWorkShop.Cinema.Domain.Services
         {
             var tagsMovies = await _tagsMoviesRepository.GetTagByMovieIDAsync(movieId);
 
-            return null;
+            var tasToReturn = tagsMovies.Select(tm => new TagMovieDomainModel 
+            {
+                  TagModel= new TagDomainModel 
+                  {
+                       TagId= tm.TagId,
+                        TagName= tm.Tag.TagName,
+                         TagValue= tm.Tag.TagValue
+                  }
+            }).ToList();
+
+            return new GenericResult<TagMovieDomainModel> 
+            {
+                IsSuccessful = true,
+                 DataList = tasToReturn
+            };
           
         }
 

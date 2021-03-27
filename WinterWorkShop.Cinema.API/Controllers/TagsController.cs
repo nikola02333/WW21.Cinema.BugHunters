@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using WinterWorkShop.Cinema.API.Models;
+using WinterWorkShop.Cinema.Domain.Common;
 using WinterWorkShop.Cinema.Domain.Interfaces;
+using WinterWorkShop.Cinema.Domain.Models;
 using WinterWorkShop.Cinema.Domain.Services;
 
 namespace WinterWorkShop.Cinema.API.Controllers
@@ -27,10 +30,22 @@ namespace WinterWorkShop.Cinema.API.Controllers
          */
         [HttpGet]
         [Route("GetTagByMovieId/{movieId}")]
-        public async Task<ActionResult> GetTagByMovieId( Guid movieId)
+        public async Task<ActionResult<GenericResult<TagMovieDomainModel>>> GetTagByMovieId( Guid movieId)
         {
             var tagsByMovieId =await _tagsMoviesService.GetTagByMovieIDAsync(movieId);
-            return null;
+            
+            if(!tagsByMovieId.IsSuccessful)
+            { 
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = Messages.GET_TAGS_BY_MOVIEID_NOT_FOUND,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+                 
+                return BadRequest(errorResponse);
+            }
+
+            return Ok(tagsByMovieId.DataList);
         }
     }
 }
