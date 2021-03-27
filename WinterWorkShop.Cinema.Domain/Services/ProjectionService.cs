@@ -17,16 +17,19 @@ namespace WinterWorkShop.Cinema.Domain.Services
         private readonly ICinemasRepository _cinemasRepository;
         private readonly IAuditoriumsRepository _auditoruimsRepository;
         private readonly IMoviesRepository _moviesRepository;
+        private readonly ITicketsRepository _ticketsRepository;
 
         public ProjectionService(IProjectionsRepository projectionsRepository, 
                                 ICinemasRepository cinemasRepository, 
                                 IAuditoriumsRepository auditoruimsRepository,
-                               IMoviesRepository moviesRepository)
+                               IMoviesRepository moviesRepository,
+                               ITicketsRepository ticketsRepository)
         {
             _projectionsRepository = projectionsRepository;
             _cinemasRepository = cinemasRepository;
             _auditoruimsRepository = auditoruimsRepository;
             _moviesRepository = moviesRepository;
+            _ticketsRepository = ticketsRepository;
         }
 
         public async Task<IEnumerable<ProjectionDomainModel>> GetAllAsync()
@@ -162,10 +165,10 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<ProjectionDomainModel>> CreateProjection(ProjectionDomainModel domainModel)
         {
-            int projectionTime = 3;
+            //int projectionTime = 3;
 
             var projectionsAtSameTime = _projectionsRepository.GetByAuditoriumId(domainModel.AuditoriumId)
-                .Where(x => x.ShowingDate < domainModel.ProjectionTime.AddHours(projectionTime) && x.ShowingDate > domainModel.ProjectionTime.AddHours(-projectionTime))
+                .Where(x => x.ShowingDate < domainModel.ProjectionTime.AddMinutes(domainModel.Duration) && x.ShowingDate > domainModel.ProjectionTime.AddMinutes(-domainModel.Duration))
                 .ToList();
 
             if (projectionsAtSameTime != null && projectionsAtSameTime.Count > 0)
@@ -177,13 +180,13 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 };
             }
 
-            var newProjection = new Data.Projection
+            var newProjection = new Projection
             {
                 MovieId = domainModel.MovieId,
                 AuditoriumId = domainModel.AuditoriumId,
                  ShowingDate = domainModel.ProjectionTime,
                  Duration = domainModel.Duration,
-                 Price = domainModel.Price
+                 Price = domainModel.Price,
                  
             };
 
@@ -244,6 +247,70 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     MovieTitle = projection.Movie.Title
                 }
             };
+        }
+
+        public async Task<GenericResult<ProjectionDomainModel>> DeleteProjectionAsync(Guid id)
+        {
+            var projection = await _projectionsRepository.GetByIdAsync(id);
+
+            if (projection==null)
+            {
+                return new GenericResult<ProjectionDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.PROJECTION_GET_BY_ID
+                };
+            }
+
+            if (projection.ShowingDate.AddMinutes(projection.Duration) < DateTime.Now)
+            {
+                var tickets =await _ticketsRepository.GetByProjectionId(id);
+                if (tickets != null)
+                {
+                    foreach (var ticket in tickets)
+                    {
+                       var dilitedTicket = _ticketsRepository.Delete(ticket.Id);
+                        if (dilitedTicket == null)
+                        {
+                            return new GenericResult<ProjectionDomainModel>
+                            {
+                                IsSuccessful = false,
+                                ErrorMessage = Messages.TICKET_DELTE_ERROR
+                            };
+                        }
+                        _ticketsRepository.Save();
+                    }     
+                }
+
+                
+
+                var deletedProjection = _projectionsRepository.Delete(id);
+                if (deletedProjection == null)
+                {
+                    return new GenericResult<ProjectionDomainModel>
+                    {
+                        IsSuccessful = false,
+                        ErrorMessage = Messages.PROJECTION_DELTE_ERROR
+                    };
+                }
+                _projectionsRepository.Save();
+            }
+            else
+            {
+                return new GenericResult<ProjectionDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.PROJECTION_DELTE_IN_PAST
+                };
+
+            }
+            
+
+            return new GenericResult<ProjectionDomainModel>
+            {
+                IsSuccessful = true
+            };
+
         }
     }
 }

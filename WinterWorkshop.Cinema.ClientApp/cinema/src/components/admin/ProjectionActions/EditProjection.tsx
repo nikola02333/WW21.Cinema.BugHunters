@@ -57,7 +57,7 @@ const EditProjection: React.FC = (props: any) => {
   });
 
   useEffect(() => {
-    getProjections();
+    getMovies();
     getAuditoriums();
   }, []);
 
@@ -152,7 +152,7 @@ const EditProjection: React.FC = (props: any) => {
       });
   };
 
-  const getProjections = () => {
+  const getMovies = () => {
     const requestOptions = {
       method: "GET",
       headers: {
@@ -228,9 +228,9 @@ const EditProjection: React.FC = (props: any) => {
     setState({ ...state, projectionTime: date.toLocaleTimeString() });
 
   return (
-    <Container>
-      <Row>
-        <Col>
+    <Container >
+      <Row className="justify-content-center">
+        <Col xs={4}>
           <h1 className="form-header">Edit Projection</h1>
           <form onSubmit={handleSubmit}>
             <FormGroup>

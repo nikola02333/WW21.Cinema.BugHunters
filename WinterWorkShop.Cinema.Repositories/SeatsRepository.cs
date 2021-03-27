@@ -72,7 +72,7 @@ namespace WinterWorkShop.Cinema.Repositories
         public async Task<Seat> GetSeatInProjectionAuditoriumAsync(Guid seatId, Guid projectionId)
         {
             var seat =await _cinemaContext.Seats.Include(x => x.Auditorium).Include(x => x.Auditorium.Projections)
-                .Where(x => x.Id == (seatId) && x.Auditorium.Projections.Select(proj => proj.Id).SingleOrDefault() == projectionId).SingleOrDefaultAsync();
+                .Where(x => x.Id == (seatId) && x.Auditorium.Projections.Any(proj => proj.Id == projectionId)).SingleOrDefaultAsync();
 
             return seat;
         }
