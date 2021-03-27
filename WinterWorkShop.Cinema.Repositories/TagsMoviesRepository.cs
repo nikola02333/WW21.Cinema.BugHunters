@@ -13,7 +13,7 @@ namespace WinterWorkShop.Cinema.Repositories
     {
         void Attach(TagsMovies TagsMovie);
 
-        public Task<TagsMovies> GetTagByMovieIDAsync(Guid movieId);
+        public Task<List<TagsMovies>> GetTagByMovieIDAsync(Guid movieId);
     }
     public class TagsMoviesRepository : ITagsMoviesRepository
     {
@@ -46,12 +46,11 @@ namespace WinterWorkShop.Cinema.Repositories
             return await _cinemaContext.TagsMovies.FindAsync(id);
         }
 
-        public async Task<TagsMovies> GetTagByMovieIDAsync(Guid movieId)
+        public async Task<List<TagsMovies>> GetTagByMovieIDAsync(Guid movieId)
         {
-            //var tagResult =await _cinemaContext.Movies.Where(movie => movie.Id == movieId).Include(tm => tm.TagsMovies).FirstOrDefaultAsync();
-            //tagResult.TagsMovies.
-            //var tagResult = await _cinemaContext.Tags.Where().Include(tm => tm.TagsMovies);
-            return null;
+
+            var tags = await _cinemaContext.TagsMovies.Where(tm => tm.MovieId == movieId).Include(t=> t.Tag).ToListAsync();
+            return tags;
         }
 
         public async Task<TagsMovies> InsertAsync(TagsMovies obj)

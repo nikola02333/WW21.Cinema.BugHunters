@@ -29,6 +29,8 @@ async function editUser(userToUpdate: IUserUpdate)
               
             })
             .catch(err => {
+              
+              debugger;
               if (err.response) {
                 NotificationManager.error(err.response.data.errorMessage);
               } else if (err.request) {

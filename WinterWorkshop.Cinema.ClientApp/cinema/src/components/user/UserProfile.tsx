@@ -68,9 +68,7 @@ const UserProfile: React.FC = () => {
 
       //setState({ ...state, firstName: data.firstName });
      // da li postoji neke drugi nacin, da  menjam iz user objekta podatke
-      setState( (prevState) => ({...prevState, firstName: data.firstName}));
-      // ovde je sigurno bug 
-      setState( (prevState) => ({...prevState, lastName: data.lastName}));
+      setState( (prevState) => ({...prevState, firstName: data.firstName, lastName: data.lastName}));
 
       //setState({ ...state, lastName: data.lastName });
       
