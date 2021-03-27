@@ -7,7 +7,7 @@ import "./../../../index.css";
 import { IMovie } from "../../../models";
 
 import { movieService } from './../../Services/movieService';
-
+import Movie from '../../MovieComponent/Movie';
 interface IState {
   movies: IMovie[];
   filteredMoviesByYear: IMovie[];
@@ -124,6 +124,8 @@ const TopTenMovies: React.FC = (props: any) => {
       <tbody>{rowsData}</tbody>
     </Table>
   );
+
+
   //const showTable = state.isLoading ? <Spinner></Spinner> : table;
   return (
     <React.Fragment>
@@ -145,14 +147,20 @@ const TopTenMovies: React.FC = (props: any) => {
           //max="2100"
         >
           <option value="none">Year</option>
-          {showYears}
+          {/*showYears*/}
         </select>
       </Row>
-      <Row className="no-gutters pr-5 pl-5">
-      {state.isLoading ? <Spinner></Spinner> : table}
-        </Row>
+      {/*<Row className="no-gutters pr-5 pl-5">
+      state.isLoading ? <Spinner></Spinner> : table
 
 
+        </Row> */}
+
+{state.isLoading ? <Spinner></Spinner> :
+    (<Movie 
+    movies={state.movies}
+    
+    /> )}
     </React.Fragment>
   );
 };

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Data;
@@ -11,6 +12,8 @@ namespace WinterWorkShop.Cinema.Repositories
     public interface ITagsMoviesRepository : IRepository<TagsMovies>
     {
         void Attach(TagsMovies TagsMovie);
+
+        public Task<TagsMovies> GetTagByMovieIDAsync(Guid movieId);
     }
     public class TagsMoviesRepository : ITagsMoviesRepository
     {
@@ -41,6 +44,14 @@ namespace WinterWorkShop.Cinema.Repositories
         public async Task<TagsMovies> GetByIdAsync(object id)
         {
             return await _cinemaContext.TagsMovies.FindAsync(id);
+        }
+
+        public async Task<TagsMovies> GetTagByMovieIDAsync(Guid movieId)
+        {
+            //var tagResult =await _cinemaContext.Movies.Where(movie => movie.Id == movieId).Include(tm => tm.TagsMovies).FirstOrDefaultAsync();
+            //tagResult.TagsMovies.
+            //var tagResult = await _cinemaContext.Tags.Where().Include(tm => tm.TagsMovies);
+            return null;
         }
 
         public async Task<TagsMovies> InsertAsync(TagsMovies obj)

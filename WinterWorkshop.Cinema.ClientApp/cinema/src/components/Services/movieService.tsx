@@ -4,7 +4,6 @@ import {IMovieToUpdateModel} from '../../models/IMovieToUpdateModel';
 import { IMovieToCreateModel } from './../../models/IMovieToCreateModel';
 
 import API from '../../axios';
-import { AxiosResponse, AxiosError } from 'axios';
 
 export const movieService = {
     createMovie,
@@ -30,8 +29,6 @@ async function getTopTen()
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
                             NotificationManager.error("Server Error");
-                          } else {
-                            // anything else
                           }
                       });
                          
@@ -47,8 +44,7 @@ async function changeCurrent(movieId: string)
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
                             NotificationManager.error("Server Error");
-                          } else {
-                            // anything else
+                         
                           }
                       });
 
@@ -65,8 +61,6 @@ async function updateMovie(movieId: string, movieToUpdate : IMovieToUpdateModel)
                                   NotificationManager.error(err.response.data.errorMessage);
                                 } else if (err.request) {
                                   NotificationManager.error("Server Error");
-                                } else {
-                                  // anything else
                                 }
                             });
 }
@@ -81,8 +75,6 @@ async function searchMovieById(movieId: string)
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
                             NotificationManager.error("Server Error");
-                          } else {
-                            // anything else
                           }
                       });
     
@@ -106,8 +98,6 @@ function removeMovie(id: string)
           NotificationManager.error(err.response.data.errorMessage);
         } else if (err.request) {
           NotificationManager.error("Server Error");
-        } else {
-          // anything else
         }
     });
 
@@ -124,8 +114,6 @@ async function getCurrentMovies()
                       NotificationManager.error(err.response.data.errorMessage);
                     } else if (err.request) {
                       NotificationManager.error("Server Error");
-                    } else {
-                      // anything else
                     }
                 });
     
@@ -142,20 +130,9 @@ async function getAllMovies()
                               NotificationManager.error(err.response.data.errorMessage);
                             } else if (err.request) {
                               NotificationManager.error("Server Error");
-                            } else {
-                              // anything else
+                           
                             }
                         });
-                          /*
-                          .catch(error => {
-                           
-                            if (error.status) {
-                              // network error
-                              NotificationManager.error(error.response.data.errorMessage);
-                            }
-                            
-                            });*/
-      
   }
   
  async function searcMovie(tagToSearch: any): Promise<any>
@@ -171,8 +148,7 @@ async function getAllMovies()
           NotificationManager.error(err.response.data.errorMessage);
         } else if (err.request) {
           NotificationManager.error("Server Error");
-        } else {
-          // anything else
+       
         }
     });  
 }
@@ -189,8 +165,7 @@ async function createMovie(moveModel: IMovieToCreateModel)
               NotificationManager.error(err.response.data.errorMessage);
             } else if (err.request) {
               NotificationManager.error("Server Error");
-            } else {
-              // anything else
+           
             }
         });
         
