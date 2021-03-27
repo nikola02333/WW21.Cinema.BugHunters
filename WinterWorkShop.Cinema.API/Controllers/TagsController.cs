@@ -35,7 +35,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
             var tagsByMovieId =await _tagsMoviesService.GetTagByMovieIDAsync(movieId);
             
             if(!tagsByMovieId.IsSuccessful)
-            {
+            { 
                 ErrorResponseModel errorResponse = new ErrorResponseModel
                 {
                     ErrorMessage = Messages.GET_TAGS_BY_MOVIEID_NOT_FOUND,
