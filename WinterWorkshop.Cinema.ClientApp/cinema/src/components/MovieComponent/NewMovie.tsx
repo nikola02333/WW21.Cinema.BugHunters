@@ -248,24 +248,14 @@ const NewMovie: React.FC = (props: any) => {
               <FormText className="text-danger">{state.description}</FormText>
             </FormGroup>
 
-            <FormControl
-              id="tags"
-              type="text"
-              placeholder="Movie Tags"
-              value={state.tags}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                handleTagsChange(e);
-              }}
-              className="add-new-form"
-            />
-
            
             <div className="d-flex justify-content-center">
             <TagsList setState={setState} tags={state.tagss}/>
             </div>
          
          
-            <div className="d-flex justify-content-center">
+            <div className="d-flex justify-content-center"> 
+        
             <ActorList setState={setState} actors={state.Actorss}/>
             </div>
             <FormControl
