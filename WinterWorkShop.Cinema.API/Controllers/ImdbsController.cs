@@ -17,17 +17,19 @@ namespace WinterWorkShop.Cinema.API.Controllers
     public class ImdbsController : ControllerBase
     {
         [HttpGet]
-        [Route("GetTopTenMovies/{searchMovie}")]
-        public async Task<ActionResult> GetTopTenMovies( string searchMovie)
+        [Route("Search/{searchMovie}")]
+        public async Task<ActionResult> SearchByMovieId( string searchMovie)
         {
           
             var apiLib = new ApiLib("k_9szm9guo");
-            var data = await apiLib.TitleAsync( searchMovie + "/FullActor,Images,Ratings");
+            var data = await apiLib.TitleAsync( searchMovie + "/Trailer,Ratings");
 
-            if(data.ErrorMessage == null)
+            if (data.ErrorMessage == "")
             {
                 return Ok(data);
             }
+                
+            
 
             ErrorResponseModel errorResponse = new ErrorResponseModel
             {
