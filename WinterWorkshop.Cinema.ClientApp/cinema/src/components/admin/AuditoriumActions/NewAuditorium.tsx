@@ -19,12 +19,12 @@ import { ICinema } from "../../../models";
 
 interface IState {
   cinemaId: string;
-  auditName: string;
+  auditoriumName: string;
   seatRows: number;
   numberOfSeats: number;
   cinemas: ICinema[];
   cinemaIdError: string;
-  auditNameError: string;
+  auditoriumNameError: string;
   seatRowsError: string;
   numOfSeatsError: string;
   submitted: boolean;
@@ -34,7 +34,7 @@ interface IState {
 const NewAuditorium: React.FC = (props: any) => {
   const [state, setState] = useState<IState>({
     cinemaId: "",
-    auditName: "",
+    auditoriumName: "",
     seatRows: 0,
     numberOfSeats: 0,
     cinemas: [
@@ -46,7 +46,7 @@ const NewAuditorium: React.FC = (props: any) => {
       },
     ],
     cinemaIdError: "",
-    auditNameError: "",
+    auditoriumNameError: "",
     seatRowsError: "",
     numOfSeatsError: "",
     submitted: false,
@@ -97,7 +97,7 @@ const NewAuditorium: React.FC = (props: any) => {
 
     setState({ ...state, submitted: true });
     if (
-      state.auditName &&
+      state.auditoriumName &&
       state.numberOfSeats &&
       state.cinemaId &&
       state.seatRows
@@ -110,15 +110,15 @@ const NewAuditorium: React.FC = (props: any) => {
   };
 
   const validate = (id: string, value: string | null) => {
-    if (id === "auditName") {
+    if (id === "auditoriumName") {
       if (value === "") {
         setState({
           ...state,
-          auditNameError: "Fill in auditorium name",
+          auditoriumNameError: "Fill in auditorium name",
           canSubmit: false,
         });
       } else {
-        setState({ ...state, auditNameError: "", canSubmit: true });
+        setState({ ...state, auditoriumNameError: "", canSubmit: true });
       }
     } else if (id === "numberOfSeats" && value) {
       const seatsNum = +value;
@@ -160,7 +160,7 @@ const NewAuditorium: React.FC = (props: any) => {
       cinemaId: state.cinemaId,
       numberOfSeats: +state.numberOfSeats,
       seatRows: +state.seatRows,
-      auditName: state.auditName,
+      auditoriumName: state.auditoriumName,
     };
 
     const requestOptions = {
@@ -228,15 +228,15 @@ const NewAuditorium: React.FC = (props: any) => {
           <form onSubmit={handleSubmit}>
             <FormGroup>
               <FormControl
-                id="auditName"
+                id="auditoriumName"
                 type="text"
                 placeholder="Auditorium Name"
-                value={state.auditName}
+                value={state.auditoriumName}
                 className="add-new-form"
                 onChange={handleChange}             
               />
               <FormText className="text-danger">
-                {state.auditNameError}
+                {state.auditoriumNameError}
               </FormText>
             </FormGroup>
             <FormGroup>
