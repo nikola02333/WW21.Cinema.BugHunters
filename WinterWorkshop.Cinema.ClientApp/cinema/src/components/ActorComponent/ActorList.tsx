@@ -3,7 +3,7 @@ import ActorForm from "./ActorForm";
 import Actor from "./Actor";
 
 import { IActor } from './../../models/IActor';
-
+import { FormGroup,Row } from "react-bootstrap";
 
  interface IProps{
    
@@ -37,8 +37,12 @@ const ActorList :React.FC<IProps> = (props) => {
 
   return (
     <>
+    <FormGroup className="mt-3">
+       <Row>
       <ActorForm  onSubmit={addActor} />
+      </Row>
       <Actor actors={actors} removeActor={removeActor} />
+      </FormGroup>
     </>
   );
 };
