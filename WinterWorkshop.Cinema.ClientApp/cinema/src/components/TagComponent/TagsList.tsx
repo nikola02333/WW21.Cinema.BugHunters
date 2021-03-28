@@ -1,15 +1,7 @@
 import React, { useState } from "react";
 import TagForm from "./TagForm";
 import Tag from "./Tag";
-import {
-  FormGroup,
-  FormControl,
-  Button,
-  Container,
-  Row,
-  Col,
-  FormText,
-} from "react-bootstrap";
+import { FormGroup, Row } from "react-bootstrap";
 
 interface IState {
   tags:ITag [];
