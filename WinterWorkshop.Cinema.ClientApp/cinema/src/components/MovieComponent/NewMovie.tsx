@@ -174,11 +174,14 @@ const NewMovie: React.FC = (props: any) => {
 
   return (
     <Container>
-      <Row>
-        <Col>
-          <p className="form-header">Add New Movie</p>
-          <form onSubmit={handleSubmit}>
-          <FormGroup>
+     <Row className="d-flex justify-content-center mt-3">
+        
+        <Col xs={12}>
+          <h1 className="form-header">Add New Movie</h1>
+          </Col>
+          <Col xs={11} md={9} lg={7} xl={5}>
+          <form onSubmit={handleSubmit} >
+            <FormGroup>
               <FormControl
                 id="movieTitleId"
                 type="text"
@@ -196,8 +199,6 @@ const NewMovie: React.FC = (props: any) => {
                 placeholder="Movie Title"
                 value={state.title}
                 onChange={(e) => handleChange(e.target)}
-                className="add-new-form"
-                required
               />
               <FormText className="text-danger text-center">{state.titleError}</FormText>
             </FormGroup>
@@ -215,7 +216,7 @@ const NewMovie: React.FC = (props: any) => {
                 }}
                 id={"year"}
                 name={"year"}
-                classes={"form-control add-new-form"}
+                classes={"form-control"}
                 optionClasses={"option classes"}
               />
               <FormText className="text-danger">{state.yearError}</FormText>
@@ -224,7 +225,6 @@ const NewMovie: React.FC = (props: any) => {
             
               <FormControl
                 as="select"
-                className="add-new-form"
                 placeholder="Rating"
                 id="rating"
                 value={state.rating}
@@ -244,7 +244,7 @@ const NewMovie: React.FC = (props: any) => {
             </FormGroup>
             <FormGroup>
               <FormControl
-                className="add-new-form"
+                
                 as="select"
                 placeholder="Current"
                 id="current"
@@ -262,7 +262,6 @@ const NewMovie: React.FC = (props: any) => {
                 placeholder="Genre"
                 value={state.genre}
                 onChange={(e) =>handleChange(e.target)}
-                className="add-new-form"
               />
               <FormText className="text-danger text-center">{state.genreError}</FormText>
             </FormGroup>
@@ -273,19 +272,24 @@ const NewMovie: React.FC = (props: any) => {
                 placeholder="About Movie"
                 value={state.description}
                 onChange={(e) =>handleChange(e.target)}
-                className="add-new-form"
               />
               <FormText className="text-danger text-center">{state.description}</FormText>
             </FormGroup>
 
-           
-            <div className="d-flex justify-content-center">
+            {/* <FormControl
+              id="tags"
+              type="text"
+              placeholder="Movie Tags"
+              value={state.tags}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                handleTagsChange(e);
+              }}
+    
+            /> */}
+
             <TagsList setState={setState} tags={state.tagss}/>
-            </div>
-         
-         
-            <div className="d-flex justify-content-center"> 
-        
+
+            <div className="d-flex justify-content-center">
             <ActorList setState={setState} actors={state.Actorss}/>
             </div>
             <FormControl
@@ -296,17 +300,19 @@ const NewMovie: React.FC = (props: any) => {
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 handleBannerUrlChange(e);
               }}
-              className="add-new-form"
+             
             />
-            <FormText className="text-danger text-center">{state.coverPicture}</FormText>
+                      
+            <Row className="d-flex justify-content-center mt-3">
             <Button
-              className="btn-add-new"
+              className="col-3"
               type="submit"
               disabled={state.submitted || !state.canSubmit}
               block
             >
               Add Movie
             </Button>
+            </Row>
           </form>
         </Col>
       </Row>
