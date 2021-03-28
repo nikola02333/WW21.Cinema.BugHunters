@@ -1,14 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import { NotificationManager } from "react-notifications";
 import { Row, Table } from "react-bootstrap";
 import Spinner from "../../components/Spinner";
 import "../../index.css";
-import {
-  isAdmin,
-  isSuperUser,
-  isUser,
-  isGuest,
-} from "../helpers/authCheck";
+
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IMovie, ITag } from "../../models/index";
@@ -20,8 +15,13 @@ interface IState {
   movies: IMovie[];
     isLoading: boolean;
 }
-
-const Movies: React.FC = (props: any) => {
+interface IProps{
+  showTopTenMovies: boolean;
+}
+// zasto ovde mora  props: any
+// preko showTopTenMovies da prikazujem filmove
+const Movies: React.FC<IProps> =  (props: any) => {
+  
   const [state, setState] = useState<IState>({
     movies: [
       {
@@ -141,16 +141,10 @@ const Movies: React.FC = (props: any) => {
       );
     }
   };
-  const handleChange = (e) => {
-    const { id, value } = e.target;
-    setState({ ...state, [id]: value });
-  };
 
-
-  // ovo je za movie!!!
   let inputValue;
 
-  // dovde !!!
+
   return (
     <React.Fragment>
       <Row className="no-gutters pt-2">

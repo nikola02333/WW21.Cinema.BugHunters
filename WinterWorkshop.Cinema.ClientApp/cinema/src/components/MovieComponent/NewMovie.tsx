@@ -301,6 +301,14 @@ const NewMovie: React.FC = (props: any) => {
             >
               Add Movie
             </Button>
+            <Button
+              className="col-3"
+              type="button"
+              variant="danger"
+              size="sm"
+            >
+             Reset fileds
+            </Button>
             </Row>
           </form>
         </Col>
