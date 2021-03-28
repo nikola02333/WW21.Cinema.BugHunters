@@ -396,7 +396,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var auditoriumToCreate = new CreateAuditoriumModel
             {
 
-                auditName = "Auditorium two",
+                auditoriumName = "Auditorium two",
                 cinemaId = 2,
                 numberOfSeats = numOfSeats,
                 seatRows = numOfRows
@@ -435,7 +435,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var auditoriumToCreate = new CreateAuditoriumModel
             {
-                auditName = "Auditorium two",
+                auditoriumName = "Auditorium two",
                 cinemaId = 2,
                 numberOfSeats = numOfSeats,
                 seatRows = numOfRows
@@ -491,7 +491,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var auditoriumToCreate = new CreateAuditoriumModel
             {
-                auditName = "Auditorium two",
+                auditoriumName = "Auditorium two",
                 cinemaId = 2,
                 numberOfSeats = numOfSeats,
                 seatRows = numOfRows
@@ -555,7 +555,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var auditoriumToCreate = new CreateAuditoriumModel
             {
-                auditName = "Auditorium two",
+                auditoriumName = "Auditorium two",
                 cinemaId = 2,
                 numberOfSeats = numOfSeats,
                 seatRows = numOfRows

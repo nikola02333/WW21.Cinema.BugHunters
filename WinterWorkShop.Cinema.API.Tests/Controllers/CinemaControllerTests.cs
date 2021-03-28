@@ -182,7 +182,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 createAuditoriumModel = new List<CreateAuditoriumModel>
                 {
                     new CreateAuditoriumModel{
-                    auditName = "New Auditorium",
+                    auditoriumName = "New Auditorium",
                     numberOfSeats = 2,
                     seatRows = 2
                     }
@@ -218,7 +218,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 createAuditoriumModel = new List<CreateAuditoriumModel>
                 {
                     new CreateAuditoriumModel{
-                    auditName = "New Auditorium",
+                    auditoriumName = "New Auditorium",
                     numberOfSeats = 2,
                     seatRows = 2
                     }
@@ -244,7 +244,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 {
                     Id = 1,
                     CinemaId = CreateCinemaResponseModel.Data.Id,
-                    Name = cinemaToCreate.createAuditoriumModel[0].auditName,
+                    Name = cinemaToCreate.createAuditoriumModel[0].auditoriumName,
                    SeatsList = new List<SeatDomainModel>()
                 }
             };
@@ -277,7 +277,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 createAuditoriumModel = new List<CreateAuditoriumModel>
                 {
                     new CreateAuditoriumModel{
-                    auditName = "New Auditorium",
+                    auditoriumName = "New Auditorium",
                     numberOfSeats = 2,
                     seatRows = 2
                     }
@@ -303,7 +303,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 {
                     Id = 1,
                     CinemaId = CreateCinemaResponseModel.Data.Id,
-                    Name = cinemaToCreate.createAuditoriumModel[0].auditName,
+                    Name = cinemaToCreate.createAuditoriumModel[0].auditoriumName,
                     SeatsList = new List<SeatDomainModel>()
                 }
             };
