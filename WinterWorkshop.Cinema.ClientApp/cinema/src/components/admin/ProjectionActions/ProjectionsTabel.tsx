@@ -17,7 +17,7 @@ const ProjectionsTable : React.FC<IProps> = ({projections,setState})=>{
     const history=useHistory();
 
     const editProjection = (id: string) => {
-        history.push(`editProjection/${id}`);
+        history.push(`newProjection/${id}`);
       };
 
     const removeProjection = async(id: string) => {

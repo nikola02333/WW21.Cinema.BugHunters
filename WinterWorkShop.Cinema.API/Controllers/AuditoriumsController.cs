@@ -64,7 +64,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
             AuditoriumDomainModel auditoriumDomainModel = new AuditoriumDomainModel
             {
                 CinemaId = createAuditoriumModel.cinemaId,
-                Name = createAuditoriumModel.auditName
+                Name = createAuditoriumModel.auditoriumName
                 
             };
 

@@ -63,7 +63,7 @@ const EditMovie: React.FC = (props: any) => {
 
   useEffect(() => {
     getMovie(id);
-  }, [id]);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
@@ -129,10 +129,12 @@ const EditMovie: React.FC = (props: any) => {
 
   return (
     <Container>
-      <Row>
-        <Col>
-          <h1 className="form-header">Edit Existing Movie</h1>
-          <form onSubmit={handleSubmit}>
+      <Row className="d-flex justify-content-center mt-3">
+        <Col xs={12}>
+          <h2 className="text-center">Edit Existing Movie</h2>
+        </Col>
+        <Col xs={11} md={9} lg={7} xl={5}>
+          <form onSubmit={handleSubmit} className="">
             <FormGroup>
               <FormControl
                 id="title"
