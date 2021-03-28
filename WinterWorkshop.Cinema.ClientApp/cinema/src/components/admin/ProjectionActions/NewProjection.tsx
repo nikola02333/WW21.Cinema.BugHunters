@@ -92,7 +92,7 @@ const NewProjection: React.FC = (props: any) => {
 
   const getProjection = async()=>{
     
-    if(id===undefined){
+    if(id===undefined || id===""){
       return;
     }
     var projection =await projectionService.getProjectionById(id);
@@ -142,6 +142,7 @@ const NewProjection: React.FC = (props: any) => {
       
       validate(id, value);
     } else {
+      console.log("NULLL")
       validate(id, null);
     }
   };
