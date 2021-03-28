@@ -138,6 +138,7 @@ const NewMovie: React.FC = (props: any) => {
     const { title, year, genre, description, coverPicture } = state;
     if (title && year && genre && description && coverPicture  ) {
       addMovie();
+
     } else {
      
       //NotificationManager.error("Please fill in data");
@@ -164,10 +165,9 @@ const NewMovie: React.FC = (props: any) => {
       CoverPicture: state.coverPicture,
       Genre: state.genre,
       Actors: state.Actorss.map(actor=> actor.name).join(','),
-      Description:''
+      Description: state.description
     };
-    debugger;
-
+    
    await movieService.createMovie(movieToCreate);
   };
 
