@@ -142,7 +142,7 @@ const NewProjection: React.FC = (props: any) => {
       
       validate(id, value);
     } else {
-      validate(id, null);
+      //validate(id, null);
     }
   };
 

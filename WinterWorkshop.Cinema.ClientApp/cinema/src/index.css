@@ -12,6 +12,10 @@ code {
     monospace;
 }
 
+.invalid{
+  border:1px solid #ff0000
+  }
+
 .btn-search {
   background-color: royalblue;
   border: 2px solid royalblue;

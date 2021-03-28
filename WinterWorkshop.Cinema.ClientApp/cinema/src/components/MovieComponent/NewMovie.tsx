@@ -1,14 +1,7 @@
 import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
-import {
-  FormGroup,
-  FormControl,
-  Button,
-  Container,
-  Row,
-  Col,
-  FormText,
-} from "react-bootstrap";
+
+import {FormGroup,Button,Container,Row,Col,FormText,FormControl,Form} from "react-bootstrap";
 import { NotificationManager } from "react-notifications";
 import { YearPicker } from "react-dropdown-date";
 
@@ -23,7 +16,10 @@ interface IState {
   year: string;
   rating: string;
   current: boolean;
+  movieTitleId: string;
+  movieTitleIdError:string;
   titleError: string;
+  titleSubmit: boolean;
   submitted: boolean;
   canSubmit: boolean;
   tags: string;
@@ -31,11 +27,13 @@ interface IState {
   yearError: string;
   genre: string;
   genreError: string;
+  genreSubmit: boolean;
   tagss: ITag[];
   Actors:string;
   Actorss:IActor[];
   ActorsError:string;
   description:string;
+  descriptionSubmit: boolean;
   descriptionError:string;
 }
 
@@ -46,6 +44,9 @@ const NewMovie: React.FC = (props: any) => {
     rating: "",
     current: false,
     titleError: "",
+    movieTitleId: "",
+    movieTitleIdError: "",
+   titleSubmit: false,
     submitted: false,
     canSubmit: true,
     tags: "",
@@ -53,24 +54,39 @@ const NewMovie: React.FC = (props: any) => {
     yearError: "",
     genre: "",
   genreError: "",
+  genreSubmit: false,
   tagss:[],
   description:"",
   descriptionError:"",
+  descriptionSubmit: false,
   Actors:"",
   ActorsError:"",
   Actorss:[]
   });
 
   
-
-  console.log('tagovi: '+JSON.stringify(state.tagss));
+/*
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     validate(id, value);
-    setState({ ...state, [id]: value });
+
+    setState((prevState) => ({...prevState, [id]: value}));
+    
+  };
+  */
+
+
+  
+   const handleChange = (e) => {
+    const { id, value } = e;
+    console.log(id);
+
+        setState((prev)=>({ ...prev, [id]: value}));
+      
+        validate(id, value);
   
   };
-
+   
   const handleTagsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, tags: e.target.value });
   };
@@ -81,26 +97,28 @@ const NewMovie: React.FC = (props: any) => {
 
   const validate = (id: string, value: string) => {
     if (id === "title") {
-      
       if (value === "") {
-        setState({
-          ...state,
-          titleError: "Fill in movie title",
-          canSubmit: false,
-        });
+        setState( (prevState)=> 
+        ({...prevState, 
+         titleError: "Fill in movie title", 
+         canSubmit: false,
+        titleSubmit: false}));
       } else {
-        setState({ ...state, titleError: "", canSubmit: true });
+       // setState({ ...state, titleError: "", canSubmit: true, titleSubmit: true });
+       setState( (prevState)=> 
+       ({...prevState, 
+        titleError: "", 
+        canSubmit: true,
+       titleSubmit: true}));
       }
     }
+
+
     if (id === "genre") {
       if (value === "") {
-        setState({
-          ...state,
-          genreError: "Fill in movie genre",
-          canSubmit: false,
-        });
+        setState( (prevState)=> ({...prevState, genreError:"Fill in movie genre", canSubmit: false}));
       } else {
-        setState({ ...state, genreError: "", canSubmit: true });
+        setState( (prevState)=> ({...prevState, genreError:"", canSubmit: true}));
       }
     }
 
@@ -119,12 +137,12 @@ const NewMovie: React.FC = (props: any) => {
 
     // ovde sad treba tagove da izvucem iz statea
     setState({ ...state, submitted: true });
-    const { title, year, rating } = state;
-    if (title && year && rating ) {
+    const { title, year, rating, genre, description, coverPicture } = state;
+    if (title && year && rating && genre && description && coverPicture  ) {
       addMovie();
     } else {
      
-      NotificationManager.error("Please fill in data");
+      //NotificationManager.error("Please fill in data");
       setState({ ...state, submitted: false });
     }
   };
@@ -158,18 +176,30 @@ const NewMovie: React.FC = (props: any) => {
     <Container>
       <Row>
         <Col>
-          <h1 className="form-header">Add New Movie</h1>
+          <p className="form-header">Add New Movie</p>
           <form onSubmit={handleSubmit}>
+          <FormGroup>
+              <FormControl
+                id="movieTitleId"
+                type="text"
+                placeholder="movieId for search on Imdb"
+                value={state.movieTitleId}
+                onChange={(e) => handleChange(e.target)}
+                className="add-new-form"
+              />
+              <FormText className="text-danger text-center">{state.movieTitleIdError}</FormText>
+            </FormGroup>
             <FormGroup>
               <FormControl
                 id="title"
                 type="text"
                 placeholder="Movie Title"
                 value={state.title}
-                onChange={handleChange}
+                onChange={(e) => handleChange(e.target)}
                 className="add-new-form"
+                required
               />
-              <FormText className="text-danger">{state.titleError}</FormText>
+              <FormText className="text-danger text-center">{state.titleError}</FormText>
             </FormGroup>
             <FormGroup>
               <YearPicker
@@ -231,10 +261,10 @@ const NewMovie: React.FC = (props: any) => {
                 type="text"
                 placeholder="Genre"
                 value={state.genre}
-                onChange={handleChange}
+                onChange={(e) =>handleChange(e.target)}
                 className="add-new-form"
               />
-              <FormText className="text-danger">{state.genreError}</FormText>
+              <FormText className="text-danger text-center">{state.genreError}</FormText>
             </FormGroup>
             <FormGroup>
               <FormControl
@@ -242,10 +272,10 @@ const NewMovie: React.FC = (props: any) => {
                 type="text"
                 placeholder="About Movie"
                 value={state.description}
-                onChange={handleChange}
+                onChange={(e) =>handleChange(e.target)}
                 className="add-new-form"
               />
-              <FormText className="text-danger">{state.description}</FormText>
+              <FormText className="text-danger text-center">{state.description}</FormText>
             </FormGroup>
 
            
@@ -268,7 +298,7 @@ const NewMovie: React.FC = (props: any) => {
               }}
               className="add-new-form"
             />
-            <FormText className="text-danger">{state.titleError}</FormText>
+            <FormText className="text-danger text-center">{state.coverPicture}</FormText>
             <Button
               className="btn-add-new"
               type="submit"
