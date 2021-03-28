@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.Data.Entities;
@@ -18,11 +19,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
         {
             _tagsMoviesRepository = tagsMoviesRepository;
         }
-        public async Task<GenericResult<TagMovieDomainModel>> AddTagMovie(TagsMovies tagsToadd)
+        public async Task<GenericResult<TagMovieDomainModel>> AddTagMovieAsync(TagsMovies tagsToadd)
         {
-            // ovaj ga samo dodaje, znaci nista ne radi drugo !!!
             var tagMovie =  await _tagsMoviesRepository.InsertAsync(tagsToadd);
-
 
             return new GenericResult<TagMovieDomainModel>
             {
@@ -37,6 +36,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                            Id= tagMovie.Movie.Id,
                             Year = tagMovie.Movie.Year,
                              Rating = tagMovie.Movie.Year
+                              
                      },
                      TagModel= new TagDomainModel
                      {
@@ -49,7 +49,29 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
-        public Task<GenericResult<TagMovieDomainModel>> SearchTag(TagDomainModel tagDomainModel)
+        public async  Task<GenericResult<TagMovieDomainModel>> GetTagByMovieIDAsync(Guid movieId)
+        {
+            var tagsMovies = await _tagsMoviesRepository.GetTagByMovieIDAsync(movieId);
+
+            var tasToReturn = tagsMovies.Select(tm => new TagMovieDomainModel 
+            {
+                  TagModel= new TagDomainModel 
+                  {
+                       TagId= tm.TagId,
+                        TagName= tm.Tag.TagName,
+                         TagValue= tm.Tag.TagValue
+                  }
+            }).ToList();
+
+            return new GenericResult<TagMovieDomainModel> 
+            {
+                IsSuccessful = true,
+                 DataList = tasToReturn
+            };
+          
+        }
+
+        public Task<GenericResult<TagMovieDomainModel>> SearchTagAsync(TagDomainModel tagDomainModel)
         {
             throw new NotImplementedException();
         }

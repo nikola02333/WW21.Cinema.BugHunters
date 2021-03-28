@@ -229,8 +229,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             userForUpdate.FirstName = userToUpdate.FirstName;
             userForUpdate.LastName = userToUpdate.LastName;
-            userForUpdate.UserName = userToUpdate.UserName.ToLower();
-            userForUpdate.Role = userToUpdate.Role.ToLower();
+            //userForUpdate.UserName = userToUpdate.UserName.ToLower();
+            //userForUpdate.Role = userToUpdate.Role.ToLower();
 
             _usersRepository.Update(userForUpdate);
 

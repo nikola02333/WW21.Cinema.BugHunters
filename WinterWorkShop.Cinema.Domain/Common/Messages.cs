@@ -94,5 +94,15 @@
         public const string TAG_DELTE_ERROR = "Error occured while deleting tag, please try again.";
 
         #endregion
+
+        #region Imdb       
+        public const string IMDB_MOVIE_NOT_FOUND = "Error occured while getting movie from Imdb, please try again.";
+
+        #endregion
+
+        #region TagsMovies       
+        public const string GET_TAGS_BY_MOVIEID_NOT_FOUND = "Error occured while getting tags for specific movie id, please try again.";
+
+        #endregion
     }
 }
