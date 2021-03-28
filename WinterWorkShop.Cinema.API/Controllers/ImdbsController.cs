@@ -17,16 +17,38 @@ namespace WinterWorkShop.Cinema.API.Controllers
     public class ImdbsController : ControllerBase
     {
         [HttpGet]
-        [Route("GetTopTenMovies/{searchMovie}")]
-        public async Task<ActionResult> GetTopTenMovies( string searchMovie)
+        [Route("Search/{searchMovie}")]
+        public async Task<ActionResult> GetMovieDetails( string searchMovie)
         {
           
             var apiLib = new ApiLib("k_9szm9guo");
             var data = await apiLib.TitleAsync( searchMovie + "/FullActor,Images,Ratings");
 
-            if(data.ErrorMessage == null)
+            if(data.ErrorMessage == "")
             {
                 return Ok(data);
+            }
+
+            ErrorResponseModel errorResponse = new ErrorResponseModel
+            {
+                ErrorMessage = Messages.IMDB_MOVIE_NOT_FOUND,
+                StatusCode = System.Net.HttpStatusCode.BadRequest
+            };
+
+            return BadRequest(errorResponse);
+        }
+
+        [HttpGet]
+        [Route("GetTopTenMovies")]
+        public async Task<ActionResult> GetTopTenMovies()
+        {
+
+            var apiLib = new ApiLib("k_9szm9guo");
+            var data = await apiLib.Top250MoviesAsync();
+
+            if (data.ErrorMessage == "")
+            {
+                return Ok(data.Items.Take(10));
             }
 
             ErrorResponseModel errorResponse = new ErrorResponseModel

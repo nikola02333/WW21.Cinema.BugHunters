@@ -18,6 +18,8 @@ import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {cinemaService} from './../../Services/cinemaService';
 import {ICinemaToCreateModel} from './../../../models/ICinemaToCreateModel';
 
+
+
 interface IState {
   createCinema:ICinemaToCreateModel;
   submitted:boolean;

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { NotificationManager } from "react-notifications";
-import { serviceConfig } from "../../../appSettings";
 import { Row, Table } from "react-bootstrap";
 import Spinner from "../../Spinner";
 import "./../../../index.css";
@@ -60,7 +59,6 @@ const TopTenMovies: React.FC = (props: any) => {
   }, []);
 
   
-// setState({ ...state, movies: data, isLoading: false });
   const getTopTenMovies =  async()=>{
 
     setState({ ...state,isLoading: true });
@@ -126,7 +124,6 @@ const TopTenMovies: React.FC = (props: any) => {
   );
 
 
-  //const showTable = state.isLoading ? <Spinner></Spinner> : table;
   return (
     <React.Fragment>
       <Row className="no-gutters pt-2">
@@ -136,10 +133,7 @@ const TopTenMovies: React.FC = (props: any) => {
         <span className="filter-heading">Filter by:</span>
         <select
         
-          /*/onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-            getTopTenMoviesByYear(e.target.value)
-          }
-        */
+         
           name="movieYear"
           id="movieYear"
           className="select-dropdown"
@@ -150,13 +144,8 @@ const TopTenMovies: React.FC = (props: any) => {
           {/*showYears*/}
         </select>
       </Row>
-      {/*<Row className="no-gutters pr-5 pl-5">
-      state.isLoading ? <Spinner></Spinner> : table
 
-
-        </Row> */}
-
-{state.isLoading ? <Spinner></Spinner> :
+    {state.isLoading ? <Spinner></Spinner> :
     (<Movie 
     movies={state.movies}
     
