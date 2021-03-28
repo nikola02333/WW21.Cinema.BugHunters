@@ -8,7 +8,8 @@ export const auditoriumService = {
     getAllAuditoriums,
     getAuditoriumById,
     getAuditoriumByCinemaId,
-    deleteAuditorium
+    deleteAuditorium,
+    createAuditorium
 };
 
 async function getAllAuditoriums()
@@ -79,7 +80,7 @@ async function createAuditorium(auditorium: ICreateAuditorium)
                       });
 }
 
-async function deleteAuditorium(id: number)
+async function deleteAuditorium(id: string)
 {
     if (window.confirm('Are you sure you wish to delete this auditorium?'))
     {
@@ -97,4 +98,6 @@ async function deleteAuditorium(id: number)
                           }
                       });
     }
+
+    
 }

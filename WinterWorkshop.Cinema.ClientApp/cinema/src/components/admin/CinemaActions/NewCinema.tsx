@@ -46,7 +46,6 @@ const NewCinema: React.FC = (props: any) => {
 
  
   const addCinema = async() => {
-    console.log(state.createCinema);
     await cinemaService.addCinema(state.createCinema);
   };
 

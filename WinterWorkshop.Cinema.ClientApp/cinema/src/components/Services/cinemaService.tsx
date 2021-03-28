@@ -21,7 +21,13 @@ async function updateCinema(cinemaId: string, cinemaToUpdate : ICinemaToUpdateMo
                                 return res.data;
                               })
                               .catch(error => {
-                                NotificationManager.error(error.response.data.errorMessage);
+                                if (error.response) {
+                                  NotificationManager.error(error.response.data.errorMessage);
+                                } else if (error.request) {
+                                  NotificationManager.error("Server Error");
+                                } else {
+                                  NotificationManager.error("Error");
+                                }
                                 });
 }
 
@@ -32,7 +38,13 @@ async function  getCinemaById(cinemaId: string)
                                 return res.data;
                               })
                               .catch(error => {
-                                NotificationManager.error(error.response.data.errorMessage);
+                                if (error.response) {
+                                  NotificationManager.error(error.response.data.errorMessage);
+                                } else if (error.request) {
+                                  NotificationManager.error("Server Error");
+                                } else {
+                                  NotificationManager.error("Error");
+                                }
                                 });
 }
 
@@ -42,13 +54,18 @@ function removeCinema(id: string)
     {
       return  API.delete(`/api/cinemas/Delete/${id}`)
       .then( (response)=> {
-
         console.log(response.data);
         NotificationManager.success("Successfuly removed cinema!");     
         return id;
       })
       .catch(error => {
-        NotificationManager.error(error.response.data.errorMessage);
+        if (error.response) {
+          NotificationManager.error(error.response.data.errorMessage);
+        } else if (error.request) {
+          NotificationManager.error("Server Error");
+        } else {
+          NotificationManager.error("Error");
+        }
         });
     }
 }
@@ -59,9 +76,14 @@ async function getCinemas()
                           .then( response=> {
                             return response.data;
                           })
-                          .catch(error => {
-                           
-                            NotificationManager.error(error.response.data.errorMessage || "Server error");
+                          .catch(error => {                       
+                            if (error.response) {
+                              NotificationManager.error(error.response.data.errorMessage);
+                            } else if (error.request) {
+                              NotificationManager.error("Server Error");
+                            } else {
+                              NotificationManager.error("Error");
+                            }
                             });
       
   }
@@ -74,7 +96,12 @@ async function addCinema(cinematoCreateModel: ICinemaToCreateModel)
              NotificationManager.success("Successfuly added cinema!");
         })
         .catch(error => {
-          debugger
-          NotificationManager.error(error.response.data.errorMessage);
+          if (error.response) {
+            NotificationManager.error(error.response.data.errorMessage);
+          } else if (error.request) {
+            NotificationManager.error("Server Error");
+          } else {
+            NotificationManager.error("Error");
+          }
           });    
 }

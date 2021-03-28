@@ -16,6 +16,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCouch } from "@fortawesome/free-solid-svg-icons";
 import "./../../../index.css";
 import { ICinema } from "../../../models";
+import {auditoriumService} from './../../Services/auditoriumService';
+import {cinemaService} from './../../Services/cinemaService';
+import { ICreateAuditorium} from './../../../models/AuditoriumModels';
 
 interface IState {
   cinemaId: string;
@@ -29,6 +32,7 @@ interface IState {
   numOfSeatsError: string;
   submitted: boolean;
   canSubmit: boolean;
+  isLoading: boolean;
 }
 
 const NewAuditorium: React.FC = (props: any) => {
@@ -51,33 +55,13 @@ const NewAuditorium: React.FC = (props: any) => {
     numOfSeatsError: "",
     submitted: false,
     canSubmit: true,
+    isLoading: true
   });
 
-  const getCinemas = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    fetch(`${serviceConfig.baseURL}/api/cinemas/all`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({ ...state, cinemas: data});
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
+  const getCinemas = async () => {
+    setState({ ...state, isLoading: true });
+    var cinemas= await cinemaService.getCinemas();
+    setState({ ...state, cinemas: cinemas, isLoading: false });
   };
 
   useEffect(() => {
@@ -155,44 +139,20 @@ const NewAuditorium: React.FC = (props: any) => {
     }
   };
 
-  const addAuditorium = () => {
-    const data = {
-      cinemaId: state.cinemaId,
-      numberOfSeats: +state.numberOfSeats,
-      seatRows: +state.seatRows,
+  const addAuditorium = async () => {
+    var auditoriumToCreate : ICreateAuditorium = {
+      cinemaId : state.cinemaId,
       auditoriumName: state.auditoriumName,
-    };
-
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-      body: JSON.stringify(data),
-    };
-
-    fetch(`${serviceConfig.baseURL}/api/auditoriums/create`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.statusText;
-      })
-      .then((result) => {
-        NotificationManager.success("Successfuly added new auditorium!");
-        props.history.push("AllAuditoriums");
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
+      numberOfSeats : state.numberOfSeats,
+      seatRows : state.seatRows
+    }; 
+   await auditoriumService.createAuditorium(auditoriumToCreate);
   };
 
   const onCinemaChange = (cinemas: ICinema[]) => {
     if (cinemas[0]) {
       validate("cinemaId", cinemas[0].id);
-      setState({ ...state, cinemaId: cinemas[0].id });
+      setState({ ...state, cinemaId: cinemas[0].id});
       
     } else {
       validate("cinemaId", null);

@@ -13,6 +13,7 @@ import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../../appSettings";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { ICinema } from "../../../models";
+import {cinemaService} from '../../Services/cinemaService'
 
 interface IState {
   cinemaId: string;
@@ -26,6 +27,7 @@ interface IState {
   numOfSeatsError: string;
   submitted: boolean;
   canSubmit: boolean;
+  isLoading: boolean;
 }
 
 const EditAuditorium: React.FC = (props: any): JSX.Element => {
@@ -48,6 +50,7 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
     numOfSeatsError: "",
     submitted: false,
     canSubmit: true,
+    isLoading: true,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -159,31 +162,11 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
       });
   };
 
-  const getCinemas = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    fetch(`${serviceConfig.baseURL}/api/Cinemas/all`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({ ...state, cinemas: data });
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
+  const getCinemas = async () => {
+    setState({ ...state, isLoading: true });
+     
+    var cinemas= await cinemaService.getCinemas();
+    setState({ ...state, cinemas: cinemas, isLoading: false });
   };
 
   useEffect(() => {
