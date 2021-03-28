@@ -188,7 +188,6 @@ const NewMovie: React.FC = (props: any) => {
                 placeholder="movieId for search on Imdb"
                 value={state.movieTitleId}
                 onChange={(e) => handleChange(e.target)}
-                className="add-new-form"
               />
               <FormText className="text-danger text-center">{state.movieTitleIdError}</FormText>
             </FormGroup>
@@ -276,22 +275,11 @@ const NewMovie: React.FC = (props: any) => {
               <FormText className="text-danger text-center">{state.description}</FormText>
             </FormGroup>
 
-            {/* <FormControl
-              id="tags"
-              type="text"
-              placeholder="Movie Tags"
-              value={state.tags}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                handleTagsChange(e);
-              }}
-    
-            /> */}
+           
 
             <TagsList setState={setState} tags={state.tagss}/>
 
-            <div className="d-flex justify-content-center">
             <ActorList setState={setState} actors={state.Actorss}/>
-            </div>
             <FormControl
               id="coverPicture"
               type="text"
