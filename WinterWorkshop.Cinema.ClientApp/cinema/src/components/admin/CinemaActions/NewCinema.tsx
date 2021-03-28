@@ -104,8 +104,8 @@ const NewCinema: React.FC = (props: any) => {
                 <Space key={field.key} style={{ display: 'flex', marginBottom: 8 }} align="baseline">
                   <Form.Item
                     {...field}
-                    name={[field.name, 'auditName']}
-                    fieldKey={[field.fieldKey, 'auditName']}
+                    name={[field.name, 'auditoriumName']}
+                    fieldKey={[field.fieldKey, 'auditoriumName']}
                     rules={[{ required: true, message: 'Missing auditorium name' }]}
                   >
                     <Input placeholder="Auditorium name" />
