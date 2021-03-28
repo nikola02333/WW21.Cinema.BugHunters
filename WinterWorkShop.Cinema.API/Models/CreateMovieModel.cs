@@ -18,7 +18,7 @@ namespace WinterWorkShop.Cinema.API.Models
         public int Year{ get; set; }
 
         [Required]
-        [Range(1, 10, ErrorMessage = Messages.MOVIE_PROPERTIE_RATING_NOT_VALID)]
+        [Range(0, 10, ErrorMessage = Messages.MOVIE_PROPERTIE_RATING_NOT_VALID)]
         public double Rating { get; set; }
 
         [Required]

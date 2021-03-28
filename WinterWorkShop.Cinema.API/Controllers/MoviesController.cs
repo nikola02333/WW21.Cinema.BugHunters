@@ -114,7 +114,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 Tags = movieModel.Tags.Split(","),
                 Actors = movieModel.Actors.Split(","),
                 //hadKodovano
-                HasOscar = false
+                HasOscar = false,
+                Description= movieModel.Description
             };
 
             GenericResult<MovieDomainModel> createMovie;
