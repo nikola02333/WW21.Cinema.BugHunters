@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FormControl, FormGroup } from "react-bootstrap";
+import { FormControl, FormGroup, Col,Button } from "react-bootstrap";
 
 
 interface IState{
@@ -30,18 +30,23 @@ const ActorForm :React.FC<IProps>= ({ onSubmit,...props}) => {
 
   return (
     
-        <FormGroup>
-          <FormControl
-            placeholder="Add Actor"
-            value={input.input}
-            onChange={handleChange}
-            name="text"
-            autoComplete="off"
-          />
-          <button onClick={handleSubmit} >
-            Add Actor
-          </button>
-        </FormGroup>
+    <>
+    <Col xs={10}>
+       <FormControl
+         
+         placeholder="Add Actor"
+         value={input.input}
+         onChange={handleChange}
+         name="text"
+         autoComplete="off"
+     />
+     </Col>
+     <Col xs={2}>
+       <Button onClick={handleSubmit} >
+         Add
+       </Button>
+       </Col>
+     </>
   );
 };
 

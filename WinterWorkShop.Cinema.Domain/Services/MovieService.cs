@@ -461,9 +461,18 @@ namespace WinterWorkShop.Cinema.Domain.Services
             }
            
 
-            var items = await _moviesRepository.SearchMoviesByTags( tagValue);
+            var searchResult = await _moviesRepository.SearchMoviesByTags( tagValue);
+            
+            if(searchResult == null)
+            {
+                return new GenericResult<MovieDomainModel>
+                {
+                    IsSuccessful = false,
+                    ErrorMessage = Messages.MOVIE_SEARCH_BY_TAG_NOT_FOUND
+                };
+            }
 
-            var movies = items.Select(movie => 
+            var movies = searchResult.Select(movie => 
                         new MovieDomainModel { 
                             Current= movie.Current, 
                              Genre= movie.Genre,
@@ -490,11 +499,15 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 HasOscar = movieDomainModel.HasOscar,
                 Rating = movieDomainModel.Rating
             };
-
-            // ovde dodajem tagove koje je Korisnik uneo !!! moze u drugu funkciju da se prebaci
-            // samo  kod atach-a mi je pukao kod, zbog vec jednog trakovanog u ef, nzm zasto nemg opet da kreiram taj scenario
+            // ovde treba  if za "" ako je prvi elemnt da izadje 
+            
             foreach (var tag in movieDomainModel.Tags)
             {
+                if(tag== "")
+                {
+                    break;
+                }
+                // ova nesto ne radi dobro search
                 var tagExists = _tagsRepository.GetTagByValue(tag);
 
                 if (tagExists != null)
@@ -535,6 +548,10 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             foreach (var actor in movieDomainModel.Actors)
             {
+                if(actor == "")
+                {
+                    break;
+                }
                 var actorExists = _tagsRepository.GetTagByValue(actor);
 
                 if (actorExists != null)
