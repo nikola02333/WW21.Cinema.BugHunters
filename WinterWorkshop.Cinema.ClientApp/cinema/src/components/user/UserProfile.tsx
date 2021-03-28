@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
 import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../appSettings";
-import { Row,Button, Container } from "react-bootstrap";
+import { Row,Button, FormControl } from "react-bootstrap";
 import { getUserName, getRole } from "../helpers/authCheck";
 import { withRouter } from "react-router";
 import { IProjection, IUser, IReservation } from "../../models";
 
 
 import {userService} from '../Services/userService';
+import {IUserUpdate} from '../../models/IUserUpdate';
+
+import { stat } from "node:fs";
 interface IState {
   user: IUser;
   reservations: IReservation[];
   projection: IProjection[];
+  isEdit: boolean;
   submitted: boolean;
+  firstName:string;
+  lastName:string;
 }
 
 const UserProfile: React.FC = () => {
@@ -30,6 +36,10 @@ const UserProfile: React.FC = () => {
     ],
     projection: [],
     submitted: false,
+    isEdit:false,
+    firstName:'',
+    lastName:''
+
   });
 
   useEffect(() => {
@@ -43,6 +53,7 @@ const UserProfile: React.FC = () => {
     async function fetchUserByUsername(){
     let data = await userService.getUserByUsername(userName);
 
+    
     if(data === undefined)
     {
       return;
@@ -55,6 +66,14 @@ const UserProfile: React.FC = () => {
      }
       setState((prevState)=> ({...prevState, user: data}));
 
+      //setState({ ...state, firstName: data.firstName });
+     // da li postoji neke drugi nacin, da  menjam iz user objekta podatke
+      setState( (prevState) => ({...prevState, firstName: data.firstName, lastName: data.lastName}));
+
+      //setState({ ...state, lastName: data.lastName });
+      
+      console.log(state.firstName);
+      console.log(state.lastName);
     }
     if(userName != null)
     {
@@ -100,10 +119,30 @@ const UserProfile: React.FC = () => {
    
   };
 
-  const EditUser = ()=>{
-
-    
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value, name } = e.target;
+  
+    setState({ ...state, [id]: value });
+    // setState ( ...prev, user:{...prev, name:data.name})
   };
+
+  const EditUser = async ()=>{
+
+   
+   //var result = await userService.edit
+   setState( (prevState)=> ({...prevState, isEdit: true}))
+
+   var userUpdate :IUserUpdate ={
+    id : state.user.id,
+    firstName : state.firstName,
+    lastName : state.lastName
+   };
+     
+   await userService.editUser(userUpdate);
+      window.location.reload();
+     
+  };
+
   const getProjectionById = (projectionId: string) => {
     const requestOptions = {
       method: "GET",
@@ -134,7 +173,10 @@ const UserProfile: React.FC = () => {
       });
   };
 
+ 
+
   return (
+   
      <div className="container d-flex justify-content-center ">
     <div className="row">
     <div className="col-md-auto">
@@ -157,8 +199,24 @@ const UserProfile: React.FC = () => {
               <div className="card-body">
                 <h5 className="card-title">User details:</h5>
                 <p className="card-text">
-                  <strong>Full name:</strong>{" "}
-                  {`${state.user.firstName} ${state.user.lastName}`}
+                  <strong>First name:</strong>{" "}
+                  <FormControl
+            type="text"
+            placeholder="First Name"
+            id="firstName"
+            value={state.firstName}
+            onChange={handleChange}
+            className="mr-sm-2"
+          />
+          <strong>Last name:</strong>{" "}
+                  <FormControl
+            type="text"
+            placeholder="Last Name"
+            id="lastName"
+            value={state.lastName}
+            onChange={handleChange}
+            className="mr-sm-2"
+          />
                 </p>
                 <p className="card-text">
                   <strong>Bonus points: </strong> {state.user.bonusPoints}
@@ -167,8 +225,8 @@ const UserProfile: React.FC = () => {
                   <strong>Status: </strong> {getRole()}
                 </p>
                 <div className="d-flex justify-content-center">
-                <Button type="submit" className="mx-1" variant="danger" id="delete" >Delete User</Button>
-                <Button type="button" onClick={()=>EditUser()} className="mx-1" variant="primary" id="edit" >Edit User</Button>
+                <Button type="submit" className="mx-1" variant="danger" id="delete" >Remove User</Button>
+                <Button type="button"  onClick={()=>EditUser()} className="mx-1" variant="primary" id="edit" >Edit User</Button>
                 </div>
               </div>
             </div>

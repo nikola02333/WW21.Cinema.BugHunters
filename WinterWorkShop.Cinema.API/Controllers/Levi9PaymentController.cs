@@ -14,7 +14,7 @@ using WinterWorkShop.Cinema.Domain.Services;
 namespace WinterWorkShop.Cinema.API.Controllers
 {
     // DO NOT TOUCH
-    [Authorize]
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class Levi9PaymentController : ControllerBase

@@ -171,7 +171,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpPut]
         [Route("Update/{userId}")]
-        public async Task<ActionResult<GenericResult<UserDomainModel>>> UpdateUserAsync(Guid userId, CreateUserModel userToUpdate)
+        public async Task<ActionResult<GenericResult<UserDomainModel>>> UpdateUserAsync(Guid userId, UpdateUserModel userToUpdate)
         {
             if (userId == null)
             {
@@ -190,10 +190,10 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             UserDomainModel userUpdate = new UserDomainModel
             {
-                UserName= userToUpdate.UserName,
+                //UserName= userToUpdate.UserName,
                  FirstName= userToUpdate.FirstName,
                   LastName = userToUpdate.LastName,
-                   Role= "user"
+                   //Role= "user"
             };
             var user = await _userService.UpdateUserAsync(userId, userUpdate);
 

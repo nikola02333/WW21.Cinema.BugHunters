@@ -28,6 +28,8 @@ namespace WinterWorkShop.Cinema.Tests.Services
         private Mock<ICinemasRepository> _mockCinemasRepository;
         private Mock<IAuditoriumsRepository> _mockAuditoriumsRepository;
         private Mock<IMoviesRepository> _mockMoviesRepository;
+        private Mock<ITicketsRepository> _mockTicketsRepository;
+
         private Projection _projection;
         private Data.Cinema _cinema;
         private Auditorium _auditorium;
@@ -47,7 +49,8 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _mockCinemasRepository = new Mock<ICinemasRepository>();
             _mockAuditoriumsRepository = new Mock<IAuditoriumsRepository>();
             _mockMoviesRepository = new Mock<IMoviesRepository>();
-            _projectionsService = new ProjectionService(_mockProjectionsRepository.Object, _mockCinemasRepository.Object,_mockAuditoriumsRepository.Object,_mockMoviesRepository.Object);
+            _mockTicketsRepository = new Mock<ITicketsRepository>();
+            _projectionsService = new ProjectionService(_mockProjectionsRepository.Object, _mockCinemasRepository.Object,_mockAuditoriumsRepository.Object,_mockMoviesRepository.Object, _mockTicketsRepository.Object);
             _projection = new Projection
             {
                 Id = Guid.NewGuid(),

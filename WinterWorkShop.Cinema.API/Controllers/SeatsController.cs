@@ -42,6 +42,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("reservedByProjectionId/{id:guid}")]
         public async Task<ActionResult<GenericResult<SeatDomainModel>>> GetReservedSeatsAsync(Guid id)
         {
+
             if (id == null || id == Guid.Empty)
             {
                 ErrorResponseModel errorResponse = new ErrorResponseModel

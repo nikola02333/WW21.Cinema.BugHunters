@@ -484,11 +484,10 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             _userController.ModelState.AddModelError("Username", Messages.USER_CREATION_ERROR);
 
-            var invalidUserUpdate = new CreateUserModel
+            var invalidUserUpdate = new UpdateUserModel
             {
                 FirstName="firstName",
                 LastName="Lastname",
-                 Role="user"
             };
 
             // Act
@@ -520,18 +519,17 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 IsSuccessful = true,
             };
 
-            var UserUpdate = new CreateUserModel
+            var UserUpdate = new UpdateUserModel
             {
                 FirstName = "firstName",
                 LastName = "Lastname",
-                Role = "user",
-                UserName= "username"
             };
 
             _mockUserService.Setup(srvc => srvc.UpdateUserAsync(userId, It.IsAny<UserDomainModel>()))
                             .ReturnsAsync(updatedUserResult);
 
             // Act
+            //  userUpdateModel
             var result = await _userController.UpdateUserAsync(userId, UserUpdate);
 
             var usersResult = ((AcceptedResult)result.Result).Value;

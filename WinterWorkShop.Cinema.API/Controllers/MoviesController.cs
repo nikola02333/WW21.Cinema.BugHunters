@@ -244,7 +244,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
             {
                 ErrorResponseModel errorResponse = new ErrorResponseModel
                 {
-                    ErrorMessage = Messages.MOVIE_DELETE_ERROR,
+                    ErrorMessage = deletedMovie.ErrorMessage,
                     StatusCode = System.Net.HttpStatusCode.BadRequest
                 };
 
