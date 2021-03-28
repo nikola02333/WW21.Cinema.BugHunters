@@ -260,9 +260,15 @@ const NewMovie: React.FC = (props: any) => {
             />
 
            
-            <div className="d-flex justify-content-center">
+            {/* <div className="d-flex justify-content-center"> */}
+            <Row className="d-flex justify-content-center">
+            <Col xs={4} className="mt-3">
             <TagsList setState={setState} tags={state.tagss}/>
-            </div>
+            </Col>
+            </Row>
+
+            
+            {/* </div> */}
          
          
             <div className="d-flex justify-content-center">

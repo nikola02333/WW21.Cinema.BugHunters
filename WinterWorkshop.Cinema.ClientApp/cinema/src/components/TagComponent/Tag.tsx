@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import TodoForm from "./TagForm";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { FormControl, FormGroup,Button, Row, Col } from "react-bootstrap";
+
 interface ITag {
   id: string;
   name: string;
@@ -34,14 +36,22 @@ const Tag = ({ tags, removeTag, updateTag }:IProps) => {
 
    
 const toReturn =  tags.map((tag, index) => (
-   <div key={index}>
-    <div key={tag.id}>{tag.name}</div>
-    <div className="icons">
-      <div onClick={() => removeTag(tag.id)}>
+   <Row key={index} className="mt-2">
+    <Col xs={10} key={tag.id} className="d-flex justify-content-center">
+    <FormControl
+            placeholder="Add tag"
+            value={tag.name}
+            name="text"
+            disabled
+            autoComplete="off"
+        />
+    </Col>
+    <Col xs={2} className="icons col-xs-1">
+      <Button variant="danger" onClick={() => removeTag(tag.id)}>
       <FontAwesomeIcon icon={faTrash} />
-      </div>
-    </div>
-  </div>
+      </Button>
+    </Col>
+  </Row>
   ));
 
   return(<>{toReturn}</>);
