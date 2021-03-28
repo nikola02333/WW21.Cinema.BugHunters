@@ -38,7 +38,6 @@ namespace WinterWorkShop.Cinema.Tests.Services
             {
                 Title = "Movie",
                 Current = true,
-                UserRaitings = 8,
                 Year = 2019,
                 CoverPicture = "www.google.rs",
                 Genre = "comedy",

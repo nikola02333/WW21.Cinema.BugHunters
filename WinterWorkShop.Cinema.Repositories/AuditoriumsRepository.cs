@@ -24,14 +24,11 @@ namespace WinterWorkShop.Cinema.Repositories
             _cinemaContext = cinemaContext;
         }
 
-
-       
-
         public Auditorium Delete(object id)
         {
            
 
-            Auditorium existing = _cinemaContext.Auditoriums.Include(p => p.Projections).Include(c=>c.Seats).Where(a => a.Id == (int)id).FirstOrDefault();
+            Auditorium existing = _cinemaContext.Auditoriums.Include(c=>c.Seats).Include(p=>p.Projections).ThenInclude(t=>t.Tickets).Where(a => a.Id == (int)id).FirstOrDefault();
            
             var result = _cinemaContext.Auditoriums.Remove(existing);
 

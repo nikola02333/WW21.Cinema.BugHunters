@@ -26,13 +26,13 @@ namespace WinterWorkShop.Cinema.Tests.Services
             private Mock<ICinemasRepository> _mockCinemaRepository;
             private CinemaService _cinemaService;
             private Mock<IAuditoriumsRepository> _mockAuditoriumRepository;
-
+            private Mock<IProjectionsRepository> _mockProjectionRepository;
             [TestInitialize]
             public void TestInit()
             {
                 _mockAuditoriumRepository = new Mock<IAuditoriumsRepository>();
                 _mockCinemaRepository = new Mock<ICinemasRepository>();
-                _cinemaService = new CinemaService(_mockCinemaRepository.Object, _mockAuditoriumRepository.Object);
+                _cinemaService = new CinemaService(_mockCinemaRepository.Object, _mockAuditoriumRepository.Object, _mockProjectionRepository.Object);
             }
 
             [TestMethod]
