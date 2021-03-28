@@ -189,5 +189,24 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             return Accepted();
         }
+
+        [HttpPut]
+        [Route("Update/{id}")]
+        public async Task<ActionResult<GenericResult<ProjectionDomainModel>>> UpdateProjection(Guid id, [FromBody] ProjectionDomainModel updatedProjection)
+        {
+            updatedProjection.Id = id;
+
+            var result = await _projectionService.UpdateProjection(updatedProjection);
+            if (!result.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = result.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+                return BadRequest(errorResponse);
+            }
+            return Accepted(result.Data);
+        }
     }
 }

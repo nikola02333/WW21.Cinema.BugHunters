@@ -1,21 +1,19 @@
 import { serviceConfig } from "../../appSettings"
 import { NotificationManager } from "react-notifications";
-import {IFilterProjectionModel,ICreateProjection} from '../../models/ProjectionModels';
+import {ICreateAuditorium} from '../../models/AuditoriumModels';
 import API from '../../axios';
-import { AxiosResponse, AxiosError } from 'axios';
 
-export const projectionService = {
-    getAllProjections,
-    getProjectionById,
-    getFilteredProjection,
-    createProjection,
-    deleteProjectino,
-    updateProjection
+
+export const auditoriumService = {
+    getAllAuditoriums,
+    getAuditoriumById,
+    getAuditoriumByCinemaId,
+    deleteAuditorium
 };
 
-async function getAllProjections()
+async function getAllAuditoriums()
 {
-  return await API.get(`${serviceConfig.baseURL}/api/Projections/all`)
+  return await API.get(`${serviceConfig.baseURL}/api/Auditoriums/all`)
                         .then( response => {
                           return response.data;
                         })
@@ -30,42 +28,9 @@ async function getAllProjections()
                       });
 }
 
-async function getProjectionById(id : string)
+async function getAuditoriumById(id:number)
 {
-  return await API.get(`${serviceConfig.baseURL}/api/Projections/byprojectionid/${id}`)
-                        .then( response => {
-                          return response.data;
-                        })
-                        .catch(err => {
-                          if (err.response) {
-                            NotificationManager.error(err.response.data.errorMessage);
-                          } else if (err.request) {
-                            NotificationManager.error("Server Error");
-                          } else {
-                            NotificationManager.error("Error");
-                          }
-                      });                
-}
-
-async function getFilteredProjection(filter : IFilterProjectionModel)
-{
-    let query = "";
-    if (filter.CinemaId) {
-      query = `cinemaId=${filter.CinemaId}`;
-    }
-    if (filter.AuditoriumId) {
-      query += `${query.length ? "&" : ""}auditoriumId=${filter.AuditoriumId}`;
-    }
-    if (filter.MovieId) {
-      query += `${query.length ? "&" : ""}movieId=${filter.MovieId}`;
-    }
-    if (filter.DateTime && filter.DateTime.getFullYear()!==1970 ) {
-      query += `${query.length ? "&" : ""}dateTime=${filter.DateTime.toISOString()}`;
-    }
-    if (query.length) {
-      query = `?${query}`;
-    }
-  return await API.get(`${serviceConfig.baseURL}/api/Projections/filter/${query}`)
+  return await API.get(`${serviceConfig.baseURL}/api/Auditoriums/GetById/${id}`)
                         .then( response => {
                           return response.data;
                         })
@@ -80,9 +45,26 @@ async function getFilteredProjection(filter : IFilterProjectionModel)
                       });
 }
 
-async function createProjection(projection: ICreateProjection)
+async function getAuditoriumByCinemaId(id:number)
 {
-  return await API.post(`${serviceConfig.baseURL}/api/Projections`,projection)
+  return await API.get(`${serviceConfig.baseURL}/api/Auditoriums/ByCinemaId/${id}`)
+                        .then( response => {
+                          return response.data;
+                        })
+                        .catch(err => {
+                          if (err.response) {
+                            NotificationManager.error(err.response.data.errorMessage);
+                          } else if (err.request) {
+                            NotificationManager.error("Server Error");
+                          } else {
+                            NotificationManager.error("Error");
+                          }
+                      });
+}
+
+async function createAuditorium(auditorium: ICreateAuditorium)
+{
+  return await API.post(`${serviceConfig.baseURL}/api/Auditoriums/Create`,auditorium)
                         .then( response=> {
                           return response.data;
                         })
@@ -96,11 +78,12 @@ async function createProjection(projection: ICreateProjection)
                           }
                       });
 }
-async function deleteProjectino(id: string)
+
+async function deleteAuditorium(id: number)
 {
-    if (window.confirm('Are you sure you wish to delete this projection?'))
+    if (window.confirm('Are you sure you wish to delete this auditorium?'))
     {
-        return await API.delete(`${serviceConfig.baseURL}/api/Projections/Delete/${id}`)
+        return await API.delete(`${serviceConfig.baseURL}/api/Auditoriums/Delete/${id}`)
                         .then( response=> {
                           return response.data;
                         })
@@ -114,22 +97,4 @@ async function deleteProjectino(id: string)
                           }
                       });
     }
-}
-
-async function updateProjection(id: string, projectionToUpdate : ICreateProjection)
-{
- return await API.put(`/api/Projections/Update/${id}`, projectionToUpdate)
-                              .then( (res)=> {
-                                NotificationManager.success("Projection updated successfuly");
-                                return res.data;
-                              })
-                              .catch(err => {
-                                if (err.response) {
-                                  NotificationManager.error(err.response.data.errorMessage);
-                                } else if (err.request) {
-                                  NotificationManager.error("Server Error");
-                                } else {
-                                  NotificationManager.error("Error");
-                                }
-                            });
 }

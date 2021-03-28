@@ -55,40 +55,6 @@ const ShowAllProjections: React.FC = (props: any) => {
     setTimeout(() => window.location.reload(), 1000);
   };
 
-  const fillTableWithDaata = () => {
-    return state.projections.map((projection) => {
-      return (
-        <tr key={projection.id}>
-          <td width="18%">{projection.movieTitle}</td>
-          <td width="18%">{projection.auditoriumName}</td>
-          <td width="18%">{projection.projectionTime}</td>
-          <td
-            width="5%"
-            className="text-center cursor-pointer"
-            onClick={() => editProjection(projection.id)}
-          >
-            <FontAwesomeIcon className="text-info mr-2 fa-1x" icon={faEdit} />
-          </td>
-          <td
-            width="5%"
-            className="text-center cursor-pointer"
-            onClick={() => removeProjection(projection.id)}
-          >
-            <FontAwesomeIcon
-              className="text-danger mr-2 fa-1x"
-              icon={faTrash}
-            />
-          </td>
-        </tr>
-      );
-    });
-  };
-
-  const editProjection = (id: string) => {
-    props.history.push(`editProjection/${id}`);
-  };
-
-  
   const showTable = state.isLoading ? <Spinner></Spinner> : <ProjectionsTable setState={setState} projections={state.projections}/>;
   return (
     <React.Fragment>
