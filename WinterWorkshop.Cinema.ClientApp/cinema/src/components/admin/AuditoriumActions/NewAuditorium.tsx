@@ -143,10 +143,16 @@ const NewAuditorium: React.FC = (props: any) => {
     var auditoriumToCreate : ICreateAuditorium = {
       cinemaId : state.cinemaId,
       auditoriumName: state.auditoriumName,
-      numberOfSeats : state.numberOfSeats,
-      seatRows : state.seatRows
+      numberOfSeats : +state.numberOfSeats,
+      seatRows : +state.seatRows
     }; 
-   await auditoriumService.createAuditorium(auditoriumToCreate);
+   var created=await auditoriumService.createAuditorium(auditoriumToCreate);
+   if(created===undefined){
+    setState((prev)=>({ ...prev, submitted: false }));
+    return;
+    }
+    NotificationManager.success("New auditorium added!");
+    props.history.push(`AllAuditoriums`); 
   };
 
   const onCinemaChange = (cinemas: ICinema[]) => {
@@ -155,8 +161,7 @@ const NewAuditorium: React.FC = (props: any) => {
       setState({ ...state, cinemaId: cinemas[0].id});
       
     } else {
-      validate("cinemaId", null);
-      
+      validate("cinemaId", null);     
     }
   };
 

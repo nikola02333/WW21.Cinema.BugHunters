@@ -65,7 +65,7 @@ async function getAuditoriumByCinemaId(id:number)
 
 async function createAuditorium(auditorium: ICreateAuditorium)
 {
-  return await API.post(`${serviceConfig.baseURL}/api/Auditoriums/Create`,auditorium)
+  return  await API.post(`${serviceConfig.baseURL}/api/Auditoriums/Create`,auditorium)
                         .then( response=> {
                           return response.data;
                         })

@@ -160,7 +160,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         // if (projectionsAtSameTime != null && projectionsAtSameTime.Count > 0) - true
         // return ErrorMessage
         [TestMethod]
-        public void ProjectionService_CreateProjection_WithProjectionAtSameTime_ReturnErrorMessage() 
+        public async Task ProjectionService_CreateProjection_WithProjectionAtSameTime_ReturnErrorMessage() 
         {
             //Arrange
             List<Projection> projectionsModelsList = new List<Projection>();
@@ -168,11 +168,11 @@ namespace WinterWorkShop.Cinema.Tests.Services
             string expectedMessage = "Cannot create new projection, there are projections at same time alredy.";
 
             
-            _mockProjectionsRepository.Setup(x => x.GetByAuditoriumId(It.IsAny<int>())).Returns(projectionsModelsList);
+            _mockProjectionsRepository.Setup(x => x.GetByAuditoriumId(It.IsNotNull<int>())).Returns(projectionsModelsList);
             
 
             //Act
-            var resultAction = _projectionsService.CreateProjection(_projectionDomainModel).ConfigureAwait(false).GetAwaiter().GetResult();
+            var resultAction =await  _projectionsService.CreateProjection(_projectionDomainModel);
 
             //Assert
             Assert.IsNotNull(resultAction);

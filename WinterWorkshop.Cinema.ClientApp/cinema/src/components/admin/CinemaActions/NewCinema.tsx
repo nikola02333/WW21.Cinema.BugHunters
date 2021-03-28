@@ -46,7 +46,13 @@ const NewCinema: React.FC = (props: any) => {
 
  
   const addCinema = async() => {
-    await cinemaService.addCinema(state.createCinema);
+    var created=await cinemaService.addCinema(state.createCinema);
+    if(created===undefined){
+      setState((prev)=>({ ...prev, submitted: false }));
+      return;
+      }
+      NotificationManager.success("New cinema added!");
+      props.history.push(`AllCinemas`); 
   };
 
 

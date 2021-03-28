@@ -45,9 +45,10 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
     var result = await auditoriumService.deleteAuditorium(auditoriumId);
     if(result === undefined)
      {
-
+      return;
      }
      else{
+      NotificationManager.success("Auditorium successfully deleted!");
       var auditoriumDeleted= state.auditoriums.filter( auditorium=> auditorium.id != auditoriumId );
       setState({...state, auditoriums: auditoriumDeleted});
      }

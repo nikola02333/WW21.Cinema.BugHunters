@@ -44,7 +44,7 @@ const ShowAllCinemas: React.FC = (props: any) => {
     var result = await cinemaService.removeCinema(id);
     if(result === undefined)
      {
-
+      return;
      }
      else{
       var cinemaDeleted= state.cinemas.filter( cinema=> cinema.id != id );

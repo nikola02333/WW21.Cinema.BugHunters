@@ -425,6 +425,8 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 Genre = "comedy",
                 Title = "new Movie",
                 Year = 1994
+                 
+                 
             };
 
 
