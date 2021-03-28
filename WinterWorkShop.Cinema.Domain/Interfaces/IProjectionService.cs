@@ -15,5 +15,7 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
         Task<GenericResult<ProjectionDomainModel>> CreateProjection(ProjectionDomainModel domainModel);
 
         Task<GenericResult<ProjectionDomainModel>> FilterProjectionAsync(FilterProjectionDomainModel filter);
+
+        Task<GenericResult<ProjectionDomainModel>> DeleteProjectionAsync(Guid id);
     }
 }

@@ -16,9 +16,14 @@ namespace WinterWorkShop.Cinema.API.Models
         public DateTime ProjectionTime { get; set; }
 
         [Required]
+        [Range(1, Int32.MaxValue)]
         public int Duration { get; set; }
 
         [Required]
         public Guid MovieId { get; set; }
+
+        [Required]
+        [Range(1, Int32.MaxValue)]
+        public int Price { get; set; }
     }
 }

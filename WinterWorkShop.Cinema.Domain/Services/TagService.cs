@@ -74,6 +74,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         }
 
+     
+
         public async Task<GenericResult<TagDomainModel>> GetTagByName(string tag)
         {
             var tagToFind = await _tagsRepository.GetByIdAsync(tag);

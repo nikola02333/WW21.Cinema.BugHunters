@@ -115,8 +115,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 AuditoriumId = projectionModel.AuditoriumId,
                 MovieId = projectionModel.MovieId,
                 ProjectionTime = projectionModel.ProjectionTime,
-                Duration = projectionModel.Duration
-                
+                Duration = projectionModel.Duration,
+                Price = projectionModel.Price
             };
 
             GenericResult<ProjectionDomainModel> createProjectionResultModel;
@@ -148,6 +148,46 @@ namespace WinterWorkShop.Cinema.API.Controllers
             }
 
             return Created("projections//" + createProjectionResultModel.Data.Id, createProjectionResultModel.Data);
+        }
+
+        [HttpDelete]
+        [Route("Delete/{id}")]
+        public async Task<ActionResult<GenericResult<ProjectionDomainModel>>> Delete(Guid id)
+        {
+
+            if (id == Guid.Empty)
+            {
+                return BadRequest(Messages.PROJECTION_GUID_NULL);
+            }
+            GenericResult<ProjectionDomainModel> deletedProjection;
+
+            try
+            {
+                deletedProjection = await _projectionService.DeleteProjectionAsync(id);
+            }
+            catch (DbUpdateException e)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = e.InnerException.Message ?? e.Message,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
+            if (!deletedProjection.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = deletedProjection.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+
+                return BadRequest(errorResponse);
+            }
+
+            return Accepted();
         }
     }
 }

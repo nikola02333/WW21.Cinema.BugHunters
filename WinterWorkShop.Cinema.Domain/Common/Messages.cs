@@ -55,6 +55,9 @@
         public const string PROJECTIONS_AT_SAME_TIME = "Cannot create new projection, there are projections at same time alredy.";
         public const string PROJECTION_IN_PAST = "Projection time cannot be in past.";
         public const string PROJECTION_GET_BY_ID = "Error occured while getting projection by Id, please try again.";
+        public const string PROJECTION_DELTE_ERROR = "Error occured while deleting projection, please try again.";
+        public const string PROJECTION_GUID_NULL = "Cannot use default Guid";
+        public const string PROJECTION_DELTE_IN_PAST = "A projection that has not been completed cannot be deleted";
         #endregion
 
         #region Seats
@@ -89,6 +92,16 @@
         #region Tags       
         public const string TAG_DOES_NOT_EXIST = "Error occured while getting tag by Id, please try again.";
         public const string TAG_DELTE_ERROR = "Error occured while deleting tag, please try again.";
+
+        #endregion
+
+        #region Imdb       
+        public const string IMDB_MOVIE_NOT_FOUND = "Error occured while getting movie from Imdb, please try again.";
+
+        #endregion
+
+        #region TagsMovies       
+        public const string GET_TAGS_BY_MOVIEID_NOT_FOUND = "Error occured while getting tags for specific movie id, please try again.";
 
         #endregion
     }

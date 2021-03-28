@@ -6,16 +6,40 @@ import * as authChech from "../helpers/authCheck";
 
 import API from '../../axios';
 import { IUser } from './../../models/index';
+import {IUserUpdate} from './../../models/IUserUpdate';
 
 export const userService = {
     login,
     singUp,
     getUserByUsername,
     getTokenForGuest,
-    
+    editUser
    
 };
 
+async function editUser(userToUpdate: IUserUpdate)
+{
+   await API.put(`${serviceConfig.baseURL}/api/users/Update/${userToUpdate.id}`, userToUpdate)
+            .then( (response)=> {
+              debugger;
+              if(response.status == 202)
+              {
+                NotificationManager.success(`User, succesfuly  updated!`);
+              }
+              
+            })
+            .catch(err => {
+              
+              debugger;
+              if (err.response) {
+                NotificationManager.error(err.response.data.errorMessage);
+              } else if (err.request) {
+                NotificationManager.error("Server Error");
+             
+              }
+          });
+
+}
  async function getTokenForGuest()
  {
    return await API.get(`${serviceConfig.baseURL}/get-token/`)
@@ -27,8 +51,7 @@ export const userService = {
                         NotificationManager.error(err.response.data.errorMessage);
                       } else if (err.request) {
                         NotificationManager.error("Server Error");
-                      } else {
-                        // anything else
+                     
                       }
                   });
 
@@ -45,8 +68,7 @@ async function getUserByUsername(userName: string) : Promise<IUser>
         NotificationManager.error(err.response.data.errorMessage);
       } else if (err.request) {
         NotificationManager.error("Server Error");
-      } else {
-        // anything else
+     
       }
   });
 }
@@ -69,8 +91,6 @@ async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
         NotificationManager.error(err.response.data.errorMessage);
       } else if (err.request) {
         NotificationManager.error("Server Error");
-      } else {
-        // anything else
       }
   });
 
@@ -99,8 +119,6 @@ function login (userName:string)  {
               NotificationManager.error(err.response.data.errorMessage);
             } else if (err.request) {
               NotificationManager.error("Server Error");
-            } else {
-              // anything else
             }
         });
 };
@@ -138,8 +156,7 @@ export const getUserByUsernameReservatino = (setState) => {
         NotificationManager.error(err.response.data.errorMessage);
       } else if (err.request) {
         NotificationManager.error("Server Error");
-      } else {
-        // anything else
+      
       }
   });
 };

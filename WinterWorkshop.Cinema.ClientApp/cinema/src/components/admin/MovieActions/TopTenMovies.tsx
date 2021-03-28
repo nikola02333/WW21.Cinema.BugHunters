@@ -7,7 +7,7 @@ import "./../../../index.css";
 import { IMovie } from "../../../models";
 
 import { movieService } from './../../Services/movieService';
-
+import Movie from '../../MovieComponent/Movie';
 interface IState {
   movies: IMovie[];
   filteredMoviesByYear: IMovie[];
@@ -110,41 +110,6 @@ const TopTenMovies: React.FC = (props: any) => {
     return yearOptions;
   };
 
-  const getTopTenMoviesByYear = (year: string) => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    setState({ ...state, isLoading: true });
-    fetch(
-      `${serviceConfig.baseURL}/api/movies/topbyyear/${year}`,
-      requestOptions
-    )
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({
-            ...state,
-            filteredMoviesByYear: data,
-            isLoading: false,
-            selectedYear: true,
-          });
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, isLoading: false });
-      });
-  };
 
   const rowsData = fillTableWithDaata();
   const table = (
@@ -159,7 +124,9 @@ const TopTenMovies: React.FC = (props: any) => {
       <tbody>{rowsData}</tbody>
     </Table>
   );
-  const showTable = state.isLoading ? <Spinner></Spinner> : table;
+
+
+  //const showTable = state.isLoading ? <Spinner></Spinner> : table;
   return (
     <React.Fragment>
       <Row className="no-gutters pt-2">
@@ -180,10 +147,20 @@ const TopTenMovies: React.FC = (props: any) => {
           //max="2100"
         >
           <option value="none">Year</option>
-          {showYears}
+          {/*showYears*/}
         </select>
       </Row>
-      <Row className="no-gutters pr-5 pl-5">{showTable}</Row>
+      {/*<Row className="no-gutters pr-5 pl-5">
+      state.isLoading ? <Spinner></Spinner> : table
+
+
+        </Row> */}
+
+{state.isLoading ? <Spinner></Spinner> :
+    (<Movie 
+    movies={state.movies}
+    
+    /> )}
     </React.Fragment>
   );
 };
