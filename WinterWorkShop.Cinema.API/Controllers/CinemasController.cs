@@ -101,7 +101,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                     var auditoriumDomainModel = new AuditoriumDomainModel
                     {
                         CinemaId = insertedCinema.Data.Id,
-                        Name = audit.auditName
+                        Name = audit.auditoriumName
 
                     };
 

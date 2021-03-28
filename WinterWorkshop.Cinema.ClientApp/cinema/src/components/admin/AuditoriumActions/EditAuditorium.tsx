@@ -16,12 +16,12 @@ import { ICinema } from "../../../models";
 
 interface IState {
   cinemaId: string;
-  auditName: string;
+  auditoriumName: string;
   seatRows: number;
   numberOfSeats: number;
   cinemas: ICinema[];
   cinemaIdError: string;
-  auditNameError: string;
+  auditoriumNameError: string;
   seatRowsError: string;
   numOfSeatsError: string;
   submitted: boolean;
@@ -31,7 +31,7 @@ interface IState {
 const EditAuditorium: React.FC = (props: any): JSX.Element => {
   const [state, setState] = useState<IState>({
     cinemaId: "",
-    auditName: "",
+    auditoriumName: "",
     seatRows: 0,
     numberOfSeats: 0,
     cinemas: [
@@ -43,7 +43,7 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
       },
     ],
     cinemaIdError: "",
-    auditNameError: "",
+    auditoriumNameError: "",
     seatRowsError: "",
     numOfSeatsError: "",
     submitted: false,
@@ -61,7 +61,7 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
 
     setState({ ...state, submitted: true });
     if (
-      state.auditName &&
+      state.auditoriumName &&
       state.numberOfSeats &&
       state.cinemaId &&
       state.seatRows
@@ -74,15 +74,15 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
   };
 
   const validate = (id: string, value: string | null) => {
-    if (id === "auditName") {
+    if (id === "auditoriumName") {
       if (value === "") {
         setState({
           ...state,
-          auditNameError: "Fill in auditorium name",
+          auditoriumNameError: "Fill in auditorium name",
           canSubmit: false,
         });
       } else {
-        setState({ ...state, auditNameError: "", canSubmit: true });
+        setState({ ...state, auditoriumNameError: "", canSubmit: true });
       }
     } else if (id === "numberOfSeats" && value) {
       const seatsNum = +value;
@@ -127,7 +127,7 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
       cinemaId: state.cinemaId,
       numberOfSeats: +state.numberOfSeats,
       seatRows: +state.seatRows,
-      auditName: state.auditName,
+      auditoriumName: state.auditoriumName,
     };
 
     const requestOptions = {
@@ -188,7 +188,7 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
 
   useEffect(() => {
     getCinemas();
-  }, [getCinemas]);
+  }, []);
 
   const onCinemaChange = (cinemas: ICinema[]) => {
     if (cinemas[0]) {
@@ -217,20 +217,22 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
 
   return (
     <Container>
-      <Row>
-        <Col>
+      <Row className="d-flex justify-content-center mt-3">
+        <Col xs={12}>
           <h1 className="form-header">Edit Auditorium</h1>
+        </Col>
+        <Col xs={11} md={9} lg={7} xl={5}>
           <form onSubmit={handleSubmit}>
             <FormGroup>
               <FormControl
-                id="auditName"
+                id="auditoriumName"
                 type="text"
                 placeholder="Auditorium Name"
-                value={state.auditName}
+                value={state.auditoriumName}
                 onChange={handleChange}
               />
               <FormText className="text-danger">
-                {state.auditNameError}
+                {state.auditoriumNameError}
               </FormText>
             </FormGroup>
             <FormGroup>
@@ -247,6 +249,7 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
             </FormGroup>
             <FormGroup>
               <FormControl
+                min="1"
                 id="seatRows"
                 type="number"
                 placeholder="Number Of Rows"
@@ -257,6 +260,7 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
             </FormGroup>
             <FormGroup>
               <FormControl
+                min="1"
                 id="numberOfSeats"
                 type="number"
                 placeholder="Number Of Seats"
