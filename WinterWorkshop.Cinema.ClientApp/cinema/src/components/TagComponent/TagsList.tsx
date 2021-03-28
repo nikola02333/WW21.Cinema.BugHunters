@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import TagForm from "./TagForm";
 import Tag from "./Tag";
+import {
+  FormGroup,
+  FormControl,
+  Button,
+  Container,
+  Row,
+  Col,
+  FormText,
+} from "react-bootstrap";
 
 interface IState {
   tags:ITag [];
@@ -50,8 +59,14 @@ const TagsList :React.FC<IProps> = (props) => {
 
   return (
     <>
-      <TagForm  onSubmit={addTag} />
-      <Tag tags={tags} removeTag={removeTag} updateTag={updateTag} />
+     <FormGroup className="mt-3">
+       <Row>
+       <TagForm  onSubmit={addTag} />
+       </Row>
+     
+       <Tag tags={tags} removeTag={removeTag} updateTag={updateTag} />
+      
+      </FormGroup>
     </>
   );
 };

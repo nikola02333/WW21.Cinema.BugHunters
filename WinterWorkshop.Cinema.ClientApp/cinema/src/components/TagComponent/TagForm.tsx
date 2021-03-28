@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FormControl, FormGroup } from "react-bootstrap";
+import { FormControl, FormGroup,Button, Row, Col } from "react-bootstrap";
 
 interface IState{
   input:string;
@@ -35,20 +35,24 @@ const TagForm :React.FC<IProps>= ({ onSubmit,...props}) => {
   };
 
   return (
-    
-        <FormGroup>
+    <>
+       <Col xs={10}>
           <FormControl
+            
             placeholder="Add tag"
             value={input.input}
             onChange={handleChange}
             name="text"
            
             autoComplete="off"
-          />
-          <button onClick={handleSubmit} >
-            Add tag
-          </button>
-        </FormGroup>
+        />
+        </Col>
+        <Col xs={2}>
+          <Button onClick={handleSubmit} >
+            Add
+          </Button>
+          </Col>
+        </>
   );
 };
 
