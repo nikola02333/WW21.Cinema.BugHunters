@@ -59,7 +59,7 @@ const TagsList :React.FC<IProps> = (props) => {
 
   return (
     <>
-     <FormGroup>
+     <FormGroup className="mt-3">
        <Row>
        <TagForm  onSubmit={addTag} />
        </Row>
