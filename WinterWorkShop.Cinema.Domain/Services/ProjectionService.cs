@@ -50,7 +50,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 MovieTitle = item.Movie.Title,
                 AuditoriumName = item.Auditorium.AuditoriumName,
                 Duration = item.Duration,
-                Price = item.Price
+                Price = item.Price,
+                CinemaId= item.Auditorium.CinemaId,
+                CinemaName=item.Auditorium.Cinema.Name
             }).ToList();
 
             return result;
@@ -157,7 +159,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Duration = item.Duration,
                     Price = item.Price,
                     AuditoriumName = item.Auditorium.AuditoriumName,
-                    MovieTitle = item.Movie.Title
+                    MovieTitle = item.Movie.Title,
+                     CinemaId = item.Auditorium.CinemaId,
+                    CinemaName = item.Auditorium.Cinema.Name
                 }).ToList()
             };
 
@@ -244,7 +248,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Duration = projection.Duration,
                     Price = projection.Price,
                     AuditoriumName = projection.Auditorium.AuditoriumName,
-                    MovieTitle = projection.Movie.Title
+                    MovieTitle = projection.Movie.Title,
+                    CinemaId = projection.Auditorium.CinemaId,
+                    CinemaName = projection.Auditorium.Cinema.Name
                 }
             };
         }
@@ -261,10 +267,11 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     ErrorMessage = Messages.PROJECTION_GET_BY_ID
                 };
             }
+            var tickets = await _ticketsRepository.GetByProjectionId(id);
 
             if (projection.ShowingDate.AddMinutes(projection.Duration) < DateTime.Now)
             {
-                var tickets =await _ticketsRepository.GetByProjectionId(id);
+               
                 if (tickets != null)
                 {
                     foreach (var ticket in tickets)
@@ -295,15 +302,29 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 }
                 _projectionsRepository.Save();
             }
-            else
-            {
-                return new GenericResult<ProjectionDomainModel>
+            else if(tickets==null || tickets.Count() == 0)
                 {
-                    IsSuccessful = false,
-                    ErrorMessage = Messages.PROJECTION_DELTE_IN_PAST
-                };
+                    var deletedProjection = _projectionsRepository.Delete(id);
+                    if (deletedProjection == null)
+                    {
+                        return new GenericResult<ProjectionDomainModel>
+                        {
+                            IsSuccessful = false,
+                            ErrorMessage = Messages.PROJECTION_DELTE_ERROR
+                        };
+                    }
+                    _projectionsRepository.Save();
+                } else
+                    {
+                        return new GenericResult<ProjectionDomainModel>
+                        {
+                            IsSuccessful = false,
+                            ErrorMessage = Messages.PROJECTION_DELTE_IN_PAST
+                        };
+                    }
+               
 
-            }
+            
             
 
             return new GenericResult<ProjectionDomainModel>
