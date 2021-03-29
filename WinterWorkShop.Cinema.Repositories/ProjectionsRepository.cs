@@ -36,7 +36,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public async Task<IEnumerable<Projection>> GetAllAsync()
         {
-            var data = await _cinemaContext.Projections.Include(x => x.Movie).Include(x => x.Auditorium).ThenInclude(x=>x.Cinema).ToListAsync();
+            var data = await _cinemaContext.Projections.Include(x => x.Movie).Include(x => x.Auditorium).ThenInclude(x=>x.Cinema).OrderByDescending(x=>x.ShowingDate).ToListAsync();
             
             return data;           
         }
