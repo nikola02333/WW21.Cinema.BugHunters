@@ -738,6 +738,43 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
 
         }
-     
+
+        public async Task<List<int>> GetAllMoviesBySortedYear()
+        {
+            var movies = await GetAllMoviesAsync(true);
+
+            if(movies== null)
+            {
+                return null;
+            }
+
+            var result = movies.DataList.OrderByDescending(movie => movie.Year).Select(movie=> movie.Year);
+
+            // 
+            return result.Distinct().ToList();
+        }
+
+        public async Task<GenericResult<MovieDomainModel>> GetTopTenMoviesBySpecificYear(int year)
+        {
+            var topTenMoviesBySpecificYear =await _moviesRepository.GetTopTenMoviesBySpecificYear(year);
+
+
+            var moviesToReturn = topTenMoviesBySpecificYear.Select(movie => new MovieDomainModel {
+                Title = movie.Title,
+                Rating = movie.Rating,
+                Genre = movie.Genre,
+                Current = movie.Current,
+                CoverPicture = movie.CoverPicture,
+                HasOscar = movie.HasOscar,
+                Year = movie.Year,
+                Id= movie.Id
+            }).ToList();
+
+            return new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful= true,
+                DataList = moviesToReturn
+            };
+        }
     }
 }

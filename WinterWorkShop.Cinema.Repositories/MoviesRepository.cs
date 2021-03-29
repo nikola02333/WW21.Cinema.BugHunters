@@ -25,6 +25,8 @@ namespace WinterWorkShop.Cinema.Repositories
         Task<IEnumerable<Movie>> GetMoviesByCinemaId(int id);
         Task<IEnumerable<Movie>> SearchMoviesByTags(string tagValue);
 
+        Task<IEnumerable<Movie>> GetTopTenMoviesBySpecificYear(int year);
+
         void Detach(object entity);
     }
     
@@ -156,6 +158,17 @@ namespace WinterWorkShop.Cinema.Repositories
             var movies = await _cinemaContext.Movies.Where(x => x.Projections.Any(p => p.Auditorium.CinemaId == id)).ToListAsync();
 
             return movies;
+        }
+
+        public async Task<IEnumerable<Movie>> GetTopTenMoviesBySpecificYear(int year)
+        {
+            var topTenMoviesByYear = await _cinemaContext.Movies.Where(movie => movie.Year == year)
+                                            .OrderByDescending(movie => movie.Rating)
+                                            .OrderByDescending(movie=> movie.HasOscar)
+                                            .Take(10)
+                                            .ToListAsync();
+
+            return topTenMoviesByYear;
         }
     }
 }
