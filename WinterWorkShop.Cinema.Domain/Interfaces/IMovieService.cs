@@ -12,7 +12,13 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
     public interface IMovieService
     {
         Task<GenericResult<MovieDomainModel>> GetAllMoviesAsync(bool? isCurrent);
-       
+
+
+        Task<List<int>> GetAllMoviesBySortedYear();
+
+        Task<GenericResult<MovieDomainModel>> GetTopTenMoviesBySpecificYear(int year);
+
+
         Task<GenericResult<MovieDomainModel>> GetMovieByIdAsync(Guid id);
 
         Task<GenericResult<MovieDomainModel>> AddMovieAsync(MovieDomainModel newMovie);
@@ -25,9 +31,8 @@ namespace WinterWorkShop.Cinema.Domain.Interfaces
 
         Task<GenericResult<MovieDomainModel>> ActivateDeactivateMovie(Guid movieId);
         Task<GenericResult<MovieDomainModel>> GetMoviesByAuditoriumId(int id);
-        //Task<GenericResult<MovieDomainModel>> ActivateMovie(object movieId);
 
-        void AddTagsForMovie(MovieDomainModel movieDomainModel);
+        void AddTagsForMovie(MovieDomainModel movieDomainModel, Movie movie);
 
         Task<GenericResult<MovieDomainModel>> SearchMoviesByTag(string query);
 

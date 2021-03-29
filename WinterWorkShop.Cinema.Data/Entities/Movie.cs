@@ -24,6 +24,9 @@ namespace WinterWorkShop.Cinema.Data
         public string    Genre { get; set; }
         public string CoverPicture { get; set; }
 
+        public string ImdbId { get; set; }
+        public string Description { get; set; }
+
         public virtual ICollection<Projection> Projections { get; set; }
 
         public ICollection<TagsMovies> TagsMovies { get; set; }

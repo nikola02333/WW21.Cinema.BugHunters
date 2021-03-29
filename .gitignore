@@ -360,3 +360,6 @@ healthchecksdb
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+/WinterWorkShop.Cinema.Data/Migrations/CinemaContextModelSnapshot.cs
+/WinterWorkShop.Cinema.Data/Migrations/20210329090814_Inital.Designer.cs
+/WinterWorkShop.Cinema.Data/Migrations/20210329090814_Inital.cs

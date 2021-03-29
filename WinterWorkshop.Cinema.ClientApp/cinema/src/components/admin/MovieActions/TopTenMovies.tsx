@@ -7,6 +7,7 @@ import { IMovie } from "../../../models";
 
 import { movieService } from './../../Services/movieService';
 import Movie from '../../MovieComponent/Movie';
+import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from "node:constants";
 interface IState {
   movies: IMovie[];
   filteredMoviesByYear: IMovie[];
@@ -20,6 +21,7 @@ interface IState {
   submitted: boolean;
   isLoading: boolean;
   selectedYear: boolean;
+  years: Number[]
 }
 
 const TopTenMovies: React.FC = (props: any) => {
@@ -52,13 +54,30 @@ const TopTenMovies: React.FC = (props: any) => {
     submitted: false,
     isLoading: true,
     selectedYear: false,
+    years:[]
   });
 
-  useEffect(() => {
+  useEffect( () => {
     getTopTenMovies();
+   getAllYears();
   }, []);
 
+  useEffect( ()=>{
+    console.log(state.years);
+  },[state])
+
+  const getAllYears = async() => {
+
+    
+    var yearss = await movieService.getAllYears();
+    
+    setState( prevState=> ({...prevState, years: yearss}) );
+
+    
+    
   
+  }
+
   const getTopTenMovies =  async()=>{
 
     setState({ ...state,isLoading: true });
@@ -99,16 +118,17 @@ const TopTenMovies: React.FC = (props: any) => {
       });
     }
   };
+const getMoviesByYear = async(e)=> {
 
-  const showYears = () => {
-    let yearOptions: JSX.Element[] = [];
-    for (let i = 1960; i <= 2100; i++) {
-      yearOptions.push(<option value={i}>{i}</option>);
-    }
-    return yearOptions;
-  };
-
-
+  const { id, value } = e;
+  
+  const movies = await movieService.getTopTenMoviesByYear(value); 
+if(movies == undefined)
+{
+  return;
+}
+  setState(prevState=> ({ ...prevState, movies: movies }));
+};
   const rowsData = fillTableWithDaata();
   const table = (
     <Table striped bordered hover size="sm" variant="dark">
@@ -133,15 +153,13 @@ const TopTenMovies: React.FC = (props: any) => {
         <span className="filter-heading">Filter by:</span>
         <select
         
-         
+         onChange={(e)=> getMoviesByYear(e.target)}
           name="movieYear"
           id="movieYear"
           className="select-dropdown"
-          //min="1900"
-          //max="2100"
         >
           <option value="none">Year</option>
-          {/*showYears*/}
+          { state.years.map(year => ( <option key={year.toString()} value={year.toString()}>{year}</option>))}
         </select>
       </Row>
 
