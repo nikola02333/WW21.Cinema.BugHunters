@@ -133,6 +133,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 Actors = movieModel.Actors.Split(","),
                 //hadKodovano
                 HasOscar = false,
+                Imdb= movieModel.ImdbId,
                 Description= movieModel.Description
             };
 

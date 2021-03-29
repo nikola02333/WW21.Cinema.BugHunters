@@ -261,11 +261,15 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Genre= newMovie.Genre,
                 CoverPicture = newMovie.CoverPicture,
                 HasOscar = newMovie.HasOscar,
+                ImdbId= newMovie.Imdb,
+                Description=  newMovie.Description
+                
             };
 
             var movie = await _moviesRepository.InsertAsync(movieToCreate);
 
             _moviesRepository.Save();
+
             _moviesRepository.Detach(movie);
 
             MovieDomainModel domainModel = new MovieDomainModel()
@@ -279,7 +283,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 CoverPicture = movie.CoverPicture,
                 HasOscar = movie.HasOscar,
                 Tags = newMovie.Tags,
-                Actors= newMovie.Actors
+                Actors= newMovie.Actors,
+                Imdb= newMovie.Imdb
+                
             };
 
             return new GenericResult<MovieDomainModel> 
@@ -767,7 +773,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 CoverPicture = movie.CoverPicture,
                 HasOscar = movie.HasOscar,
                 Year = movie.Year,
-                Id= movie.Id
+                Id= movie.Id,
+                Imdb= movie.ImdbId
+                
             }).ToList();
 
             return new GenericResult<MovieDomainModel>

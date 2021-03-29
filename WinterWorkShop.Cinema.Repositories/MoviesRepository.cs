@@ -164,7 +164,7 @@ namespace WinterWorkShop.Cinema.Repositories
         {
             var topTenMoviesByYear = await _cinemaContext.Movies.Where(movie => movie.Year == year)
                                             .OrderByDescending(movie => movie.Rating)
-                                            .OrderByDescending(movie=> movie.HasOscar)
+                                            .ThenBy(movie=> movie.HasOscar)
                                             .Take(10)
                                             .ToListAsync();
 

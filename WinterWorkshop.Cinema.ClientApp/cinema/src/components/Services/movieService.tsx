@@ -15,9 +15,40 @@ export const movieService = {
     updateMovie,
     changeCurrent,
     getTopTen,
-    getMovieById
+    getMovieById,
+    getAllYears,
+    getTopTenMoviesByYear
    
 };
+async function getTopTenMoviesByYear(year: number)
+{
+  return await API.get(`${serviceConfig.baseURL}/api/movies/GetTopTenMoviesByYear/${year}`)
+                  .then( response=> {
+                    return response.data;
+                  })
+                  .catch(err => {
+                    if (err.response) {
+                      NotificationManager.error(err.response.data.errorMessage);
+                    } else if (err.request) {
+                      NotificationManager.error("Server Error");
+                    }
+                });
+};
+async function getAllYears()
+{
+   return await API.get(`${serviceConfig.baseURL}/api/movies/GetMoviesSortedByYear`)
+                  .then( response=> {
+                    return response.data;
+                  })
+                  .catch(err => {
+                    if (err.response) {
+                      NotificationManager.error(err.response.data.errorMessage);
+                    } else if (err.request) {
+                      NotificationManager.error("Server Error");
+                    }
+                });
+                
+}
 async function getTopTen()
 {
   //TopTenMovies

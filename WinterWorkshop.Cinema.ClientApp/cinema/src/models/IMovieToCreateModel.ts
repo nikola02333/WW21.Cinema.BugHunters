@@ -9,4 +9,5 @@ export interface IMovieToCreateModel
       Genre: string;
       Actors: string;
       Description:string;
+      ImdbId?: string;
 }

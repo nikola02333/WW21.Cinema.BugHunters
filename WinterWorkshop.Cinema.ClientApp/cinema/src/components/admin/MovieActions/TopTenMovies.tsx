@@ -20,6 +20,7 @@ interface IState {
   submitted: boolean;
   isLoading: boolean;
   selectedYear: boolean;
+  years: Number[]
 }
 
 const TopTenMovies: React.FC = (props: any) => {
@@ -52,13 +53,29 @@ const TopTenMovies: React.FC = (props: any) => {
     submitted: false,
     isLoading: true,
     selectedYear: false,
+    years:[]
   });
 
-  useEffect(() => {
+  useEffect( () => {
     getTopTenMovies();
+   getAllYears();
   }, []);
 
-  
+  useEffect( ()=>{
+    console.log(state.years);
+  },[state])
+
+  const getAllYears = async() => {
+
+    
+    var yearss = await movieService.getAllYears();
+    
+    setState( prevState=> ({...prevState, years: yearss}) );
+
+    var x = await showYears();
+    
+   // console.log(x);
+  }
   const getTopTenMovies =  async()=>{
 
     setState({ ...state,isLoading: true });
@@ -99,12 +116,35 @@ const TopTenMovies: React.FC = (props: any) => {
       });
     }
   };
+const getMoviesByYear = async(e)=> {
 
-  const showYears = () => {
+  const { id, value } = e;
+  
+  const movies = await movieService.getTopTenMoviesByYear(value); 
+if(movies == undefined)
+{
+  return;
+}
+  setState(prevState=> ({ ...prevState, movies: movies }));
+};
+
+  const showYears = async () => {
     let yearOptions: JSX.Element[] = [];
-    for (let i = 1960; i <= 2100; i++) {
+    //  
+    var yearss = await movieService.getAllYears();
+
+    //console.log(yearss);
+    /*
+    for (let i = yearss[0]; i <= yearss.lentgh; i++) {
       yearOptions.push(<option value={i}>{i}</option>);
     }
+    */
+    if(yearss == null)
+    {
+      return;
+    }
+
+    yearOptions=  yearss.map(year => ( <option key={year} value={year}>{year}</option>));
     return yearOptions;
   };
 
@@ -133,7 +173,7 @@ const TopTenMovies: React.FC = (props: any) => {
         <span className="filter-heading">Filter by:</span>
         <select
         
-         
+         onChange={(e)=> getMoviesByYear(e.target)}
           name="movieYear"
           id="movieYear"
           className="select-dropdown"
@@ -141,7 +181,7 @@ const TopTenMovies: React.FC = (props: any) => {
           //max="2100"
         >
           <option value="none">Year</option>
-          {/*showYears*/}
+          { state.years.map(year => ( <option key={year.toString()} value={year.toString()}>{year}</option>))}
         </select>
       </Row>
 

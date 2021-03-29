@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { withRouter } from "react-router-dom";
 
 import {FormGroup,Button,Container,Row,Col,FormText,FormControl,Form} from "react-bootstrap";
-import { NotificationManager } from "react-notifications";
 import { YearPicker } from "react-dropdown-date";
 
 import { movieService } from './../Services/movieService';
@@ -11,6 +10,7 @@ import TagsList from '../TagComponent/TagsList';
 import {ITag} from '../../models/ITag';
 import ActorList from './../ActorComponent/ActorList';
 import { IActor } from './../../models/IActor';
+
 interface IState {
   title: string;
   year: string;
@@ -35,6 +35,8 @@ interface IState {
   description:string;
   yearSubmit: boolean;
   descriptionSubmit: boolean;
+  imdbid: string;
+  imdbidError:string;
   descriptionError:string;
 }
 
@@ -63,6 +65,8 @@ const NewMovie: React.FC = (props: any) => {
   descriptionSubmit: false,
   Actors:"",
   ActorsError:"",
+  imdbid: "",
+  imdbidError:"",
   Actorss:[]
   });
 
@@ -152,6 +156,9 @@ const NewMovie: React.FC = (props: any) => {
    
   };
 
+  const getTopTenMoviesByYear= ()=>{
+
+  }
  
   const addMovie = async() => {
    
@@ -159,6 +166,7 @@ const NewMovie: React.FC = (props: any) => {
  
       Title: state.title,
       Year: +state.year,
+      ImdbId: state.imdbid,
       Current: ( (state.current.toString() === 'true') ? true: false),
       Rating: +state.rating,
       Tags: state.tagss.map(tag=> tag.name).join(','),
@@ -167,7 +175,6 @@ const NewMovie: React.FC = (props: any) => {
       Actors: state.Actorss.map(actor=> actor.name).join(','),
       Description: state.description
     };
-    
    await movieService.createMovie(movieToCreate);
   };
 
@@ -185,15 +192,19 @@ const NewMovie: React.FC = (props: any) => {
           </Col>
           <Col xs={11} md={9} lg={7} xl={5}>
           <form onSubmit={handleSubmit} >
+
             <FormGroup>
               <FormControl
-                id="movieTitleId"
+                id="imdbid"
                 type="text"
                 placeholder="movieId for search on Imdb"
-                value={state.movieTitleId}
+                value={state.imdbid}
                 onChange={(e) => handleChange(e.target)}
+                //  <FormText className="text-danger text-center">{state.imdbidError}</FormText>
               />
-              <FormText className="text-danger text-center">{state.movieTitleIdError}</FormText>
+              <Button type="button"  onClick={getTopTenMoviesByYear} className="col-4 mt-3"> Seach Imdb</Button>
+             
+
             </FormGroup>
             <FormGroup>
               <FormControl
