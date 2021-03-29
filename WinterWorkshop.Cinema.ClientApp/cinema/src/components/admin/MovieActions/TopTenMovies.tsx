@@ -7,6 +7,7 @@ import { IMovie } from "../../../models";
 
 import { movieService } from './../../Services/movieService';
 import Movie from '../../MovieComponent/Movie';
+import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from "node:constants";
 interface IState {
   movies: IMovie[];
   filteredMoviesByYear: IMovie[];
@@ -72,10 +73,11 @@ const TopTenMovies: React.FC = (props: any) => {
     
     setState( prevState=> ({...prevState, years: yearss}) );
 
-    var x = await showYears();
     
-   // console.log(x);
+    
+  
   }
+
   const getTopTenMovies =  async()=>{
 
     setState({ ...state,isLoading: true });
@@ -127,28 +129,6 @@ if(movies == undefined)
 }
   setState(prevState=> ({ ...prevState, movies: movies }));
 };
-
-  const showYears = async () => {
-    let yearOptions: JSX.Element[] = [];
-    //  
-    var yearss = await movieService.getAllYears();
-
-    //console.log(yearss);
-    /*
-    for (let i = yearss[0]; i <= yearss.lentgh; i++) {
-      yearOptions.push(<option value={i}>{i}</option>);
-    }
-    */
-    if(yearss === null)
-    {
-      return;
-    }
-
-    yearOptions=  yearss.map(year => ( <option key={year} value={year}>{year}</option>));
-    return yearOptions;
-  };
-
-
   const rowsData = fillTableWithDaata();
   const table = (
     <Table striped bordered hover size="sm" variant="dark">
@@ -177,8 +157,6 @@ if(movies == undefined)
           name="movieYear"
           id="movieYear"
           className="select-dropdown"
-          //min="1900"
-          //max="2100"
         >
           <option value="none">Year</option>
           { state.years.map(year => ( <option key={year.toString()} value={year.toString()}>{year}</option>))}

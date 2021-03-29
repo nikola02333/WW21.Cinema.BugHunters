@@ -1,14 +1,10 @@
 ﻿using IMDbApiLib;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.API.Models;
 using WinterWorkShop.Cinema.Domain.Common;
-using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
@@ -33,7 +29,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
             var apiLib = new ApiLib(_configuration["IMDB_API_KEY:key"]);
             var data = await apiLib.TitleAsync(searchMovie + "/Trailer,Ratings");
 
-            //var rand = new Random();
 
             if (data.ErrorMessage == "")
             {
