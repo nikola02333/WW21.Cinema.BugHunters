@@ -11,6 +11,8 @@ import {ITag} from '../../models/ITag';
 import ActorList from './../ActorComponent/ActorList';
 import { IActor } from './../../models/IActor';
 
+
+import { imdbService } from './../Services/imdbService';
 interface IState {
   title: string;
   year: string;
@@ -39,7 +41,6 @@ interface IState {
   imdbidError:string;
   descriptionError:string;
 }
-
 const NewMovie: React.FC = (props: any) => {
   const [state, setState] = useState<IState>({
     title: "",
@@ -67,29 +68,21 @@ const NewMovie: React.FC = (props: any) => {
   ActorsError:"",
   imdbid: "",
   imdbidError:"",
-  Actorss:[]
+  Actorss:[
+   /* {
+      id: "str",
+      name: 'nikola',
+      movieId:'fd'
+    }*/
+  ]
   });
 
-  
-/*
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { id, value } = e.target;
-    validate(id, value);
-
-    setState((prevState) => ({...prevState, [id]: value}));
-    
-  };
-  */
-
-
-  
    const handleChange = (e) => {
     const { id, value } = e;
         setState((prev)=>({ ...prev, [id]: value}));
         validate(id, value);
   
   };
-   
   
   const handleBannerUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setState({ ...state, coverPicture: e.target.value });
@@ -104,7 +97,6 @@ const NewMovie: React.FC = (props: any) => {
          canSubmit: false,
         titleSubmit: false}));
       } else {
-       // setState({ ...state, titleError: "", canSubmit: true, titleSubmit: true });
        setState( (prevState)=> 
        ({...prevState, 
         titleError: "", 
@@ -140,12 +132,13 @@ const NewMovie: React.FC = (props: any) => {
   
     setState({ ...state, submitted: true });
     const { title, year, genre, description, coverPicture } = state;
+    
+    debugger;
     if (title && year && genre && description && coverPicture  ) {
       addMovie();
 
     } else {
      
-      //NotificationManager.error("Please fill in data");
       setState({ ...state, submitted: false });
     }
   };
@@ -156,8 +149,49 @@ const NewMovie: React.FC = (props: any) => {
    
   };
 
-  const getTopTenMoviesByYear= ()=>{
+  const searchImdb= async(id:string)=>{
 
+    const moveiResult = await imdbService.searchImdb(id);
+
+// rating , tags,coverPicture, Actors, description, year
+    if(moveiResult !== undefined)
+    {
+
+      /**
+       *   let myInterfacesArray = countryDealers.map(xx=>{
+
+    return <IDealer>
+    {
+         dealerName : xx.name,
+         dealerCode : xx.code,
+         dealerCountry : xx.country
+          // and so on
+     };
+
+  });
+       * let element = document.getElementById(id);
+    element.value = valueToSelect;
+       */
+
+   
+//rating
+    setState((prevState)=>({...prevState,
+       title:moveiResult.title,
+      genre: moveiResult.genres,
+      rating: Math.round(moveiResult.imDbRating).toString(),
+      coverPicture: moveiResult.image,
+      description : moveiResult.plot,
+     // actorss
+     //taggs 
+      current: true,
+      year: moveiResult.year,
+      canSubmit:true,
+      titleSubmit: true,
+      genreSubmit:true
+      }));
+      
+
+    }
   }
  
   const addMovie = async() => {
@@ -180,7 +214,6 @@ const NewMovie: React.FC = (props: any) => {
 
   const isFormValid =()=>
   {
-    // disabled={(state.durationSubmit && state.movieIdSubmit && state.auditoriumIdSubmit && state.priceSubmit && state.projectionTimeSubmit ) ? false : true}
     return ( ( state.titleSubmit && state.genreSubmit) ? false: true )
   }
   return (
@@ -202,7 +235,7 @@ const NewMovie: React.FC = (props: any) => {
                 onChange={(e) => handleChange(e.target)}
                 //  <FormText className="text-danger text-center">{state.imdbidError}</FormText>
               />
-              <Button type="button"  onClick={getTopTenMoviesByYear} className="col-4 mt-3"> Seach Imdb</Button>
+              <Button type="button"  onClick={()=>searchImdb(state.imdbid)} className="col-4 mt-3"> Seach Imdb</Button>
              
 
             </FormGroup>
@@ -244,6 +277,7 @@ const NewMovie: React.FC = (props: any) => {
                 value={state.rating}
                 onChange={(e)=> handleChange(e.target)}
               >
+                
                 <option value="1">1</option>
                 <option value="2">2</option>
                 <option value="3">3</option>
@@ -253,7 +287,7 @@ const NewMovie: React.FC = (props: any) => {
                 <option value="7">7</option>
                 <option value="8">8</option>
                 <option value="9">9</option>
-                <option value="10">10</option>
+                <option value="10">10</option> 
               </FormControl>
             </FormGroup>
             <FormGroup>

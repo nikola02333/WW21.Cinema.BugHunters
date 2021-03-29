@@ -1,5 +1,6 @@
 ﻿using IMDbApiLib;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,12 +17,60 @@ namespace WinterWorkShop.Cinema.API.Controllers
     [Route("api/[controller]")]
     public class ImdbsController : ControllerBase
     {
+        private readonly IConfiguration _configuration;
+
+        public ImdbsController(IConfiguration configuration)
+        {
+           _configuration = configuration;
+        }
+
         [HttpGet]
         [Route("Search/{searchMovie}")]
-        public async Task<ActionResult> SearchByMovieId( string searchMovie)
+        public async Task<ActionResult> SearchByMovieId(string searchMovie)
         {
-          
-            var apiLib = new ApiLib("k_9szm9guo");
+
+
+            var apiLib = new ApiLib(_configuration["IMDB_API_KEY:key"]);
+            var data = await apiLib.TitleAsync(searchMovie + "/Trailer,Ratings");
+
+            //var rand = new Random();
+
+            if (data.ErrorMessage == "")
+            {
+                var result = new ImdbSearchModel
+                {
+                    Title = data.Title,
+                    Year = data.Year,
+
+                    ActorList = data.ActorList.Select(actor => new Actor { Name = actor.Name }).Take(3).ToList(),
+                    Awards = data.Awards,
+                    Genres = data.Genres.Split(",")[0],
+                    Image = data.Image,
+                    IMDbRating = data.IMDbRating,
+                    Plot = data.Plot,
+                    RuntimeMins = data.RuntimeMins,
+                };
+
+                return Ok(result);
+            }
+
+            ErrorResponseModel errorResponse = new ErrorResponseModel
+            {
+                ErrorMessage = Messages.IMDB_MOVIE_NOT_FOUND,
+                StatusCode = System.Net.HttpStatusCode.BadRequest
+            };
+
+            return BadRequest(errorResponse);
+        }
+
+
+        [HttpGet]
+        [Route("Search/video/{searchMovie}")]
+        public async Task<ActionResult> SearchVideoByMovieId( string searchMovie)
+        {
+            
+
+            var apiLib = new ApiLib(_configuration["IMDB_API_KEY:key"]);
             var data = await apiLib.TitleAsync( searchMovie + "/Trailer,Ratings");
             var youtubeTrailer = await apiLib.YouTubeTrailerAsync(searchMovie);
 

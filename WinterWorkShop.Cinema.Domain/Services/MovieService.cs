@@ -417,7 +417,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     };
                     await _tagsMoviesRepository.InsertAsync(tagsMovies);
 
-                   // _tagsMoviesRepository.Save();
                 }
             }
 
@@ -459,7 +458,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     };
                     await _tagsMoviesRepository.InsertAsync(tagsMovies);
 
-                   // _tagsMoviesRepository.Save();
                 }
             }
 
