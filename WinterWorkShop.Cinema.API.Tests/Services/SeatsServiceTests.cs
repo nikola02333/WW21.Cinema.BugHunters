@@ -284,5 +284,70 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Assert.IsFalse(expectedResponce.IsSuccessful);
         }
 
+        [TestMethod]
+
+        public async Task GetMaxNumbersOfSeatsByAuditoriumIdAsync_If_Auditorium_Null_Returns_ErrorMessage()
+        {
+            //Arrange
+            Auditorium auditorium = null;
+            bool isSuccessful = false;
+            var expectedErrorMassage = Messages.AUDITORIUM_GET_BY_ID_ERROR;
+
+            _mockAuditoriumsRepository.Setup(srvc => srvc.GetByIdAsync(It.IsNotNull<int>())).ReturnsAsync(auditorium);
+
+            //Act
+            var result = await _seatService.GetMaxNumbersOfSeatsByAuditoriumIdAsync(It.IsNotNull<int>());
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(GenericResult<SeatsMaxNumbersDomainModel>));
+            Assert.AreEqual(expectedErrorMassage, result.ErrorMessage);
+            Assert.AreEqual(isSuccessful,result.IsSuccessful);
+        }
+
+        [TestMethod]
+
+        public async Task GetMaxNumbersOfSeatsByAuditoriumIdAsync_If_Seats_Null_Returns_ErrorMessage()
+        {
+            //Arrange
+            Auditorium auditorium = new Auditorium { };
+            bool isSuccessful = false;
+            var expectedErrorMassage = Messages.SEATS_IN_AUDITORIUM;
+            List<Seat> seats = null;
+
+            _mockAuditoriumsRepository.Setup(srvc => srvc.GetByIdAsync(It.IsNotNull<int>())).ReturnsAsync(auditorium);
+
+            _mockSeatsRepository.Setup(srvc => srvc.GetSeatsByAuditoriumIdAsync(It.IsAny<int>())).ReturnsAsync(seats);
+
+            //Act
+            var result = await _seatService.GetMaxNumbersOfSeatsByAuditoriumIdAsync(It.IsNotNull<int>());
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(GenericResult<SeatsMaxNumbersDomainModel>));
+            Assert.AreEqual(expectedErrorMassage, result.ErrorMessage);
+            Assert.AreEqual(isSuccessful, result.IsSuccessful);
+        }
+
+        [TestMethod]
+
+        public async Task GetMaxNumbersOfSeatsByAuditoriumIdAsync_Returns_Seats()
+        {
+            //Arrange
+            Auditorium auditorium = new Auditorium { };
+            bool isSuccessful = true;
+        
+            _mockAuditoriumsRepository.Setup(srvc => srvc.GetByIdAsync(It.IsNotNull<int>())).ReturnsAsync(auditorium);
+            _mockSeatsRepository.Setup(srvc => srvc.GetSeatsByAuditoriumIdAsync(It.IsAny<int>())).ReturnsAsync(_seatList);
+
+            //Act
+            var result = await _seatService.GetMaxNumbersOfSeatsByAuditoriumIdAsync(It.IsNotNull<int>());
+          
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.IsInstanceOfType(result, typeof(GenericResult<SeatsMaxNumbersDomainModel>));
+            Assert.AreEqual(isSuccessful, result.IsSuccessful);
+        }
+
     }
 }

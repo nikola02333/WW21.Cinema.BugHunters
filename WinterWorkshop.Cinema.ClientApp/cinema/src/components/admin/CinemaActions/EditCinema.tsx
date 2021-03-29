@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, withRouter } from "react-router-dom";
+import { useHistory, useParams, withRouter } from "react-router-dom";
 import {
   FormGroup,
   FormControl,
@@ -11,7 +11,7 @@ import {
 } from "react-bootstrap";
 import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../../appSettings";
-
+import {cinemaService} from '../../Services/cinemaService'
 interface IParams {
   id: string;
 }
@@ -26,8 +26,8 @@ interface IState {
 }
 
 const EditCinema: React.FC = (props: any) => {
+  const history = useHistory();
   const { id } = useParams<IParams>();
-
   const [state, setState] = useState<IState>({
     name: "",
     id: "",
@@ -39,7 +39,7 @@ const EditCinema: React.FC = (props: any) => {
   });
 
   useEffect(() => {
-    getCinema(id);
+    getCinemaById(id);
   }, [id]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,65 +97,29 @@ const EditCinema: React.FC = (props: any) => {
     }
   };
 
-  const getCinema = (cinemaId: string) => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
+  const getCinemaById = async (cinemaId: string) => {
 
-    fetch(`${serviceConfig.baseURL}/api/cinemas/GetById/${cinemaId}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({ ...state, name: data.name, id: data.id ,address:data.address,cityName:data.cityName});
-         
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
+    var cinema = await cinemaService.getCinemaById(cinemaId);
+    if(cinema  != undefined)
+    {
+      setState({
+        ...state,
+        cityName:cinema.cityName,
+        name: cinema.name,
+        address: cinema.address,
+        id: cinema.id + "",
       });
+    }
   };
 
-  const updateCinema = () => {
+  const updateCinema = async() => {
     const data = {
       Name: state.name,
       address:state.address,
       cityName:state.cityName
     };
-
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-      body: JSON.stringify(data),
-    };
-
-    fetch(`${serviceConfig.baseURL}/api/cinemas/${state.id}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.statusText;
-      })
-      .then((result) => {
-        props.history.goBack();
-        NotificationManager.success("Successfuly edited cinema!");
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
+    await cinemaService.updateCinema(id,data);
+    history.push('/dashboard/AllCinemas');
   };
 
   return (

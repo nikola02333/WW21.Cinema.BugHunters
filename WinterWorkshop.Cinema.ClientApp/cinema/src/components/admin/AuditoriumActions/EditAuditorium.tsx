@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { withRouter } from "react-router-dom";
+import { useHistory,useParams,withRouter } from "react-router-dom";
 import {
   FormGroup,
   FormControl,
@@ -13,9 +13,14 @@ import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../../appSettings";
 import { Typeahead } from "react-bootstrap-typeahead";
 import { ICinema } from "../../../models";
-
+import {cinemaService} from '../../Services/cinemaService'
+import {auditoriumService} from '../../Services/auditoriumService'
+interface IParams {
+  id: string;
+}
 interface IState {
   cinemaId: string;
+  id:string;
   auditoriumName: string;
   seatRows: number;
   numberOfSeats: number;
@@ -26,10 +31,14 @@ interface IState {
   numOfSeatsError: string;
   submitted: boolean;
   canSubmit: boolean;
+  isLoading: boolean;
 }
 
 const EditAuditorium: React.FC = (props: any): JSX.Element => {
+  const history = useHistory();
+  const { id } = useParams<IParams>();
   const [state, setState] = useState<IState>({
+    id:"",
     cinemaId: "",
     auditoriumName: "",
     seatRows: 0,
@@ -48,12 +57,14 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
     numOfSeatsError: "",
     submitted: false,
     canSubmit: true,
+    isLoading: true,
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
+    validate(id, value);
     setState({ ...state, [id]: value });
-    //validate(id, value);
+  
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -119,73 +130,41 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
     }
   };
 
-  const editAuditorium = () => {
-    const idFromUrl = window.location.pathname.split("/");
-    const id = idFromUrl[3];
-
+  const editAuditorium = async () => {
     const data = {
       cinemaId: state.cinemaId,
       numberOfSeats: +state.numberOfSeats,
       seatRows: +state.seatRows,
       auditoriumName: state.auditoriumName,
     };
-
-    const requestOptions = {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-      body: JSON.stringify(data),
-    };
-
-    fetch(
-      `${serviceConfig.baseURL}/api/auditoriums/editauditorium/${id}`,
-      requestOptions
-    )
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.statusText;
-      })
-      .then((result) => {
-        NotificationManager.success("Successfuly edited auditorium!");
-        props.history.push("AllAuditoriums");
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
+    await auditoriumService.updateAuditorium(id,data);
+    history.push('/dashboard/AllAuditoriums'); 
   };
 
-  const getCinemas = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
+  const getAuditoriumById = async (auditoriumId: string) => {
 
-    fetch(`${serviceConfig.baseURL}/api/Cinemas/all`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({ ...state, cinemas: data });
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
+    var auditorium = await auditoriumService.getAuditoriumById(auditoriumId);
+    if(auditorium  != undefined)
+    {
+      setState({
+        ...state,
+        cinemaId:auditorium.cinemaId,
+        auditoriumName: auditorium.auditoriumName,
+        id: auditorium.id + ""
       });
+    }
   };
 
+  const getCinemas = async () => {
+    setState({ ...state, isLoading: true });
+     
+    var cinemas= await cinemaService.getCinemas();
+    setState({ ...state, cinemas: cinemas, isLoading: false });
+  };
+
+  useEffect(() => {
+    getAuditoriumById(id);
+  }, [id]);
   useEffect(() => {
     getCinemas();
   }, []);

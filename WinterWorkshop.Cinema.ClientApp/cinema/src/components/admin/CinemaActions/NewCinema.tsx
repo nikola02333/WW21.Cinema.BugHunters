@@ -15,24 +15,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCouch } from "@fortawesome/free-solid-svg-icons";
 import { Form, Input, Button, Space, Select,InputNumber } from 'antd';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import {cinemaService} from './../../Services/cinemaService';
+import {ICinemaToCreateModel} from './../../../models/ICinemaToCreateModel';
+
+
 
 interface IState {
-  createCinema:{
-    name: string;
-  address:string;
-  cityName:string;
-  createAuditoriumModel;
-  };
-  submitted;
+  createCinema:ICinemaToCreateModel;
+  submitted:boolean;
 };
 
 const NewCinema: React.FC = (props: any) => {
   const [state, setState] = useState<IState>({
     createCinema:{
-      name: "",
+      name:"",
       address:"",
-      cityName:"",
-      createAuditoriumModel:[],
+      cityName:""
     },
     submitted: false
   });
@@ -48,35 +46,15 @@ const NewCinema: React.FC = (props: any) => {
     }
   },[state.submitted])
 
-
-  const addCinema = () => {
-      const data = state.createCinema;
-      console.log(state.createCinema)
-    console.log(data)
-    const requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-      body: JSON.stringify(data),
-    };
-
-    fetch(`${serviceConfig.baseURL}/api/cinemas/create`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.statusText;
-      })
-      .then((result) => {
-        NotificationManager.success("Successfuly added cinema!");
-        props.history.push(`AllCinemas`);
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
+ 
+  const addCinema = async() => {
+    var created=await cinemaService.addCinema(state.createCinema);
+    if(created===undefined){
+      setState((prev)=>({ ...prev, submitted: false }));
+      return;
+      }
+      NotificationManager.success("New cinema added!");
+      props.history.push(`AllCinemas`); 
   };
 
 

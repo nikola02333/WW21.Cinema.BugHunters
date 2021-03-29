@@ -20,7 +20,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
         }
         public async Task<GenericResult<TagDomainModel>> AddTagAsync(TagDomainModel tagToCreate)
         {
-            var tagExists = _tagsRepository.GetByIdAsync(tagToCreate.TagName);
+            var tagExists =await _tagsRepository.GetByIdAsync(tagToCreate.TagName);
             
             if( tagExists != null)
             {

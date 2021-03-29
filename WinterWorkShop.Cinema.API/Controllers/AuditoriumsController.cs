@@ -165,7 +165,5 @@ namespace WinterWorkShop.Cinema.API.Controllers
             return Ok(result.Data);
         }
 
-
-       
     }
 }

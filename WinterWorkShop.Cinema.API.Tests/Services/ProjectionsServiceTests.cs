@@ -160,7 +160,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         // if (projectionsAtSameTime != null && projectionsAtSameTime.Count > 0) - true
         // return ErrorMessage
         [TestMethod]
-        public void ProjectionService_CreateProjection_WithProjectionAtSameTime_ReturnErrorMessage() 
+        public async Task ProjectionService_CreateProjection_WithProjectionAtSameTime_ReturnErrorMessage() 
         {
             //Arrange
             List<Projection> projectionsModelsList = new List<Projection>();
@@ -168,11 +168,11 @@ namespace WinterWorkShop.Cinema.Tests.Services
             string expectedMessage = "Cannot create new projection, there are projections at same time alredy.";
 
             
-            _mockProjectionsRepository.Setup(x => x.GetByAuditoriumId(It.IsAny<int>())).Returns(projectionsModelsList);
+            _mockProjectionsRepository.Setup(x => x.GetByAuditoriumId(It.IsNotNull<int>())).Returns(projectionsModelsList);
             
 
             //Act
-            var resultAction = _projectionsService.CreateProjection(_projectionDomainModel).ConfigureAwait(false).GetAwaiter().GetResult();
+            var resultAction =await  _projectionsService.CreateProjection(_projectionDomainModel);
 
             //Assert
             Assert.IsNotNull(resultAction);
@@ -727,6 +727,45 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Assert.AreEqual(result.DataList[0].AuditoriumId, _audirotiumId);
             Assert.AreEqual(expectedResultCount, result.DataList.Count);
             Assert.IsTrue(result.IsSuccessful);
+        }
+
+
+        [TestMethod]
+        public async Task ProjectionService_GetByIdAsync_If_IsSuccessful_True_Returns_Projection()
+        {
+            //Arrange
+            var isSuccessful = true;
+
+            _mockProjectionsRepository.Setup(x => x.GetByIdAsync(It.IsNotNull<Guid>())).ReturnsAsync(_projection);
+           
+            //Act
+            var result = await _projectionsService.GetByIdAsync(_projection.Id);
+
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(isSuccessful, result.IsSuccessful);
+            Assert.IsInstanceOfType(result, typeof(GenericResult<ProjectionDomainModel>));
+        }
+
+        [TestMethod]
+        public async Task ProjectionService_GetByIdAsync_If_Projection_Is_Null_Returns_Error_Message()
+        {
+            //Arrange
+            var isSuccessful = false ;
+            var expectedErrorMessage = Messages.PROJECTION_GET_BY_ID;
+            Projection projection = null;
+            _mockProjectionsRepository.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(projection);
+
+            //Act
+            var result = await _projectionsService.GetByIdAsync(It.IsAny<Guid>());
+     
+
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(isSuccessful, result.IsSuccessful);
+            Assert.AreEqual(expectedErrorMessage, result.ErrorMessage);
+            Assert.IsInstanceOfType(result, typeof(GenericResult<ProjectionDomainModel>));
         }
     }
 }
