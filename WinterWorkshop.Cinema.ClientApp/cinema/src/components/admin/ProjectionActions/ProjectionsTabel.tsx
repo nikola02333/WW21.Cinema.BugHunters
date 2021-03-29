@@ -24,6 +24,7 @@ const ProjectionsTable : React.FC<IProps> = ({projections,setState})=>{
         setState(prev=>({ ...prev, isLoading: true }));
         await projectionService.deleteProjectino(id);
         setState(prev=>({ ...prev, isLoading: false }));
+        window.location.reload();
       };
 
 
