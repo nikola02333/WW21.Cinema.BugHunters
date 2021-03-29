@@ -485,7 +485,8 @@ namespace WinterWorkShop.Cinema.Tests.Services
             _mockTagsMoviesRepository.Setup(srvc => srvc.InsertAsync(yearTagsMovies)).ReturnsAsync(yearTagsMovies);
             _mockTagsMoviesRepository.Setup(srvc => srvc.InsertAsync(titleTagsMovies)).ReturnsAsync(It.IsNotNull<TagsMovies>());
 
-            await _moviesService.AddTagsForMovie(movie);
+            // ovo je dodato, treba da se ispravi 
+             _moviesService.AddTagsForMovie(new MovieDomainModel(),movie);
             _mockTagsMoviesRepository.Verify(srvc => srvc.InsertAsync(It.IsNotNull<TagsMovies>()), Times.Exactly(3));
 
 
