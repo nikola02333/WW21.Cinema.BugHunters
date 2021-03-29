@@ -450,23 +450,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
         public async Task<GenericResult<MovieDomainModel>> SearchMoviesByTag(string tagValue)
         {
           
-            Tag tagsExists = null;
-            if (tagValue != null)
-            {
-
-                 tagsExists =  _tagsRepository.GetTagByValue(tagValue);
-            }
-
-            if(tagsExists == null)
-            {
-                return new GenericResult<MovieDomainModel>
-                {
-                    IsSuccessful = false,
-                    ErrorMessage =Messages.MOVIE_SEARCH_BY_TAG_NOT_FOUND
-                };
-            }
-           
-
             var searchResult = await _moviesRepository.SearchMoviesByTags( tagValue);
             
             if(searchResult == null)
