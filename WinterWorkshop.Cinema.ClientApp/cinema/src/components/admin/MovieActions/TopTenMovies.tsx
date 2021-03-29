@@ -139,7 +139,7 @@ if(movies == undefined)
       yearOptions.push(<option value={i}>{i}</option>);
     }
     */
-    if(yearss == null)
+    if(yearss === null)
     {
       return;
     }
