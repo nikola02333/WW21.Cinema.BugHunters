@@ -27,6 +27,7 @@
     "react-dom": "^16.14.0",
     "react-dropdown-date": "0.0.18",
     "react-notifications": "^1.7.2",
+    "react-player": "^2.9.0",
     "react-router": "^5.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "3.3.0",

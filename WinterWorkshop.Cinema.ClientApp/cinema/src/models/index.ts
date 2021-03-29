@@ -10,6 +10,8 @@ export interface IProjection {
   auditoriumId:number;
   duration:number;
   price:number;
+  cinemaId:number;
+  cinemaName:string;
 }
 export interface IProjectionNEW {
   auditoriumId: number;
@@ -20,6 +22,8 @@ export interface IProjectionNEW {
   movieTitle: string;
   price: number;
   projectionTime: string;
+  cinemaId:number;
+  cinemaName:string;
 }
 
 export interface IMovie {
@@ -79,4 +83,12 @@ export interface IReservation {
 
 export interface ITag {
   name: string;
+}
+
+export interface IProjectionByCinemaId {
+  cinema: IProjection[];
+}
+export interface IGroupedProjections{
+  movieId:string;
+  projections:IProjectionByCinemaId[];
 }

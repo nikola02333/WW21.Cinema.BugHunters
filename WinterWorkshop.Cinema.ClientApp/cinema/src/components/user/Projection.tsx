@@ -52,6 +52,8 @@ const Projection: React.FC = (props: any) => {
             movieTitle: "",
             price: 0,
             projectionTime: "",
+            cinemaId:0,
+            cinemaName:""
           },
         ],
       },
@@ -92,6 +94,8 @@ const Projection: React.FC = (props: any) => {
         movieTitle: "",
         price: 0,
         projectionTime: "",
+        cinemaId:0,
+        cinemaName:""
       },
     ],
     cinemaId: "",
