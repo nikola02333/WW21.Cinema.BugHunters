@@ -9,7 +9,8 @@ export const auditoriumService = {
     getAuditoriumById,
     getAuditoriumByCinemaId,
     deleteAuditorium,
-    createAuditorium
+    createAuditorium,
+    updateAuditorium
 };
 
 async function getAllAuditoriums()
@@ -29,7 +30,7 @@ async function getAllAuditoriums()
                       });
 }
 
-async function getAuditoriumById(id:number)
+async function getAuditoriumById(id:string)
 {
   return await API.get(`${serviceConfig.baseURL}/api/Auditoriums/GetById/${id}`)
                         .then( response => {
@@ -46,7 +47,7 @@ async function getAuditoriumById(id:number)
                       });
 }
 
-async function getAuditoriumByCinemaId(id:number)
+async function getAuditoriumByCinemaId(id:string)
 {
   return await API.get(`${serviceConfig.baseURL}/api/Auditoriums/ByCinemaId/${id}`)
                         .then( response => {
@@ -79,7 +80,23 @@ async function createAuditorium(auditorium: ICreateAuditorium)
                           }
                       });
 }
-
+async function updateAuditorium(auditoriumId: string, auditoriumToUpdate : ICreateAuditorium)
+{
+ return await API.put(`/api/auditoriums/update/${auditoriumId}`, auditoriumToUpdate)
+                              .then( (res)=> {
+                                NotificationManager.success("Auditorium updated successfuly");
+                                return res.data;
+                              })
+                              .catch(error => {
+                                if (error.response) {
+                                  NotificationManager.error(error.response.data.errorMessage);
+                                } else if (error.request) {
+                                  NotificationManager.error("Server Error");
+                                } else {
+                                  NotificationManager.error("Error");
+                                }
+                                });
+}
 async function deleteAuditorium(id: string)
 {
     if (window.confirm('Are you sure you wish to delete this auditorium?'))

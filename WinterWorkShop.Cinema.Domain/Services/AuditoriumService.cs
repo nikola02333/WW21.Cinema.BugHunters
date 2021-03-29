@@ -260,8 +260,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Data = auditorium
             };
         }
-        
 
-       
     }
 }
