@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
-import { FormControl, FormGroup,Button, Row, Col } from "react-bootstrap";
-import { StaticRouter } from "react-router";
+import React, { useState} from "react";
+import { FormControl,Button, Row, Col } from "react-bootstrap";
 
 interface IState{
   auditoriumName: string;
@@ -19,15 +18,10 @@ const AuditoriumForm :React.FC<IProps>= ({ onSubmit,...props}) => {
     numberOfSeats:1
   });
 
-  useEffect(()=>{
-      console.log(input);
-  },[input])
-
   const handleChange = (e) => {
-      console.log("handleChange");
       const {id ,value}=e.target;
       if(id==="auditoriumName"){
-        console.log("value");
+  
         setInput({ ...input ,[id]:value});
       }else{
         setInput({ ...input ,[id]:+value});

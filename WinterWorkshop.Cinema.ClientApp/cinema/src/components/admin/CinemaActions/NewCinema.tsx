@@ -56,30 +56,12 @@ const NewCinema: React.FC = (props: any) => {
     submitted: false
   });
 
-  useEffect(()=>{
-    console.log("state");
-    console.log(state);
-  },[state]);
-
-  // useEffect(()=>{
-  //   if(state.submitted===true){
-  //     console.log("KREIRAJ");
-  //     addCinema();
-  //   }
-  // },[state.submitted]);
-  // useEffect(()=>{
-  //   console.log("DODELI");
-  //   setState((prev)=>({...prev,createCinema:{...prev.createCinema, createAuditoriumModel:state.auditoriums}}));
-
-  // },[state.auditoriums]);
-
   const handleChange = (e) => {
     const { id, value } = e;
     if (value!==null) {
       setState((prev)=>({ ...prev, createCinema:{...prev.createCinema, [id]: value}}));
       validate(id, value);
     } else {
-      console.log("NULLL")
       validate(id, null);
     }
   };
@@ -128,7 +110,7 @@ const NewCinema: React.FC = (props: any) => {
     var created=cinemaService.addCinema(data);
 
     if(created===undefined){
-      console.log("if");
+    
       setState((prev)=>({ ...prev, submitted: false }));
       return;
       }
@@ -136,7 +118,7 @@ const NewCinema: React.FC = (props: any) => {
       
       NotificationManager.success("New cinema added!");
       props.history.push(`AllCinemas`);
-      console.log("kreiranooo");
+   
       ; 
   };
 

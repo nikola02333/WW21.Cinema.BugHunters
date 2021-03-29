@@ -54,7 +54,6 @@ function removeCinema(id: string)
     {
       return  API.delete(`/api/cinemas/Delete/${id}`)
       .then( (response)=> {
-        console.log(response.data);
         NotificationManager.success("Successfuly removed cinema!");     
         return id;
       })
