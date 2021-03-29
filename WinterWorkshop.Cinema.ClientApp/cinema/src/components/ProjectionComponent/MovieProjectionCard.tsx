@@ -12,39 +12,18 @@ interface IProps{
   movies: IMovie[];
   filteredProjections:IProjection[];
 }
-export interface IProjectionByAuditoriumId {
-  auditorium: IProjection[];
+export interface IProjectionByCinemaId {
+  cinema: IProjection[];
 }
+
 interface IState{
   movieId:string;
-  projections:IProjectionByAuditoriumId[];
+  projections:IProjectionByCinemaId[];
 }
 
 const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjections}) =>{
   const history =useHistory();
 
-  const [state,setState]=useState<IState[]>([]);
-
-  const filter = () => {
-    var grouped = _.chain(filteredProjections).groupBy("movieId").map(function(offers, movieId) {
-      // Optionally remove product_id from each record
-       var cleanOffers = _.map(offers, function(it) {
-        return _.omit(it, "movieId");
-      });
-    var groupedAud=  _.chain(cleanOffers).groupBy("auditoriumId").map(function(offers, auditoriumId) {
-       var auditorium = _.map(offers);
-          return {auditorium};
-       }).value();
-    
-      return {
-        movieId: movieId,
-        projections: groupedAud
-      };
-    }).value();
-    return grouped;
-  };
-  const filterCallBack = useCallback(() => filter(), [state]);
-    
   const fillTableWithData = () => {
         return movies.map((movie) => {
           const projectionButton = movie.projections?.map((projection) => {
@@ -74,7 +53,11 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
                 <Col md={12} className="mb-2 text-muted">
                 Year of production: {movie.year}
                 </Col>
+                <Col>
+                  <Button onClick={() => history.push(`MovieDeatails/${movie.id}`)}>More</Button>
+                </Col>
               </Col>
+              
             </Row>
             </Container>
           );
@@ -94,36 +77,37 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
           var cleanOffers = _.map(offers, function(it) {
           return _.omit(it, "movieId");
         });
-      var groupedAud=  _.chain(cleanOffers).groupBy("auditoriumId").map(function(offers, auditoriumId) {
-          var auditorium = _.map(offers);
-            return {auditorium};
+        var groupedCinema=  _.chain(cleanOffers).groupBy("cinemaId").map(function(offers, cinemaId) {
+          var cinema = _.map(offers);
+            return {cinema};
           }).value();
+      
       
         return {
           movieId: movieId,
-          projections: groupedAud
+          projections: groupedCinema
         };
       }).value();
-      
+      console.log(grouped);
       return grouped.map((filteredProjection: IState)  => {
       var movie = movies.find(x => x.id === filteredProjection.movieId) as IMovie;
-      
       const projectionButton = filteredProjection.projections.map((projectio,index) => {
-      
-      const bottonsAudit= projectio.auditorium.map((audit,index)=>{
+        
+      const bottonsCinema= projectio.cinema.map((cinema,index)=>{
             if(index===0){
               return (<>
                 <Col xs={2} className={"mx-1   justify-content-start"}>
-              <span className="font-weight-bold">{audit.auditoriumName}</span> 
+              <span className="font-weight-bold">{cinema.cinemaName}</span> 
                 </Col>
                 <Col xs={1} className={"mx-1  p-0 justify-content-start"}>
-                <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">{audit.projectionTime.slice(0, 10)}</Tooltip>}>
+                <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">
+                  {cinema.projectionTime.slice(0, 10)} {" "+cinema.auditoriumName}</Tooltip>}>
                 <Button
-                  key={audit.id}
-                  onClick={() => navigateToProjectionDetails(audit.id, movie.id,history)}
+                  key={cinema.id}
+                  onClick={() => navigateToProjectionDetails(cinema.id, movie.id,history)}
                   className=" btn-sm"
                 >
-                  {audit.projectionTime.slice(11, 16)}h
+                  {cinema.projectionTime.slice(11, 16)}h
                 </Button>
                 </OverlayTrigger>
                 </Col>
@@ -133,19 +117,20 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
             }
               return (
                 <Col xs={1} className={"mx-1  p-0 justify-content-start"}>
-                  <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">{audit.projectionTime.slice(0, 10)}</Tooltip>}>
+                  <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">
+                    {cinema.projectionTime.slice(0, 10)} {" "+cinema.auditoriumName}</Tooltip>}>
                     <Button
-                    key={audit.id}
-                    onClick={() => navigateToProjectionDetails(audit.id, movie.id,history)}
+                    key={cinema.id}
+                    onClick={() => navigateToProjectionDetails(cinema.id, movie.id,history)}
                     className="btn-sm">
-                      {audit.projectionTime.slice(11, 16)}h
+                      {cinema.projectionTime.slice(11, 16)}h
                     </Button>
                   </OverlayTrigger>
                 </Col>
               );
             })
         return (
-              <Row key={movie.id+index} className="justify-content-start my-2 mb-3">{bottonsAudit}</Row>
+              <Row key={movie.id+index} className="justify-content-start  my-2 mb-3">{bottonsCinema}</Row>
         );
       });
 
