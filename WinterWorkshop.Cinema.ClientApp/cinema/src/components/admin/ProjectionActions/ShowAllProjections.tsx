@@ -16,18 +16,7 @@ export interface IState {
 
 const ShowAllProjections: React.FC = (props: any) => {
   const [state, setState] = useState<IState>({
-    projections: [
-      {
-        auditoriumId: 0,
-        auditoriumName: "",
-        duration: 0,
-        id: "",
-        movieId: "",
-        movieTitle: "",
-        price: 0,
-        projectionTime: "",
-      },
-    ],
+    projections: [],
     isLoading: true,
   });
 

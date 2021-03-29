@@ -22,6 +22,8 @@ const ProjectionDeatils = (props:{setInfo,getSeatData})=>{
             movieTitle: "",
             price: 0,
             projectionTime: "",
+            cinemaId:0,
+            cinemaName:""
         } ,
         movie:{
             id: "",

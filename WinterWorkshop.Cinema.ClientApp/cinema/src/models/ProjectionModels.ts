@@ -1,8 +1,8 @@
 export interface IFilterProjectionModel{
-    CinemaId: number,
-    AuditoriumId: number,
-    MovieId : string,
-    DateTime : Date
+    CinemaId?: number,
+    AuditoriumId?: number,
+    MovieId?: string,
+    DateTime?: Date
 }
 
 export interface ICreateProjection{
@@ -12,3 +12,4 @@ export interface ICreateProjection{
     MovieId:string,
     Price:number
 }
+
