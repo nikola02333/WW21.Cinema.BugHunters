@@ -31,10 +31,8 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         public void TestInit()
         {
             _mockAuditoriumService = new Mock<IAuditoriumService>();
-
-               _mockCinemaService = new Mock<ICinemaService>();
+            _mockCinemaService = new Mock<ICinemaService>();
             _cinemaController = new CinemasController(_mockCinemaService.Object, _mockAuditoriumService.Object);
-
 
         }
 
@@ -63,18 +61,12 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 .ReturnsAsync(expectedCinemas);
 
             // Act
-
             var result = await _cinemaController.GetAsync();
-
-
             var cinemaResult = ((OkObjectResult)result.Result).Value;
            
-
-
             //Assert
-            Assert.IsNotNull(cinemaResult);
-
-            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
+           Assert.IsNotNull(cinemaResult);
+           Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
            Assert.AreSame(expectedCinemas.DataList, cinemaResult);
            Assert.AreEqual(expectedStatusCode, ((OkObjectResult)result.Result).StatusCode);
            
@@ -98,15 +90,11 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 .ReturnsAsync(expectedCinemas);
 
             // Act
-
             var result = await _cinemaController.GetAsync();
-
-
             var cinemaResult = ((OkObjectResult)result.Result).Value;
 
-
+            //Assert
             Assert.IsNotNull(cinemaResult);
-
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
             Assert.AreSame(expectedCinemas.DataList, cinemaResult);
             Assert.AreEqual(expectedStatusCode, ((OkObjectResult)result.Result).StatusCode);
@@ -114,7 +102,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
 
         [TestMethod]
-        public async Task GetCinemaById_If_Id_Exists_Returns_User()
+        public async Task GetCinemaById_If_Id_Exists_Returns_Cinema()
         {
             int expectedStatusCode = 200;
             int expectedCinemaId = 1;
@@ -136,27 +124,21 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 .ReturnsAsync(expectedCinema);
 
             // Act
-
-            var result = await _cinemaController.GetCinemaById(expectedCinemaId);
-
-            //Assert
+            var result = await _cinemaController.GetCinemaById(expectedCinemaId);         
             var cinemaResult = ((OkObjectResult)result.Result).Value;
 
-
+            //Assert
             Assert.IsNotNull(cinemaResult);
-
             Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
             Assert.AreSame(expectedCinema.Data, cinemaResult);
             Assert.AreEqual(expectedStatusCode, ((OkObjectResult)result.Result).StatusCode);
         }
 
         [TestMethod]
-        public async Task GetCinemaByID_When_Id_Is_Not_Right_Returns_BadRequest()
+        public async Task GetCinemaById_When_Id_Is_Not_Right_Returns_BadRequest()
         {
             int expectedStatusCode = 400;
-
             int expectedId = 0;
-
             var expectedErrorMessage = "Cinema doesn't exist";
 
             var expectedCinema = new GenericResult<CinemaDomainModel>
@@ -165,29 +147,23 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 ErrorMessage = "Cinema doesn't exist"
             };
 
-
             _mockCinemaService.Setup(srvc => srvc.GetCinemaById(expectedId))
                 .ReturnsAsync(expectedCinema);
 
             // Act
-
-            var result = await _cinemaController.GetCinemaById(expectedId);
+            var result = await _cinemaController.GetCinemaById(expectedId);         
+            var cinemaResult = ((BadRequestObjectResult)result.Result).Value;
+            var error = (ErrorResponseModel)cinemaResult;
 
             //Assert
-            var cinemaResult = ((BadRequestObjectResult)result.Result).Value;
-
             Assert.IsNotNull(cinemaResult);
-
             Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
-
-            Assert.AreEqual(expectedStatusCode, ((BadRequestObjectResult)result.Result).StatusCode);
-
-            var error = (ErrorResponseModel)cinemaResult;
+            Assert.AreEqual(expectedStatusCode, ((BadRequestObjectResult)result.Result).StatusCode);         
             Assert.AreEqual(expectedErrorMessage, error.ErrorMessage);
         }
 
         [TestMethod]
-        public async Task AddCinemaAsync_When_IsSuccesfull_Is_False_Returns_Bad_Request()
+        public async Task CreateCinemaAsync_When_IsSuccesfull_Is_False_Returns_Bad_Request()
         {
             string expectedMessage = "Cinema alreday exists";
             int expectedStatusCode = 400;
@@ -197,11 +173,9 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 IsSuccessful = false,
                 ErrorMessage = "Cinema alreday exists"
             };
-
-        
+       
             var cinemaToCreate = new CreateCinemaModel
-            {
-              
+            {             
                 Address = "Perleska 167",
                 CityName = "Paris",
                 Name = "Cineplex",
@@ -213,28 +187,19 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                     seatRows = 2
                     }
                 }
-
             };
 
             _mockCinemaService.Setup(srvc => srvc.AddCinemaAsync(It.IsAny<CinemaDomainModel>()))
                              .ReturnsAsync(CreateCinemaResponseModel);
             // Act
             var result = await _cinemaController.CreateCinemaAsync(cinemaToCreate);
-
-
-
             var badObjectResult = ((BadRequestObjectResult)result).Value;
-
-
             var errorStatusCode = (BadRequestObjectResult)result;
-
             var errorResult = (ErrorResponseModel)badObjectResult;
 
             //Assert
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
-
             Assert.AreEqual(errorResult.ErrorMessage, expectedMessage);
-
             Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
         }
         
@@ -245,12 +210,10 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             int cinemaumId = 1;
             var cinemaToCreate = new CreateCinemaModel
-            {
-                 
+            {               
                 Address = "Perleska 167",
                 CityName = "Paris",
                 Name = "Cineplex",
-
 
                 createAuditoriumModel = new List<CreateAuditoriumModel>
                 {
@@ -260,11 +223,8 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                     seatRows = 2
                     }
                 }
-
             };
-
-         
-
+    
             GenericResult<CinemaDomainModel> CreateCinemaResponseModel = new GenericResult<CinemaDomainModel>
             {
                 IsSuccessful = true,
@@ -275,10 +235,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                     CityName = "Paris",
                     Name = "Cineplex",
                 }
-
             };
-
-
 
             GenericResult<AuditoriumDomainModel> CreateAuditoriumResponseModel = new GenericResult<AuditoriumDomainModel>
             {
@@ -289,25 +246,15 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                     CinemaId = CreateCinemaResponseModel.Data.Id,
                     Name = cinemaToCreate.createAuditoriumModel[0].auditoriumName,
                    SeatsList = new List<SeatDomainModel>()
-
-
                 }
-
             };
 
             var inserted= _mockCinemaService.Setup(srvc => srvc.AddCinemaAsync(It.IsNotNull<CinemaDomainModel>()))
-                           .ReturnsAsync(CreateCinemaResponseModel);
-
-
-            
-
+                           .ReturnsAsync(CreateCinemaResponseModel);        
             _mockAuditoriumService.Setup(srvc => srvc.CreateAuditorium(It.IsNotNull<AuditoriumDomainModel>(), cinemaToCreate.createAuditoriumModel[0].seatRows, cinemaToCreate.createAuditoriumModel[0].numberOfSeats)).ReturnsAsync(CreateAuditoriumResponseModel);
-
-          
+         
             // Act
             var result = await _cinemaController.CreateCinemaAsync(cinemaToCreate);
-
-
             var resultResponse = (CreatedAtActionResult)result;
             var cinemaCreated = resultResponse.Value;
 
@@ -317,19 +264,16 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         }
      
         [TestMethod]
-        public async Task CreateCinemaAsync_When_Auditorium_Result_Is_IsSuccessful_False_Returns_Bad_Request()
+        public async Task CreateCinemaAsync_When_Auditorium_Result_IsSuccessful_False_Returns_Bad_Request()
         {
             int expectedStatusCode = 400;
 
             int cinemaumId = 1;
             var cinemaToCreate = new CreateCinemaModel
             {
-
                 Address = "Perleska 167",
                 CityName = "Paris",
                 Name = "Cineplex",
-
-
                 createAuditoriumModel = new List<CreateAuditoriumModel>
                 {
                     new CreateAuditoriumModel{
@@ -338,10 +282,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                     seatRows = 2
                     }
                 }
-
             };
-
-
 
             GenericResult<CinemaDomainModel> CreateCinemaResponseModel = new GenericResult<CinemaDomainModel>
             {
@@ -353,10 +294,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                     CityName = "Paris",
                     Name = "Cineplex",
                 }
-
             };
-
-
 
             GenericResult<AuditoriumDomainModel> CreateAuditoriumResponseModel = new GenericResult<AuditoriumDomainModel>
             {
@@ -367,25 +305,15 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                     CinemaId = CreateCinemaResponseModel.Data.Id,
                     Name = cinemaToCreate.createAuditoriumModel[0].auditoriumName,
                     SeatsList = new List<SeatDomainModel>()
-
-
                 }
-
             };
 
             var inserted = _mockCinemaService.Setup(srvc => srvc.AddCinemaAsync(It.IsNotNull<CinemaDomainModel>()))
                            .ReturnsAsync(CreateCinemaResponseModel);
-
-
-
-
             _mockAuditoriumService.Setup(srvc => srvc.CreateAuditorium(It.IsNotNull<AuditoriumDomainModel>(), cinemaToCreate.createAuditoriumModel[0].seatRows, cinemaToCreate.createAuditoriumModel[0].numberOfSeats)).ReturnsAsync(CreateAuditoriumResponseModel);
-
 
             // Act
             var result = await _cinemaController.CreateCinemaAsync(cinemaToCreate);
-
-
             var resultResponse = (BadRequestObjectResult)result;
             var cinemaCreated = resultResponse;
 
@@ -401,9 +329,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         public async Task DeleteCinema_When_Called_Returns_Accepted()
         {
             int expectedStatusCode = 202;
-
             var cinemaId = default(int);
-
             var DeletedCinema = new GenericResult<CinemaDomainModel>
             {
                 IsSuccessful = true,
@@ -422,14 +348,10 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             // Act
             var result =await _cinemaController.DeleteCinema(cinemaId);
-
-
             var resultResponse = (AcceptedResult)result;
 
             //Assert
             Assert.IsInstanceOfType(result, typeof(AcceptedResult));
-
-
             Assert.AreEqual(expectedStatusCode, resultResponse.StatusCode);
         }
 
@@ -441,7 +363,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             int expectedStatusCode = 400;
             var expectedMessage = "Cinema not found";
             var userId = 1;
-
 
             GenericResult<CinemaDomainModel> UpdateCinemaResponseModel = new GenericResult<CinemaDomainModel>
             {
@@ -455,7 +376,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 Address = "Perleska 167",
                 CityName = "Paris",
                 Name = "Cineplex"
-
             };
 
             // Act
@@ -463,19 +383,13 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                               .ReturnsAsync(UpdateCinemaResponseModel);
          
             var result = await _cinemaController.UpdateCinema(userId,cinemaToUpdate);
-
             var badObjectResult = ((BadRequestObjectResult)result).Value;
-
             var errorStatusCode = (BadRequestObjectResult)result;
-
             var errorResult = (ErrorResponseModel)badObjectResult;
-
 
             //Assert
             Assert.IsInstanceOfType(result, typeof(BadRequestObjectResult));
-
             Assert.AreEqual(errorResult.ErrorMessage, expectedMessage);
-
             Assert.AreEqual(expectedStatusCode, errorStatusCode.StatusCode);
         }
 
@@ -494,7 +408,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             };
 
-
             var updatedCinemaResult = new GenericResult<CinemaDomainModel>
             {
                 IsSuccessful = true,
@@ -506,14 +419,11 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             // Act
             var result = await _cinemaController.UpdateCinema(cinemaId,cinemaToUpdate);
-
             var cinemaResult = ((AcceptedResult)result);
 
-
             //Assert
-
             Assert.IsInstanceOfType(cinemaResult,typeof(AcceptedResult));
-            
+
         }
 
 
@@ -532,7 +442,6 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             };
 
-
             var updatedCinemaResult = new GenericResult<CinemaDomainModel>
             {
                 IsSuccessful = false,
@@ -544,12 +453,8 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             // Act
             var result = await _cinemaController.UpdateCinema(cinemaId, cinemaToUpdate);
-
-            var cinemaResult = ((BadRequestObjectResult)result).Value;
-           
+            var cinemaResult = ((BadRequestObjectResult)result).Value;        
             var errorStatusCode = (ErrorResponseModel)cinemaResult;
-
-
 
             //Assert
             Assert.IsNotNull(cinemaResult);

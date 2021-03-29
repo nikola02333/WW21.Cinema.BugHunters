@@ -14,7 +14,8 @@ export const movieService = {
     searchMovieById,
     updateMovie,
     changeCurrent,
-    getTopTen
+    getTopTen,
+    getMovieById
    
 };
 async function getTopTen()
@@ -170,3 +171,20 @@ async function createMovie(moveModel: IMovieToCreateModel)
         });
         
 }
+
+async function getMovieById(id:string)
+{
+    return await API.get(`${serviceConfig.baseURL}/api/movies/GetById/${id}`)
+                          .then( response=> {
+                           
+                            return response.data;
+                          })
+                          .catch(err => {
+                            if (err.response) {
+                              NotificationManager.error(err.response.data.errorMessage);
+                            } else if (err.request) {
+                              NotificationManager.error("Server Error");
+                           
+                            }
+                        });
+  }

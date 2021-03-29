@@ -425,6 +425,8 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 Genre = "comedy",
                 Title = "new Movie",
                 Year = 1994
+                 
+                 
             };
 
 
@@ -763,6 +765,25 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         }
 
         [TestMethod]
+        public async Task ActivateMovie_Returns_Accepted()
+        {
+            var expectedStatusCode = 202;
+            var movieId = new Guid("0d9f4911-c93c-471a-9ded-9fe7475bcb78");
+            GenericResult<MovieDomainModel> genericResult = new GenericResult<MovieDomainModel> {IsSuccessful=true};
+            _mockMovieService.Setup(srvc => srvc.ActivateDeactivateMovie(movieId)).ReturnsAsync(genericResult);
+
+            //Act
+            var result = await _moviesController.ActivateMovie(movieId);
+            var message = (AcceptedResult)result.Result;
+        
+
+            //Assert
+            Assert.IsInstanceOfType(result.Result, typeof(AcceptedResult));
+            Assert.AreEqual(expectedStatusCode, message.StatusCode);
+
+        }
+
+        [TestMethod]
         public void CreateMovieAsync_When_Called_IsSuccesful_True_Calls_AddTagsForMovie()
         {
             var movieToCreateTags = new GenericResult<MovieDomainModel>
@@ -821,5 +842,113 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
         }
 
+        [TestMethod]
+        public async Task GetByCinemaIdAsync_When_IsSuccessful_False_Returns_NotFound()
+        {
+            //Arrange
+            int expectedStatusCode = 404;
+            var expectedMovieResult = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = false,
+            };
+
+            _mockMovieService.Setup(src => src.GetMoviesByCinemaId(It.IsAny<int>())).ReturnsAsync(expectedMovieResult);
+
+
+            //Act
+
+            var result = await _moviesController.GetByCinemaIdAsync(It.IsAny<int>());
+
+            //Assert
+            var movieResult = ((NotFoundObjectResult)result.Result).Value;
+            var error = (ErrorResponseModel)movieResult;
+
+            Assert.IsNotNull(movieResult);
+            Assert.IsInstanceOfType(result.Result, typeof(NotFoundObjectResult));
+            Assert.AreEqual(expectedStatusCode, ((NotFoundObjectResult)result.Result).StatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task GetByCinemaIdAsync_When_IsSuccessful_True_Returns_Ok()
+        {
+            //Arrange
+            int expectedStatusCode = 200;
+
+            var expectedMovieResult = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = true,
+                DataList=new List<MovieDomainModel> { }
+            };
+
+            _mockMovieService.Setup(src => src.GetMoviesByCinemaId(It.IsNotNull<int>())).ReturnsAsync(expectedMovieResult);
+
+
+            //Act
+
+            var result = await _moviesController.GetByCinemaIdAsync(It.IsNotNull<int>());
+
+            //Assert
+            var movieResult = (OkObjectResult)result.Result;
+
+            Assert.IsNotNull(movieResult);
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
+            Assert.AreEqual(expectedStatusCode, movieResult.StatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task GetByAuditoriumIdAsync_When_IsSuccessful_True_Returns_Ok()
+        {
+            //Arrange
+            int expectedStatusCode = 200;
+            var expectedMovieResult = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = true,
+                DataList = new List<MovieDomainModel> { }
+            };
+
+            _mockMovieService.Setup(src => src.GetMoviesByAuditoriumId(It.IsNotNull<int>())).ReturnsAsync(expectedMovieResult);
+
+
+            //Act
+
+            var result = await _moviesController.GetByAuditoriumIdAsync(It.IsNotNull<int>());
+
+            //Assert
+            var movieResult = (OkObjectResult)result.Result;
+
+            Assert.IsNotNull(movieResult);
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
+            Assert.AreEqual(expectedStatusCode, movieResult.StatusCode);
+
+        }
+
+        [TestMethod]
+        public async Task GetByAuditoriumIdAsync_When_IsSuccessful_False_Returns_NotFound()
+        {
+            //Arrange
+            int expectedStatusCode = 404;
+            var expectedMovieResult = new GenericResult<MovieDomainModel>
+            {
+                IsSuccessful = false,
+            };
+
+            _mockMovieService.Setup(src => src.GetMoviesByAuditoriumId(It.IsAny<int>())).ReturnsAsync(expectedMovieResult);
+
+
+            //Act
+
+            var result = await _moviesController.GetByAuditoriumIdAsync(It.IsAny<int>());
+
+            //Assert
+            var movieResult = ((NotFoundObjectResult)result.Result).Value;
+            var error = (ErrorResponseModel)movieResult;
+
+            Assert.IsNotNull(movieResult);
+            Assert.IsInstanceOfType(result.Result, typeof(NotFoundObjectResult));
+            Assert.AreEqual(expectedStatusCode, ((NotFoundObjectResult)result.Result).StatusCode);
+
+        }
     }
 }

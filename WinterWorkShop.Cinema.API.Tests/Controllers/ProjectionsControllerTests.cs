@@ -387,5 +387,59 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             Assert.AreEqual(errorResponce.ErrorMessage, responce.ErrorMessage);
 
         }
+
+        [TestMethod]
+        public async Task GetByIdAsync_If_IsSuccessful_False_Returns_BadRequest()
+        {
+            //Arrange
+            int expectedStatusCode = 400;
+            var expectedErrorMassage = Messages.PROJECTION_GET_BY_ID;
+            GenericResult<ProjectionDomainModel> projectionDomainModel = new GenericResult<ProjectionDomainModel>
+           {
+              IsSuccessful=false,
+              ErrorMessage= Messages.PROJECTION_GET_BY_ID
+           };
+
+            _mockProjectionService.Setup(x => x.GetByIdAsync(It.IsAny<Guid>())).ReturnsAsync(projectionDomainModel);
+
+            //Act
+            var result =await _projectionsController.GetByIdAsync(It.IsAny<Guid>());
+
+            var resultStatusCode = (BadRequestObjectResult)result.Result;
+            var resultErrorMassage = (ErrorResponseModel)resultStatusCode.Value;
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedStatusCode, resultStatusCode.StatusCode);
+            Assert.IsInstanceOfType(result.Result, typeof(BadRequestObjectResult));
+            Assert.AreEqual(expectedErrorMassage, resultErrorMassage.ErrorMessage);
+        }
+
+
+        [TestMethod]
+        public async Task GetByIdAsync_If_IsSuccessful_True_Returns_OkObjectResult()
+        {
+            //Arrange
+            int expectedStatusCode = 200;
+ 
+            GenericResult<ProjectionDomainModel> projectionDomainModel = new GenericResult<ProjectionDomainModel>
+            {
+                IsSuccessful = true,
+               Data=new ProjectionDomainModel { }
+            };
+
+            _mockProjectionService.Setup(x => x.GetByIdAsync(It.IsNotNull<Guid>())).ReturnsAsync(projectionDomainModel);
+
+            //Act
+            var result = await _projectionsController.GetByIdAsync(It.IsNotNull<Guid>());
+
+            var resultStatusCode = (OkObjectResult)result.Result;
+           
+            //Assert
+            Assert.IsNotNull(result);
+            Assert.AreEqual(expectedStatusCode, resultStatusCode.StatusCode);
+            Assert.IsInstanceOfType(result.Result, typeof(OkObjectResult));
+          
+        }
+
     }
 }

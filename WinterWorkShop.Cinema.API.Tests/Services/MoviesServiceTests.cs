@@ -224,15 +224,31 @@ namespace WinterWorkShop.Cinema.Tests.Services
             var movieId = Guid.NewGuid();
             var isSuccesful = false;
             var expectedMessage = Messages.MOVIE_DOES_NOT_EXIST;
-
-            
-
-           
-
+              
             _mockMovieRepository.Setup(srvc => srvc.Delete(movieId)).Returns(It.IsNotNull<Movie>());
             // Act
 
             var result =await _moviesService.DeleteMovieAsync(movieId);
+
+            //Arrange
+            Assert.IsInstanceOfType(result, typeof(GenericResult<MovieDomainModel>));
+            Assert.AreEqual(isSuccesful, result.IsSuccessful);
+            Assert.AreEqual(expectedMessage, result.ErrorMessage);
+        }
+
+        [TestMethod]
+        public async Task DeleteMovieAsync_When_movieDeleted_Null_Returns_Movie_Delete_Error()
+        {
+            var movieId = Guid.NewGuid();
+            var isSuccesful = false;
+            var movieToDelete = new Movie();
+            var expectedMessage = Messages.MOVIE_DELETE_ERROR;
+
+            _mockMovieRepository.Setup(srvc => srvc.GetByIdAsync(movieId)).ReturnsAsync(movieToDelete);
+            _mockMovieRepository.Setup(srvc => srvc.Delete(movieId)).Returns(It.IsAny<Movie>());
+            // Act
+
+            var result = await _moviesService.DeleteMovieAsync(movieId);
 
             //Arrange
             Assert.IsInstanceOfType(result, typeof(GenericResult<MovieDomainModel>));
@@ -542,9 +558,38 @@ namespace WinterWorkShop.Cinema.Tests.Services
             var isSuccesful = false;
             var expectMessage = Messages.MOVIE_SEARCH_BY_TAG_NOT_FOUND;
 
-            _mockTagsRepository.Setup(srvc => srvc.GetTagByValue(It.IsAny<string>())).Returns(default(Tag));
+           _mockTagsRepository.Setup(srvc => srvc.GetTagByValue(It.IsAny<string>())).Returns(default(Tag));
 
             
+        }
+
+        [TestMethod]
+        public async Task GetMoviesByCinemaId_If_Cinema_Is_Null_Returns_Cinema_Id_Not_Found()
+        {
+            var isSuccesful = false;
+            var expectedMessage = Messages.CINEMA_ID_NOT_FOUND;
+            _mockCinemaRepository.Setup(srvc => srvc.GetByIdAsync(It.IsAny<int>())).ReturnsAsync(It.IsAny<Data.Cinema>());
+
+            var result =await _moviesService.GetMoviesByCinemaId(It.IsAny<int>());
+            var message = (GenericResult<MovieDomainModel>)result;
+           
+            Assert.AreEqual(isSuccesful, message.IsSuccessful);
+            Assert.AreEqual(expectedMessage, message.ErrorMessage);
+
+        }
+
+        [TestMethod]
+        public async Task GetMoviesByCinemaId_ReturnsMovie()
+        {
+            var isSuccesful = true;
+            var cinema = new Data.Cinema{ };
+            List<Movie> movies = new List<Movie>();
+            _mockCinemaRepository.Setup(srvc => srvc.GetByIdAsync(It.IsNotNull<int>())).ReturnsAsync(cinema);
+            _mockMovieRepository.Setup(srvc => srvc.GetMoviesByCinemaId(It.IsNotNull<int>())).ReturnsAsync(movies);
+            var result = await _moviesService.GetMoviesByCinemaId(It.IsNotNull<int>());
+            var message = (GenericResult<MovieDomainModel>)result;
+
+            Assert.AreEqual(isSuccesful, message.IsSuccessful);
         }
 
     }

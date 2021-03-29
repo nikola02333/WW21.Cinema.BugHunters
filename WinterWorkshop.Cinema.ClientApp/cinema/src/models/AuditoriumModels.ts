@@ -1,5 +1,5 @@
 export interface ICreateAuditorium{
-    cinamemaId : number;
+    cinemaId : string;
     auditoriumName: string;
     seatRows : number;
     numberOfSeats : number;

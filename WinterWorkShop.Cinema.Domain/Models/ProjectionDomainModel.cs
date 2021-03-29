@@ -20,5 +20,9 @@ namespace WinterWorkShop.Cinema.Domain.Models
 
         public int Duration { get; set; }
         public int Price { get; set; }
+
+        public int CinemaId { get; set; }
+
+        public string CinemaName { get; set; }
     }
 }

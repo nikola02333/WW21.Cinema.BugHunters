@@ -246,3 +246,9 @@ input[type="date"]::-webkit-clear-button
 .nav-menu-bg{
   background: linear-gradient(to top, #293a4b,#1a2530);
 }
+.movie-details{
+  font-size: 21px;
+}
+.movie-details-text{
+  font-size: 21px;
+}

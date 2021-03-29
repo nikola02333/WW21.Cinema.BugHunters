@@ -7,7 +7,7 @@ import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "../../Spinner";
 import { withRouter } from "react-router";
 import { IAuditorium, ISeats } from "../../../models";
-
+import {auditoriumService} from './../../Services/auditoriumService';
 interface IState {
   auditoriums: IAuditorium[];
   isLoading: boolean;
@@ -31,64 +31,27 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
     getAuditoriums();
   }, []);
 
-  const getAuditoriums = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    setState((prev)=>({...prev, isLoading: true }));
-    fetch(`${serviceConfig.baseURL}/api/auditoriums/all`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState((prev)=>({...prev, auditoriums: data, isLoading: false }));
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState((prev)=>({...prev, isLoading: false }));
-      });
+  const getAuditoriums = async () => {
+    setState({ ...state, isLoading: true });
+     
+    var auditoriums = await auditoriumService.getAllAuditoriums();
+    setState({ ...state, auditoriums: auditoriums, isLoading: false });
   };
 
  
 
-  const removeAuditorium = (auditoriumId: string) => {
-    const requestOptions = {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    setState((prev)=>({...prev, isLoading: true }));
-    fetch(
-      `${serviceConfig.baseURL}/api/Auditoriums/${auditoriumId}`,
-      requestOptions
-    )
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        NotificationManager.success("Successfully deleted auditorium.");
-        return response.json();
-      })
-
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState((prev)=>({...prev, isLoading: false }));
-      });
-
-    setTimeout(() => window.location.reload(), 1000);
+  const removeAuditorium = async (auditoriumId: string) => {
+   
+    var result = await auditoriumService.deleteAuditorium(auditoriumId);
+    if(result === undefined)
+     {
+      return;
+     }
+     else{
+      NotificationManager.success("Auditorium successfully deleted!");
+      var auditoriumDeleted= state.auditoriums.filter( auditorium=> auditorium.id != auditoriumId );
+      setState({...state, auditoriums: auditoriumDeleted});
+     }
   };
 
    const size= (obj)=> {

@@ -36,19 +36,19 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public async Task<IEnumerable<Projection>> GetAllAsync()
         {
-            var data = await _cinemaContext.Projections.Include(x => x.Movie).Include(x => x.Auditorium).ToListAsync();
+            var data = await _cinemaContext.Projections.Include(x => x.Movie).Include(x => x.Auditorium).ThenInclude(x=>x.Cinema).ToListAsync();
             
             return data;           
         }
 
         public async Task<Projection> GetByIdAsync(object id)
         {
-            return await _cinemaContext.Projections.Include(x => x.Movie).Include(x => x.Auditorium).FirstOrDefaultAsync(x=>x.Id == (Guid)id);
+            return await _cinemaContext.Projections.Include(x => x.Movie).Include(x => x.Auditorium).ThenInclude(x => x.Cinema).FirstOrDefaultAsync(x=>x.Id == (Guid)id);
         }
 
         public  IEnumerable<Projection> GetByAuditoriumId(int auditoriumId)
         {
-            var projectionsData = _cinemaContext.Projections.Where(x => x.AuditoriumId == auditoriumId);
+            var projectionsData = _cinemaContext.Projections.Where(x => x.AuditoriumId == auditoriumId).Include(x => x.Auditorium.Cinema);
 
             return projectionsData;
         }
@@ -83,7 +83,7 @@ namespace WinterWorkShop.Cinema.Repositories
 
         public async Task<IEnumerable<Projection>> FilterProjectionAsync(int? CinemaId, int? AuditoriumId, Guid? MovieId, DateTime? DateTime)
         {
-            var projections =await _cinemaContext.Projections.Include(x=>x.Movie).Include(x=>x.Auditorium).Where(x => (CinemaId == null || x.Auditorium.CinemaId == CinemaId)
+            var projections =await _cinemaContext.Projections.Include(x=>x.Movie).Include(x=>x.Auditorium).ThenInclude(x=>x.Cinema).Where(x => (CinemaId == null || x.Auditorium.CinemaId == CinemaId)
                                                && (AuditoriumId == null || x.AuditoriumId == AuditoriumId)
                                                && (MovieId == null || x.MovieId == MovieId)
                                                && (DateTime == null || x.ShowingDate.Date == DateTime.Value.Date)).ToListAsync();

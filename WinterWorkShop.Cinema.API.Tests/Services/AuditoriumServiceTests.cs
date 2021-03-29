@@ -41,7 +41,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
 
         [TestMethod]
-        public async Task GetAllAuditoriums_Returns_LisatOfAuditoriums()
+        public async Task GetAllAsync_Returns_LisatOfAuditoriums()
         {
 
             var expectedAuditoriums = new List<Auditorium>
@@ -138,7 +138,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         }
 
         [TestMethod]
-        public async Task GetAllAuditoriums_Returns_EmptyList()
+        public async Task GetAllAsync_Returns_EmptyList()
         {
 
             var expectedAuditoriums = new List<Auditorium>
@@ -167,7 +167,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         }
 
         [TestMethod]
-        public async Task CreateAuditoriums_Returns_Created_Auditorium()
+        public async Task CreateAuditorium_Returns_Created_Auditorium()
         {
             int numberOfRows = 2;
 
@@ -253,7 +253,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
 
         [TestMethod]
-        public async Task CreateAuditoriums_If_Cinema_Id_Is_Wrong_Returns_Error_Massage()
+        public async Task CreateAuditorium_If_Cinema_Id_Is_Wrong_Returns_Error_Massage()
         {
 
 
@@ -320,7 +320,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         }
 
         [TestMethod]
-        public async Task CreateAuditoriums_If_Auditorium_Already_Exists_Returns_Error_Massage()
+        public async Task CreateAuditorium_If_Auditorium_Already_Exists_Returns_Error_Massage()
         {
 
 
@@ -402,7 +402,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         }
 
         [TestMethod]
-        public async Task CreateAuditoriums_Returns_Created_Error()
+        public async Task CreateAuditorium_Returns_Created_Error()
         {
             int numberOfRows = 2;
 
@@ -492,7 +492,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         }
 
         [TestMethod]
-        public async Task GetByAuditorium_Returns_Auditorium()
+        public async Task GetByIdAsync_Returns_Auditorium()
         {
             int numberOfRows = 2;
 
@@ -545,7 +545,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
 
         [TestMethod]
-        public async Task GetByAuditorium_Returns_ErrorMessage()
+        public async Task GetByIdAsync_Returns_ErrorMessage()
         {
             int numberOfRows = 2;
 
@@ -581,7 +581,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         }
 
         [TestMethod]
-        public async Task DeleteAuditorium_Returns_Deleted_Auditorium()
+        public async Task DeleteAsync_Returns_Deleted_Auditorium()
         {
             int numberOfRows = 2;
 

@@ -581,6 +581,48 @@ namespace WinterWorkShop.Cinema.Tests.Services
             Assert.IsFalse(genericResult.IsSuccessful);
         }
 
+        [TestMethod]
+        public async Task GetTicketByUserIdAsync_When_User_Is_Null_Return_ErrorMessage()
+        {
+            //Arrange
+            var id = Guid.NewGuid();
+            _userById = null;
+            bool isSuccessful = false;
+            var expectedErrorMassage = Messages.USER_NOT_FOUND;
 
+            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(id)).ReturnsAsync(_userById);
+
+            //Act
+            var resultAction = await _ticketService.GetTicketByUserIdAsync(id);
+           
+
+            //Assert
+            Assert.IsNotNull(resultAction);
+            Assert.IsInstanceOfType(resultAction, typeof(GenericResult<TicketDomainModel>));
+            Assert.AreEqual(isSuccessful,resultAction.IsSuccessful);
+            Assert.AreEqual(expectedErrorMassage, resultAction.ErrorMessage);
+        }
+
+        [TestMethod]
+        public async Task GetTicketByUserIdAsync_When_Successful_Return_Ticket()
+        {
+            //Arrange
+            var id = Guid.NewGuid();
+            _userById = new User { };
+            bool isSuccessful = true;
+   
+
+            _mockUsersRepository.Setup(repo => repo.GetByIdAsync(id)).ReturnsAsync(_userById);
+            _mockTicketRepository.Setup(repo => repo.GetByUserId(id)).ReturnsAsync(_ticketList);
+
+            //Act
+            var resultAction = await _ticketService.GetTicketByUserIdAsync(id);
+
+            //Assert
+            Assert.IsNotNull(resultAction);
+            Assert.IsInstanceOfType(resultAction, typeof(GenericResult<TicketDomainModel>));
+            Assert.AreEqual(isSuccessful, resultAction.IsSuccessful);
+            Assert.IsInstanceOfType(resultAction.DataList, typeof(List<TicketDomainModel>));
+        }
     }
 }

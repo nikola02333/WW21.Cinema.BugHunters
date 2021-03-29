@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Spinner from "../../Spinner";
 import { ICinema } from "../../../models";
+import {cinemaService} from './../../Services/cinemaService';
 
 interface IState {
   cinemas: ICinema[];
@@ -30,58 +31,25 @@ const ShowAllCinemas: React.FC = (props: any) => {
     getCinemas();
   },[]);
 
-  const getCinemas = () => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
+  const getCinemas = async () => {
 
     setState({ ...state, isLoading: true });
-    fetch(`${serviceConfig.baseURL}/api/cinemas/all`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({ ...state, cinemas: data, isLoading: false });
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, isLoading: false });
-      });
+     
+    var cinemas= await cinemaService.getCinemas();
+    setState({ ...state, cinemas: cinemas, isLoading: false });
   };
 
 
-  const removeCinema = (id: string) => {
-    const requestOptions = {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    fetch(`${serviceConfig.baseURL}/api/cinemas/delete/${id}`, requestOptions)
-      .then((response) => {
-        if (!response.ok) {
-          return Promise.reject(response);
-        }
-        NotificationManager.success("Successfully deleted cinema.");
-        return response.json();
-      })
-
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, isLoading: false });
-      });
-    setTimeout(() => window.location.reload(), 1000);
+  const removeCinema = async (id: string) => {
+    var result = await cinemaService.removeCinema(id);
+    if(result === undefined)
+     {
+      return;
+     }
+     else{
+      var cinemaDeleted= state.cinemas.filter( cinema=> cinema.id != id );
+      setState({...state, cinemas: cinemaDeleted});
+     }
   };
 
   const fillTableWithDaata = () => {
