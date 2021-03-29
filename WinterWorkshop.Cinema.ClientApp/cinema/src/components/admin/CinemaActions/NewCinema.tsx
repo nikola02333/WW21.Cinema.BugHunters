@@ -14,7 +14,6 @@ import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../../appSettings";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCouch } from "@fortawesome/free-solid-svg-icons";
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import {cinemaService} from './../../Services/cinemaService';
 import {ICinemaToCreateModel} from './../../../models/ICinemaToCreateModel';
 import { ICreateAuditoriumWithCinema } from "../../../models/AuditoriumModels";
