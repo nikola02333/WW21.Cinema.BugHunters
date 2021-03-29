@@ -15,9 +15,7 @@ interface IProps{
 export interface IProjectionByCinemaId {
   cinema: IProjection[];
 }
-// export interface IProjectionByAuditoriumId {
-//   auditorium: IProjection[];
-// }
+
 interface IState{
   movieId:string;
   projections:IProjectionByCinemaId[];
@@ -26,27 +24,6 @@ interface IState{
 const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjections}) =>{
   const history =useHistory();
 
-  const [state,setState]=useState<IState[]>([]);
-
-  const filter = () => {
-    var grouped = _.chain(filteredProjections).groupBy("movieId").map(function(offers, movieId) {
-      // Optionally remove product_id from each record
-       var cleanOffers = _.map(offers, function(it) {
-        return _.omit(it, "movieId");
-      });
-    var groupedAud=  _.chain(cleanOffers).groupBy("auditoriumId").map(function(offers, auditoriumId) {
-       var auditorium = _.map(offers);
-          return {auditorium};
-       }).value();
-    
-      return {
-        movieId: movieId,
-        projections: groupedAud
-      };
-    }).value();
-    return grouped;
-  };
-    
   const fillTableWithData = () => {
         return movies.map((movie) => {
           const projectionButton = movie.projections?.map((projection) => {
@@ -76,7 +53,11 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
                 <Col md={12} className="mb-2 text-muted">
                 Year of production: {movie.year}
                 </Col>
+                <Col>
+                  <Button onClick={() => history.push(`MovieDeatails/${movie.id}`)}>More</Button>
+                </Col>
               </Col>
+              
             </Row>
             </Container>
           );

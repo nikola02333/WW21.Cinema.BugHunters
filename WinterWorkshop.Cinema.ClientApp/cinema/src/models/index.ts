@@ -84,3 +84,11 @@ export interface IReservation {
 export interface ITag {
   name: string;
 }
+
+export interface IProjectionByCinemaId {
+  cinema: IProjection[];
+}
+export interface IGroupedProjections{
+  movieId:string;
+  projections:IProjectionByCinemaId[];
+}

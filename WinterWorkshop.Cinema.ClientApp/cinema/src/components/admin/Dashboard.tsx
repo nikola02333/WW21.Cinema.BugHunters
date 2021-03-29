@@ -88,7 +88,8 @@ const Dashboard: React.FC = () => {
          
           <Route path="/dashboard/Projections" component={Projections} />
           <Route path="/dashboard/TicketReservation" component={TicketReservation} />
-          <Route path="/dashboard/MovieDetails" component={MovieDeatails} />
+
+          <Route path="/dashboard/MovieDeatails" component={MovieDeatails} />
           
           
           <PrivateRouteAdminAndSuperUser

@@ -23,13 +23,18 @@ namespace WinterWorkShop.Cinema.API.Controllers
           
             var apiLib = new ApiLib("k_9szm9guo");
             var data = await apiLib.TitleAsync( searchMovie + "/Trailer,Ratings");
+            var youtubeTrailer = await apiLib.YouTubeTrailerAsync(searchMovie);
 
-            if (data.ErrorMessage == "")
+            var result = new IMDBModel
             {
-                return Ok(data);
+                Data = data,
+                YoutubeData = youtubeTrailer
+            };
+
+            if (data.ErrorMessage == "" && youtubeTrailer.ErrorMessage=="")
+            {
+                return Ok(result);
             }
-                
-            
 
             ErrorResponseModel errorResponse = new ErrorResponseModel
             {
