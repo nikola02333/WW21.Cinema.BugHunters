@@ -444,21 +444,21 @@ namespace WinterWorkShop.Cinema.Domain.Services
         public async Task<GenericResult<MovieDomainModel>> SearchMoviesByTag(string tagValue)
         {
           
-            Tag tagsExists = null;
-            if (tagValue != null)
-            {
+            //Tag tagsExists = null;
+            //if (tagValue != null)
+            //{
 
-                 tagsExists =  _tagsRepository.GetTagByValue(tagValue);
-            }
+            //     tagsExists =  _tagsRepository.GetTagByValue(tagValue);
+            //}
 
-            if(tagsExists == null)
-            {
-                return new GenericResult<MovieDomainModel>
-                {
-                    IsSuccessful = false,
-                    ErrorMessage =Messages.MOVIE_SEARCH_BY_TAG_NOT_FOUND
-                };
-            }
+            //if(tagsExists == null)
+            //{
+            //    return new GenericResult<MovieDomainModel>
+            //    {
+            //        IsSuccessful = false,
+            //        ErrorMessage =Messages.MOVIE_SEARCH_BY_TAG_NOT_FOUND
+            //    };
+            //}
            
 
             var searchResult = await _moviesRepository.SearchMoviesByTags( tagValue);
@@ -497,7 +497,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Title = movieDomainModel.Title,
                 Year = movieDomainModel.Year,
                 HasOscar = movieDomainModel.HasOscar,
-                Rating = movieDomainModel.Rating
+                Rating = movieDomainModel.Rating,
+                CoverPicture = movieDomainModel.CoverPicture
             };
             // ovde treba  if za "" ako je prvi elemnt da izadje 
             

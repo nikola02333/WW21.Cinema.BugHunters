@@ -25,6 +25,8 @@ namespace WinterWorkShop.Cinema.Repositories
         Task<IEnumerable<Movie>> GetMoviesByCinemaId(int id);
         Task<IEnumerable<Movie>> SearchMoviesByTags(string tagValue);
 
+        void Attach(Movie movie);
+
         void Detach(object entity);
     }
     
@@ -110,7 +112,7 @@ namespace WinterWorkShop.Cinema.Repositories
         {
            
             var searchTags = _cinemaContext.Tags
-                 .Where(t => t.TagValue ==tagValue)
+                 .Where(t => t.TagValue.Contains(tagValue))
                    //.Where(t => t.TagValue.Contains(tagValue))
                 .ToList();
 
@@ -156,6 +158,11 @@ namespace WinterWorkShop.Cinema.Repositories
             var movies = await _cinemaContext.Movies.Where(x => x.Projections.Any(p => p.Auditorium.CinemaId == id)).ToListAsync();
 
             return movies;
+        }
+
+        public void Attach(Movie movie)
+        {
+            _cinemaContext.Attach(movie);
         }
     }
 }
