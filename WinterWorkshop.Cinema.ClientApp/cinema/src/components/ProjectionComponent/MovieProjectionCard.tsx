@@ -67,11 +67,7 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
     
 
     const fill = () => {
-      // if(filteredProjections.length===0){
-      //   return(
-      //     <></>
-      //   );
-      // }
+     
       console.log(filteredProjections);
       var grouped = _.chain(filteredProjections).groupBy("movieId").map(function(offers, movieId) {
           var cleanOffers = _.map(offers, function(it) {
@@ -129,8 +125,9 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
                 </Col>
               );
             })
-        return (
+        return (<>
               <Row key={movie.id+index} className="justify-content-start  my-2 mb-3">{bottonsCinema}</Row>
+              <hr/> </>
         );
       });
 
@@ -155,10 +152,12 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
               </Col>
             </Row>
             <Row >
-              <Col md={12} className="mb-2">
+              <Col md={12} className="">
               <span className="p-0 font-weight-bold ">Projection times:</span> 
               </Col>
-            </Row> 
+              
+            </Row>
+            <hr/> 
             <Row>
               <Col xs={12}>
                 {projectionButton}

@@ -161,7 +161,6 @@ const NewProjection: React.FC = (props: any) => {
   const validate = (id, value) => {
     if (id === "projectionTime") {
       if (!value) {
-        console.log("kk");
         setState((prev)=>({ ...prev,
           projectionTimeError: "Projection time cannot be in past",
           canSubmit: false,

@@ -54,7 +54,6 @@ function removeCinema(id: string)
     {
       return  API.delete(`/api/cinemas/Delete/${id}`)
       .then( (response)=> {
-        console.log(response.data);
         NotificationManager.success("Successfuly removed cinema!");     
         return id;
       })
@@ -88,12 +87,11 @@ async function getCinemas()
       
   }
  
-async function addCinema(cinematoCreateModel: ICinemaToCreateModel) 
+ function addCinema(cinematoCreateModel: ICinemaToCreateModel) 
 {
-  console.log(cinematoCreateModel);
-    await API.post(`${serviceConfig.baseURL}/api/cinemas/create`, JSON.stringify(cinematoCreateModel))
+  return API.post(`${serviceConfig.baseURL}/api/cinemas/Create`, cinematoCreateModel)
         .then( response=> {
-             NotificationManager.success("Successfuly added cinema!");
+          return response.data;
         })
         .catch(error => {
           if (error.response) {

@@ -121,7 +121,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
             }         
             return CreatedAtAction(nameof(GetCinemaById),
                 new { Id = insertedCinema.Data.Id },
-                insertedCinema.DataList);
+                insertedCinema.Data);
         }
 
 
