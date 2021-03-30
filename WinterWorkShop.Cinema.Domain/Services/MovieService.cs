@@ -47,11 +47,15 @@ namespace WinterWorkShop.Cinema.Domain.Services
             var allMovies = isCurrent != null && isCurrent == true
                 ? await _moviesRepository.GetCurrentMoviesAsync()
                 : await _moviesRepository.GetAllAsync();
+
+           
                             
             List<MovieDomainModel> result = new List<MovieDomainModel>();
             MovieDomainModel model;
             foreach (var item in allMovies)
             {
+                var tags =await _tagsMoviesRepository.GetTagByMovieIDAsync(item.Id);
+                
                 model = new MovieDomainModel
                 {
                     Current = item.Current,
@@ -61,7 +65,13 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Year = item.Year,
                     Genre = item.Genre,
                     CoverPicture = item.CoverPicture,
-                    HasOscar = item.HasOscar
+                    HasOscar = item.HasOscar,
+                    TagsModel = tags.Select(tag=> new TagDomainModel
+                    {
+                        TagId=tag.TagId,
+                        TagName=tag.Tag.TagName,
+                        TagValue=tag.Tag.TagValue
+                    }).ToList()
                 };
                 result.Add(model);
             }
@@ -97,6 +107,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Genre = movie.Genre,
                 CoverPicture = movie.CoverPicture,
                 HasOscar = movie.HasOscar,
+                Imdb=movie.ImdbId,
+                Description=movie.Description
             };
 
             return  new GenericResult<MovieDomainModel>
@@ -466,7 +478,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
             var tagExistYear = _tagsRepository.GetTagByValue(movie.Year.ToString());
             var tagExistTitle = _tagsRepository.GetTagByValue(movie.Title);
 
-          
             await AddTags(movie, tagExistGenre,"Genre");
             await AddTags(movie, tagExistYear,"Year");
             await AddTags(movie, tagExistTitle,"Title");

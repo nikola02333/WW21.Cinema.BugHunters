@@ -11,7 +11,8 @@ import {groupProjectionButton,groupedProjectionButtons} from "../helpers/functio
 import { projectionService } from '../Services/projectionService';
 import {IFilterProjectionModel} from "../../models/ProjectionModels"
 import MovieProjectionButtons from "./MovieProjectioiButtons"
-import ReactPlayer from 'react-player'
+import ReactPlayer from 'react-player';
+import {imdbService} from "../Services/imdbService";
 
 
  interface IProjectionByCinemaId {
@@ -32,8 +33,10 @@ const [movie,setMovie]= useState<IMovie>({
     title: "",
     year: "",
     rating: 0,
+    imdb:""
 });
 const [imbd,setImdb]=useState<IMDB>(imdbData);
+const [uploaded,setUploaded]=useState<Boolean>(false);
 const [projections,setProjections]= useState<IProjection[]>([]);
 const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
     {
@@ -61,11 +64,31 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
 });
 
     useEffect(()=>{
-        getMovie();
-        getProjection(id);
+        getMovie(id);
+        // getProjection(id);
         
     },[])
+
+   
     
+    const getFromIMDB = async(id:string | undefined)=>{
+
+        if(!uploaded){
+            console.log("data");
+            console.log(id);
+            if(id!=="" && id!==undefined){
+                var data =await imdbService.searchImdbWitVideo(id);
+                if(data===undefined){
+                    return;
+                }
+                setImdb(data);
+            }
+            setUploaded(true);
+        }
+        
+       
+    }
+
     const grouped = (projections:IProjection[])=>{
         const grouped = groupProjectionButton(projections);
         setGroupedProjections(grouped);
@@ -84,13 +107,17 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
         grouped(projection);
     }
 
-    const getMovie= async()=>{
-        const movie= await movieService.getMovieById(id) ;
+    const getMovie= async(id)=>{
+        const data :IMovie= await movieService.getMovieById(id) ;
         if(movie===undefined){
             return;
         }
-        console.log(movie);
+        if(data.imdb!==undefined || data.imdb!==null){
+            getFromIMDB(data.imdb);
+        }
+        
         setMovie(movie);
+        
     }
     
 
@@ -98,8 +125,8 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
         <Container key={movie.id}>
             <Col xs={12}  className="shadow rounded my-3">
             <Row className="justify-content-center">
-              <Col sm={3} className=" my-4 ml-1 d-flex justify-content-center">
-              <Image  className="img-responsive img-fluid" style={{  borderRadius:5}} src={imbd.data.image} />
+              <Col md={4} className=" my-4 ml-1 d-flex justify-content-center">
+              <Image  className=" img-fluid" style={{  borderRadius:5}} src={imbd.data.image} />
               </Col>
               <Col md={7} className=" my-3">
                 <Row className="mt-3">

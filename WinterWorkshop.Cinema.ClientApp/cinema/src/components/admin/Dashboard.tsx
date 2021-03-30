@@ -15,9 +15,8 @@ import NewAuditorium from "./AuditoriumActions/NewAuditorium";
 import ShowAllAuditoriums from "./AuditoriumActions/ShowAllAuditoriums";
 import ShowAllProjections from "./ProjectionActions/ShowAllProjections";
 import NewProjection from "./ProjectionActions/NewProjection";
-import ProjectionDetails from "./../user/ProjectionDetails";
+
 import UserProfile from "./../user/UserProfile";
-import Projection from "../user/Projection";
 import EditAuditorium from "./AuditoriumActions/EditAuditorium";
 import EditProjection from "./ProjectionActions/EditProjection";
 import { checkRole } from "../helpers/roleCheck";
@@ -80,12 +79,6 @@ const Dashboard: React.FC = () => {
             path="/dashboard/NewProjection"
             component={NewProjection}
           />
-          <Route
-            path="/dashboard/ProjectionDetails"
-            component={ProjectionDetails}
-          />
-          <Route path="/dashboard/Projection" component={Projection} />
-         
           <Route path="/dashboard/Projections" component={Projections} />
           <Route path="/dashboard/TicketReservation" component={TicketReservation} />
 
