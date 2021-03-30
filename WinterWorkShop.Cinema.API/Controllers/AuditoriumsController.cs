@@ -161,5 +161,23 @@ namespace WinterWorkShop.Cinema.API.Controllers
             return Ok(result.Data);
         }
 
+        [HttpPut]
+        [Route("{Update/id}")]
+        public async Task<ActionResult> UpdateAuditorium(int id, [FromBody] string auditoriumName)
+        {
+          
+            var result = await _auditoriumService.UpdateAuditorium(id, auditoriumName);
+            if (!result.IsSuccessful)
+            {
+                ErrorResponseModel errorResponse = new ErrorResponseModel
+                {
+                    ErrorMessage = result.ErrorMessage,
+                    StatusCode = System.Net.HttpStatusCode.BadRequest
+                };
+                return BadRequest(errorResponse);
+            }
+            return Accepted(result.Data);
+        }
+
     }
 }

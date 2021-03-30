@@ -25,7 +25,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             _seatsRepository = seatsRepository;
             _projectionsRepository = projectionsRepository;
 
-    }
+        }
 
         public async Task<IEnumerable<AuditoriumDomainModel>> GetAllAsync()
         {
@@ -62,7 +62,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
         public async Task<GenericResult<AuditoriumDomainModel>> GetAllAuditoriumByCinemaId(int id)
         {
-            var cineam =await _cinemasRepository.GetByIdAsync(id);
+            var cineam = await _cinemasRepository.GetByIdAsync(id);
             if (cineam == null)
             {
                 return new GenericResult<AuditoriumDomainModel>
@@ -86,7 +86,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             return new GenericResult<AuditoriumDomainModel>
             {
                 IsSuccessful = true,
-                DataList = auditorium.Select(item =>new AuditoriumDomainModel
+                DataList = auditorium.Select(item => new AuditoriumDomainModel
                 {
                     Id = item.Id,
                     CinemaId = item.CinemaId,
@@ -111,13 +111,13 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 return new GenericResult<AuditoriumDomainModel>
                 {
                     IsSuccessful = false,
-                     ErrorMessage = Messages.AUDITORIUM_UNVALID_CINEMAID
+                    ErrorMessage = Messages.AUDITORIUM_UNVALID_CINEMAID
                 };
             }
 
             var auditorium = await _auditoriumsRepository.GetByAuditoriumNameAsync(domainModel.Name, domainModel.CinemaId);
-          
-            if (auditorium.Count()>0)
+
+            if (auditorium.Count() > 0)
             {
                 return new GenericResult<AuditoriumDomainModel>
                 {
@@ -142,7 +142,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     {
                         Row = i,
                         Number = j
-                        
+
                     };
 
                     newAuditorium.Seats.Add(newSeat);
@@ -195,12 +195,12 @@ namespace WinterWorkShop.Cinema.Domain.Services
             {
                 return new GenericResult<AuditoriumDomainModel>
                 {
-                    ErrorMessage =Messages.AUDITORIUM_GET_BY_ID_ERROR,
+                    ErrorMessage = Messages.AUDITORIUM_GET_BY_ID_ERROR,
                     IsSuccessful = false
                 };
             }
 
-           
+
 
             var result = new AuditoriumDomainModel
             {
@@ -214,8 +214,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Number = seat.Number,
                     Row = seat.Row
                 }).ToList()
-               
-        };
+
+            };
 
 
             return new GenericResult<AuditoriumDomainModel>
@@ -225,14 +225,14 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
-       
+
 
         public async Task<GenericResult<AuditoriumDomainModel>> DeleteAsync(int id)
         {
 
-    
-            var existing =await _auditoriumsRepository.GetByIdAsync(id);
-           
+
+            var existing = await _auditoriumsRepository.GetByIdAsync(id);
+
 
             // Auditorium deleted
             _auditoriumsRepository.Delete(id);
@@ -240,19 +240,19 @@ namespace WinterWorkShop.Cinema.Domain.Services
             _auditoriumsRepository.Save();
 
 
-           AuditoriumDomainModel auditorium = new AuditoriumDomainModel
-           {
-              Id=existing.Id,
-              CinemaId=existing.CinemaId,
-              Name=existing.AuditoriumName,
-              SeatsList=existing.Seats.Select(seat => new SeatDomainModel
-              {
-                  Id = seat.Id,
-                  AuditoriumId = seat.AuditoriumId,
-                  Number = seat.Number,
-                  Row = seat.Row
-              }).ToList()
-           };
+            AuditoriumDomainModel auditorium = new AuditoriumDomainModel
+            {
+                Id = existing.Id,
+                CinemaId = existing.CinemaId,
+                Name = existing.AuditoriumName,
+                SeatsList = existing.Seats.Select(seat => new SeatDomainModel
+                {
+                    Id = seat.Id,
+                    AuditoriumId = seat.AuditoriumId,
+                    Number = seat.Number,
+                    Row = seat.Row
+                }).ToList()
+            };
 
             return new GenericResult<AuditoriumDomainModel>
             {
@@ -261,5 +261,34 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
+        public async Task<GenericResult<AuditoriumDomainModel>> UpdateAuditorium(int auditoriumId,string auditoriumName)
+        {
+            var auditorium = await _auditoriumsRepository.GetByIdAsync(auditoriumId);
+            if (auditorium == null)
+            {
+                return new GenericResult<AuditoriumDomainModel>
+                {
+                    ErrorMessage = Messages.AUDITORIUM_GET_BY_ID_ERROR,
+                    IsSuccessful = false
+                };
+            }
+
+            auditorium.AuditoriumName = auditoriumName;
+           
+            _auditoriumsRepository.Update(auditorium);
+            _auditoriumsRepository.Save();
+
+            return new GenericResult<AuditoriumDomainModel>
+            {
+                IsSuccessful = true,
+                Data = new AuditoriumDomainModel
+                {
+                    Id =auditorium.Id,
+                    CinemaId=auditorium.CinemaId,
+                    Name=auditorium.AuditoriumName               
+                }
+            };
+
+        }
     }
 }
