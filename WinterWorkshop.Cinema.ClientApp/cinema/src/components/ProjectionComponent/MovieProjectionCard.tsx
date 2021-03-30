@@ -4,12 +4,17 @@ import {getRoundedRating,navigateToProjectionDetails} from "./ProjectionFunction
 import { IAuditorium, IProjection, ICinema, IMovie } from "../../models";
 import {useHistory} from "react-router-dom";
 import _, { map } from 'underscore';
-import Projection from '../user/Projection';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from '@fortawesome/free-solid-svg-icons'
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons'
+
+
 
 
 interface IProps{
   submitted: boolean;
   movies: IMovie[];
+  currantProjections:IProjection[];
   filteredProjections:IProjection[];
 }
 export interface IProjectionByCinemaId {
@@ -21,55 +26,13 @@ interface IState{
   projections:IProjectionByCinemaId[];
 }
 
-const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjections}) =>{
+const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjections,currantProjections}) =>{
   const history =useHistory();
 
-  const fillTableWithData = () => {
-        return movies.map((movie) => {
-          const projectionButton = movie.projections?.map((projection) => {
-            return (
-              <Button
-                key={projection.id}
-                onClick={() => navigateToProjectionDetails(projection.id, movie.id,history)}
-                className="btn-projection-time"
-              >
-                {projection.projectionTime.slice(11, 16)}h
-              </Button>
-            );
-          });
-    
-          return (
-            <Container key={movie.id} className="shadow rounded my-3">
-            <Row >
-              <Col md={3} className="  my-3">
-              <Image  className=" img-responsive img-fluid" style={{  borderRadius:5}} src={movie.coverPicture} />
-              </Col>
-              <Col md={9} className=" my-3">
-                <Col md={12}>
-                <span className="card-title-font">{movie.title}</span>
-                 {getRoundedRating(movie.rating)}
-                </Col>
-  
-                <Col md={12} className="mb-2 text-muted">
-                Year of production: {movie.year}
-                </Col>
-                <Col>
-                  <Button onClick={() => history.push(`MovieDeatails/${movie.id}`)}>More</Button>
-                </Col>
-              </Col>
-              
-            </Row>
-            </Container>
-          );
-        });
-      };
-
-    
-
-    const fill = () => {
+    const showProjections = (projections:IProjection[]) => {
      
-      console.log(filteredProjections);
-      var grouped = _.chain(filteredProjections).groupBy("movieId").map(function(offers, movieId) {
+      console.log(projections);
+      var grouped = _.chain(projections).groupBy("movieId").map(function(offers, movieId) {
           var cleanOffers = _.map(offers, function(it) {
           return _.omit(it, "movieId");
         });
@@ -85,8 +48,12 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
         };
       }).value();
       console.log(grouped);
-      return grouped.map((filteredProjection: IState)  => {
+      return grouped.map((filteredProjection: IState,indexTop)  => {
       var movie = movies.find(x => x.id === filteredProjection.movieId) as IMovie;
+      if(movie===undefined){
+        return;
+      }
+      console.log(movie);
       const projectionButton = filteredProjection.projections.map((projectio,index) => {
         
       const bottonsCinema= projectio.cinema.map((cinema,index)=>{
@@ -97,13 +64,13 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
                 </Col>
                 <Col xs={1} className={"mx-1  p-0 justify-content-start"}>
                 <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">
-                  {cinema.projectionTime.slice(0, 10)} {" "+cinema.auditoriumName}</Tooltip>}>
+                  {" "+cinema.auditoriumName}</Tooltip>}>
                 <Button
                   key={cinema.id}
                   onClick={() => navigateToProjectionDetails(cinema.id, movie.id,history)}
                   className=" btn-sm"
                 >
-                  {cinema.projectionTime.slice(11, 16)}h
+                  {cinema.projectionTime.slice(5, 10)+"  "+cinema.projectionTime.slice(11, 16)}h
                 </Button>
                 </OverlayTrigger>
                 </Col>
@@ -114,48 +81,101 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
               return (
                 <Col xs={1} className={"mx-1  p-0 justify-content-start"}>
                   <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">
-                    {cinema.projectionTime.slice(0, 10)} {" "+cinema.auditoriumName}</Tooltip>}>
+                  {" "+cinema.auditoriumName}</Tooltip>}>
                     <Button
                     key={cinema.id}
                     onClick={() => navigateToProjectionDetails(cinema.id, movie.id,history)}
                     className="btn-sm">
-                      {cinema.projectionTime.slice(11, 16)}h
+                      { cinema.projectionTime.slice(5, 10)+"  "+cinema.projectionTime.slice(11, 16)}h
                     </Button>
                   </OverlayTrigger>
                 </Col>
               );
             })
         return (<>
-              <Row key={movie.id+index} className="justify-content-start  my-2 mb-3">{bottonsCinema}</Row>
+              <Row key={indexTop+index} className="justify-content-start  my-2 mb-3">{bottonsCinema}</Row>
               <hr/> </>
         );
       });
-
-
+     
           return(
           <Container key={filteredProjection.movieId} className="shadow rounded my-3">
-            <Row >
-              <Col md={3} className="justify-content-start my-3">
-              <img className="img-responsive img-fluid" style={{  borderRadius:5}} src={movie.coverPicture} />
+            <Row className="">
+              <Col md={4} className="justify-content-center my-3">
+                
+              <img onClick={() => history.push(`MovieDeatails/${movie.id}`)} className=" img-fluid" style={{  borderRadius:5}} src={movie.coverPicture} />
               </Col>
-              <Col md={9} className=" my-3">
-                <Col md={12}>
-                <span className="card-title-font">{movie.title}
-                </span>
-                {movie.rating &&
-                getRoundedRating(movie.rating)}
-                </Col>
+              <Col  className=" my-3">
+                  <Row className="mt-3">
+                    <Col xs={2}>
+                    <span className="font-weight-bold movie-details">Name:</span>
+                    </Col>
+                    <Col >
+                    <span className="movie-details">{movie.title}</span>
+                    </Col>
+                </Row >
+               
+                <Row className="mt-3">
+                    <Col xs={2}>
+                    <span className="font-weight-bold movie-details">Genre:</span>
+                    </Col>
+                    <Col>
+                    <span className="movie-details">{movie.tagsModel?.map(tag=> { if(tag.tagName==="Genre") return tag.tagValue+" "}).join('  ')}</span>
+                    </Col>
+                </Row>
 
-                <Col md={12} className="mb-2 text-muted">
-                Year of production: {movie.year}
-                </Col>
+                <Row className="mt-3">
+                    <Col xs={2}>
+                    <span className="font-weight-bold movie-details">Actors:</span>
+                    </Col>
+                    <Col>
+                    <span className="movie-details-text pt-auto">{movie.tagsModel?.map(tag=> { if(tag.tagName==="Actor") return tag.tagValue+","}).join('  ')}</span>
+                    </Col>
+                </Row >
+                <Row className="mt-3">
+                    <Col xs={2}>
+                    <span className="font-weight-bold movie-details">Runtime:</span>
+                    </Col>
+                    <Col>
+                    <span className="movie-details-text">{projections[0].duration+" min"}</span>
+                    </Col>
+                </Row>
+                <Row className="mt-3">
+                    <Col xs={2}>
+                    <span className="font-weight-bold movie-details">Year:</span>
+                    </Col>
+                    <Col>
+                    <span className="movie-details-text">{movie.year}</span>
+                    </Col>
+                </Row>
+                <Row className="mt-3">
+                    <Col xs={2}>
+                    <span className="font-weight-bold movie-details">Awards:</span>
+                    </Col>
+                    <Col>
+                    <span className="movie-details-text">{movie.hasOscar?"Oscar":"No awards"}</span>
+                    </Col>
+                </Row>
+                <Row className="mt-3">
+                    <Col xs={2}>
+                    <span className="font-weight-bold movie-details">Rating:</span>
+                    </Col>
+                    <Col>
+                    <span className=""><FontAwesomeIcon icon={faStar} className="text-warning"/>{movie.rating+"/10"}</span>
+                    </Col>
+                    
+                </Row>
+                <Row className="mt-3">
+                  <Col xs={2} className="d-flex justify-content-start ">
+                      <Button variant="outline-info" onClick={() => history.push(`MovieDeatails/${movie.id}`)}>More</Button>
+                  </Col>
+                </Row>
               </Col>
             </Row>
             <Row >
-              <Col md={12} className="">
+              <Col xs={12} >
               <span className="p-0 font-weight-bold ">Projection times:</span> 
               </Col>
-              
             </Row>
             <hr/> 
             <Row>
@@ -169,11 +189,10 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
         )};
 
     const checkIfFiltered = () => {
-      console.log(submitted);
       if (submitted) {
-        return fill();
+        return showProjections(filteredProjections);
       } else {
-        return fillTableWithData();
+        return showProjections(currantProjections);
       }
     };
 
