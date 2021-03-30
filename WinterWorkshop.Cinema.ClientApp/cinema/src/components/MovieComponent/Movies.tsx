@@ -31,6 +31,15 @@ const Movies: React.FC<IProps> =  (props: any) => {
         year: "",
         current: false,
         rating: 0,
+        tagsModel:[{
+
+          tagId:0,
+  
+          tagName:"",
+  
+          tagValue:""
+  
+        }]
       },
     ],
     isLoading: true,

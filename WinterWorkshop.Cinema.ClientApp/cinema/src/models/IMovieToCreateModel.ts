@@ -10,4 +10,5 @@ export interface IMovieToCreateModel
       Actors: string;
       Description:string;
       ImdbId?: string;
+      HasOscar:boolean;
 }

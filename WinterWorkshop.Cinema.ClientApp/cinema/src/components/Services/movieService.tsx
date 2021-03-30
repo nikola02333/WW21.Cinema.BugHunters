@@ -187,9 +187,10 @@ async function getAllMovies()
 async function createMovie(moveModel: IMovieToCreateModel) 
   {
   
-      await API.post(`${serviceConfig.baseURL}/api/movies`, JSON.stringify(moveModel))
+    return  await API.post(`${serviceConfig.baseURL}/api/movies`, JSON.stringify(moveModel))
           .then( response=> {
                NotificationManager.success("Successfuly added movie!");
+               return response.data;
           })
           .catch(err => {
             if (err.response) {

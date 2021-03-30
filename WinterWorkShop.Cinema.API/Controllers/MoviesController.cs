@@ -15,7 +15,7 @@ using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class MoviesController : ControllerBase
@@ -113,7 +113,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
 
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [HttpPost]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> CreateMovieAsync([FromBody] CreateMovieModel movieModel)
         {
@@ -131,8 +131,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 CoverPicture = movieModel.CoverPicture,
                 Tags = movieModel.Tags.Split(","),
                 Actors = movieModel.Actors.Split(","),
-                //hadKodovano
-                HasOscar = false,
+                HasOscar =  movieModel.HasOscar,
                 Imdb= movieModel.ImdbId,
                 Description= movieModel.Description
             };
@@ -142,13 +141,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
             try
             {
                 createMovie = await _movieService.AddMovieAsync(domainModel);
-                
-              /*  
-              if(createMovie.IsSuccessful)
-                {
-                    // sada ovde ubacujem i actore!!!
-                    _movieService.AddTagsForMovie(createMovie.Data);
-                }*/
                 
             }
             catch (DbUpdateException e)
