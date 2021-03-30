@@ -63,7 +63,7 @@ const Movies: React.FC<IProps> =  (props: any) => {
    let result = await movieService.changeCurrent(id);
    if(result === undefined)
    {
-    NotificationManager.error('Error while changing current state of the movie');
+    return;
    }
    else{
     const newState = state.movies.filter((movie) => {

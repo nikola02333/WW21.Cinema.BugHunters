@@ -17,7 +17,7 @@ export const movieService = {
     getTopTen,
     getMovieById,
     getAllYears,
-    getTopTenMoviesByYear,
+    getTopTenMoviesByYear
 };
 async function getTopTenMoviesByYear(year: number)
 {

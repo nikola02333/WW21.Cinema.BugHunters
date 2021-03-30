@@ -35,6 +35,11 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
     setState({ ...state, isLoading: true });
      
     var auditoriums = await auditoriumService.getAllAuditoriums();
+    
+    if(auditoriums=== undefined)
+    {
+      return;
+    }
     setState({ ...state, auditoriums: auditoriums, isLoading: false });
   };
 

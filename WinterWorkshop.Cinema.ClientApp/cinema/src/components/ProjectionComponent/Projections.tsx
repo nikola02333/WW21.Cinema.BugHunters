@@ -148,7 +148,6 @@ const Projections : React.FC = (props: any) => {
       }
     };
 
-    console.log("PROJECTIONS")
 
     const infoMemo = useMemo(()=>info.submitted,[info.submitted,projection.filteredProjections]);
     const moviesMemo = useMemo(()=>movies.movies,[movies.movies]);
