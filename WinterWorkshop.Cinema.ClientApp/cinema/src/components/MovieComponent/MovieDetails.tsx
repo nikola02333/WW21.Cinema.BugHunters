@@ -81,8 +81,6 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
     const getFromIMDB = async(id:string | undefined)=>{
 
         if(!uploaded){
-            console.log("data");
-            console.log(id);
             if(id!=="" && id!==undefined){
                 var data =await imdbService.searchImdbWitVideo(id);
                 if(data===undefined){

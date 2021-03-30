@@ -123,7 +123,6 @@ const NewMovie: React.FC = (props: any) => {
       } else {
         setState( (prevState)=> ({...prevState,  yearError: '', yearSubmit: true}));
       }
-      console.log(state.yearSubmit);
     }
   };
 
@@ -173,8 +172,6 @@ const NewMovie: React.FC = (props: any) => {
     element.value = valueToSelect;
        */
 const actorsToSet= moveiResult.actorList.map( (actor,index) => {
-        
-  console.log(actor, index);
   return  {
     id:  index,
     name: actor.name
@@ -205,7 +202,6 @@ const actorsToSet= moveiResult.actorList.map( (actor,index) => {
    
     
     var movieToCreate : IMovieToCreateModel = {
- 
       Title: state.title,
       Year: +state.year,
       ImdbId: state.imdbid,
