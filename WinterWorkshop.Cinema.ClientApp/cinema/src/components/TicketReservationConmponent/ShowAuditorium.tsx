@@ -3,8 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faCouch } from "@fortawesome/free-solid-svg-icons";
 import { Container, Row, Col,Button , Modal} from "react-bootstrap";
 import "./../../index.css";
-import { serviceConfig } from "../../appSettings";
-import { NotificationManager } from "react-notifications";
 import { useHistory } from "react-router-dom";
 import PopUpModel from "./PopUpModel"
 import {IStateTicketReservation} from "./TicketReservation"

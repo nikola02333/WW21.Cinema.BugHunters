@@ -18,12 +18,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
     public class MovieService : IMovieService
     {
 
-        enum DefaultTags
-        {
-           Title,
-           Genre,
-           Year
-        }
+       
         private readonly IMoviesRepository _moviesRepository;
         private readonly IAuditoriumsRepository _auditoriumsRepository;
         private readonly ITagsRepository _tagsRepository;
@@ -177,11 +172,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             var movie = await _moviesRepository.InsertAsync(movieToCreate);
             
-            //_moviesRepository.Save();
 
-            //ovde imam  MOVIE   model koji ima id-0 , a ja sam vec setvao jedan movie gore 
             AddTagsForMovie(newMovie, movie);
-            //_moviesRepository.Detach(movie);
 
             MovieDomainModel domainModel = new MovieDomainModel()
             {
@@ -417,7 +409,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     var tagToCreate = new Tag
                     {
                         TagValue = tag,
-                        TagName = ""
+                        TagName = "Tag"
                     };
                     var newTag = await _tagsRepository.InsertAsync(tagToCreate);
 
@@ -458,7 +450,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     var actorTagToCreate = new Tag
                     {
                         TagValue = actor,
-                        TagName = ""
+                        TagName = "Actor"
                     };
                     var newTagActor = await _tagsRepository.InsertAsync(actorTagToCreate);
 

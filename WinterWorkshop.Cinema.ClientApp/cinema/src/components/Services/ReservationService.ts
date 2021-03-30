@@ -1,6 +1,5 @@
 import { serviceConfig } from "../../appSettings"
 import { NotificationManager } from "react-notifications";
-import {Get} from "../helpers/RequestOptions"
 import * as authChech from "../helpers/authCheck";
 
 export const tryReservation = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>,seat,info) => {
@@ -24,6 +23,7 @@ export const tryReservation = (e: React.MouseEvent<HTMLButtonElement, MouseEvent
       .then((result) => {
         makeReservation(e,seat,info);
       })
+      // then samo ovde jedan gde cu zvati IncrementPoints/{userId}
       .catch((response) => {
         NotificationManager.warning("Insufficient founds.");
         // setState((prev)=>({ ...prev, submitted: false }));

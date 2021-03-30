@@ -1,7 +1,7 @@
-import React,{useEffect, useState,memo,useMemo,useCallback} from 'react'
-import { Container, Row, Col, Card, Button ,Image,Table,OverlayTrigger,Tooltip} from "react-bootstrap";
+import React,{memo} from 'react'
+import { Container, Row, Col, Button ,Image,Table,OverlayTrigger,Tooltip} from "react-bootstrap";
 import {getRoundedRating,navigateToProjectionDetails} from "./ProjectionFunctions"
-import { IAuditorium, IProjection, ICinema, IMovie } from "../../models";
+import {  IProjection, IMovie } from "../../models";
 import {useHistory} from "react-router-dom";
 import _, { map } from 'underscore';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

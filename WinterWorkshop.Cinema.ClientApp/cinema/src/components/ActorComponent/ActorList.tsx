@@ -7,7 +7,6 @@ import { FormGroup,Row } from "react-bootstrap";
 
  interface IProps{
    
-  //actors
   actors :IActor[];
   setState :any;
  }

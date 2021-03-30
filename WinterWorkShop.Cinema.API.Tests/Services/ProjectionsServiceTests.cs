@@ -135,7 +135,11 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
             _mockProjectionsRepository.Setup(x => x.GetAllAsync()).Returns(_responseTask);
             //Act
+<<<<<<< HEAD
             var resultAction = _projectionsService.GetAllAsync(true).ConfigureAwait(false).GetAwaiter().GetResult();
+=======
+            var resultAction = _projectionsService.GetAllAsync(false).ConfigureAwait(false).GetAwaiter().GetResult();
+>>>>>>> origin/development
             var result = (List<ProjectionDomainModel>)resultAction;
 
             //Assert
@@ -157,7 +161,11 @@ namespace WinterWorkShop.Cinema.Tests.Services
             
 
             //Act
+<<<<<<< HEAD
             var resultAction = _projectionsService.GetAllAsync(true).ConfigureAwait(false).GetAwaiter().GetResult();
+=======
+            var resultAction = _projectionsService.GetAllAsync(false).ConfigureAwait(false).GetAwaiter().GetResult();
+>>>>>>> origin/development
 
             //Assert
             Assert.IsNull(resultAction);
