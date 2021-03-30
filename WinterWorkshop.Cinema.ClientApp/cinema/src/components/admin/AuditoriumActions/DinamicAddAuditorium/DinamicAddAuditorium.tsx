@@ -24,8 +24,6 @@ const DinamicAddAuditorium :React.FC<IProps> = (props) => {
     const newAuditoriums = [...auditoriums,auditorium ];
     setAuditoroums(newAuditoriums);
     props.setState(prevState=> ({...prevState,auditoriums: newAuditoriums}));
-
-    console.log(...newAuditoriums);
   };
 
   const removeAuditorium = (id) => {

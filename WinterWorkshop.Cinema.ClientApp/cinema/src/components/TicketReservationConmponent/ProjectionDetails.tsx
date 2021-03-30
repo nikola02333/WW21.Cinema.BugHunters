@@ -111,12 +111,11 @@ const ProjectionDeatils = (props:{setInfo,getSeatData})=>{
       };
 
     return(
-        <div>
-          <Row >
-          <Col xs={2} className="justify-content-center ">
+          <Row className="justify-content-center align-items-center">
+          <Col md={3} className="justify-content-center ">
           <img className="img-responsive img-fluid shadow rounded"  src={state.movie.coverPicture} />
           </Col>
-          <Col sm={10}>
+          <Col sm={9}>
           <Card.Title>
             <span className="card-title-font">{state.movie.title}</span>
             <span className="float-right">
@@ -125,15 +124,22 @@ const ProjectionDeatils = (props:{setInfo,getSeatData})=>{
           </Card.Title>
           <hr />
           <Card.Subtitle className="mb-2 text-muted">
-            Year of production: {state.movie.year}
+            Date: {state.projections.projectionTime.slice(0, 10)}
             <span className="float-right">
-              Time of projection: {state.projections.projectionTime.slice(11, 16)}h
+              Cinema: {state.projections.cinemaName}
+            </span>
+          </Card.Subtitle>
+          <Card.Subtitle className="mb-2 mt-3 text-muted">
+            Time: {state.projections.projectionTime.slice(11, 16)}h
+            <span className="float-right">
+            Auditorium: {state.projections.auditoriumName}
             </span>
           </Card.Subtitle>
           <hr />
-        </Col>
+          </Col>
+         
         </Row>
-        </div>
+        
     );
 };
 

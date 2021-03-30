@@ -6,7 +6,7 @@ import "../../index.css";
 
 import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { IMovie, ITag } from "../../models/index";
+import { IMovie } from "../../models/index";
 
 import { movieService } from './../Services/movieService';
 import Movie from './Movie';
@@ -76,8 +76,6 @@ const Movies: React.FC<IProps> =  (props: any) => {
   };
 
   const getMovies = async() => {
-     //if (isAdmin() === true || isSuperUser() === true) {
-      
       setState({ ...state, isLoading: true });
      
       var movies= await movieService.getAllMovies();
@@ -97,7 +95,7 @@ const Movies: React.FC<IProps> =  (props: any) => {
       return;
      }
      else{
-      var moviesDeleted= state.movies.filter( movie => movie.id != id );
+      var moviesDeleted= state.movies.filter( movie => movie.id !== id );
       setState({...state, movies: moviesDeleted});
      }
   };
@@ -112,7 +110,7 @@ const Movies: React.FC<IProps> =  (props: any) => {
 
    
     var moviesSearch = await movieService.searcMovie(tag);
-    if(moviesSearch != undefined)
+    if(moviesSearch !== undefined)
     {
       setState({ ...state, movies: moviesSearch, isLoading: false });
     }

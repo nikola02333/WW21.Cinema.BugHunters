@@ -272,7 +272,6 @@ export const getAllCinemas = (setInfo,setCinemas) => {
     if (query.length) {
       query = `?${query}`;
     }
-    console.log(query);
     fetch(
       `${serviceConfig.baseURL}/api/projections/filter${query}`,
       requestOptions
