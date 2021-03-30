@@ -47,7 +47,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             int expectedResultCount = 1;
             int expectedStatusCode = 200;
 
-            _mockProjectionService.Setup(x => x.GetAllAsync()).Returns(responseTask);
+            _mockProjectionService.Setup(x => x.GetAllAsync(false)).Returns(responseTask);
            
             //Act
             var result = _projectionsController.GetAsync().ConfigureAwait(false).GetAwaiter().GetResult().Result;
@@ -71,7 +71,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             int expectedResultCount = 0;
             int expectedStatusCode = 200;
 
-            _mockProjectionService.Setup(x => x.GetAllAsync()).Returns(responseTask);
+            _mockProjectionService.Setup(x => x.GetAllAsync(false)).Returns(responseTask);
 
             //Act
             var result = _projectionsController.GetAsync().ConfigureAwait(false).GetAwaiter().GetResult().Result;

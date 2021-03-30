@@ -12,7 +12,7 @@ using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
@@ -25,7 +25,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
      
-        //[Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public async Task<ActionResult<GenericResult<UserDomainModel>>> GetAsync()
         {

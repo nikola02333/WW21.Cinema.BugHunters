@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { withRouter } from "react-router-dom";
+import { withRouter ,useHistory} from "react-router-dom";
 
 import {FormGroup,Button,Container,Row,Col,FormText,FormControl,Form} from "react-bootstrap";
 import { YearPicker } from "react-dropdown-date";
@@ -38,10 +38,12 @@ interface IState {
   yearSubmit: boolean;
   descriptionSubmit: boolean;
   imdbid: string;
+  hasOscar: boolean;
   imdbidError:string;
   descriptionError:string;
 }
 const NewMovie: React.FC = (props: any) => {
+  const history = useHistory();
   const [state, setState] = useState<IState>({
     title: "",
     year: "",
@@ -56,6 +58,7 @@ const NewMovie: React.FC = (props: any) => {
     canSubmit: true,
     tags: "",
     coverPicture: "",
+    hasOscar:false,
     yearError: "",
     genre: "",
   genreError: "",
@@ -72,7 +75,6 @@ const NewMovie: React.FC = (props: any) => {
    /* {
       id: "str",
       name: 'nikola',
-      movieId:'fd'
     }*/
   ]
   });
@@ -119,7 +121,6 @@ const NewMovie: React.FC = (props: any) => {
       if (!value || value === "" || yearNum < 1895 || yearNum > 2100) {
         setState({ ...state, yearError: "Please chose valid year" });
       } else {
-        //setState({ ...state, yearError: "", yearSubmit: true });
         setState( (prevState)=> ({...prevState,  yearError: '', yearSubmit: true}));
       }
       console.log(state.yearSubmit);
@@ -153,7 +154,6 @@ const NewMovie: React.FC = (props: any) => {
 
     const moveiResult = await imdbService.searchImdb(id);
 
-// rating , tags,coverPicture, Actors, description, year
     if(moveiResult !== undefined)
     {
 
@@ -172,8 +172,15 @@ const NewMovie: React.FC = (props: any) => {
        * let element = document.getElementById(id);
     element.value = valueToSelect;
        */
-
-   
+const actorsToSet= moveiResult.actorList.map( (actor,index) => {
+        
+  console.log(actor, index);
+  return  {
+    id:  index,
+    name: actor.name
+    }
+  });
+   debugger;
 //rating
     setState((prevState)=>({...prevState,
        title:moveiResult.title,
@@ -181,21 +188,22 @@ const NewMovie: React.FC = (props: any) => {
       rating: Math.round(moveiResult.imDbRating).toString(),
       coverPicture: moveiResult.image,
       description : moveiResult.plot,
-     // actorss
-     //taggs 
+      
+      Actorss :[ ...prevState.Actorss ,...actorsToSet], 
       current: true,
       year: moveiResult.year,
       canSubmit:true,
       titleSubmit: true,
       genreSubmit:true
       }));
-      
+      debugger;
 
     }
   }
  
   const addMovie = async() => {
    
+    
     var movieToCreate : IMovieToCreateModel = {
  
       Title: state.title,
@@ -207,14 +215,26 @@ const NewMovie: React.FC = (props: any) => {
       CoverPicture: state.coverPicture,
       Genre: state.genre,
       Actors: state.Actorss.map(actor=> actor.name).join(','),
-      Description: state.description
+      Description: state.description,
+      HasOscar:  state.hasOscar.toString()=='true' ? true: false
     };
-   await movieService.createMovie(movieToCreate);
+  const result = await movieService.createMovie(movieToCreate);
+
+  if(result === undefined)
+  {
+    return;
+  }
+  history.push('/dashboard/AllMovies');
   };
 
   const isFormValid =()=>
   {
     return ( ( state.titleSubmit && state.genreSubmit) ? false: true )
+  }
+  const resetFilds= (e )=> {
+    
+   //document.getElementById("createMovieForm")?.reset();
+
   }
   return (
     <Container>
@@ -224,7 +244,7 @@ const NewMovie: React.FC = (props: any) => {
           <h1 className="form-header">Add New Movie</h1>
           </Col>
           <Col xs={11} md={9} lg={7} xl={5}>
-          <form onSubmit={handleSubmit} >
+          <form onSubmit={handleSubmit} id="createMovieForm" >
 
             <FormGroup>
               <FormControl
@@ -309,6 +329,19 @@ const NewMovie: React.FC = (props: any) => {
             </FormGroup>
             <FormGroup>
               <FormControl
+                
+                as="select"
+                placeholder="Has Oscar"
+                id="hasOscar"
+                value={state.hasOscar.toString()}
+                onChange={(e)=>handleChange(e.target)}
+              >
+                <option value="false">No Oscar</option>
+                <option value="true">Has Oscar</option>
+              </FormControl>
+            </FormGroup>
+            <FormGroup>
+              <FormControl
                 id="genre"
                 type="text"
                 placeholder="Genre"
@@ -342,7 +375,7 @@ const NewMovie: React.FC = (props: any) => {
                       
             <Row className="d-flex justify-content-center mt-3">
             <Button
-              className="col-3"
+              className="col-4"
               type="submit"
               //disabled={state.submitted || !state.canSubmit}
               disabled = {isFormValid()}
@@ -351,8 +384,9 @@ const NewMovie: React.FC = (props: any) => {
               Add Movie
             </Button>
             <Button
-              className="col-3"
-              type="button"
+            onClick={(e)=>resetFilds(e)}
+              className="col-4 mx-3"
+              type="reset"
               variant="danger"
               size="sm"
             >

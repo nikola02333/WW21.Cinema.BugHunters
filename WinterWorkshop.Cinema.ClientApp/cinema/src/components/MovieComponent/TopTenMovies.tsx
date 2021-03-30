@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { NotificationManager } from "react-notifications";
 import { Row, Table } from "react-bootstrap";
-import Spinner from "../../Spinner";
-import "./../../../index.css";
-import { IMovie } from "../../../models";
+import Spinner from "../Spinner";
+import "./../../index.css";
+import { IMovie } from "../../models";
 
-import { movieService } from './../../Services/movieService';
-import Movie from '../../MovieComponent/Movie';
-import { SSL_OP_NETSCAPE_DEMO_CIPHER_CHANGE_BUG } from "node:constants";
+import { movieService } from '../Services/movieService';
+import Movie from './Movie';
+
 interface IState {
   movies: IMovie[];
   filteredMoviesByYear: IMovie[];
