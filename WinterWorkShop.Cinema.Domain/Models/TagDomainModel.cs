@@ -12,6 +12,5 @@ namespace WinterWorkShop.Cinema.Domain.Models
 
         public string? TagValue { get; set; }
 
-        public List<TagsMovies> TagsMovies { get; set; }
     }
 }
