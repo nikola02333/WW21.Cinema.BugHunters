@@ -85,12 +85,14 @@ const TopTenMovies: React.FC = (props: any) => {
 
 const getTopTenMoviesFomImdb = async()=>{
 
-  var movies = await imdbService.getTopTenMovies();
-  if( movies === undefined)
+  var moviesImdb = await imdbService.getTopTenMovies();
+
+  debugger;
+  if( moviesImdb === undefined)
   {
     return;
   }
-  setState(prevState=> ({ ...prevState, movies: movies, isLoading: false }));
+  setState(prevState=> ({ ...prevState, movies: moviesImdb, isLoading: false }));
 }
 
   const getTopTenMovies =  async()=>{

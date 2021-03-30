@@ -34,9 +34,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("{id:guid}")]
         public async Task<ActionResult<GenericResult<TicketDomainModel>>> GetByIdAsync(Guid id)
         {
-            
 
-           var ticketDomainModels = await _ticketService.GetTicketByIdAsync(id);
+
+            var ticketDomainModels = await _ticketService.GetTicketByIdAsync(id);
 
             if (!ticketDomainModels.IsSuccessful)
             {
@@ -75,6 +75,9 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpPost]
         [Route("Create")]
+        [Authorize(Roles = "user")]
+        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "superUser")]
         public async Task<ActionResult<GenericResult<TicketDomainModel>>> CreateTicketAsync([FromBody]CreateTicketModel ticketModel)
         {
             if (!ModelState.IsValid)

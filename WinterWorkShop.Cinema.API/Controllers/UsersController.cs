@@ -187,10 +187,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
             UserDomainModel userUpdate = new UserDomainModel
             {
-                //UserName= userToUpdate.UserName,
                  FirstName= userToUpdate.FirstName,
                   LastName = userToUpdate.LastName,
-                   //Role= "user"
             };
             var user = await _userService.UpdateUserAsync(userId, userUpdate);
 
@@ -205,7 +203,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return BadRequest(errorResponse);
             }
 
-            return Accepted();
+            return Accepted(user.Data);
         }
         [HttpPost]
         [Route("IncrementPoints/{userId}")]
