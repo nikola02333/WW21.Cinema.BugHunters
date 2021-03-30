@@ -1,5 +1,6 @@
 import React,{memo} from 'react'
-import {getMoviesBySelectedAuditorium} from "../ProjectionService"
+import { movieService } from '../../Services/movieService';
+
 
 const SelectAuditoriums  = memo( (props:{selectedAuditoriumId,selectedCinema,filteredAuditoriums,auditoriums,setInfo,setFilteredData}) =>{
     console.log("FilterAuditoriums")
@@ -28,9 +29,36 @@ const SelectAuditoriums  = memo( (props:{selectedAuditoriumId,selectedCinema,fil
           });
         }
       };
+      const MoviesBySelectedAuditorium = async(id:string) =>{
+        if(id!=="none"){
+          
+        props.setInfo((prev)=>({...prev, auditoriumId: +id }));
+        var data =await movieService.getMovieByAuditoriumId(+id);
+        if(data===undefined){
+          return;
+        }
+        console.log(data);
+        props.setFilteredData((prev)=>({
+          ...prev,
+          filteredMovies: data
+        }))
+        props.setInfo((prev)=>({
+          ...prev,
+          isLoading: false,
+          selectedAuditorium: true,
+        }));
+      }else{
+        props.setInfo((prev)=>({
+          ...prev,
+          auditoriumId: "",
+          selectedAuditorium: false
+        }))
+      }
+       
+    }
     return(
         <select
-        onChange={(e) => getMoviesBySelectedAuditorium(e.target.value , props.setInfo, props.setFilteredData)}
+        onChange={(e) => MoviesBySelectedAuditorium(e.target.value)}
         name="auditoriumId"
         id="auditorium"
         className="select-dropdown"

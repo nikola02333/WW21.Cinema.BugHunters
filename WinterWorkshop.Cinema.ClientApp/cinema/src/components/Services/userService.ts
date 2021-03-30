@@ -13,7 +13,8 @@ export const userService = {
     singUp,
     getUserByUsername,
     getTokenForGuest,
-    editUser
+    editUser,
+    
    
 };
 

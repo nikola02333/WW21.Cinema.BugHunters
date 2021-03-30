@@ -18,6 +18,8 @@ export const movieService = {
     getMovieById,
     getAllYears,
     getTopTenMoviesByYear,
+    getMovieByCinemaId,
+    getMovieByAuditoriumId
 };
 async function getTopTenMoviesByYear(year: number)
 {
@@ -218,3 +220,36 @@ async function getMovieById(id:string)
                             }
                         });
   }
+
+  async function getMovieByCinemaId(selectedCineamId:number)
+{
+    return await API.get(`${serviceConfig.baseURL}/api/Movies/bycineamId/${selectedCineamId}`)
+                          .then( response=> {
+                           
+                            return response.data;
+                          })
+                          .catch(err => {
+                            if (err.response) {
+                              NotificationManager.error(err.response.data.errorMessage);
+                            } else if (err.request) {
+                              NotificationManager.error("Server Error");
+                           
+                            }
+                        });
+  }
+
+  async function getMovieByAuditoriumId(audirotiumId:number)
+  {
+      return await API.get(`${serviceConfig.baseURL}/api/Movies/byauditoriumid/${audirotiumId}`)
+                            .then( response=> {
+                              return response.data;
+                            })
+                            .catch(err => {
+                              if (err.response) {
+                                NotificationManager.error(err.response.data.errorMessage);
+                              } else if (err.request) {
+                                NotificationManager.error("Server Error");
+                             
+                              }
+                          });
+    }

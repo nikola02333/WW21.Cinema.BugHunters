@@ -14,6 +14,7 @@ import ShowAuditorium from "./ShowAuditorium";
 import {getUserByUsernameReservatino} from "../Services/userService";
 import InfoTable from "./InfoTable";
 import {tryReservation} from "../Services/ReservationService";
+import {reservationService} from "../Services/reservationServices";
 
 export interface IStateTicketReservation{
   maxRow:number,
@@ -61,7 +62,8 @@ const TicketReservation:React.FC = () =>{
 
     function tryReservationF(e){
       e.persist();
-      tryReservation(e,seat,info);
+
+      reservationService.tryReservationn(e,seat,info);
     };
 
     return(

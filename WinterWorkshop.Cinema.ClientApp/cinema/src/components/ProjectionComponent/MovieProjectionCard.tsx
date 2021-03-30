@@ -54,9 +54,9 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
         return;
       }
       console.log(movie);
-      const projectionButton = filteredProjection.projections.map((projectio,index) => {
+      const projectionButton = filteredProjection.projections.map((projection,index) => {
         
-      const bottonsCinema= projectio.cinema.map((cinema,index)=>{
+      const bottonsCinema= projection.cinema.map((cinema,index)=>{
             if(index===0){
               return (<>
                 <Col xs={2} className={"mx-1   justify-content-start"}>
@@ -64,7 +64,7 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
                 </Col>
                 <Col xs={1} className={"mx-1  p-0 justify-content-start"}>
                 <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">
-                  {" "+cinema.auditoriumName}</Tooltip>}>
+                  {cinema.price+"rsd "+cinema.auditoriumName}</Tooltip>}>
                 <Button
                   key={cinema.id}
                   onClick={() => navigateToProjectionDetails(cinema.id, movie.id,history)}
@@ -81,7 +81,7 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
               return (
                 <Col xs={1} className={"mx-1  p-0 justify-content-start"}>
                   <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">
-                  {" "+cinema.auditoriumName}</Tooltip>}>
+                  {cinema.price+"rsd "+cinema.auditoriumName}</Tooltip>}>
                     <Button
                     key={cinema.id}
                     onClick={() => navigateToProjectionDetails(cinema.id, movie.id,history)}
