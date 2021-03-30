@@ -63,8 +63,6 @@ const ProjectionDeatils = (props:{setInfo,getSeatData})=>{
                 ...prev,
                 movie: data 
               }));
-              console.log("getMovie");
-              console.log(data);
             }
           })
           .catch((response) => {
@@ -112,7 +110,6 @@ const ProjectionDeatils = (props:{setInfo,getSeatData})=>{
           
       };
 
-console.log("RENDER")
     return(
         <div>
           <Row >

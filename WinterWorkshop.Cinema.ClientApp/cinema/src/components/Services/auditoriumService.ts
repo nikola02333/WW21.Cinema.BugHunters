@@ -47,7 +47,7 @@ async function getAuditoriumById(id:string)
                       });
 }
 
-async function getAuditoriumByCinemaId(id:string)
+async function getAuditoriumByCinemaId(id:number)
 {
   return await API.get(`${serviceConfig.baseURL}/api/Auditoriums/ByCinemaId/${id}`)
                         .then( response => {
@@ -82,7 +82,7 @@ async function createAuditorium(auditorium: ICreateAuditorium)
 }
 async function updateAuditorium(auditoriumId: string, auditoriumToUpdate : ICreateAuditorium)
 {
- return await API.put(`/api/auditoriums/update/${auditoriumId}`, auditoriumToUpdate)
+ return await API.put(`${serviceConfig.baseURL}/api/auditoriums/update/${auditoriumId}`, auditoriumToUpdate)
                               .then( (res)=> {
                                 NotificationManager.success("Auditorium updated successfuly");
                                 return res.data;

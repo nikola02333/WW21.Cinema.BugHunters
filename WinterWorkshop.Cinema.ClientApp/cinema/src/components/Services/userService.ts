@@ -13,7 +13,8 @@ export const userService = {
     singUp,
     getUserByUsername,
     getTokenForGuest,
-    editUser
+    editUser,
+    
    
 };
 
@@ -75,8 +76,6 @@ async function getUserByUsername(userName: string) : Promise<IUser>
 
 async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
 {
-  console.log(JSON.stringify(userToCreate))
-
  var data =await API.post(`${serviceConfig.baseURL}/api/users/Create`, JSON.stringify(userToCreate))
     .then((response) => {
       return response.data;
@@ -147,8 +146,6 @@ export const getUserByUsernameReservatino = (setState) => {
     .then((data) => {
       if (data) {
         setState((prev)=>({ ...prev, userId: data.id }));
-        console.log("getUserByUsername");
-        console.log(data);
       }
     })
     .catch(err => {

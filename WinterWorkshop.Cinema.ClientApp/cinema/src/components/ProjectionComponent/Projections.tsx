@@ -82,6 +82,9 @@ const Projections : React.FC = (props: any) => {
       getMovies();
       getCurrentProjections();
     },[]);
+    useEffect(()=>{
+      console.log(info);
+    },[info]);
 
     const getCurrentProjections= async() =>{
       setInfo((prev)=>({ ...prev, isLoading: true }));
@@ -133,13 +136,15 @@ const Projections : React.FC = (props: any) => {
       
       event.preventDefault();
       const { cinemaId, auditoriumId, movieId, dateTime } = info;
-
+      console.log("info");
+      console.log(info);
       if (cinemaId || auditoriumId || movieId || ( dateTime && dateTime.getFullYear()!==1970) ) {
+        console.log("ifffffffffff");
         getFilteredProjections();
 
       } else {
         if(!cinemaId && !auditoriumId && !movieId && ( !dateTime || dateTime.getFullYear()===1970) ){
-          NotificationManager.info("All movies");
+          NotificationManager.info("Current projections");
         }else{
           NotificationManager.error("Not found.");
         }
@@ -157,11 +162,11 @@ const Projections : React.FC = (props: any) => {
     return (
         <Container>
           <Row className="justify-content-center mt-3">
-          <h1 className="projections-title">Projections</h1>
+          <h1 className="projections-title">{info.submitted?"Filtered projections":"Current projections"}</h1>
           </Row>
          
           <Row className="justify-content-center">
-          <FilterProjections handleSubmit={handleSubmit} movies={movies.movies} setMovies={setMovies} info={info} setInfo={setInfo}/>
+          <FilterProjections handleSubmit={handleSubmit} movies={moviesMemo} setMovies={setMovies} info={info} setInfo={setInfo}/>
           </Row>
           <MovieProjectCard submitted={infoMemo} movies={moviesMemo} currantProjections={currantProjectionsMemo} filteredProjections={filterProjectionsMemo}/>
           

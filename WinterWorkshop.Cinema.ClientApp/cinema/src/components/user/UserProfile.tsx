@@ -71,9 +71,7 @@ const UserProfile: React.FC = () => {
       setState( (prevState) => ({...prevState, firstName: data.firstName, lastName: data.lastName}));
 
       //setState({ ...state, lastName: data.lastName });
-      
-      console.log(state.firstName);
-      console.log(state.lastName);
+
     }
     if(userName != null)
     {

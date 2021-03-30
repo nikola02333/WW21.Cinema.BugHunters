@@ -33,7 +33,14 @@ const [movie,setMovie]= useState<IMovie>({
     title: "",
     year: "",
     rating: 0,
-    imdb:""
+    imdb:"",
+    hasOscar:false,
+    tagsModel:[{
+        tagId:0,
+        tagName:"",
+        tagValue:""
+    }]
+
 });
 const [imbd,setImdb]=useState<IMDB>(imdbData);
 const [uploaded,setUploaded]=useState<Boolean>(false);
@@ -74,8 +81,6 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
     const getFromIMDB = async(id:string | undefined)=>{
 
         if(!uploaded){
-            console.log("data");
-            console.log(id);
             if(id!=="" && id!==undefined){
                 var data =await imdbService.searchImdbWitVideo(id);
                 if(data===undefined){

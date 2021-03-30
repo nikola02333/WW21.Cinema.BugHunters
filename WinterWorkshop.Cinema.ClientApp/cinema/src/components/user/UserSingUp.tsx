@@ -59,7 +59,6 @@ useEffect( ()=> {
         const { id,value } = e.target;
         validate(id, value);
         setState({ ...state, [id]: value });
-        console.log(id, value);
         
       };
     
@@ -130,7 +129,6 @@ useEffect( ()=> {
           }
         }
       };
-      console.log(state)
     return (
         <Container>
       <Row>

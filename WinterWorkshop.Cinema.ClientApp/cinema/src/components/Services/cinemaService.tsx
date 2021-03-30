@@ -4,6 +4,7 @@ import {ICinemaToCreateModel} from '../../models/ICinemaToCreateModel';
 import {ICinemaToUpdateModel} from '../../models/ICinemaToUpdateModel';
 
 import API from '../../axios';
+import { ICinema } from "../../models";
 
 export const cinemaService = {
     addCinema,
