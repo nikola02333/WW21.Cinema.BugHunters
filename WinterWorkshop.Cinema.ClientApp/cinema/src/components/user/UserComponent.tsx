@@ -51,7 +51,6 @@ interface IState {
         }
        
       };
-      //hideUserProfileButtonElement
       const hideLoginButtonElement = () => {
         let loginButton = document.getElementById("login");
         if (loginButton) {
@@ -81,7 +80,6 @@ interface IState {
 
   const shouldShowUserProfile = () => {
     if (shouldDisplayUserProfile === undefined) {
-      //shouldDisplayUserProfile = !isGuest();
     }
     return shouldDisplayUserProfile;
   };
@@ -132,6 +130,7 @@ interface IState {
     history.push('/dashboard/Projections');
     window.location.reload();
     //getTokenForGuest();
+    userService.getTokenForGuest();
   };
 
   const redicectToSingUp =()=>{

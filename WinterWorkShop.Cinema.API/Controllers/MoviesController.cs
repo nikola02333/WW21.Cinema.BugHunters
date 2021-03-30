@@ -59,11 +59,12 @@ namespace WinterWorkShop.Cinema.API.Controllers
             movieDomainModels = await _movieService.GetAllMoviesAsync(isCurrent);
 
            
-            return Ok(movieDomainModels.DataList);
+             return Ok(movieDomainModels.DataList);
         }
 
         [HttpGet]
         [Route("TopTenMovies")]
+
         public async Task<ActionResult> GetTopTenMoviesAsync()
         {
 
@@ -82,6 +83,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("GetTopTenMoviesByYear/{year}")]
+        [Authorize(Roles = "user")]
         public async Task<ActionResult> GetTopTenMoviesBySpecificYear(int year)
         {
 
@@ -199,7 +201,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
             movieToUpdate.Data.Current = movieModel.Current;
             movieToUpdate.Data.Year = movieModel.Year;
             movieToUpdate.Data.Rating = movieModel.Rating;
-            //movieToUpdate.Data.HasOscar = movieModel.HasOscar;
+            movieToUpdate.Data.HasOscar = movieModel.HasOscar;
 
             GenericResult<MovieDomainModel> movieDomainModel;
             try
@@ -265,6 +267,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpPost]
         [Route("ActivateMovie/{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> ActivateMovie(Guid id)
         {
             if (id == Guid.Empty)
@@ -293,6 +296,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("SearchMoviesByTag/")]
+        [Authorize(Roles = "user")]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> SearchMoviesByTags( [FromQuery]string query)
         {
             GenericResult<MovieDomainModel> movies;

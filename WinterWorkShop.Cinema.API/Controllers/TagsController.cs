@@ -21,11 +21,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
             _tagsMoviesService = tagService;
         }
 
-        /*
-          [Route("GetById/{id}")]
-        public async Task<ActionResult<GenericResult<UserDomainModel>>> GetbyIdAsync(Guid id)
-        {
-         */
+    
         [HttpGet]
         [Route("GetTagByMovieId/{movieId}")]
         public async Task<ActionResult<GenericResult<TagMovieDomainModel>>> GetTagByMovieId( Guid movieId)

@@ -372,7 +372,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                               Id= movie.Id,
                                Rating= movie.Rating,
                                 Title= movie.Title,
-                                 Year= movie.Year
+                                 Year= movie.Year,
+                                 HasOscar= movie.HasOscar
                         }).ToList();
             return new GenericResult<MovieDomainModel> {
             

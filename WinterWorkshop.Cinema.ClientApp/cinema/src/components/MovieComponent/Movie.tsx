@@ -17,7 +17,6 @@ import {
 
  interface IProps {
   movies:IMovie[];
-  // validation?: (flag: any) => boolean;
   editMovie? : { (movieId) : void}
   removeMovie? (movieId) : void
   changeCurrent? ( 
@@ -38,7 +37,6 @@ const Movie: React.FC<IProps> =({editMovie,changeCurrent,removeMovie,...props}) 
       return userShouldSeeWholeTable;
     };
    
-    /// ovo za movie!!!
   const fillTableWithDaata = () => {
     return props.movies.map((movie) => {
       return (
@@ -49,17 +47,17 @@ const Movie: React.FC<IProps> =({editMovie,changeCurrent,removeMovie,...props}) 
             <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">
               { movie.tagsModel?.map(tag=> tag.tagValue).join(" ")}</Tooltip>}>
 
-         
             <FontAwesomeIcon
               className="text-info mr-2 fa-1x"
               icon={faInfoCircle}
             />
              </OverlayTrigger>
           </td>
+          
           <td>{movie.title}</td>
           <td>{movie.year}</td>
           <td>{Math.round(movie.rating)}/10</td>
-
+          <td>{ movie.hasOscar? "true" : "fase"}</td>
           {shouldUserSeeWholeTable() && <td>{movie.current ? "Yes" : "No"}</td>}
           {shouldUserSeeWholeTable() && (
             <td
@@ -112,6 +110,7 @@ const Movie: React.FC<IProps> =({editMovie,changeCurrent,removeMovie,...props}) 
           <th>Title</th>
           <th>Year</th>
           <th>Rating</th>
+          <th>Has oscar</th>
           {shouldUserSeeWholeTable() && <th>Is Current</th>}
           {shouldUserSeeWholeTable() && <th></th>}
           {shouldUserSeeWholeTable() && <th></th>}

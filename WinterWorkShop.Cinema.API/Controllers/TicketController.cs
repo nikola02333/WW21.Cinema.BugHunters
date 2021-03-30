@@ -75,6 +75,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpPost]
         [Route("Create")]
+        [Authorize(Roles = "user")]
         public async Task<ActionResult<GenericResult<TicketDomainModel>>> CreateTicketAsync([FromBody]CreateTicketModel ticketModel)
         {
             if (!ModelState.IsValid)
