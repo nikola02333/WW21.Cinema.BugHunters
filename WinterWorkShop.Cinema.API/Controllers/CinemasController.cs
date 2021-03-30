@@ -68,6 +68,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpPost]
         [Route("Create")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateCinemaAsync([FromBody] CreateCinemaModel cinema)
         {
             CinemaDomainModel cinemaModel = new CinemaDomainModel

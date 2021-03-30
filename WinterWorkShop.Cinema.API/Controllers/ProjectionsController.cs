@@ -65,6 +65,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("filter")]
+        [Authorize(Roles = "user")]
         public async Task<ActionResult<GenericResult<ProjectionDomainModel>>> GetFilteredProjection([FromQuery] FilterProjectionModel query)
         {
             var filter = new FilterProjectionDomainModel

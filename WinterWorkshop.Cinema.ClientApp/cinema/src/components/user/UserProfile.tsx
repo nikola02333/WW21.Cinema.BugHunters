@@ -136,8 +136,14 @@ const UserProfile: React.FC = () => {
     lastName : state.lastName
    };
      
-   await userService.editUser(userUpdate);
-      window.location.reload();
+   var editUser= await userService.editUser(userUpdate);
+
+   if(editUser=== undefined)
+   {
+      return;
+   }
+   setState( (prevState)=> ({...prevState, user: editUser}));
+      //window.location.reload();
      
   };
 

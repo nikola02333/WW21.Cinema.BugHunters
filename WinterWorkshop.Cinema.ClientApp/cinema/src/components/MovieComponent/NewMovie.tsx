@@ -156,29 +156,13 @@ const NewMovie: React.FC = (props: any) => {
     if(moveiResult !== undefined)
     {
 
-      /**
-       *   let myInterfacesArray = countryDealers.map(xx=>{
-
-    return <IDealer>
-    {
-         dealerName : xx.name,
-         dealerCode : xx.code,
-         dealerCountry : xx.country
-          // and so on
-     };
-
-  });
-       * let element = document.getElementById(id);
-    element.value = valueToSelect;
-       */
+     
 const actorsToSet= moveiResult.actorList.map( (actor,index) => {
   return  {
     id:  index,
     name: actor.name
     }
   });
-   debugger;
-//rating
     setState((prevState)=>({...prevState,
        title:moveiResult.title,
       genre: moveiResult.genres,
@@ -227,11 +211,7 @@ const actorsToSet= moveiResult.actorList.map( (actor,index) => {
   {
     return ( ( state.titleSubmit && state.genreSubmit) ? false: true )
   }
-  const resetFilds= (e )=> {
-    
-   //document.getElementById("createMovieForm")?.reset();
-
-  }
+  
   return (
     <Container>
      <Row className="d-flex justify-content-center mt-3">
@@ -249,7 +229,6 @@ const actorsToSet= moveiResult.actorList.map( (actor,index) => {
                 placeholder="movieId for search on Imdb"
                 value={state.imdbid}
                 onChange={(e) => handleChange(e.target)}
-                //  <FormText className="text-danger text-center">{state.imdbidError}</FormText>
               />
               <FormGroup className="d-flex justify-content-center">
               <Button 
@@ -373,20 +352,10 @@ const actorsToSet= moveiResult.actorList.map( (actor,index) => {
             <Button
               className="col-4"
               type="submit"
-              //disabled={state.submitted || !state.canSubmit}
               disabled = {isFormValid()}
               block
             >
               Add Movie
-            </Button>
-            <Button
-            onClick={(e)=>resetFilds(e)}
-              className="col-4 mx-3"
-              type="reset"
-              variant="danger"
-              size="sm"
-            >
-             Reset fileds
             </Button>
             </Row>
           </form>
