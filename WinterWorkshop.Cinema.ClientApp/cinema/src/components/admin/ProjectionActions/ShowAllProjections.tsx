@@ -25,7 +25,6 @@ const ShowAllProjections: React.FC = (props: any) => {
   }, []);
 
   const getProjections = async() => {
-    console.log("projection");
     setState(prev=>({ ...prev, isLoading: true }));
     var projections = await projectionService.getAllProjections();
     if(projections === undefined){

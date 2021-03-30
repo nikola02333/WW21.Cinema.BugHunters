@@ -29,7 +29,6 @@ const ProjectionsTable : React.FC<IProps> = ({projections,setState})=>{
 
 
     const fillTableWithData = () => {
-        console.log("object");
         return projections.map((projection) => {
           return (
             <tr key={projection.id}>

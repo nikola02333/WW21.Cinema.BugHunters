@@ -73,11 +73,8 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
     useEffect(()=>{
         getMovie(id);
         // getProjection(id);
-        
     },[])
 
-   
-    
     const getFromIMDB = async(id:string | undefined)=>{
 
         if(!uploaded){
@@ -117,9 +114,9 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
         if(movie===undefined){
             return;
         }
-        if(data.imdb!==undefined || data.imdb!==null){
-            getFromIMDB(data.imdb);
-        }
+        // if(data.imdb!==undefined || data.imdb!==null){
+        //     getFromIMDB(data.imdb);
+        // }
         
         setMovie(movie);
         
