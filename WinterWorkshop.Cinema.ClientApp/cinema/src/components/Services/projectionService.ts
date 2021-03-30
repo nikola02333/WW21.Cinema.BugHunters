@@ -12,9 +12,9 @@ export const projectionService = {
     updateProjection
 };
 
-async function getAllProjections()
+async function getAllProjections(currant=false)
 {
-  return await API.get(`${serviceConfig.baseURL}/api/Projections/all`)
+  return await API.get(`${serviceConfig.baseURL}/api/Projections/all?currant=${currant}`)
                         .then( response => {
                           return response.data;
                         })
@@ -49,13 +49,13 @@ async function getProjectionById(id : string)
 async function getFilteredProjection(filter : IFilterProjectionModel)
 {
     let query = "";
-    if (filter.CinemaId) {
+    if (filter.CinemaId!==0 && filter.CinemaId!==undefined) {
       query = `cinemaId=${filter.CinemaId}`;
     }
-    if (filter.AuditoriumId) {
+    if (filter.AuditoriumId!==0 && filter.CinemaId!==undefined) {
       query += `${query.length ? "&" : ""}auditoriumId=${filter.AuditoriumId}`;
     }
-    if (filter.MovieId) {
+    if (filter.MovieId!=="" && filter.CinemaId!==undefined) {
       query += `${query.length ? "&" : ""}movieId=${filter.MovieId}`;
     }
     if (filter.DateTime && filter.DateTime.getFullYear()!==1970 ) {

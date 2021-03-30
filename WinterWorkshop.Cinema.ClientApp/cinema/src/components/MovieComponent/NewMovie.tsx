@@ -233,8 +233,12 @@ const NewMovie: React.FC = (props: any) => {
                 onChange={(e) => handleChange(e.target)}
                 //  <FormText className="text-danger text-center">{state.imdbidError}</FormText>
               />
-              <Button type="button"  onClick={()=>searchImdb(state.imdbid)} className="col-4 mt-3"> Seach Imdb</Button>
-             
+              <FormGroup className="d-flex justify-content-center">
+              <Button 
+              type="button"  
+              onClick={()=>searchImdb(state.imdbid)} 
+              className="col-4 mt-3"> Seach Imdb</Button>
+             </FormGroup>
 
             </FormGroup>
             <FormGroup>

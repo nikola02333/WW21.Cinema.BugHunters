@@ -78,7 +78,7 @@ useEffect( ()=> {
         
        
        var data= await userService.singUp(userToCreate);
-        history.push('/dashboard/Projection');
+        history.push('/dashboard/Projections');
 
       } else {
         NotificationManager.error("Please fill in data");
