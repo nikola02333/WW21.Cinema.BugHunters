@@ -10,7 +10,8 @@ import * as Service from "./ProjectionService"
 import {IMovie, IAuditorium,  ICinema} from "../../models";
 import {IInfoState,IStateMovies} from "./Projections"
 import DatePicker from 'DatePicker';
-
+import {cinemaService} from "../Services/cinemaService"
+import {auditoriumService} from "../Services/auditoriumService"
 
 interface IProps{
   movies: IMovie[];
@@ -40,11 +41,31 @@ const FilterProjections:React.FC<IProps> = memo(({movies,setMovies,info,setInfo,
     const [btnColor, onbtnColor] = useState(false);
 
     useEffect(() => {
-     Service.getCurrentMoviesAndProjections(setInfo,setMovies);
-     Service.getAllCinemas(setInfo,setCinemas);
-     Service.getAllAuditoriums(setInfo,setAuditoriums);
+    //  Service.getCurrentMoviesAndProjections(setInfo,setMovies);
+    //  Service.getAllCinemas(setInfo,setCinemas);
+    getAllCinemas();
+    getAllAuditoriums();
+    //  Service.getAllAuditoriums(setInfo,setAuditoriums);
     console.log("FIlter Data")
     }, []);
+
+    const getAllCinemas = async() =>{
+      var data=await cinemaService.getCinemas();
+      if(data===undefined){
+        return;
+      }
+      setCinemas({cinemas:data});
+    }
+
+    const getAllAuditoriums = async()=>{
+      var data=await auditoriumService.getAllAuditoriums();
+      if(data===undefined){
+        return;
+      }
+      setAuditoriums({auditoriums:data});
+    }
+
+
     
     const infoCinema = useMemo(()=>info,[info.selectedCinema,info.selectedAuditorium]);
 

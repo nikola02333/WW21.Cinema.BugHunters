@@ -19,8 +19,7 @@ export interface IStateShowAuditoriums{
 
 
 const ShowAuditorium: React.FC<IProps> = memo(({seat,setSeat,tryReservation}) => {
-    console.log("ChooseSeats");
-    
+
     const [state,setState]=useState<IStateShowAuditoriums>({
       modalShow:false,
       separately:false
@@ -104,8 +103,6 @@ const ShowAuditorium: React.FC<IProps> = memo(({seat,setSeat,tryReservation}) =>
         for (let i = 0; i < allButtons.length; i++) {
           if (seatId === allButtons[i].value) {
             allButtons[i].className = "seat";
-            console.log("Mark BLUE");
-            console.log(allButtons[i].value);
           }
         }
       };
@@ -139,7 +136,6 @@ const ShowAuditorium: React.FC<IProps> = memo(({seat,setSeat,tryReservation}) =>
           <td key={`row${row}-seat${i}`}>
             <button
             onClick={(e) => {
-              console.log("KLIK "+`row${row}-seat${i} `+currentSeatId);
                 let currentRow = row;
                 let currentNumber = i;
                 let currSeatId = currentSeatId;
@@ -157,10 +153,8 @@ const ShowAuditorium: React.FC<IProps> = memo(({seat,setSeat,tryReservation}) =>
                     
                     leftSeatIsTaken = checkIfSeatIsTaken(leftSeatProperties.id);
                 }
-                console.log("K");
                 if (rightSeatProperties) {
                     rightSeatIsCurrentlyReserved = checkIfSeatIsCurrentlyReserved(rightSeatProperties.id);
-                    console.log(rightSeatIsCurrentlyReserved);
                     rightSeatIsTaken = checkIfSeatIsTaken(rightSeatProperties.id);
                 }
 
@@ -180,48 +174,36 @@ const ShowAuditorium: React.FC<IProps> = memo(({seat,setSeat,tryReservation}) =>
                     }
 
                     if (seat.currentReservationSeats.includes({currentSeatId}) === false) {
-                      console.log("PUSH")
                     currentReservationSeats.push({
                          currentSeatId,
                     });
-                    console.log(currentReservationSeats);
+
                     }
                 } else {
                     if (leftSeatIsCurrentlyReserved && rightSeatIsCurrentlyReserved ) {
-                         console.log("000");
                         markWholeRowSeatsAsBlue();
                         currentReservationSeats = [];
                     } else {
                         currentReservationSeats.splice(currentReservationSeats.indexOf({currentSeatId: currentSeatId, }),1);
-                        console.log("SLICE");
                         if (!leftSeatIsCurrentlyReserved && !leftSeatIsTaken && leftSeatProperties) {
-                            markSeatAsBlue(leftSeatProperties.id);
-                            console.log("111");
-                            console.log(leftSeatProperties.id);
-                            
+                            markSeatAsBlue(leftSeatProperties.id);                
                         }
                         if (!rightSeatIsCurrentlyReserved && !rightSeatIsTaken && rightSeatProperties) {
                             markSeatAsBlue(rightSeatProperties.id);
-                            console.log("222");
                         }
         
                         if (leftSeatIsCurrentlyReserved || rightSeatIsCurrentlyReserved) {
-                          
-                          console.log("333");
-                          console.log(currentSeatId);
                             setTimeout(() => {
                             markSeatAsGreenish(currentSeatId);
                             }, 150);
                         }
                     }
 
-                    console.log("KRAJ KLIKAAA");
                     setSeat((prev)=>({
                     ...prev,
                     currentReservationSeats,
                     }));
                 }
-                console.log("KRAJ KLIKA");
                 setSeat((prev)=>({
                 ...prev,
                 currentReservationSeats,

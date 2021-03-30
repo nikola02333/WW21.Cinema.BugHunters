@@ -1,7 +1,6 @@
 import React,{memo} from 'react'
 
 const InfoTable = (props:{currentReservationSeats,projectionPrice}) =>{
-    console.log("InfoTable");
     return(
         <table className="payment-table">
             <thead className="payment-table__head">

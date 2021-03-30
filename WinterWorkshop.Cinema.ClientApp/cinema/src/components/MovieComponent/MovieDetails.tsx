@@ -33,7 +33,14 @@ const [movie,setMovie]= useState<IMovie>({
     title: "",
     year: "",
     rating: 0,
-    imdb:""
+    imdb:"",
+    hasOscar:false,
+    tagsModel:[{
+        tagId:0,
+        tagName:"",
+        tagValue:""
+    }]
+
 });
 const [imbd,setImdb]=useState<IMDB>(imdbData);
 const [uploaded,setUploaded]=useState<Boolean>(false);
