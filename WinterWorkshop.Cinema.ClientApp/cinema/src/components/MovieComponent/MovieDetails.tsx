@@ -23,23 +23,29 @@ import {imdbService} from "../Services/imdbService";
     projections:IProjectionByCinemaId[];
   }
 
-
+interface IState{
+    movie:IMovie
+}
 const MovieDeatails : React.FC =(props: any)=>{
 var id = window.location.pathname.split("/")[3];
 
-const [movie,setMovie]= useState<IMovie>({
-    id: "",
-    coverPicture: "",
-    title: "",
-    year: "",
-    rating: 0,
-    imdb:"",
-    hasOscar:false,
-    tagsModel:[{
-        tagId:0,
-        tagName:"",
-        tagValue:""
-    }]
+const [movie,setMovie]= useState<IState>({
+    movie:{
+        id: "",
+        coverPicture: "",
+        title: "",
+        year: "",
+        rating: 0,
+        imdb:"",
+        hasOscar:false,
+        tagsModel:[{
+            tagId:0,
+            tagName:"",
+            tagValue:""
+        }],
+        description:""
+    }
+    
 
 });
 const [imbd,setImdb]=useState<IMDB>(imdbData);
@@ -75,18 +81,23 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
         // getProjection(id);
     },[])
 
+    useEffect(()=>{
+        console.log(movie);
+    },[movie])
+
     const getFromIMDB = async(id:string | undefined)=>{
 
-        if(!uploaded){
-            if(id!=="" && id!==undefined){
-                var data =await imdbService.searchImdbWitVideo(id);
-                if(data===undefined){
-                    return;
-                }
-                setImdb(data);
-            }
-            setUploaded(true);
-        }
+        // if(!uploaded){
+        //     if(id!=="" && id!==undefined){
+        //         var data =await imdbService.searchImdbWitVideo(id);
+        //         if(data===undefined){
+        //             return;
+        //         }
+        //         setImdb(data);
+        //         console.log(data);
+        //     }
+        //     setUploaded(true);
+        // }
         
        
     }
@@ -111,24 +122,25 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
 
     const getMovie= async(id)=>{
         const data :IMovie= await movieService.getMovieById(id) ;
-        if(movie===undefined){
+        if(data===undefined){
             return;
         }
-        // if(data.imdb!==undefined || data.imdb!==null){
-        //     getFromIMDB(data.imdb);
-        // }
+        if(data.imdb!==undefined || data.imdb!==null){
+            getFromIMDB(data.imdb);
+        }
+        console.log(data);
         
-        setMovie(movie);
+        setMovie({movie:data});
         
     }
     
 
     return(
-        <Container key={movie.id}>
+        <Container key={movie.movie.id}>
             <Col xs={12}  className="shadow rounded my-3">
             <Row className="justify-content-center">
-              <Col md={4} className=" my-4 ml-1 d-flex justify-content-center">
-              <Image  className=" img-fluid" style={{  borderRadius:5}} src={imbd.data.image} />
+              <Col md={3} className=" my-4 ml-1 d-flex justify-content-center">
+              <Image  className=" img-fluid" style={{  borderRadius:5}} src={movie.movie.coverPicture} />
               </Col>
               <Col md={7} className=" my-3">
                 <Row className="mt-3">
@@ -136,7 +148,7 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
                     <span className="font-weight-bold movie-details">Name:</span>
                     </Col>
                     <Col>
-                    <span className="">{imbd.data.fullTitle}</span>
+                    <span className="">{movie.movie.title}</span>
                     </Col>
                 </Row >
                 <Row className="mt-3">
@@ -152,7 +164,7 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
                     <span className="font-weight-bold movie-details">Genre:</span>
                     </Col>
                     <Col>
-                    <span className="">{imbd.data.genres}</span>
+                    <span className="">{movie.movie.tagsModel?.map(tag=> { if(tag.tagName==="Genre") return tag.tagValue+" "}).join('  ')}</span>
                     </Col>
                 </Row>
                 <Row className="mt-3">
@@ -160,7 +172,7 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
                     <span className="font-weight-bold movie-details">Stars:</span>
                     </Col>
                     <Col>
-                    <span className="">{imbd.data.stars}</span>
+                    <span className="">{movie.movie.tagsModel?.map(tag=> { if(tag.tagName==="Actor") return tag.tagValue+" "}).join('  ')}</span>
                     </Col>
                 </Row >
                 <Row className="mt-3">
@@ -192,7 +204,7 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
                     <span className="font-weight-bold movie-details">IMDB rating:</span>
                     </Col>
                     <Col>
-                    <span className=""><FontAwesomeIcon icon={faStar} className="text-warning"/>{imbd.data.imDbRating+"/10"}</span>
+                    <span className=""><FontAwesomeIcon icon={faStar} className="text-warning"/>{movie.movie.rating+"/10"}</span>
                     </Col>
                 </Row>
               </Col>
@@ -209,7 +221,7 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
                     <p className="movie-detail  text-center m-0">Plot:</p>
                 </Col>
                 <Col xs={12} className="my-2 " >
-                    <p className="text-justify ">{imbd.data.plot}</p>
+                    <p className="text-justify ">{movie.movie.description}</p>
                 </Col>
                 </Col>
             </Row>

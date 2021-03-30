@@ -92,6 +92,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 };
             }
 
+            var tags = await _tagsMoviesRepository.GetTagByMovieIDAsync(movie.Id);
+
             MovieDomainModel domainModel = new MovieDomainModel
             {
                 Id = movie.Id,
@@ -103,7 +105,13 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 CoverPicture = movie.CoverPicture,
                 HasOscar = movie.HasOscar,
                 Imdb=movie.ImdbId,
-                Description=movie.Description
+                Description=movie.Description,
+                TagsModel = tags.Select(tag => new TagDomainModel
+                {
+                    TagId = tag.TagId,
+                    TagName = tag.Tag.TagName,
+                    TagValue = tag.Tag.TagValue
+                }).ToList()
             };
 
             return  new GenericResult<MovieDomainModel>
