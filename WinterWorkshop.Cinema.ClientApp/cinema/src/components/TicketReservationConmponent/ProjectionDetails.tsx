@@ -1,6 +1,6 @@
 import React,{useState,useEffect,memo} from 'react';
 import {IMovie,IProjection} from "../../models";
-import { Container, Row, Col, Card } from "react-bootstrap";
+import {  Row, Col, Card } from "react-bootstrap";
 import {getRoundedRating} from "../helpers/functions";
 import { NotificationManager } from "react-notifications";
 import { serviceConfig } from "../../appSettings";

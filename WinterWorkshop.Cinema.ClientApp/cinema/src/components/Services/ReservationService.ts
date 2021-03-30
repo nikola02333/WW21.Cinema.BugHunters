@@ -1,6 +1,5 @@
 import { serviceConfig } from "../../appSettings"
 import { NotificationManager } from "react-notifications";
-import {Get} from "../helpers/RequestOptions"
 import * as authChech from "../helpers/authCheck";
 
 export const tryReservation = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>,seat,info) => {

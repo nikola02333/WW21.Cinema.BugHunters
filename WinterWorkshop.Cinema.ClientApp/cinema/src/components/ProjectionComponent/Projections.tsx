@@ -1,10 +1,9 @@
 import React, { useEffect, useState,useMemo } from "react";
 import { NotificationManager } from "react-notifications";
-import { serviceConfig } from "../../appSettings";
 import { withRouter } from "react-router-dom";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+import { Container, Row } from "react-bootstrap";
 import "./../../index.css";
-import { IAuditorium, IProjection, ICinema, IMovie } from "../../models";
+import { IAuditorium, IProjection, IMovie } from "../../models";
 import FilterProjections from "./FilterProjections";
 import MovieProjectCard from "./MovieProjectionCard";
 import * as Service from "./ProjectionService"

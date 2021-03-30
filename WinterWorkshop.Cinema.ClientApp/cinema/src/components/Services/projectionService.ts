@@ -2,7 +2,6 @@ import { serviceConfig } from "../../appSettings"
 import { NotificationManager } from "react-notifications";
 import {IFilterProjectionModel,ICreateProjection} from '../../models/ProjectionModels';
 import API from '../../axios';
-import { AxiosResponse, AxiosError } from 'axios';
 
 export const projectionService = {
     getAllProjections,

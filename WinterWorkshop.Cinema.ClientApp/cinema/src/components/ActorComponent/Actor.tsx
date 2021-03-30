@@ -2,7 +2,7 @@ import React from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { IActor } from './../../models/IActor';
-import { FormControl, FormGroup,Button, Row, Col } from "react-bootstrap";
+import { FormControl,Button, Row, Col } from "react-bootstrap";
 
 interface IProps{
   removeActor: (actorId) =>void;

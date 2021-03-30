@@ -1,10 +1,10 @@
 import React, { useEffect, useState} from "react";
 import { NotificationManager } from "react-notifications";
-import { Row, Table } from "react-bootstrap";
+import { Row } from "react-bootstrap";
 import Spinner from "../../components/Spinner";
 import "../../index.css";
 
-import { ToastContainer, toast } from "react-toastify";
+import {  toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { IMovie, ITag } from "../../models/index";
 
@@ -38,8 +38,6 @@ const Movies: React.FC<IProps> =  (props: any) => {
 
   toast.configure();
 
-  
-  
 
   useEffect(() => {
     getMovies();

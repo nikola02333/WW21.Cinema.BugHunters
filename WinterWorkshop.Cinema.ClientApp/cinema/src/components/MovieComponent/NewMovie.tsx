@@ -119,7 +119,6 @@ const NewMovie: React.FC = (props: any) => {
       if (!value || value === "" || yearNum < 1895 || yearNum > 2100) {
         setState({ ...state, yearError: "Please chose valid year" });
       } else {
-        //setState({ ...state, yearError: "", yearSubmit: true });
         setState( (prevState)=> ({...prevState,  yearError: '', yearSubmit: true}));
       }
       console.log(state.yearSubmit);
@@ -153,7 +152,6 @@ const NewMovie: React.FC = (props: any) => {
 
     const moveiResult = await imdbService.searchImdb(id);
 
-// rating , tags,coverPicture, Actors, description, year
     if(moveiResult !== undefined)
     {
 
