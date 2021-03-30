@@ -28,8 +28,6 @@ const TagsList :React.FC<IProps> = (props) => {
     const newTags = [...tags,tag ];
     setTags(newTags);
     props.setState(prevState=> ({...prevState,tagss: newTags}));
-
-    console.log(...tags);
   };
 
   const updateTag = (tagId, newValue) => {

@@ -19,7 +19,6 @@ const SelectMovies = memo((props:{info,setInfo,filteredMovies,movies}) => {
         if(!movieIsSame){
           props.setInfo((prev)=>({ ...prev, selectedMovie: false, movieId:""}));
         }  
-        console.log(movieIsSame);
         return filterMovies;
         } else {
           return props.movies.map((movie) => {

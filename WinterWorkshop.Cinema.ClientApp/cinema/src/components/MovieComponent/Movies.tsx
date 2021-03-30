@@ -13,13 +13,12 @@ import Movie from './Movie';
 
 interface IState {
   movies: IMovie[];
-    isLoading: boolean;
+  isLoading: boolean;
 }
 interface IProps{
   showTopTenMovies: boolean;
 }
-// zasto ovde mora  props: any
-// preko showTopTenMovies da prikazujem filmove
+
 const Movies: React.FC<IProps> =  (props: any) => {
   
   const [state, setState] = useState<IState>({
@@ -95,7 +94,7 @@ const Movies: React.FC<IProps> =  (props: any) => {
      var result = await movieService.removeMovie(id);
      if(result === undefined)
      {
-
+      return;
      }
      else{
       var moviesDeleted= state.movies.filter( movie => movie.id != id );
@@ -144,9 +143,7 @@ const Movies: React.FC<IProps> =  (props: any) => {
     if (tag) {
       searchMovie(tag);
     } else {
-      NotificationManager.error(
-        "Please type type something in search bar to search for movies."
-      );
+      getMovies();
     }
   };
 
