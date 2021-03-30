@@ -25,60 +25,99 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
         private Mock<ITagsMoviesRepository> _mockTagsMoviesRepository;
         private TagsMoviesService _tagsMoviesService;
-        Movie _movie;
-        Tag _tag;
-        TagsMovies _tagsMovies;
+     
        [TestInitialize]
         public void TestInit()
         {
             _mockTagsMoviesRepository = new Mock<ITagsMoviesRepository>();
             _tagsMoviesService = new TagsMoviesService(_mockTagsMoviesRepository.Object);
-
-            _movie = new Movie
-            {
-                Title = "Movie",
-                Current = true,
-                Year = 2019,
-                CoverPicture = "www.google.rs",
-                Genre = "comedy",
-                HasOscar = true,
-                Rating = 9,
-                Id = new Guid("0403c450-7426-4755-8c12-1b310c9c5134"),
-            };
-            _tagsMovies = new TagsMovies
-            {
-                Movie = _movie,
-                MovieId = _movie.Id,
-                TagId = _tag.TagId,
-                Tag = _tag
-            };
-            _tag = new Tag
-            {
-                TagId = 1,
-                TagValue = "some value",
-                TagName = "tag name",
-
-                TagsMovies = new List<TagsMovies>
-                {
-                   new TagsMovies
-                   {
-                     Movie=_movie,
-                     MovieId=_movie.Id,
-                     TagId=_tag.TagId,
-                     Tag=_tag
-                   }
-                }
-            };       
+                  
         }
-
 
         [TestMethod]
-        public async Task AddTagMovie_Return_()
-        { 
-        
+        public async Task AddTagMovie_Return_Tags()
+        {
+            bool isSuccessful = true;
+
+            Movie movie =new Movie
+             {
+              Current = false,
+                Genre = "comedy",
+                Id =new Guid("5e9963d0-52e8-4593-9658-df8839712cf7"), 
+                Rating = 8, 
+                Title = "New_Movie1",
+                Year = 1999, 
+                HasOscar=true, 
+                CoverPicture="coverpicture"
+
+            };
+            Tag tag = new Tag
+            {
+             TagId=1,
+             TagName="tagName",
+              TagValue="tagValue"
+ 
+            };
+            var movieTagsToInsert = new TagsMovies
+            {
+                Movie = movie,
+                MovieId = movie.Id,
+                TagId = tag.TagId,
+                Tag=tag
+                 
+            };
+
+            _mockTagsMoviesRepository.Setup(stvc => stvc.InsertAsync(It.IsNotNull<TagsMovies>())).ReturnsAsync(movieTagsToInsert);
+            var result = await _tagsMoviesService.AddTagMovieAsync(movieTagsToInsert);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(isSuccessful, result.IsSuccessful);
+            Assert.IsInstanceOfType(result,typeof(GenericResult<TagMovieDomainModel>));
+
         }
 
+        [TestMethod]
+        public async Task GetTagByMovieIDAsync_Return_Tags()
+        {
+            bool isSuccessful = true;
 
+            Movie movie = new Movie
+            {
+                Current = false,
+                Genre = "comedy",
+                Id = new Guid("5e9963d0-52e8-4593-9658-df8839712cf7"),
+                Rating = 8,
+                Title = "New_Movie1",
+                Year = 1999,
+                HasOscar = true,
+                CoverPicture = "coverpicture"
+
+            };
+            Tag tag = new Tag
+            {
+                TagId = 1,
+                TagName = "tagName",
+                TagValue = "tagValue"
+
+            };
+            var movieTagsToInsert = new TagsMovies
+            {
+                Movie = movie,
+                MovieId = movie.Id,
+                TagId = tag.TagId,
+                Tag = tag
+
+            };
+
+            List<TagsMovies> listOfTags = new List<TagsMovies>();
+            listOfTags.Add(movieTagsToInsert);
+            _mockTagsMoviesRepository.Setup(stvc => stvc.GetTagByMovieIDAsync(movie.Id)).ReturnsAsync(listOfTags);
+            var result = await _tagsMoviesService.GetTagByMovieIDAsync(movie.Id);
+
+            Assert.IsNotNull(result);
+            Assert.AreEqual(isSuccessful, result.IsSuccessful);
+            Assert.IsInstanceOfType(result, typeof(GenericResult<TagMovieDomainModel>));
+        }
 
 
 

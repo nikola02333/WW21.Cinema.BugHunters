@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Table } from "react-bootstrap";
+import { Row, Table, OverlayTrigger,Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
@@ -46,10 +46,15 @@ const Movie: React.FC<IProps> =({editMovie,changeCurrent,removeMovie,...props}) 
           <td
             className="text-center cursor-pointer"
           >
+            <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">
+              { movie.tagsModel?.map(tag=> tag.tagValue).join(" ")}</Tooltip>}>
+
+         
             <FontAwesomeIcon
               className="text-info mr-2 fa-1x"
               icon={faInfoCircle}
             />
+             </OverlayTrigger>
           </td>
           <td>{movie.title}</td>
           <td>{movie.year}</td>

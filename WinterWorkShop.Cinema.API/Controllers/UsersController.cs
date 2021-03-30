@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.API.Models;
 using WinterWorkShop.Cinema.Domain.Common;
@@ -12,7 +10,7 @@ using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
@@ -25,7 +23,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
      
-        //[Authorize(Roles = Role.Admin)]
+        [Authorize(Roles = Role.Admin)]
         [HttpGet]
         public async Task<ActionResult<GenericResult<UserDomainModel>>> GetAsync()
         {
@@ -111,7 +109,6 @@ namespace WinterWorkShop.Cinema.API.Controllers
         {
             if(String.IsNullOrEmpty(username))
             {
-                //return BadRequest(Messages.USER_NOT_FOUND);
                 ErrorResponseModel errorResponse = new ErrorResponseModel
                 {
                     ErrorMessage = Messages.USER_NOT_FOUND,

@@ -44,6 +44,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         public async Task GetAllMoviesAsync_When_IsCurent_False_Retusns_AllMovies()
         {
             var isCurrent = false;
+           
             var expectedMovies = new  List<Movie>
             {
                 new Movie{ Current= false, Genre = "comedy", Id = Guid.NewGuid(), Rating= 8, Title="New_Movie1", Year=1999},
@@ -51,6 +52,8 @@ namespace WinterWorkShop.Cinema.Tests.Services
             };
 
             _mockMovieRepository.Setup(srvc => srvc.GetAllAsync()).ReturnsAsync(expectedMovies);
+
+            //_mockTagsMoviesRepository.Setup(srvc => srvc.GetTagByMovieIDAsync(It.IsNotNull<Guid>())).ReturnsAsync(expectedMovies);
 
             // Act
 

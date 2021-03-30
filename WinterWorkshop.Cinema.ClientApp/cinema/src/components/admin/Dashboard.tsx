@@ -6,8 +6,7 @@ import "./../../index.css";
 // Admin actions
 import NewMovie from "../MovieComponent/NewMovie";
 import EditMovie from "../MovieComponent/EditMovie";
-//import ShowAllMovies from "../MovieComponent/ShowAllMovies";
-import TopTenMovies from "./MovieActions/TopTenMovies";
+import TopTenMovies from "../MovieComponent/TopTenMovies";
 import NewCinema from "./CinemaActions/NewCinema";
 import EditCinema from "./CinemaActions/EditCinema";
 import ShowAllCinemas from "./CinemaActions/ShowAllCinemas";

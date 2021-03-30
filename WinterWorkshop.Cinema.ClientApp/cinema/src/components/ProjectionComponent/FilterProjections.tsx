@@ -1,17 +1,14 @@
 import React, { useEffect, useState , memo, useMemo,Dispatch,SetStateAction} from "react";
-import { NotificationManager } from "react-notifications";
-import { serviceConfig } from "../../appSettings";
-import { withRouter } from "react-router-dom";
-import { Container, Row, Col, Card, Button } from "react-bootstrap";
+
+import { Row } from "react-bootstrap";
 import "./../../index.css";
 
 import SelectAuditoriums from "./SelectFilters/SelectAuditoriums"
 import SelectCinenma from "./SelectFilters/SelectCinemas"
 import SelectMovies from "./SelectFilters/SelectMovies"
 import * as Service from "./ProjectionService"
-import {IMovie, IProjection, IAuditorium,  ICinema} from "../../models";
+import {IMovie, IAuditorium,  ICinema} from "../../models";
 import {IInfoState,IStateMovies} from "./Projections"
-import { classicNameResolver } from "typescript";
 import DatePicker from 'DatePicker';
 import {cinemaService} from "../Services/cinemaService"
 import {auditoriumService} from "../Services/auditoriumService"

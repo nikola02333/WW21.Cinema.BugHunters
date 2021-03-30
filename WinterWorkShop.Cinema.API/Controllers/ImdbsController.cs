@@ -1,4 +1,5 @@
 ﻿using IMDbApiLib;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Linq;
@@ -8,7 +9,7 @@ using WinterWorkShop.Cinema.Domain.Common;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ImdbsController : ControllerBase
@@ -94,7 +95,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         public async Task<ActionResult> GetTopTenMovies()
         {
 
-            var apiLib = new ApiLib("k_9szm9guo");
+            var apiLib = new ApiLib(_configuration["IMDB_API_KEY:key"]);
             var data = await apiLib.Top250MoviesAsync();
 
             if (data.ErrorMessage == "")
