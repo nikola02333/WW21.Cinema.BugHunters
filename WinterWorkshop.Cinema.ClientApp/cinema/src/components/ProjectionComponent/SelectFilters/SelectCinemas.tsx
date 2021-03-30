@@ -3,7 +3,6 @@ import {auditoriumService} from "../../Services/auditoriumService"
 import {movieService} from "../../Services/movieService"
 
 const SelectCinenma  = memo((props:{setInfo,cinemas,setFilteredData}) =>{
-  console.log("FilterCinenma")
     const fillFilterWithCinemas = () => {
         return props.cinemas.map((cinema) => {
           return (

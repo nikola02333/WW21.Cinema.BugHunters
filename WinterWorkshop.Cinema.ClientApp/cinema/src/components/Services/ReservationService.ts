@@ -52,7 +52,6 @@ export const tryReservation = (e: React.MouseEvent<HTMLButtonElement, MouseEvent
         }),
         userId: info.userId,
       };
-      console.log(data);
 
       const requestOptions = {
         method: "POST",

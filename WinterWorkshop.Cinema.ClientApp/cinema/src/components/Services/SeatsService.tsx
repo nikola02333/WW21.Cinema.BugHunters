@@ -18,9 +18,7 @@ export async function  getReservedSeats (id: string, setState) {
          setState((prev)=>({
            ...prev,
            reservedSeats: data,
-         }));
-         console.log("getReservedSeats");
-         
+         }));       
        }
      })
      .catch((response) => {
@@ -72,8 +70,6 @@ export async function  getReservedSeats (id: string, setState) {
             ...prev,
             seats: data
           }));
-          console.log("getSeats");
-          console.log(data);
         }
       })
       .catch((response) => {

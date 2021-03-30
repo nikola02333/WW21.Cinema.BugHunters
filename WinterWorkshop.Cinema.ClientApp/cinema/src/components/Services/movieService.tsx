@@ -119,11 +119,7 @@ function removeMovie(id: string)
     {
       return  API.delete(`/api/movies/Delete/${id}`)
       .then( (response)=> {
-
-        console.log(response.data);
-
         NotificationManager.success("Successfuly removed movie!");
-       
         return id;
       })
       .catch(err => {
