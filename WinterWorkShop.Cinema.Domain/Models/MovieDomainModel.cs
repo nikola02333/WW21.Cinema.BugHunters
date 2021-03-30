@@ -15,6 +15,8 @@ namespace WinterWorkShop.Cinema.Domain.Models
         public bool HasOscar { get; set; }
         public string CoverPicture { get; set; }
         public string Description { get; set; }
+        public string? Imdb { get; set; }
+        public List<TagDomainModel> TagsModel { get; set; }
 
         public string[] Tags { get; set; }
 

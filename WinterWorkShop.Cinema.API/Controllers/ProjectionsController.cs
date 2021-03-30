@@ -31,11 +31,11 @@ namespace WinterWorkShop.Cinema.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("all")]
-        public async Task<ActionResult<IEnumerable<ProjectionDomainModel>>> GetAsync()
+        public async Task<ActionResult<IEnumerable<ProjectionDomainModel>>> GetAsync(bool currant=false)
         {
             IEnumerable<ProjectionDomainModel> projectionDomainModels;
            
-             projectionDomainModels = await _projectionService.GetAllAsync();            
+             projectionDomainModels = await _projectionService.GetAllAsync(currant);            
 
             if (projectionDomainModels == null)
             {

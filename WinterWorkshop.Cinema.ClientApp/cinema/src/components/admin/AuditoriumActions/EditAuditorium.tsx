@@ -35,8 +35,9 @@ interface IState {
 }
 
 const EditAuditorium: React.FC = (props: any): JSX.Element => {
+  var id = window.location.pathname.split("/")[3];
   const history = useHistory();
-  const { id } = useParams<IParams>();
+  
   const [state, setState] = useState<IState>({
     id:"",
     cinemaId: "",
@@ -63,14 +64,14 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     validate(id, value);
-    setState({ ...state, [id]: value });
+    setState((prev)=>({ ...prev, [id]: value }));
   
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setState({ ...state, submitted: true });
+    setState((prev)=>({ ...prev, submitted: true }));
     if (
       state.auditoriumName &&
       state.numberOfSeats &&
@@ -80,52 +81,52 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
       editAuditorium();
     } else {
       NotificationManager.error("Please fill form with data.");
-      setState({ ...state, submitted: false });
+      setState((prev)=>({ ...prev, submitted: false }));
     }
   };
 
   const validate = (id: string, value: string | null) => {
     if (id === "auditoriumName") {
       if (value === "") {
-        setState({
-          ...state,
+        setState((prev)=>({
+          ...prev,
           auditoriumNameError: "Fill in auditorium name",
           canSubmit: false,
-        });
+        }));
       } else {
-        setState({ ...state, auditoriumNameError: "", canSubmit: true });
+        setState((prev)=>({ ...prev, auditoriumNameError: "", canSubmit: true }));
       }
     } else if (id === "numberOfSeats" && value) {
       const seatsNum = +value;
       if (seatsNum > 20 || seatsNum < 1) {
-        setState({
-          ...state,
+        setState((prev)=>({
+          ...prev,
           numOfSeatsError: "Seats number can be in between 1 and 20.",
           canSubmit: false,
-        });
+        }));
       } else {
-        setState({ ...state, numOfSeatsError: "", canSubmit: true });
+        setState((prev)=>({ ...prev, numOfSeatsError: "", canSubmit: true }));
       }
     } else if (id === "seatRows" && value) {
       const seatsNum = +value;
       if (seatsNum > 20 || seatsNum < 1) {
-        setState({
-          ...state,
+        setState((prev)=>({
+          ...prev,
           seatRowsError: "Seats number can be in between 1 and 20.",
           canSubmit: false,
-        });
+        }));
       } else {
-        setState({ ...state, seatRowsError: "", canSubmit: true });
+        setState((prev)=>({ ...prev, seatRowsError: "", canSubmit: true }));
       }
     } else if (id === "cinemaId") {
-      if (!value) {
-        setState({
-          ...state,
+      if (value==="") {
+        setState((prev)=>({
+          ...prev,
           cinemaIdError: "Please chose cinema from dropdown list.",
           canSubmit: false,
-        });
+        }));
       } else {
-        setState({ ...state, cinemaIdError: "", canSubmit: true });
+        setState((prev)=>({ ...prev, cinemaIdError: "", canSubmit: true }));
       }
     }
   };
@@ -146,20 +147,20 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
     var auditorium = await auditoriumService.getAuditoriumById(auditoriumId);
     if(auditorium  != undefined)
     {
-      setState({
-        ...state,
+      setState((prev)=>({
+        ...prev,
         cinemaId:auditorium.cinemaId,
         auditoriumName: auditorium.auditoriumName,
         id: auditorium.id + ""
-      });
+      }));
     }
   };
 
   const getCinemas = async () => {
-    setState({ ...state, isLoading: true });
+    setState((prev)=>({ ...prev, isLoading: true }));
      
     var cinemas= await cinemaService.getCinemas();
-    setState({ ...state, cinemas: cinemas, isLoading: false });
+    setState((prev)=>({ ...prev, cinemas: cinemas, isLoading: false }));
   };
 
   useEffect(() => {
@@ -169,10 +170,11 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
     getCinemas();
   }, []);
 
-  const onCinemaChange = (cinemas: ICinema[]) => {
-    if (cinemas[0]) {
-      setState({ ...state, cinemaId: cinemas[0].id });
-      validate("cinemaId", cinemas[0].id);
+  const onCinemaChange = (e) => {
+    const { id, value } = e;
+    if (value!==null) {
+      setState((prev)=>({ ...prev, cinemaId: value }));
+      validate("cinemaId", value);
     } else {
       validate("cinemaId", null);
     }
@@ -215,15 +217,20 @@ const EditAuditorium: React.FC = (props: any): JSX.Element => {
               </FormText>
             </FormGroup>
             <FormGroup>
-              <Typeahead
-                labelKey="name"
-                options={state.cinemas}
-                placeholder="Choose a cinema..."
-                id="browser"
-                onChange={(e: ICinema[]) => {
+              <FormControl
+                as="select"
+                id="cinemaId"
+                onChange={(e) => {
                   onCinemaChange(e);
                 }}
-              />
+              >
+                <option value={""}>Choose a cinema...</option>
+                {state.cinemas.map((cinema)=>{
+                return(
+                  <option key={cinema.id} value={cinema.id}>{cinema.name}</option>
+                );
+              })}
+              </FormControl>
               <FormText className="text-danger">{state.cinemaIdError}</FormText>
             </FormGroup>
             <FormGroup>

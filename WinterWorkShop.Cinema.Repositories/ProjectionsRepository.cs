@@ -13,7 +13,7 @@ namespace WinterWorkShop.Cinema.Repositories
     {
         IEnumerable<Projection> GetByAuditoriumId(int salaId);
         void Attach(Projection projection);
-
+        Task<IEnumerable<Projection>> GetAllCurrantAsync();
         Task<IEnumerable<Projection>> FilterProjectionAsync(int? CinemaId, int? AuditoriumId, Guid? MovieId, DateTime? DateTime);
     }
 
@@ -35,10 +35,24 @@ namespace WinterWorkShop.Cinema.Repositories
         }
 
         public async Task<IEnumerable<Projection>> GetAllAsync()
-        {
-            var data = await _cinemaContext.Projections.Include(x => x.Movie).Include(x => x.Auditorium).ThenInclude(x=>x.Cinema).ToListAsync();
-            
+        {           
+            var  data = await _cinemaContext.Projections.Include(x => x.Movie)
+                                                        .Include(x => x.Auditorium)
+                                                        .ThenInclude(x => x.Cinema)
+                                                        .OrderBy(x => x.ShowingDate)
+                                                        .ToListAsync();
             return data;           
+        }
+
+        public async Task<IEnumerable<Projection>> GetAllCurrantAsync()
+        {
+            var data = await _cinemaContext.Projections.Include(x => x.Movie)
+                                                        .Include(x => x.Auditorium)
+                                                        .ThenInclude(x => x.Cinema)
+                                                        .Where(x => x.ShowingDate >= DateTime.Now && x.ShowingDate <= DateTime.Now.AddDays(7))
+                                                        .OrderBy(x => x.ShowingDate)
+                                                        .ToListAsync();
+            return data;
         }
 
         public async Task<Projection> GetByIdAsync(object id)
@@ -89,5 +103,7 @@ namespace WinterWorkShop.Cinema.Repositories
                                                && (DateTime == null || x.ShowingDate.Date == DateTime.Value.Date)).ToListAsync();
             return projections;
         }
+
+       
     }
 }

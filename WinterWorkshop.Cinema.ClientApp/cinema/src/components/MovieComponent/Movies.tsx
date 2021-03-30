@@ -104,6 +104,7 @@ const Movies: React.FC<IProps> =  (props: any) => {
 
   const searchMovie = async(tag: string) => {
 
+   
     var moviesSearch = await movieService.searcMovie(tag);
     if(moviesSearch != undefined)
     {

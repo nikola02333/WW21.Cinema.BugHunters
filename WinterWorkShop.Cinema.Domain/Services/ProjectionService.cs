@@ -32,9 +32,19 @@ namespace WinterWorkShop.Cinema.Domain.Services
             _ticketsRepository = ticketsRepository;
         }
 
-        public async Task<IEnumerable<ProjectionDomainModel>> GetAllAsync()
+        public async Task<IEnumerable<ProjectionDomainModel>> GetAllAsync(bool currant)
         {
-            var data = await _projectionsRepository.GetAllAsync();
+            IEnumerable<Projection> data;
+
+            if (currant)
+            {
+                data = await _projectionsRepository.GetAllCurrantAsync();
+            }
+            else
+            {
+                data = await _projectionsRepository.GetAllAsync();
+            }
+             
 
             if (data == null)
             {

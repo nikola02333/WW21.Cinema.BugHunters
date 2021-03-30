@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.API.Controllers;
 using WinterWorkShop.Cinema.API.Models;
+using WinterWorkShop.Cinema.Data;
 using WinterWorkShop.Cinema.Domain.Common;
 using WinterWorkShop.Cinema.Domain.Interfaces;
 using WinterWorkShop.Cinema.Domain.Models;
@@ -829,7 +830,8 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                        UserRaitings= 2
             };
             _mockMovieService.Setup(srvc => srvc.AddMovieAsync(It.IsNotNull<MovieDomainModel>())).ReturnsAsync(movieToCreateTags);
-            _mockMovieService.Setup(srvc => srvc.AddTagsForMovie(It.IsNotNull<MovieDomainModel>()));
+            // i ovde sam doado !!!
+            _mockMovieService.Setup(srvc => srvc.AddTagsForMovie(It.IsNotNull<MovieDomainModel>(), It.IsAny<Movie>()));
             
             //Act
             var result = _moviesController.CreateMovieAsync(movieCreateModel);

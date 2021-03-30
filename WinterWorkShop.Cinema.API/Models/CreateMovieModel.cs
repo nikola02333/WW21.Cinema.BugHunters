@@ -34,6 +34,10 @@ namespace WinterWorkShop.Cinema.API.Models
 
         public string Actors { get; set; }
 
+        public string? ImdbId { get; set; }
+
+
+
         public string Description { get; set; }
 
     }

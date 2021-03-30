@@ -137,6 +137,7 @@ namespace WinterWorkShop.Cinema.Data
             modelBuilder.Entity<Seat>()
                  .HasMany(t => t.Tickets)
                  .WithOne(a => a.Seat);
+                 //.HasForeignKey(x => x.SeatId);
 
             modelBuilder.Entity<Projection>()
                .HasMany(t => t.Tickets)

@@ -76,6 +76,24 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
         [HttpGet]
+        [Route("GetMoviesSortedByYear")]
+        public async Task<ActionResult> GetMoviesSortedByYear()
+        {
+
+            var movies = await _movieService.GetAllMoviesBySortedYear();
+            return Ok(movies);
+        }
+
+        [HttpGet]
+        [Route("GetTopTenMoviesByYear/{year}")]
+        public async Task<ActionResult> GetTopTenMoviesBySpecificYear(int year)
+        {
+
+            var movies = await _movieService.GetTopTenMoviesBySpecificYear(year);
+            return Ok(movies.DataList);
+        }
+
+        [HttpGet]
         [Route("byauditoriumid/{auditoriumId:int}")]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> GetByAuditoriumIdAsync(int auditoriumId)
         {
@@ -115,6 +133,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 Actors = movieModel.Actors.Split(","),
                 //hadKodovano
                 HasOscar = false,
+                Imdb= movieModel.ImdbId,
                 Description= movieModel.Description
             };
 
@@ -123,12 +142,13 @@ namespace WinterWorkShop.Cinema.API.Controllers
             try
             {
                 createMovie = await _movieService.AddMovieAsync(domainModel);
-                 
+                
+              /*  
               if(createMovie.IsSuccessful)
                 {
                     // sada ovde ubacujem i actore!!!
                     _movieService.AddTagsForMovie(createMovie.Data);
-                }
+                }*/
                 
             }
             catch (DbUpdateException e)
