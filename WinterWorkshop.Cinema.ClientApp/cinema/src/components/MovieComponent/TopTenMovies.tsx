@@ -97,7 +97,6 @@ const getTopTenMoviesFomImdb = async()=>{
 
     setState({ ...state,isLoading: true });
     var movies = await movieService.getTopTen();
-    console.log(movies);
     if(movies === undefined)
     {
       return;

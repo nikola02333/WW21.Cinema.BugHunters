@@ -30,7 +30,7 @@ const ActorForm :React.FC<IProps>= ({ onSubmit,...props}) => {
 
   return (
     
-    <>
+    <React.Fragment>
     <Col xs={10}>
        <FormControl
          
@@ -46,7 +46,7 @@ const ActorForm :React.FC<IProps>= ({ onSubmit,...props}) => {
          Add
        </Button>
        </Col>
-     </>
+     </React.Fragment>
   );
 };
 

@@ -82,9 +82,6 @@ const Projections : React.FC = (props: any) => {
       getMovies();
       getCurrentProjections();
     },[]);
-    useEffect(()=>{
-      console.log(info);
-    },[info]);
 
     const getCurrentProjections= async() =>{
       setInfo((prev)=>({ ...prev, isLoading: true }));
@@ -136,12 +133,8 @@ const Projections : React.FC = (props: any) => {
       
       event.preventDefault();
       const { cinemaId, auditoriumId, movieId, dateTime } = info;
-      console.log("info");
-      console.log(info);
       if (cinemaId || auditoriumId || movieId || ( dateTime && dateTime.getFullYear()!==1970) ) {
-        console.log("ifffffffffff");
         getFilteredProjections();
-
       } else {
         if(!cinemaId && !auditoriumId && !movieId && ( !dateTime || dateTime.getFullYear()===1970) ){
           NotificationManager.info("Current projections");

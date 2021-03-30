@@ -53,9 +53,18 @@ async function makeReservationn(e: React.MouseEvent<HTMLButtonElement, MouseEven
     
     return await API.post(`${serviceConfig.baseURL}/api/ticket/create`,data)
                               .then( (res)=> {
+                                  var point=0;
                                 currentReservationSeats.forEach(x => {
-                                    addPoints(info.userId);
+                                  var data = addPoints(info.userId);
+                                  if(data!==undefined){
+                                      point++;
+                                  }
                                 });
+                                if(point!==0){
+                                    NotificationManager.success(
+                                        point===1?"You got "+point+" bonus point":"You got "+point+" bonus points"
+                                      );
+                                }
                                 NotificationManager.success(
                                     "Your reservation has been made successfully!"
                                   );
@@ -81,12 +90,7 @@ async function addPoints(id)
 {
     return await API.post(`${serviceConfig.baseURL}/api/Users/IncrementPoints/${id}`)
                               .then( (res)=> {
-                                NotificationManager.success(
-                                    "Your got point"
-                                  );
-                                  setTimeout(() => {
-                                    window.location.reload();
-                                  }, 2000);
+                                return 1;
                               })
                               .catch(error => {
                                 if (error.response) {

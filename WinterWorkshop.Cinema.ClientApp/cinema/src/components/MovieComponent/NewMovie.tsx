@@ -133,7 +133,7 @@ const NewMovie: React.FC = (props: any) => {
     setState({ ...state, submitted: true });
     const { title, year, genre, description, coverPicture } = state;
     
-    debugger;
+ 
     if (title && year && genre && description && coverPicture  ) {
       addMovie();
 
@@ -177,8 +177,7 @@ const actorsToSet= moveiResult.actorList.map( (actor,index) => {
     name: actor.name
     }
   });
-   debugger;
-//rating
+
     setState((prevState)=>({...prevState,
        title:moveiResult.title,
       genre: moveiResult.genres,
@@ -193,7 +192,7 @@ const actorsToSet= moveiResult.actorList.map( (actor,index) => {
       titleSubmit: true,
       genreSubmit:true
       }));
-      debugger;
+
 
     }
   }
