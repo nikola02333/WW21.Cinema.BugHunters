@@ -54,7 +54,8 @@ const TopTenMovies: React.FC = (props: any) => {
     submitted: false,
     isLoading: true,
     selectedYear: false,
-    years:[]
+    years:[0]
+    
   });
 
   useEffect( () => {
@@ -62,15 +63,17 @@ const TopTenMovies: React.FC = (props: any) => {
    getAllYears();
   }, []);
 
-  useEffect( ()=>{
-    console.log(state.years);
-  },[state])
+ 
 
   const getAllYears = async() => {
 
     
     var yearss = await movieService.getAllYears();
     
+    if(yearss === undefined)
+    {
+      return;
+    }
     setState( prevState=> ({...prevState, years: yearss}) );
 
     
