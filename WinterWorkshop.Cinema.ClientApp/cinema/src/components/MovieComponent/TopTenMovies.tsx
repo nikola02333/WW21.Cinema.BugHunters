@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { NotificationManager } from "react-notifications";
-import { Row, Table } from "react-bootstrap";
+import { Row, Table,Form } from "react-bootstrap";
 import Spinner from "../Spinner";
 import "./../../index.css";
 import { IMovie } from "../../models";
 
 import { movieService } from '../Services/movieService';
+
 import Movie from './Movie';
+import { imdbService } from './../Services/imdbService';
 
 interface IState {
   movies: IMovie[];
@@ -80,6 +82,16 @@ const TopTenMovies: React.FC = (props: any) => {
     
   
   }
+
+const getTopTenMoviesFomImdb = async()=>{
+
+  var movies = await imdbService.getTopTenMovies();
+  if( movies === undefined)
+  {
+    return;
+  }
+  setState(prevState=> ({ ...prevState, movies: movies, isLoading: false }));
+}
 
   const getTopTenMovies =  async()=>{
 
@@ -163,7 +175,11 @@ if(movies == undefined)
           <option value="none">Year</option>
           { state.years.map(year => ( <option key={year.toString()} value={year.toString()}>{year}</option>))}
         </select>
+        <Form.Group controlId="formBasicCheckbox">
+    <Form.Check type="checkbox"onClick={getTopTenMoviesFomImdb}  label="Get Top ten Movies from Imdb" />
+    </Form.Group>
       </Row>
+      
 
     {state.isLoading ? <Spinner></Spinner> :
     (<Movie 

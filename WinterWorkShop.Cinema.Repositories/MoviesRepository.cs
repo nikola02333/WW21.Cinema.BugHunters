@@ -43,10 +43,10 @@ namespace WinterWorkShop.Cinema.Repositories
         {
             var  existingMovie = _cinemaContext.Movies.Where(movie=> movie.Id == (Guid)id).Include(tm => tm.TagsMovies).ThenInclude(t=>t.Tag) .FirstOrDefault();
 
-            
 
             var result = _cinemaContext.Movies.Remove(existingMovie);
 
+          
             return result.Entity;
         }
 

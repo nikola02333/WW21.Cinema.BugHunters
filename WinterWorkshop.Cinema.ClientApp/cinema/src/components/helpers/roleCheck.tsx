@@ -35,6 +35,8 @@ export const checkRole = () => {
             <FontAwesomeIcon className="text-primary mr-1" icon={faStar} />
             Top 10 Movies
           </NavLink>
+         
+          
         </Row>
         <Row className="justify-content-center mt-2 adminSuperUser">
           <NavLink
