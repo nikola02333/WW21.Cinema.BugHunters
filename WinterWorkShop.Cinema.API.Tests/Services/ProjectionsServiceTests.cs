@@ -58,7 +58,10 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 Movie = new Movie { Title = "ImeFilma" },
                 MovieId = Guid.NewGuid(),
                 ShowingDate = DateTime.Now.AddDays(1),
-                AuditoriumId = 1
+                AuditoriumId = 1,
+                Duration=120,
+                 Price=380
+                  
             };
 
             _projectionDomainModel = new ProjectionDomainModel
@@ -68,7 +71,11 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 AuditoriumId = 1,
                 MovieId = Guid.NewGuid(),
                 MovieTitle = "ImeFilma",
-                ProjectionTime = DateTime.Now.AddDays(1)
+                ProjectionTime = DateTime.Now.AddDays(1),
+                CinemaId=1,
+                CinemaName="New CInema",
+                Duration=130,
+                 Price=380
             };
 
             List<Projection> projectionsModelsList = new List<Projection>();
@@ -168,7 +175,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             string expectedMessage = "Cannot create new projection, there are projections at same time alredy.";
 
             
-            _mockProjectionsRepository.Setup(x => x.GetByAuditoriumId(It.IsNotNull<int>())).Returns(projectionsModelsList);
+            _mockProjectionsRepository.Setup(x => x.GetByAuditoriumId(It.IsAny<int>())).Returns(projectionsModelsList);
             
 
             //Act
@@ -696,7 +703,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
                         Duration = 100,
                         Price = 300,
                         AuditoriumName = _auditorium.AuditoriumName,
-                        MovieTitle =_movie.Title
+                        MovieTitle =_movie.Title,
                     }
                 }
             };
@@ -710,8 +717,8 @@ namespace WinterWorkShop.Cinema.Tests.Services
                 ShowingDate = _date,
                 Duration = 100,
                 Id = Guid.NewGuid(),
-                Price = 300
-
+                Price = 300,
+                 
             } };
 
 
@@ -736,7 +743,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
             //Arrange
             var isSuccessful = true;
 
-            _mockProjectionsRepository.Setup(x => x.GetByIdAsync(It.IsNotNull<Guid>())).ReturnsAsync(_projection);
+            _mockProjectionsRepository.Setup(x => x.GetByIdAsync(_projection.Id)).ReturnsAsync(_projection);
            
             //Act
             var result = await _projectionsService.GetByIdAsync(_projection.Id);

@@ -342,9 +342,17 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var movieToCreate = new CreateMovieModel
             {
-                 Rating=8,
-                  Current= true,
-                   Genre="comedy"
+                Rating = 8,
+                Current = true,
+                Genre = "comedy",
+
+                Year = 1994,
+                Description = "description",
+                HasOscar = true,
+                UserRaitings = 9,
+                Actors = "Johny Dep",
+                CoverPicture = "www.coverpicture.com",
+                Tags = "tag1"
             };
 
             //Act
@@ -377,15 +385,21 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var expectedErrorMessage = Messages.MOVIE_CREATION_ERROR;
 
             var movieToCreate = new CreateMovieModel
-            {
+            {             
                 Rating = 8,
                 Current = true,
                 Genre = "comedy",
-                 Title="new Movie",
-                  Year= 1994
+                Title = "new Movie",
+                Year = 1994,
+                Description = "description",
+                HasOscar = true,
+                UserRaitings = 9,
+                Actors = "Johny Dep",
+                CoverPicture = "www.coverpicture.com",
+                Tags = "tag1"
+                                          
             };
-            
-
+     
             var movieDomainModel = new GenericResult<MovieDomainModel>
             {
                 IsSuccessful = false,
@@ -419,28 +433,38 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             var isSuccesfull = true;
             var movieToCreate = new CreateMovieModel
             {
-                
+
                 Rating = 8,
                 Current = true,
                 Genre = "comedy",
                 Title = "new Movie",
-                Year = 1994
-                 
-                 
-            };
+                Year = 1994,
+                Description = "description",
+                HasOscar = true,
+                UserRaitings = 9,
+                Actors = "Johny Dep",
+                CoverPicture = "www.coverpicture.com",
+                Tags = "tag1"
 
+
+            };
 
             var movieDomainModel = new GenericResult<MovieDomainModel>
             {
                 IsSuccessful = true,
                 Data = new MovieDomainModel
                 {
-                     Current= movieToCreate.Current,
-                    Rating = movieToCreate.Rating,
-                     Genre= movieToCreate.Genre,
-                    Id = Guid.NewGuid(),
-                     Title= movieToCreate.Title,
-                      Year= movieToCreate.Year
+                  Current= movieToCreate.Current,
+                  Rating = movieToCreate.Rating,
+                  Genre= movieToCreate.Genre,
+                  Id = Guid.NewGuid(),
+                  Title= movieToCreate.Title,
+                  Year= movieToCreate.Year,
+                  Actors=movieToCreate.Actors.Split(","),
+                  Description=movieToCreate.Description,
+                  HasOscar=movieToCreate.HasOscar,
+                  CoverPicture=movieToCreate.CoverPicture,
+                  Tags=movieToCreate.Tags.Split(",")
                 }
             };
             //Act
@@ -579,15 +603,15 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                     Genre = "comedy",
                     Rating = 8,
                     Title = "New Movie",
-                    Year = 1994,
+                    Year = 1994
                 }
             };
             var UpdateMovieModel = new UpdateMovieModel
             {
                 Current= false,
-                  Rating= 8,
-                   Title="New Movie",
-                    Year=1994,
+                Rating= 8,
+                Title="New Movie",
+                Year=1994
             };
 
             //Act

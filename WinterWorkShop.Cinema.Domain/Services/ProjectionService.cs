@@ -171,7 +171,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
         {
             //int projectionTime = 3;
 
-            var projectionsAtSameTime = _projectionsRepository.GetByAuditoriumId(domainModel.AuditoriumId)
+            var projectionsAtSameTime =_projectionsRepository.GetByAuditoriumId(domainModel.AuditoriumId)
                 .Where(x => x.ShowingDate < domainModel.ProjectionTime.AddMinutes(domainModel.Duration) && x.ShowingDate > domainModel.ProjectionTime.AddMinutes(-domainModel.Duration))
                 .ToList();
 
