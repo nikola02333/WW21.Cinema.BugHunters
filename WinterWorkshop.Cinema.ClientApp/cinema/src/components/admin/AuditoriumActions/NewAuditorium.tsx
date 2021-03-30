@@ -242,14 +242,16 @@ const NewAuditorium: React.FC = (props: any) => {
                 {state.numOfSeatsError}
               </FormText>
             </FormGroup>
+            <Row className="d-flex justify-content-center">
             <Button
               type="submit"
-              className="btn-add-new"
+              className="col-1"
               disabled={state.submitted || !state.canSubmit}
               block
             >
               Add
             </Button>
+            </Row>
           </form>
         </Col>
       </Row>

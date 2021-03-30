@@ -86,10 +86,6 @@ const NewProjection: React.FC = (props: any) => {
     getMovies();
     getAuditoriums();
   }, []);
-  useEffect(()=>{
-    console.log(state);
-  },[state]);
-
   const getProjection = async()=>{
     
     if(id===undefined || id===""){
@@ -103,7 +99,7 @@ const NewProjection: React.FC = (props: any) => {
 
     setState((prev)=>({...prev,movieId:movieId ,auditoriumId:auditoriumId,
       projectionTime:projectionTime,price:price,duration:duration,edit:true}));
-      console.log(state.edit);
+      
       validate("movieId",movieId);
       validate("auditoriumId",auditoriumId);
       validate("projectionTime",projectionTime);
@@ -132,7 +128,7 @@ const NewProjection: React.FC = (props: any) => {
 
   const handleChange = (e) => {
     const { id, value } = e;
-    console.log(id);
+    
     if (value!==null) {
       if(id==="auditoriumId" ||id==="price" || id==="duration"){
         setState((prev)=>({ ...prev, [id]: +value}));
@@ -142,7 +138,7 @@ const NewProjection: React.FC = (props: any) => {
       
       validate(id, value);
     } else {
-      console.log("NULLL")
+      
       validate(id, null);
     }
   };
@@ -217,7 +213,6 @@ const NewProjection: React.FC = (props: any) => {
     e.preventDefault();
 
     setState((prev)=>({ ...prev, submitted: true }));
-    console.log(state);
 
     if (state.durationSubmit && state.movieIdSubmit && state.auditoriumIdSubmit && state.priceSubmit && state.projectionTimeSubmit) {
       if(state.edit){

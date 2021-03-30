@@ -35,6 +35,8 @@ export interface IMovie {
   current?: boolean;
   hasOscar?:boolean;
   projections?: IProjection[];
+  tagsModel?: ITagModel[];
+  imdb?:string;
 }
 
 export interface ICinema {
@@ -91,4 +93,10 @@ export interface IProjectionByCinemaId {
 export interface IGroupedProjections{
   movieId:string;
   projections:IProjectionByCinemaId[];
+}
+
+export interface ITagModel{
+  tagId:number;
+  tagName:string;
+  tagValue:string;
 }
