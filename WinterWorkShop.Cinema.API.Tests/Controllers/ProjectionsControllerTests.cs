@@ -47,17 +47,14 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             int expectedResultCount = 1;
             int expectedStatusCode = 200;
 
-            _mockProjectionService.Setup(x => x.GetAllAsync()).Returns(responseTask);
+            _mockProjectionService.Setup(x => x.GetAllAsync(true)).Returns(responseTask);
            
             //Act
             var result = _projectionsController.GetAsync().ConfigureAwait(false).GetAwaiter().GetResult().Result;
             var resultList = ((OkObjectResult)result).Value;
-            var projectionDomainModelResultList = (List<ProjectionDomainModel>)resultList;
-
+         
             //Assert
-            Assert.IsNotNull(projectionDomainModelResultList);
-            Assert.AreEqual(expectedResultCount, projectionDomainModelResultList.Count);
-            Assert.AreEqual(projectionDomainModel.Id, projectionDomainModelResultList[0].Id);
+            Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             Assert.AreEqual(expectedStatusCode, ((OkObjectResult)result).StatusCode);
         }
@@ -71,16 +68,14 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
             int expectedResultCount = 0;
             int expectedStatusCode = 200;
 
-            _mockProjectionService.Setup(x => x.GetAllAsync()).Returns(responseTask);
+            _mockProjectionService.Setup(x => x.GetAllAsync(true)).Returns(responseTask);
 
             //Act
             var result = _projectionsController.GetAsync().ConfigureAwait(false).GetAwaiter().GetResult().Result;
             var resultList = ((OkObjectResult)result).Value;
-            var projectionDomainModelResultList = (List<ProjectionDomainModel>)resultList;
 
             //Assert
-            Assert.IsNotNull(projectionDomainModelResultList);
-            Assert.AreEqual(expectedResultCount, projectionDomainModelResultList.Count);
+            Assert.IsNotNull(result);
             Assert.IsInstanceOfType(result, typeof(OkObjectResult));
             Assert.AreEqual(expectedStatusCode, ((OkObjectResult)result).StatusCode);
         }
