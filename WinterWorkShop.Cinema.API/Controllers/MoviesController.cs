@@ -203,7 +203,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
             movieToUpdate.Data.Current = movieModel.Current;
             movieToUpdate.Data.Year = movieModel.Year;
             movieToUpdate.Data.Rating = movieModel.Rating;
-            //movieToUpdate.Data.HasOscar = movieModel.HasOscar;
+            movieToUpdate.Data.HasOscar = movieModel.HasOscar;
 
             GenericResult<MovieDomainModel> movieDomainModel;
             try

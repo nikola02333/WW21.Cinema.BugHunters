@@ -218,6 +218,9 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Genre= updateMovie.Genre,
                 CoverPicture = updateMovie.CoverPicture,
                 HasOscar = updateMovie.HasOscar,
+                Description= updateMovie.Description,
+                ImdbId=updateMovie.Imdb
+                
             };
             
             var movieUpdated = _moviesRepository.Update(movieToUpdate);
@@ -235,6 +238,8 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Rating = movieUpdated.Rating,
                 CoverPicture = movieUpdated.CoverPicture,
                 HasOscar = movieUpdated.HasOscar,
+                Description = movieUpdated.Description,
+                Imdb=movieUpdated.ImdbId
             };
 
             return new GenericResult<MovieDomainModel>

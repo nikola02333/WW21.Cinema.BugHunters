@@ -73,13 +73,13 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
         <tr key={auditorium.id}>
           <td width="25%">{auditorium.cinemaId}</td>
           <td width="25%">{auditorium.name}</td> 
-          <td
+          {/* <td
             width="5%"
             className="text-center cursor-pointer"
             onClick={() => editAuditorium(auditorium.id)}
           >
             <FontAwesomeIcon className="text-info mr-2 fa-1x" icon={faEdit} />
-          </td>
+          </td> */}
           <td
             width="5%"
             className="text-center cursor-pointer"
