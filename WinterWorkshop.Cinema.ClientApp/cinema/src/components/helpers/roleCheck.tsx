@@ -268,12 +268,6 @@ export const checkRole = () => {
             Projections
           </NavLink>
         </Row>
-        <Row className="justify-content-center">
-          <span className="fa-2x text-white">
-            <FontAwesomeIcon className="text-white mr-2 fa-1x" icon={faVideo} />
-            Projection
-          </span>
-        </Row>
       </Col>
     );
   } else {

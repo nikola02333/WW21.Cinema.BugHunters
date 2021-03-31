@@ -549,9 +549,9 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var expectedStatusCode = 400;
             var expectedMessage = Messages.USER_ID_NULL;
-
+            int broj = 1;
             // ACT
-            var result = await _userController.IncrementBonusPointsForUser(Guid.Empty);
+            var result = await _userController.IncrementBonusPointsForUser(Guid.Empty,broj);
 
 
             var usersResult = ((BadRequestObjectResult)result.Result).Value;
@@ -573,14 +573,15 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
 
             var expectedStatusCode = 202;
             var userId = Guid.NewGuid();
+            int broj=1;
             var incrementResult = new GenericResult<UserDomainModel>
             {
                 IsSuccessful = true,
 
             };
-            _mockUserService.Setup(srvc => srvc.IncrementBonusPointsForUser(userId)).ReturnsAsync(incrementResult);
+            _mockUserService.Setup(srvc => srvc.IncrementBonusPointsForUser(userId,broj)).ReturnsAsync(incrementResult);
             // ACT
-            var result = await _userController.IncrementBonusPointsForUser(userId);
+            var result = await _userController.IncrementBonusPointsForUser(userId,broj);
 
 
             var usersResult = ((AcceptedResult)result.Result);
@@ -595,6 +596,7 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
         [TestMethod]
         public async Task IncrementBonusPointsForUser_When_IsSuccessful_False_Retunrs_BadRerqest()
         {
+            int broj = 1;
 
             var expectedStatusCode = 400;
             var expectedMessage = Messages.USER_INCREMENT_POINTS_ERROR;
@@ -605,9 +607,9 @@ namespace WinterWorkShop.Cinema.Tests.Controllers
                 ErrorMessage= Messages.USER_INCREMENT_POINTS_ERROR
 
             };
-            _mockUserService.Setup(srvc => srvc.IncrementBonusPointsForUser(userId)).ReturnsAsync(incrementResult);
+            _mockUserService.Setup(srvc => srvc.IncrementBonusPointsForUser(userId, broj)).ReturnsAsync(incrementResult);
             // ACT
-            var result = await _userController.IncrementBonusPointsForUser(userId);
+            var result = await _userController.IncrementBonusPointsForUser(userId, broj);
 
 
             var usersResult = ((BadRequestObjectResult)result.Result).Value;

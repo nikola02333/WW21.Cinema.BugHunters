@@ -20,8 +20,7 @@ async function getTopTenMovies(){
             } else if (err.request) {
               NotificationManager.error("Server Error");
             }
-        });
-            
+        });   
 }
 async function searchImdb(id: string)
 {

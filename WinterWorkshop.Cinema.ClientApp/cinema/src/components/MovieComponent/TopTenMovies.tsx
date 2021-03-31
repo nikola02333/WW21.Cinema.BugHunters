@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { NotificationManager } from "react-notifications";
-import { Row, Table,Form } from "react-bootstrap";
+import { Row, Table,Form, Col } from "react-bootstrap";
 import Spinner from "../Spinner";
 import "./../../index.css";
 import { IMovie } from "../../models";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 
 import { movieService } from '../Services/movieService';
 
 import Movie from './Movie';
 import { imdbService } from './../Services/imdbService';
+import { preProcessFile } from "typescript";
 
 interface IState {
   movies: IMovie[];
@@ -24,6 +28,8 @@ interface IState {
   isLoading: boolean;
   selectedYear: boolean;
   years: Number[]
+  checked:boolean;
+  subbmit:boolean;
 }
 
 const TopTenMovies: React.FC = (props: any) => {
@@ -56,8 +62,9 @@ const TopTenMovies: React.FC = (props: any) => {
     submitted: false,
     isLoading: true,
     selectedYear: false,
-    years:[0]
-    
+    years:[0],
+    checked:false,
+    subbmit:false
   });
 
   useEffect( () => {
@@ -68,8 +75,6 @@ const TopTenMovies: React.FC = (props: any) => {
  
 
   const getAllYears = async() => {
-
-    
     var yearss = await movieService.getAllYears();
     
     if(yearss === undefined)
@@ -78,27 +83,30 @@ const TopTenMovies: React.FC = (props: any) => {
     }
     setState( prevState=> ({...prevState, years: yearss}) );
 
-    
-    
-  
   }
 
 const getTopTenMoviesFomImdb = async()=>{
 
-  var moviesImdb = await imdbService.getTopTenMovies();
-
-  debugger;
-  if( moviesImdb === undefined)
-  {
-    return;
+  
+  console.log(state.checked);
+  if(!state.checked){
+    setState(prevState=> ({ ...prevState, isLoading: true }));
+    var moviesImdb = await imdbService.getTopTenMovies();
+    debugger;
+    if( moviesImdb === undefined)
+    {
+      setState(prevState=> ({ ...prevState, isLoading: false,checked:!prevState.checked }));
+      return;
+    }
+    setState(prevState=> ({ ...prevState, movies: moviesImdb, isLoading: false }));
   }
-  setState(prevState=> ({ ...prevState, movies: moviesImdb, isLoading: false }));
+  setState((prev)=>({...prev,checked:!prev.checked}));
 }
 
-  const getTopTenMovies =  async()=>{
-
-    setState({ ...state,isLoading: true });
+const getTopTenMovies =  async()=>{
+    setState((prev)=>({ ...prev,isLoading: true }));
     var movies = await movieService.getTopTen();
+    console.log(movies);
     if(movies === undefined)
     {
       return;
@@ -137,25 +145,32 @@ const getTopTenMoviesFomImdb = async()=>{
 const getMoviesByYear = async(e)=> {
 
   const { id, value } = e;
+  if(value==="0"){
+    getTopTenMovies();
+    return;
+  }else{
+    const movies = await movieService.getTopTenMoviesByYear(value); 
+  if(movies == undefined)
+  {
+    return;
+  }
+    setState(prevState=> ({ ...prevState, movies: movies }));
+
+  }
   
-  const movies = await movieService.getTopTenMoviesByYear(value); 
-if(movies == undefined)
-{
-  return;
-}
-  setState(prevState=> ({ ...prevState, movies: movies }));
-};
-  const rowsData = fillTableWithDaata();
-  const table = (
-    <Table striped bordered hover size="sm" variant="dark">
-      <thead>
-        <tr>
-          <th>Title</th>
-          <th>Year</th>
-          <th>Rating</th>
-        </tr>
-      </thead>
-      <tbody>{rowsData}</tbody>
+  };
+
+    const rowsData = fillTableWithDaata();
+    const table = (
+      <Table striped bordered hover size="sm" variant="dark">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Year</th>
+            <th>Rating</th>
+          </tr>
+        </thead>
+        <tbody>{rowsData}</tbody>
     </Table>
   );
 
@@ -165,29 +180,33 @@ if(movies == undefined)
       <Row className="no-gutters pt-2">
         <h1 className="form-header form-heading">Top 10 Movies</h1>
       </Row>
-      <Row className="year-filter">
-        <span className="filter-heading">Filter by:</span>
+      <Row className="year-filter justify-content-start">
+        <Col  xs={1}>
+        <span className="filter-heading ">Filter by:</span>
+        </Col>
+        <Col  xs={1}>
         <select
-        
          onChange={(e)=> getMoviesByYear(e.target)}
-          name="movieYear"
-          id="movieYear"
-          className="select-dropdown"
-        >
-          <option value="none">Year</option>
-          { state.years.map(year => ( <option key={year.toString()} value={year.toString()}>{year}</option>))}
+         name="movieYear"
+         id="movieYear"
+         className="select-dropdown">
+          <option value="0">Year</option>
+         { state.years.map(year => ( <option key={year.toString()} value={year.toString()}>{year}</option>))}
         </select>
-        <Form.Group controlId="formBasicCheckbox">
-    <Form.Check type="checkbox"onClick={getTopTenMoviesFomImdb}  label="Get Top ten Movies from Imdb" />
-    </Form.Group>
+       </Col>
+
+       <Col xs={7}>
+           <Form.Check 
+           type="checkbox"
+           defaultChecked={state.checked}
+           onClick={()=>{    
+                          getTopTenMoviesFomImdb();}}  
+           label="Top10 Movies from IMDb" />
+       </Col>
+        
       </Row>
       
-
-    {state.isLoading ? <Spinner></Spinner> :
-    (<Movie 
-    movies={state.movies}
-    
-    /> )}
+      {state.isLoading ? <Spinner></Spinner> : (<Movie movies={state.movies}/> )}
     </React.Fragment>
   );
 };
