@@ -218,6 +218,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 Genre= updateMovie.Genre,
                 CoverPicture = updateMovie.CoverPicture,
                 HasOscar = updateMovie.HasOscar,
+                Description= updateMovie.Description
             };
             
             var movieUpdated = _moviesRepository.Update(movieToUpdate);

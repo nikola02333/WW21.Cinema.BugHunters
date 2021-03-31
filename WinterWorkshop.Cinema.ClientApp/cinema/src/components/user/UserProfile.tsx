@@ -191,8 +191,7 @@ const UserProfile: React.FC = () => {
                   <strong>Status: </strong> {getRole()}
                 </p>
                 <div className="d-flex justify-content-center">
-                <Button type="submit" className="mx-1" variant="danger" id="delete" >Remove User</Button>
-                <Button type="button"  onClick={()=>EditUser()} className="mx-1" variant="primary" id="edit" >Edit User</Button>
+                <Button type="button"  onClick={()=>EditUser()} variant="primary" id="edit" >Edit User</Button>
                 </div>
               </div>
             </div>
