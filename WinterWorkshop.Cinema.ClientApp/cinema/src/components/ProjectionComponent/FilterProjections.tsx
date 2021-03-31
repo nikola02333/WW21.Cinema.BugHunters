@@ -89,7 +89,7 @@ const FilterProjections:React.FC<IProps> = memo(({movies,setMovies,info,setInfo,
                                   setInfo((prev)=>({...prev ,dateTime:date,selectedDate:false}));}
               }}>
               <button type="button" 
-              className={btnColor ? "btn btn-info mr-2": "btn btn-outline-primary mr-2" }>📅</button>
+              className={info.selectedDate ? "btn btn-info mr-2": "btn btn-outline-primary mr-2" }>📅</button>
             </DatePicker>
             
        

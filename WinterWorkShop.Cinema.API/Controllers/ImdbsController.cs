@@ -95,11 +95,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("GetTopTenMovies")]
         public async Task<ActionResult> GetTopTenMovies()
         {
-
             var apiLib = new ApiLib(_configuration["IMDB_API_KEY:key"]);
             var data = await apiLib.Top250MoviesAsync();
-
-            
 
             if (data.ErrorMessage == "")
             {

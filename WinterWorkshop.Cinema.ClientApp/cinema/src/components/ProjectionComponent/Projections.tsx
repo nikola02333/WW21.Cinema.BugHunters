@@ -113,7 +113,10 @@ const Projections : React.FC = (props: any) => {
       };
 
       var filteredProjections =await projectionService.getFilteredProjection(filter);
-      if(filteredProjections===undefined){
+      debugger;
+      if(filteredProjections===undefined || filteredProjections.length===0){
+        NotificationManager.info("No projections for given filter");
+        setInfo((prev)=>({ ...prev, submitted: false,selectedDate: false,dateTime:new Date(0)}));
         return;
       }
       let allMovies = movies.movies;
@@ -133,10 +136,10 @@ const Projections : React.FC = (props: any) => {
       
       event.preventDefault();
       const { cinemaId, auditoriumId, movieId, dateTime } = info;
-      if (cinemaId || auditoriumId || movieId || ( dateTime && dateTime.getFullYear()!==1970) ) {
+      if (cinemaId || auditoriumId || movieId  ||( dateTime && dateTime.getFullYear()!==1970) ) {
         getFilteredProjections();
       } else {
-        if(!cinemaId && !auditoriumId && !movieId && ( !dateTime || dateTime.getFullYear()===1970) ){
+         if(!cinemaId && !auditoriumId && !movieId && ( !dateTime || dateTime.getFullYear()===1970) ){
           NotificationManager.info("Current projections");
         }else{
           NotificationManager.error("Not found.");

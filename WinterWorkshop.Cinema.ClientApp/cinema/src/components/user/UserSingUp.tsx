@@ -74,11 +74,8 @@ useEffect( ()=> {
         lastName: state.lastName
       };
       if (state.userName && state.firstName &&  state.lastName) {
-        
-       
        var data= await userService.singUp(userToCreate);
-        history.push('/dashboard/Projections');
-
+       setTimeout(() => history.push('/dashboard/Projections'), 1000);
       } else {
         NotificationManager.error("Please fill in data");
         setState({ ...state, submitted: false });
@@ -93,11 +90,11 @@ useEffect( ()=> {
     //getTokenForGuest();
   };
 
-
-      const validate = (id: string, value: string | null) => {
+      var format = /[ `!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?~]/;
+      const validate = (id: string, value: string) => {
       
         if (id === "userName") {
-          if (value === "") {
+          if (value === "" || format.test(value)) {
             setState({
               ...state,
               userNameError: "Fill in Username ",
@@ -137,15 +134,6 @@ useEffect( ()=> {
           <form onSubmit={handleSubmit}>
             <FormGroup>
               <FormControl
-                id="userName"
-                type="text"
-                placeholder="User Name"
-                value={state.userName}
-                className="add-new-form"
-                onChange={handleChange}
-              />
-              <FormText className="text-danger">{state.userNameError}</FormText>
-              <FormControl
                 id="firstName"
                 type="text"
                 placeholder="First Name"
@@ -165,7 +153,15 @@ useEffect( ()=> {
                 onChange={handleChange}
               />
               <FormText className="text-danger">{state.lastNameError}</FormText>
-            
+              <FormControl
+                id="userName"
+                type="text"
+                placeholder="User Name"
+                value={state.userName}
+                className="add-new-form"
+                onChange={handleChange}
+              />
+              <FormText className="text-danger">{state.userNameError}</FormText>
             </FormGroup>
             <Button
               className="btn-add-new"
