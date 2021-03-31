@@ -190,8 +190,7 @@ const UserProfile: React.FC = () => {
                 <p className="card-text">
                   <strong>Status: </strong> {getRole()}
                 </p>
-                <div className="d-flex justify-content-center">
-                <Button type="submit" className="mx-1" variant="danger" id="delete" >Remove User</Button>
+                <div className="d-flex justify-content-start">
                 <Button type="button"  onClick={()=>EditUser()} className="mx-1" variant="primary" id="edit" >Edit User</Button>
                 </div>
               </div>
