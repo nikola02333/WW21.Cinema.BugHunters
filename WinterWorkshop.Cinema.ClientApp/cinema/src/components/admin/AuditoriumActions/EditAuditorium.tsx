@@ -98,8 +98,6 @@ const EditAuditorium: React.FC = (props: any)=> {
     }
   };
 
-  
- 
   return (
     <Container>
       <Row className="d-flex justify-content-center mt-3">

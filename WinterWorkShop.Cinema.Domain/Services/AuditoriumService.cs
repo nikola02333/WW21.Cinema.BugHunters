@@ -200,8 +200,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 };
             }
 
-
-
             var result = new AuditoriumDomainModel
             {
                 Id = auditorium.Id,
@@ -217,7 +215,6 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             };
 
-
             return new GenericResult<AuditoriumDomainModel>
             {
                 Data = result,
@@ -225,20 +222,15 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
-
-
         public async Task<GenericResult<AuditoriumDomainModel>> DeleteAsync(int id)
         {
 
-
             var existing = await _auditoriumsRepository.GetByIdAsync(id);
-
 
             // Auditorium deleted
             _auditoriumsRepository.Delete(id);
 
             _auditoriumsRepository.Save();
-
 
             AuditoriumDomainModel auditorium = new AuditoriumDomainModel
             {
