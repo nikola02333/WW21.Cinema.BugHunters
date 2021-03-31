@@ -22,7 +22,7 @@ interface IState {
   id: string;
   current: boolean;
   hasOscar: boolean;
-
+  description:string;
   titleError: string;
   yearError: string;
   submitted: boolean;
@@ -43,6 +43,7 @@ const EditMovie: React.FC = (props: any) => {
     yearError: "",
     submitted: false,
     canSubmit: true,
+    description:"",
     hasOscar:false,
   });
 
@@ -54,6 +55,7 @@ const EditMovie: React.FC = (props: any) => {
      
       setState({
         ...state,
+        description:movie.description,
         title: movie.title,
         year: movie.year,
         rating: movie.rating,
@@ -126,6 +128,7 @@ const EditMovie: React.FC = (props: any) => {
       Current: (state.current.toString() === 'true') ? true: false,
       Rating: +state.rating,
       HasOscar: (state.hasOscar.toString() === 'true') ? true: false,
+
     };
 
    await movieService.updateMovie(id,data);
@@ -212,8 +215,8 @@ const EditMovie: React.FC = (props: any) => {
                 value={state.hasOscar.toString()}
                 onChange={handleChange}
               >
-                <option value="true">No Oscar</option>
-                <option value="false">Has Oscar</option>
+                <option value="false">No Oscar</option>
+                <option value="true">Has Oscar</option>
               </FormControl>
             </FormGroup>
             <Button

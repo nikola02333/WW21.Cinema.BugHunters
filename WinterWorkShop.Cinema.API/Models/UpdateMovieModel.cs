@@ -11,6 +11,8 @@ namespace WinterWorkShop.Cinema.API.Models
         public int Year { get; set; }
         public  bool  Current { get; set; }
         public double Rating { get; set; }
+        public string Description { get; set; }
+        public bool HasOscar { get; set; }
     }
 }
 
