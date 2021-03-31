@@ -25,7 +25,7 @@ async function updateCinema(cinemaId: string, cinemaToUpdate : ICinemaToUpdateMo
                                 if (error.response) {
                                   NotificationManager.error(error.response.data.errorMessage);
                                 } else if (error.request) {
-                                  NotificationManager.error("Server Error");
+                                 // NotificationManager.error("Server Error");
                                 } else {
                                   NotificationManager.error("Error");
                                 }
@@ -42,7 +42,7 @@ async function  getCinemaById(cinemaId: string)
                                 if (error.response) {
                                   NotificationManager.error(error.response.data.errorMessage);
                                 } else if (error.request) {
-                                  NotificationManager.error("Server Error");
+                                //  NotificationManager.error("Server Error");
                                 } else {
                                   NotificationManager.error("Error");
                                 }
@@ -62,7 +62,7 @@ function removeCinema(id: string)
         if (error.response) {
           NotificationManager.error(error.response.data.errorMessage);
         } else if (error.request) {
-          NotificationManager.error("Server Error");
+        //  NotificationManager.error("Server Error");
         } else {
           NotificationManager.error("Error");
         }
@@ -80,7 +80,7 @@ async function getCinemas()
                             if (error.response) {
                               NotificationManager.error(error.response.data.errorMessage);
                             } else if (error.request) {
-                              NotificationManager.error("Server Error");
+                              //NotificationManager.error("Server Error");
                             } else {
                               NotificationManager.error("Error");
                             }
@@ -98,7 +98,7 @@ async function getCinemas()
           if (error.response) {
             NotificationManager.error(error.response.data.errorMessage);
           } else if (error.request) {
-            NotificationManager.error("Server Error");
+            //NotificationManager.error("Server Error");
           } else {
             NotificationManager.error("Error");
           }

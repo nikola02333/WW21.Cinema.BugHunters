@@ -31,7 +31,7 @@ async function getTopTenMoviesByYear(year: number)
                     if (err.response) {
                       NotificationManager.error(err.response.data.errorMessage);
                     } else if (err.request) {
-                      NotificationManager.error("Server Error");
+                     // NotificationManager.error("Server Error");
                     }
                 });
 };
@@ -45,7 +45,7 @@ async function getAllYears()
                     if (err.response) {
                       NotificationManager.error(err.response.data.errorMessage);
                     } else if (err.request) {
-                      NotificationManager.error("Server Error");
+                     // NotificationManager.error("Server Error");
                     }
                 });
                 
@@ -61,7 +61,7 @@ async function getTopTen()
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                            //NotificationManager.error("Server Error");
                           }
                       });
                          
@@ -76,7 +76,7 @@ async function changeCurrent(movieId: string)
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                          //  NotificationManager.error("Server Error");
                          
                           }
                       });
@@ -93,7 +93,7 @@ async function updateMovie(movieId: string, movieToUpdate : IMovieToUpdateModel)
                                 if (err.response) {
                                   NotificationManager.error(err.response.data.errorMessage);
                                 } else if (err.request) {
-                                  NotificationManager.error("Server Error");
+                                 // NotificationManager.error("Server Error");
                                 }
                             });
 }
@@ -107,7 +107,7 @@ async function searchMovieById(movieId: string)
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                           // NotificationManager.error("Server Error");
                           }
                       });
     
@@ -126,7 +126,7 @@ function removeMovie(id: string)
         if (err.response) {
           NotificationManager.error(err.response.data.errorMessage);
         } else if (err.request) {
-          NotificationManager.error("Server Error");
+         // NotificationManager.error("Server Error");
         }
     });
 
@@ -142,7 +142,7 @@ async function getCurrentMovies()
                     if (err.response) {
                       NotificationManager.error(err.response.data.errorMessage);
                     } else if (err.request) {
-                      NotificationManager.error("Server Error");
+                    //  NotificationManager.error("Server Error");
                     }
                 });
     
@@ -158,7 +158,7 @@ async function getAllMovies()
                             if (err.response) {
                               NotificationManager.error(err.response.data.errorMessage);
                             } else if (err.request) {
-                              NotificationManager.error("Server Error");
+                             // NotificationManager.error("Server Error");
                            
                             }
                         });

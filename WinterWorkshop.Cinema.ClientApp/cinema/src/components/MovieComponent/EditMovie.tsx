@@ -21,6 +21,8 @@ interface IState {
   rating: number;
   id: string;
   current: boolean;
+  hasOscar: boolean;
+
   titleError: string;
   yearError: string;
   submitted: boolean;
@@ -41,6 +43,7 @@ const EditMovie: React.FC = (props: any) => {
     yearError: "",
     submitted: false,
     canSubmit: true,
+    hasOscar:false,
   });
 
   const getMovie = async(movieId: string) => {
@@ -54,8 +57,9 @@ const EditMovie: React.FC = (props: any) => {
         title: movie.title,
         year: movie.year,
         rating: Math.round(movie.rating),
-        current: movie.current,
+        current:  ( (movie.current.toString() === 'true') ? true: false),
         id: movie.id + "",
+        hasOscar: ( (movie.hasOscar.toString() === 'true') ? true: false),
       });
     }
     
@@ -119,8 +123,9 @@ const EditMovie: React.FC = (props: any) => {
     const data = {
       Title: state.title,
       Year: +state.year,
-      Current: state.current === true,
+      Current: (state.current.toString() === 'true') ? true: false,
       Rating: +state.rating,
+      HasOscar: (state.hasOscar.toString() === 'true') ? true: false,
     };
 
    await movieService.updateMovie(id,data);
@@ -194,6 +199,18 @@ const EditMovie: React.FC = (props: any) => {
               >
                 <option value="true">Current</option>
                 <option value="false">Not Current</option>
+              </FormControl>
+            </FormGroup>
+            <FormGroup>
+              <FormControl
+                as="select"
+                placeholder="Has Oscar"
+                id="hasOscar"
+                value={state.hasOscar.toString()}
+                onChange={handleChange}
+              >
+                <option value="true">No Oscar</option>
+                <option value="false">Has Oscar</option>
               </FormControl>
             </FormGroup>
             <Button

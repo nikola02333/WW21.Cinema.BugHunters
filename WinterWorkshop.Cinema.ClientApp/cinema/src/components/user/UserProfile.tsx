@@ -66,11 +66,8 @@ const UserProfile: React.FC = () => {
      }
       setState((prevState)=> ({...prevState, user: data}));
 
-      //setState({ ...state, firstName: data.firstName });
-     // da li postoji neke drugi nacin, da  menjam iz user objekta podatke
       setState( (prevState) => ({...prevState, firstName: data.firstName, lastName: data.lastName}));
 
-      //setState({ ...state, lastName: data.lastName });
 
     }
     if(userName != null)
@@ -91,9 +88,6 @@ const UserProfile: React.FC = () => {
   const getUserByUsername = async() => {
     let userName = getUserName();
 
-  // setState({ ...state, user: data });
-
-  //getReservationsByUserId(state.user.id);
     if( userName!= null)
     {
       const user = await userService.getUserByUsername(userName);
@@ -121,13 +115,11 @@ const UserProfile: React.FC = () => {
     const { id, value, name } = e.target;
   
     setState({ ...state, [id]: value });
-    // setState ( ...prev, user:{...prev, name:data.name})
   };
 
   const EditUser = async ()=>{
 
    
-   //var result = await userService.edit
    setState( (prevState)=> ({...prevState, isEdit: true}))
 
    var userUpdate :IUserUpdate ={
@@ -145,36 +137,6 @@ const UserProfile: React.FC = () => {
    setState( (prevState)=> ({...prevState, user: editUser}));
     window.location.reload();
      
-  };
-
-  const getProjectionById = (projectionId: string) => {
-    const requestOptions = {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${localStorage.getItem("jwt")}`,
-      },
-    };
-
-    fetch(
-      `${serviceConfig.baseURL}/api/projections/byprojectionid/${projectionId}`,
-      requestOptions
-    )
-      .then((response) => {
-        if (!response.ok) {
-          return;
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data) {
-          setState({ ...state, projection: data });
-        }
-      })
-      .catch((response) => {
-        NotificationManager.error(response.message || response.statusText);
-        setState({ ...state, submitted: false });
-      });
   };
 
  
