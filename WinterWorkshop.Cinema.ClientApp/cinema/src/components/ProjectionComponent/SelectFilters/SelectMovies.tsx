@@ -31,9 +31,10 @@ const SelectMovies = memo((props:{info,setInfo,filteredMovies,movies}) => {
         }
       };
       const onChange = (e)=> { 
-        if(e.target.value!=="none"){
+        var id=e.target.value;
+        if(id!=="none"){
           e.persist();
-          props.setInfo((prev)=>({ ...prev, selectedMovie: true, movieId: e.target.value }));
+          props.setInfo((prev)=>({ ...prev, selectedMovie: true, movieId:id  }));
         }else{
           props.setInfo((prev)=>({ ...prev, selectedMovie: false, movieId:""}));
         }

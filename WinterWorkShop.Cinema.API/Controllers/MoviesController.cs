@@ -51,6 +51,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("AllMovies/{isCurrent}")]
+        [Authorize(Roles = "admin,user,superUser,guest")]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> GetAllAsync(bool? isCurrent)
         {
             
@@ -64,6 +65,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("TopTenMovies")]
+        [Authorize(Roles = "admin,user,superUser")]
         public async Task<ActionResult> GetTopTenMoviesAsync()
         {
 
@@ -73,6 +75,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("GetMoviesSortedByYear")]
+        [Authorize(Roles = "admin,user,superUser")]
         public async Task<ActionResult> GetMoviesSortedByYear()
         {
 
@@ -109,7 +112,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
 
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin,superUser")]
         [HttpPost]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> CreateMovieAsync([FromBody] CreateMovieModel movieModel)
         {
@@ -168,6 +171,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         //[Authorize(Roles = "admin")]
         [HttpPut]
         [Route("Update/{id}")]
+        [Authorize(Roles = "admin,superUser")]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> UpdateMovieAsync(Guid id, [FromBody] UpdateMovieModel movieModel)
         {
             if(id == Guid.Empty)
@@ -225,6 +229,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
         //[Authorize(Roles = "admin")]
         [HttpDelete]
         [Route("Delete/{id}")]
+        [Authorize(Roles = "admin,superUser")]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> Delete(Guid id)
         {
 
@@ -265,6 +270,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpPost]
         [Route("ActivateMovie/{id}")]
+        [Authorize(Roles = "admin,superUser")]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> ActivateMovie(Guid id)
         {
             if (id == Guid.Empty)
@@ -293,6 +299,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("SearchMoviesByTag/")]
+        [Authorize(Roles = "admin,user,superUser,guest")]
         public async Task<ActionResult<GenericResult<MovieDomainModel>>> SearchMoviesByTags( [FromQuery]string query)
         {
             GenericResult<MovieDomainModel> movies;

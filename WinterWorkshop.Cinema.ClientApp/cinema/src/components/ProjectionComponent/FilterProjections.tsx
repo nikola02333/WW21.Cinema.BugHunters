@@ -41,12 +41,8 @@ const FilterProjections:React.FC<IProps> = memo(({movies,setMovies,info,setInfo,
     const [btnColor, onbtnColor] = useState(false);
 
     useEffect(() => {
-    //  Service.getCurrentMoviesAndProjections(setInfo,setMovies);
-    //  Service.getAllCinemas(setInfo,setCinemas);
     getAllCinemas();
     getAllAuditoriums();
-    //  Service.getAllAuditoriums(setInfo,setAuditoriums);
-    console.log("FIlter Data")
     }, []);
 
     const getAllCinemas = async() =>{
@@ -64,13 +60,9 @@ const FilterProjections:React.FC<IProps> = memo(({movies,setMovies,info,setInfo,
       }
       setAuditoriums({auditoriums:data});
     }
-
-
-    
+      
     const infoCinema = useMemo(()=>info,[info.selectedCinema,info.selectedAuditorium]);
 
-
-    console.log("render FILTER");
     return(
         <form 
         id="name"
@@ -97,7 +89,7 @@ const FilterProjections:React.FC<IProps> = memo(({movies,setMovies,info,setInfo,
                                   setInfo((prev)=>({...prev ,dateTime:date,selectedDate:false}));}
               }}>
               <button type="button" 
-              className={btnColor ? "btn btn-info mr-2": "btn btn-outline-primary mr-2" }>📅</button>
+              className={info.selectedDate ? "btn btn-info mr-2": "btn btn-outline-primary mr-2" }>📅</button>
             </DatePicker>
             
        

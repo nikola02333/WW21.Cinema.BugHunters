@@ -41,15 +41,10 @@ export const groupProjectionButton = (projections:IProjection[]) => {
 
   export const groupedProjectionButtons=(filteredProjection :IGroupedProjections, movie: IMovie, history)=>{
     
-
     if(_.isEmpty(filteredProjection)){
-      console.log("isEmpty");
       return(<></>);
     }
-    console.log("filteredProjection")
-    console.log(filteredProjection);
-    console.log("movie")
-    console.log(movie);
+
     debugger
     const projectionButton = filteredProjection.projections.map((projectio,index) => {
 

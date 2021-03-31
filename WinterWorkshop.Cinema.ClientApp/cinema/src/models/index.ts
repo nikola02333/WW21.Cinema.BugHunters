@@ -37,6 +37,7 @@ export interface IMovie {
   projections?: IProjection[];
   tagsModel?: ITagModel[];
   imdb?:string;
+  description?:string
 }
 
 export interface ICinema {

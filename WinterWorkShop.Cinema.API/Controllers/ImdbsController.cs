@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.API.Models;
 using WinterWorkShop.Cinema.Domain.Common;
+using WinterWorkShop.Cinema.Domain.Models;
 
 namespace WinterWorkShop.Cinema.API.Controllers
 {
@@ -94,13 +95,22 @@ namespace WinterWorkShop.Cinema.API.Controllers
         [Route("GetTopTenMovies")]
         public async Task<ActionResult> GetTopTenMovies()
         {
-
             var apiLib = new ApiLib(_configuration["IMDB_API_KEY:key"]);
             var data = await apiLib.Top250MoviesAsync();
 
             if (data.ErrorMessage == "")
             {
-                return Ok(data.Items.Take(10));
+                var topTenMovies = data.Items.Take(10);
+                var result = topTenMovies.Select(movie => new MovieDomainModel
+                { 
+                    
+                    Title= movie.Title,
+                     Rating= double.Parse( movie.IMDbRating),
+                      Year=  int.Parse(movie.Year),
+                      Current= true
+
+                });
+                return Ok(result);
             }
 
             ErrorResponseModel errorResponse = new ErrorResponseModel

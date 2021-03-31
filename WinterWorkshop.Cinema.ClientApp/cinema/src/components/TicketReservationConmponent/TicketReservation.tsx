@@ -53,6 +53,9 @@ const TicketReservation:React.FC = () =>{
     useEffect(()=>{
       getUserByUsernameReservatino(setInfo);
     },[]);
+    useEffect(()=>{
+      console.log(info)
+    },[info]);
  
      function getSeatData(auditoriumId,projectionId){
        Service.getReservedSeats(projectionId,setSeat);
@@ -60,10 +63,10 @@ const TicketReservation:React.FC = () =>{
        Service.getSeats(auditoriumId,setSeat);
     };
 
-    function tryReservationF(e){
+    const tryReservationF=(e)=>{
       e.persist();
-
       reservationService.tryReservationn(e,seat,info);
+
     };
 
     return(
@@ -81,7 +84,7 @@ const TicketReservation:React.FC = () =>{
                 <InfoTable currentReservationSeats={seat.currentReservationSeats} projectionPrice={info.projectionPrice}/>
                 </Row>
                 <Row className="justify-content-center my-2">
-                <ShowAuditorium tryReservation={tryReservationF} seat={seat} setSeat={setSeat} />
+                <ShowAuditorium tryReservation={tryReservationF} info={info} seat={seat} setSeat={setSeat} />
                 </Row>
                 
             </Col>

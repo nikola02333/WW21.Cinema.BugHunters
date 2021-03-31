@@ -18,25 +18,20 @@ export const userService = {
    
 };
 
-async function editUser(userToUpdate: IUserUpdate)
+async function editUser(userToUpdate: IUserUpdate) :Promise<IUser>
 {
-   await API.put(`${serviceConfig.baseURL}/api/users/Update/${userToUpdate.id}`, userToUpdate)
+  return await API.put(`${serviceConfig.baseURL}/api/users/Update/${userToUpdate.id}`, userToUpdate)
             .then( (response)=> {
-              debugger;
-              if(response.status == 202)
-              {
-                NotificationManager.success(`User, succesfuly  updated!`);
-              }
               
+              NotificationManager.success(`User, succesfuly  updated!`);
+                return response.data;
             })
             .catch(err => {
               
-              debugger;
               if (err.response) {
                 NotificationManager.error(err.response.data.errorMessage);
               } else if (err.request) {
                 NotificationManager.error("Server Error");
-             
               }
           });
 

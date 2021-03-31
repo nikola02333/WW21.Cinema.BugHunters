@@ -14,10 +14,13 @@ const SelectCinenma  = memo((props:{setInfo,cinemas,setFilteredData}) =>{
       };
 
     const hendleChange = async(e) =>{
-      if(e.target.value!=="none"){
-      props.setInfo((prev)=>({...prev, cinemaId: e.target.value }));
-      getAuditoriumsBySelectedCinema(e.target.value);
-      getMoviesBySelectedCinema(e.target.value);
+      var id=e.target.value;
+      console.log(id)
+      e.preventDefault();
+      if(id!=="none" && id){
+      props.setInfo((prev)=>({...prev, cinemaId: id }));
+      getAuditoriumsBySelectedCinema(id);
+      getMoviesBySelectedCinema(id);
       props.setInfo((prev)=>({
         ...prev,
         isLoading: false,

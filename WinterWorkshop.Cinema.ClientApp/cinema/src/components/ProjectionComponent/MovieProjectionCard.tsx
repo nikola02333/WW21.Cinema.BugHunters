@@ -31,7 +31,6 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
 
     const showProjections = (projections:IProjection[]) => {
      
-      console.log(projections);
       var grouped = _.chain(projections).groupBy("movieId").map(function(offers, movieId) {
           var cleanOffers = _.map(offers, function(it) {
           return _.omit(it, "movieId");
@@ -47,18 +46,17 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
           projections: groupedCinema
         };
       }).value();
-      console.log(grouped);
       return grouped.map((filteredProjection: IState,indexTop)  => {
       var movie = movies.find(x => x.id === filteredProjection.movieId) as IMovie;
       if(movie===undefined){
         return;
       }
-      console.log(movie);
+
       const projectionButton = filteredProjection.projections.map((projection,index) => {
         
       const bottonsCinema= projection.cinema.map((cinema,index)=>{
             if(index===0){
-              return (<>
+              return (<React.Fragment key={Math.floor(Math.random() * 10000)}>
                 <Col xs={2} className={"mx-1   justify-content-start"}>
               <span className="font-weight-bold">{cinema.cinemaName}</span> 
                 </Col>
@@ -75,11 +73,11 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
                 </OverlayTrigger>
                 </Col>
                 
-                </>
+                </React.Fragment>
               );
             }
               return (
-                <Col xs={1} className={"mx-1  p-0 justify-content-start"}>
+                <Col key={Math.floor(Math.random() * 10000)} xs={1} className={"mx-1  p-0 justify-content-start"}>
                   <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">
                   {cinema.price+"rsd "+cinema.auditoriumName}</Tooltip>}>
                     <Button
@@ -92,9 +90,9 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
                 </Col>
               );
             })
-        return (<>
-              <Row key={indexTop+index} className="justify-content-start  my-2 mb-3">{bottonsCinema}</Row>
-              <hr/> </>
+        return (<React.Fragment key={Math.floor(Math.random() * 10000)}>
+              <Row key={Math.floor(Math.random() * 10000)} className="justify-content-start  my-2 mb-3">{bottonsCinema}</Row>
+              <hr/></React.Fragment>
         );
       });
      

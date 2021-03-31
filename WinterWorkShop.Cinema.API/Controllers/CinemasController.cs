@@ -68,6 +68,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpPost]
         [Route("Create")]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> CreateCinemaAsync([FromBody] CreateCinemaModel cinema)
         {
             CinemaDomainModel cinemaModel = new CinemaDomainModel
@@ -123,6 +124,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpDelete]
         [Route("Delete/{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> DeleteCinema(int id)
         {
 
@@ -153,7 +155,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult> UpdateCinema(int id, [FromBody] CinemaDomainModel updatedCinema)
+        [Authorize(Roles = "admin")]
+        public async Task<ActionResult> UpdateCinema(int id, [FromBody] CinemaDomainModel updatedMovie)
         {
             updatedCinema.Id = id;
 

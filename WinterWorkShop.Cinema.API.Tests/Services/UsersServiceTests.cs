@@ -539,14 +539,14 @@ namespace WinterWorkShop.Cinema.Tests.Services
         {
             var isSuccesful = false;
             var expectedMessage = Messages.USER_ID_NULL;
-
+            int broj = 1;
             var userId = Guid.NewGuid();
 
             _mockUserRepository.Setup(srvc => srvc.GetByIdAsync(userId)).ReturnsAsync(default(User));
 
             
 
-            var result = await _userService.IncrementBonusPointsForUser(userId);
+            var result = await _userService.IncrementBonusPointsForUser(userId,broj);
 
             // Assert
 
@@ -562,7 +562,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
         public async Task IncrementBonusPointsForUser_When_Called_Returns_IsSuccesful_True()
         {
             var isSuccesful = true;
-
+            int broj = 1;
             var userId = Guid.NewGuid();
 
             var userResult = new GenericResult<UserDomainModel>
@@ -578,7 +578,7 @@ namespace WinterWorkShop.Cinema.Tests.Services
 
 
 
-            var result = await _userService.IncrementBonusPointsForUser(userId);
+            var result = await _userService.IncrementBonusPointsForUser(userId,broj);
 
             // Assert
 

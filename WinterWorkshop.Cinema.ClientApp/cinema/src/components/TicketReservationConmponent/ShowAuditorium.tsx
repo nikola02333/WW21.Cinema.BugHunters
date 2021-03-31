@@ -1,16 +1,23 @@
 import React,{memo, useState} from 'react'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faCouch } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart, faCouch,faSpinner } from "@fortawesome/free-solid-svg-icons";
 import { Container, Row, Col,Button , Modal} from "react-bootstrap";
 import "./../../index.css";
 import { useHistory } from "react-router-dom";
 import PopUpModel from "./PopUpModel"
 import {IStateTicketReservation} from "./TicketReservation"
+import Spinner from "../Spinner"
 
+interface IInfo{
+  userId: string,
+  submitted: boolean,
+  projectionPrice:number
+}
 interface IProps{
   seat:IStateTicketReservation,
   setSeat: React.Dispatch<React.SetStateAction<IStateTicketReservation>>,
   tryReservation(e) : void
+  info:IInfo
 }
 export interface IStateShowAuditoriums{
   modalShow:boolean,
@@ -18,7 +25,7 @@ export interface IStateShowAuditoriums{
 }
 
 
-const ShowAuditorium: React.FC<IProps> = memo(({seat,setSeat,tryReservation}) => {
+const ShowAuditorium: React.FC<IProps> = ({info,seat,setSeat,tryReservation}) => {
 
     const [state,setState]=useState<IStateShowAuditoriums>({
       modalShow:false,
@@ -131,15 +138,16 @@ const ShowAuditorium: React.FC<IProps> = memo(({seat,setSeat,tryReservation}) =>
           let currentSeatId = seat.seats[seatIndex].id;
           let currentlyReserved = seat.currentReservationSeats.some((seat) => seat.currentSeatId === currentSeatId);
           let seatTaken = seat.reservedSeats.some((seat) => seat.id === currentSeatId);
-
+         
         renderedSeats.push(
           <td key={`row${row}-seat${i}`}>
             <button
             onClick={(e) => {
+              e.preventDefault();
                 let currentRow = row;
                 let currentNumber = i;
                 let currSeatId = currentSeatId;
-
+                
                 let leftSeatIsCurrentlyReserved = false;
                 let leftSeatIsTaken = false;
                 let rightSeatIsCurrentlyReserved = false;
@@ -193,16 +201,13 @@ const ShowAuditorium: React.FC<IProps> = memo(({seat,setSeat,tryReservation}) =>
                         }
         
                         if (leftSeatIsCurrentlyReserved || rightSeatIsCurrentlyReserved) {
-                            setTimeout(() => {
+                            
                             markSeatAsGreenish(currentSeatId);
-                            }, 150);
+                            
                         }
                     }
-
-                    setSeat((prev)=>({
-                    ...prev,
-                    currentReservationSeats,
-                    }));
+                    
+                   
                 }
                 setSeat((prev)=>({
                 ...prev,
@@ -234,14 +239,18 @@ const ShowAuditorium: React.FC<IProps> = memo(({seat,setSeat,tryReservation}) =>
     return renderedSeats;
     };
 
-    
-    
+  
     return( 
         <Container >
             <Row className="justify-content-center ">
-              <Button type="primary" className="mb-3" onClick={(e) => tryReservation(e)}>
+              <Button 
+              type="primary" 
+              className="mb-3" 
+              disabled={seat.currentReservationSeats.length===0?true:false} 
+              onClick={(e) => tryReservation(e)}>
               Confirm<FontAwesomeIcon className="text-white mr-1 fa-1x btn-payment__icon" icon={faShoppingCart}/>
               </Button>
+          
             </Row>
             <Row className="justify-content-center ">
             <table className="">
@@ -258,5 +267,5 @@ const ShowAuditorium: React.FC<IProps> = memo(({seat,setSeat,tryReservation}) =>
            
         </Container>
     );
-});
+};
 export default ShowAuditorium;
