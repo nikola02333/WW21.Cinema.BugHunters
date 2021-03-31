@@ -162,11 +162,11 @@ namespace WinterWorkShop.Cinema.API.Controllers
         }
 
         [HttpPut]
-        [Route("{Update/id}")]
-        public async Task<ActionResult> UpdateAuditorium(int id, [FromBody] string auditoriumName)
+        [Route("Update/{id}")]
+        public async Task<ActionResult> UpdateAuditorium(int id, [FromBody] AuditoriumToUpdateModel auditorium )
         {
           
-            var result = await _auditoriumService.UpdateAuditorium(id, auditoriumName);
+            var result = await _auditoriumService.UpdateAuditorium(id, auditorium);
             if (!result.IsSuccessful)
             {
                 ErrorResponseModel errorResponse = new ErrorResponseModel

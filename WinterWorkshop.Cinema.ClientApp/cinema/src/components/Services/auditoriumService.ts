@@ -1,6 +1,6 @@
 import { serviceConfig } from "../../appSettings"
 import { NotificationManager } from "react-notifications";
-import {ICreateAuditorium} from '../../models/AuditoriumModels';
+import {IAuditoriumToUpdate, ICreateAuditorium} from '../../models/AuditoriumModels';
 import API from '../../axios';
 
 
@@ -80,7 +80,7 @@ async function createAuditorium(auditorium: ICreateAuditorium)
                           }
                       });
 }
-async function updateAuditorium(auditoriumId: string, auditoriumToUpdate : ICreateAuditorium)
+async function updateAuditorium(auditoriumId: string, auditoriumToUpdate : IAuditoriumToUpdate)
 {
  return await API.put(`${serviceConfig.baseURL}/api/auditoriums/update/${auditoriumId}`, auditoriumToUpdate)
                               .then( (res)=> {

@@ -261,7 +261,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             };
         }
 
-        public async Task<GenericResult<AuditoriumDomainModel>> UpdateAuditorium(int auditoriumId,string auditoriumName)
+        public async Task<GenericResult<AuditoriumDomainModel>> UpdateAuditorium(int auditoriumId,AuditoriumToUpdateModel auditoriumToUpdate)
         {
             var auditorium = await _auditoriumsRepository.GetByIdAsync(auditoriumId);
             if (auditorium == null)
@@ -273,7 +273,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 };
             }
 
-            auditorium.AuditoriumName = auditoriumName;
+            auditorium.AuditoriumName = auditoriumToUpdate.Name;
            
             _auditoriumsRepository.Update(auditorium);
             _auditoriumsRepository.Save();

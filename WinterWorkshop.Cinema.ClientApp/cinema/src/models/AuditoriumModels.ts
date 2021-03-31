@@ -12,3 +12,7 @@ export interface ICreateAuditoriumWithCinema{
     seatRows : number;
     numberOfSeats : number;
 }
+
+export interface IAuditoriumToUpdate{
+    auditoriumName: string;   
+}

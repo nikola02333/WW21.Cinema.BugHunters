@@ -153,11 +153,11 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpPut]
         [Route("{id}")]
-        public async Task<ActionResult> UpdateCinema(int id, [FromBody] CinemaDomainModel updatedMovie)
+        public async Task<ActionResult> UpdateCinema(int id, [FromBody] CinemaDomainModel updatedCinema)
         {
-            updatedMovie.Id = id;
+            updatedCinema.Id = id;
 
-            var result = await _cinemaService.UpdateCinema(updatedMovie);
+            var result = await _cinemaService.UpdateCinema(updatedCinema);
             if (!result.IsSuccessful)
             {
                 ErrorResponseModel errorResponse = new ErrorResponseModel
