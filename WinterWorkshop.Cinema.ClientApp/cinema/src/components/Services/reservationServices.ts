@@ -12,7 +12,12 @@ export const reservationService = {
 
 async function tryReservationn(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, seat,info)
 {
- return await API.post(`${serviceConfig.baseURL}/api/levi9payment`)
+  if (
+    authChech.getRole() === "user" ||
+    authChech.getRole() === "superUser" ||
+    authChech.getRole() === "admin"
+  ){
+    return await API.post(`${serviceConfig.baseURL}/api/levi9payment`)
                               .then( (res)=> {
                                 makeReservationn(e,seat,info);
                               })
@@ -25,44 +30,37 @@ async function tryReservationn(e: React.MouseEvent<HTMLButtonElement, MouseEvent
                                   NotificationManager.error("Error");
                                 }
                                 });
+  }else{
+        NotificationManager.error("Please log in to make reservation.");
+        }
+}
+interface ICreateSeats{
+  projectionId:string;
+  seatId:string[];
+  userId:number;
 }
 
 async function makeReservationn(e: React.MouseEvent<HTMLButtonElement, MouseEvent>, seat,info)
 {
     e.preventDefault();
-
-    if (
-        authChech.getRole() === "user" ||
-        authChech.getRole() === "superUser" ||
-        authChech.getRole() === "admin"
-    ){
-
     var idFromUrl = window.location.pathname.split("/");
-      var projectionId = idFromUrl[3];
+    var projectionId = idFromUrl[3];
 
-      const { currentReservationSeats } = seat;
+    const { currentReservationSeats } = seat;
 
-      const data = {
+    const data : ICreateSeats = {
         projectionId: projectionId,
-        seatId: currentReservationSeats.map((id)=>{
-          return id['currentSeatId'];
-        }),
+        seatId: currentReservationSeats.map((id)=>{return id['currentSeatId'];}) ,
         userId: info.userId,
-      };
+    };
+    var points = data.seatId.length;
 
-    
     return await API.post(`${serviceConfig.baseURL}/api/ticket/create`,data)
                               .then( (res)=> {
-                                  var point=0;
-                                currentReservationSeats.forEach(x => {
-                                  var data = addPoints(info.userId);
-                                  if(data!==undefined){
-                                      point++;
-                                  }
-                                });
-                                if(point!==0){
+                                var result = addPoints(info.userId,points);
+                                if(currentReservationSeats.lenght!==0){
                                     NotificationManager.success(
-                                        point===1?"You got "+point+" bonus point":"You got "+point+" bonus points"
+                                      points===1?"You got "+points+" bonus point":"You got "+points+" bonus points"
                                       );
                                 }
                                 NotificationManager.success(
@@ -74,21 +72,19 @@ async function makeReservationn(e: React.MouseEvent<HTMLButtonElement, MouseEven
                               })
                               .catch(error => {
                                 if (error.response) {
-                                 NotificationManager.error(error.response.data.errorMessage);
+                                NotificationManager.error(error.response.data.errorMessage);
                                 } else if (error.request) {
                                   NotificationManager.error("Server Error");
                                 } else {
                                   NotificationManager.error("Error");
                                 }
                                 });
-    }else{
-        NotificationManager.error("Please log in to make reservation.");
-    }
+    
 }
 
-async function addPoints(id)
+async function addPoints(id:string, number:number)
 {
-    return await API.post(`${serviceConfig.baseURL}/api/Users/IncrementPoints/${id}`)
+    return await API.post(`${serviceConfig.baseURL}/api/Users/IncrementPoints/${id}/${number}`)
                               .then( (res)=> {
                                 return 1;
                               })
