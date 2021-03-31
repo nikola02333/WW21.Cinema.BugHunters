@@ -23,7 +23,7 @@ async function getAllAuditoriums()
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                           // NotificationManager.error("Server Error");
                           } else {
                             NotificationManager.error("Error");
                           }
@@ -40,7 +40,7 @@ async function getAuditoriumById(id:string)
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                           // NotificationManager.error("Server Error");
                           } else {
                             NotificationManager.error("Error");
                           }
@@ -57,7 +57,7 @@ async function getAuditoriumByCinemaId(id:number)
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                           // NotificationManager.error("Server Error");
                           } else {
                             NotificationManager.error("Error");
                           }
@@ -74,7 +74,7 @@ async function createAuditorium(auditorium: ICreateAuditorium)
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                          //  NotificationManager.error("Server Error");
                           } else {
                             NotificationManager.error("Error");
                           }
@@ -91,7 +91,7 @@ async function updateAuditorium(auditoriumId: string, auditoriumToUpdate : ICrea
                                 if (error.response) {
                                   NotificationManager.error(error.response.data.errorMessage);
                                 } else if (error.request) {
-                                  NotificationManager.error("Server Error");
+                                //  NotificationManager.error("Server Error");
                                 } else {
                                   NotificationManager.error("Error");
                                 }
@@ -109,7 +109,7 @@ async function deleteAuditorium(id: string)
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                           // NotificationManager.error("Server Error");
                           } else {
                             NotificationManager.error("Error");
                           }

@@ -74,7 +74,7 @@ async function makeReservationn(e: React.MouseEvent<HTMLButtonElement, MouseEven
                                 if (error.response) {
                                 NotificationManager.error(error.response.data.errorMessage);
                                 } else if (error.request) {
-                                  NotificationManager.error("Server Error");
+                                  //NotificationManager.error("Server Error");
                                 } else {
                                   NotificationManager.error("Error");
                                 }
@@ -92,7 +92,7 @@ async function addPoints(id:string, number:number)
                                 if (error.response) {
                                     NotificationManager.error(error.response.data.errorMessage);
                                 } else if (error.request) {
-                                  NotificationManager.error("Server Error");
+                               //   NotificationManager.error("Server Error");
                                 } else {
                                   NotificationManager.error("Error");
                                 }
