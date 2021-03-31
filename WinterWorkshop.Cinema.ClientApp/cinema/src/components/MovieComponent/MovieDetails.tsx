@@ -86,20 +86,17 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
     },[movie])
 
     const getFromIMDB = async(id:string | undefined)=>{
-
-        // if(!uploaded){
-        //     if(id!=="" && id!==undefined){
-        //         var data =await imdbService.searchImdbWitVideo(id);
-        //         if(data===undefined){
-        //             return;
-        //         }
-        //         setImdb(data);
-        //         console.log(data);
-        //     }
-        //     setUploaded(true);
-        // }
-        
-       
+        if(!uploaded){
+            if(id!=="" && id!==undefined){
+                var data =await imdbService.searchImdbWitVideo(id);
+                if(data===undefined){
+                    return;
+                }
+                setImdb(data);
+                console.log(data);
+            }
+            setUploaded(true);
+        }
     }
 
     const grouped = (projections:IProjection[])=>{

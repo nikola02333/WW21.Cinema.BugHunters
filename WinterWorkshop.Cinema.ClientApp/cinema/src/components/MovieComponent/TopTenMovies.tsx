@@ -122,7 +122,7 @@ const getTopTenMovies =  async()=>{
           <tr key={filteredMovie.id}>
             <td>{filteredMovie.title}</td>
             <td>{filteredMovie.year}</td>
-            <td>{Math.round(filteredMovie.rating)}/10</td>
+            <td>{filteredMovie.rating}/10</td>
           </tr>
         );
       });
@@ -136,7 +136,7 @@ const getTopTenMovies =  async()=>{
           <tr key={movie.id}>
             <td>{movie.title}</td>
             <td>{movie.year}</td>
-            <td>{Math.round(movie.rating)}/10</td>
+            <td>{movie.rating}/10</td>
           </tr>
         );
       });
