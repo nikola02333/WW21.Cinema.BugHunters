@@ -18,7 +18,7 @@ async function getTopTenMovies(){
             if (err.response) {
               NotificationManager.error(err.response.data.errorMessage);
             } else if (err.request) {
-              NotificationManager.error("Server Error");
+            //  NotificationManager.error("Server Error");
             }
         });   
 }
@@ -32,7 +32,7 @@ async function searchImdb(id: string)
                         if (err.response) {
                           NotificationManager.error(err.response.data.errorMessage);
                         } else if (err.request) {
-                          NotificationManager.error("Server Error");
+                          //NotificationManager.error("Server Error");
                         }
                     });
 }
@@ -46,7 +46,7 @@ async function searchImdbWitVideo(id: string)
                         if (err.response) {
                           NotificationManager.error(err.response.data.errorMessage);
                         } else if (err.request) {
-                          NotificationManager.error("Server Error");
+                         // NotificationManager.error("Server Error");
                         }
                     });
 }

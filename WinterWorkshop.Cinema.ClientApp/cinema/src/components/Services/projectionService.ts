@@ -22,7 +22,7 @@ async function getAllProjections(currant=false)
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                           // NotificationManager.error("Server Error");
                           } else {
                             NotificationManager.error("Error");
                           }
@@ -39,7 +39,7 @@ async function getProjectionById(id : string)
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                            //NotificationManager.error("Server Error");
                           } else {
                             NotificationManager.error("Error");
                           }
@@ -72,7 +72,7 @@ async function getFilteredProjection(filter : IFilterProjectionModel)
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                           // NotificationManager.error("Server Error");
                           } else {
                             NotificationManager.error("Error");
                           }
@@ -89,7 +89,7 @@ async function createProjection(projection: ICreateProjection)
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                            //NotificationManager.error("Server Error");
                           } else {
                             NotificationManager.error("Error");
                           }
@@ -107,7 +107,7 @@ async function deleteProjectino(id: string)
                           if (err.response) {
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
-                            NotificationManager.error("Server Error");
+                           // NotificationManager.error("Server Error");
                           } else {
                             NotificationManager.error("Error");
                           }
@@ -126,7 +126,7 @@ async function updateProjection(id: string, projectionToUpdate : ICreateProjecti
                                 if (err.response) {
                                   NotificationManager.error(err.response.data.errorMessage);
                                 } else if (err.request) {
-                                  NotificationManager.error("Server Error");
+                                 // NotificationManager.error("Server Error");
                                 } else {
                                   NotificationManager.error("Error");
                                 }
