@@ -99,7 +99,10 @@ const getTopTenMoviesFomImdb = async()=>{
       return;
     }
     setState(prevState=> ({ ...prevState, movies: moviesImdb, isLoading: false }));
+  }else{
+    getTopTenMovies();
   }
+
   setState((prev)=>({...prev,checked:!prev.checked}));
 }
 

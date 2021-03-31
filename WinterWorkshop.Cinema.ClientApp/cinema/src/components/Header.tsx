@@ -82,7 +82,7 @@ const Header: React.FC = (props: any) => {
     <Navbar className="nav-menu-bg" expand="lg">
       <Navbar.Brand className="text-info font-weight-bold text-capitalize">
         <Link className="text-decoration-none" to="/dashboard/Projections">
-          Cinema
+          Cinema by BugHunters
         </Link>
       </Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" className="text-white" />
