@@ -56,7 +56,7 @@ const EditMovie: React.FC = (props: any) => {
         ...state,
         title: movie.title,
         year: movie.year,
-        rating: Math.round(movie.rating),
+        rating: movie.rating,
         current:  ( (movie.current.toString() === 'true') ? true: false),
         id: movie.id + "",
         hasOscar: ( (movie.hasOscar.toString() === 'true') ? true: false),

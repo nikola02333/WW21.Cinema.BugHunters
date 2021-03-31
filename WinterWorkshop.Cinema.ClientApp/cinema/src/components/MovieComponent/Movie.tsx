@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Row, Table, OverlayTrigger,Tooltip } from "react-bootstrap";
+import { Row, Table, OverlayTrigger,Tooltip, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
@@ -14,6 +14,7 @@ import {
     isUser,
     isGuest,
   } from "../helpers/authCheck";
+  import { useHistory } from "react-router-dom";
 
  interface IProps {
   movies:IMovie[];
@@ -37,6 +38,7 @@ const Movie: React.FC<IProps> =({editMovie,changeCurrent,removeMovie,...props}) 
       }
       return userShouldSeeWholeTable;
     };
+    const history = useHistory();
    
     /// ovo za movie!!!
   const fillTableWithDaata = () => {
@@ -48,17 +50,20 @@ const Movie: React.FC<IProps> =({editMovie,changeCurrent,removeMovie,...props}) 
           >
             <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">
               { movie.tagsModel?.map(tag=> tag.tagValue).join(" ")}</Tooltip>}>
-
-         
+            {/* <Button
+            variant="link"
+            onClick={()=>history.push(`MovieDeatails/${movie.id}`)}> */}
             <FontAwesomeIcon
               className="text-info mr-2 fa-1x"
               icon={faInfoCircle}
+              onClick={()=>history.push(`MovieDeatails/${movie.id}`)}
             />
+            {/* </Button> */}
              </OverlayTrigger>
           </td>
           <td>{movie.title}</td>
           <td>{movie.year}</td>
-          <td>{Math.round(movie.rating)}/10</td>
+          <td>{movie.rating}/10</td>
           <td>{movie.hasOscar? "Yes": "No"}</td>
           {shouldUserSeeWholeTable() && <td>{movie.current ? "Yes" : "No"}</td>}
           {shouldUserSeeWholeTable() && (
