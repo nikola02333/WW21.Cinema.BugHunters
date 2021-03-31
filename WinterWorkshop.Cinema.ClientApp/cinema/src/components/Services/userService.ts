@@ -71,7 +71,7 @@ async function getUserByUsername(userName: string) : Promise<IUser>
 
 async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
 {
- var data =await API.post(`${serviceConfig.baseURL}/api/users/Create`, JSON.stringify(userToCreate))
+ return await API.post(`${serviceConfig.baseURL}/api/users/Create`, JSON.stringify(userToCreate))
     .then((response) => {
       return response.data;
     })
@@ -88,7 +88,6 @@ async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
       }
   });
 
-    return data;
 }
 
 function login (userName:string)  {
