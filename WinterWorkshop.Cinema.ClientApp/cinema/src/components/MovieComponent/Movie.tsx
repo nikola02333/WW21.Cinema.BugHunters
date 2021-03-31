@@ -64,7 +64,7 @@ const Movie: React.FC<IProps> =({editMovie,changeCurrent,removeMovie,...props}) 
           <td>{movie.title}</td>
           <td>{movie.year}</td>
           <td>{movie.rating}/10</td>
-
+          <td>{movie.hasOscar? "Yes": "No"}</td>
           {shouldUserSeeWholeTable() && <td>{movie.current ? "Yes" : "No"}</td>}
           {shouldUserSeeWholeTable() && (
             <td
@@ -117,6 +117,7 @@ const Movie: React.FC<IProps> =({editMovie,changeCurrent,removeMovie,...props}) 
           <th>Title</th>
           <th>Year</th>
           <th>Rating</th>
+          <th>Has Oscar</th>
           {shouldUserSeeWholeTable() && <th>Is Current</th>}
           {shouldUserSeeWholeTable() && <th></th>}
           {shouldUserSeeWholeTable() && <th></th>}

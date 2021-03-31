@@ -31,7 +31,7 @@ async function editUser(userToUpdate: IUserUpdate) :Promise<IUser>
               if (err.response) {
                 NotificationManager.error(err.response.data.errorMessage);
               } else if (err.request) {
-                NotificationManager.error("Server Error");
+               // NotificationManager.error("Server Error");
               }
           });
 
@@ -40,13 +40,12 @@ async function editUser(userToUpdate: IUserUpdate) :Promise<IUser>
  {
    return await API.get(`${serviceConfig.baseURL}/get-token/`)
                     .then( response => {
-                      return response.data;
+                      localStorage.setItem("jwt", response.data.token);
+                      return response.data.token;
                     })
                     .catch(err => {
                       if (err.response) {
-                        NotificationManager.error(err.response.data.errorMessage);
                       } else if (err.request) {
-                        NotificationManager.error("Server Error");
                      
                       }
                   });
@@ -63,7 +62,7 @@ async function getUserByUsername(userName: string) : Promise<IUser>
       if (err.response) {
         NotificationManager.error(err.response.data.errorMessage);
       } else if (err.request) {
-        NotificationManager.error("Server Error");
+       // NotificationManager.error("Server Error");
      
       }
   });
@@ -71,7 +70,7 @@ async function getUserByUsername(userName: string) : Promise<IUser>
 
 async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
 {
- var data =await API.post(`${serviceConfig.baseURL}/api/users/Create`, JSON.stringify(userToCreate))
+ return await API.post(`${serviceConfig.baseURL}/api/users/Create`, JSON.stringify(userToCreate))
     .then((response) => {
       return response.data;
     })
@@ -84,11 +83,10 @@ async function  singUp (userToCreate: IUserToCreateModel) :  Promise<any>
       if (err.response) {
         NotificationManager.error(err.response.data.errorMessage);
       } else if (err.request) {
-        NotificationManager.error("Server Error");
+        //NotificationManager.error("Server Error");
       }
   });
 
-    return data;
 }
 
 function login (userName:string)  {
@@ -112,7 +110,7 @@ function login (userName:string)  {
             if (err.response) {
               NotificationManager.error(err.response.data.errorMessage);
             } else if (err.request) {
-              NotificationManager.error("Server Error");
+            //  NotificationManager.error("Server Error");
             }
         });
 };
@@ -147,7 +145,7 @@ export const getUserByUsernameReservatino = (setState) => {
       if (err.response) {
         NotificationManager.error(err.response.data.errorMessage);
       } else if (err.request) {
-        NotificationManager.error("Server Error");
+       // NotificationManager.error("Server Error");
       
       }
   });

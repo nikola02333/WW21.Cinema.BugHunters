@@ -148,7 +148,8 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
                     <span className="">{movie.movie.title}</span>
                     </Col>
                 </Row >
-                <Row className="mt-3">
+                {
+                    imbd.data.directors===""?<></>:<Row className="mt-3">
                     <Col xs={3}>
                     <span className="font-weight-bold movie-details">Producer:</span>
                     </Col>
@@ -156,6 +157,8 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
                     <span className="">{imbd.data.directors}</span>
                     </Col>
                 </Row>
+                }
+                
                 <Row className="mt-3">
                     <Col xs={3}>
                     <span className="font-weight-bold movie-details">Genre:</span>
@@ -166,20 +169,24 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
                 </Row>
                 <Row className="mt-3">
                     <Col xs={3}>
-                    <span className="font-weight-bold movie-details">Stars:</span>
+                    <span className="font-weight-bold movie-details">Actors:</span>
                     </Col>
                     <Col>
                     <span className="">{movie.movie.tagsModel?.map(tag=> { if(tag.tagName==="Actor") return tag.tagValue+" "}).join('  ')}</span>
                     </Col>
                 </Row >
-                <Row className="mt-3">
+
+                {
+                    imbd.data.runtimeMins===""?<></>:<Row className="mt-3">
                     <Col xs={3}>
                     <span className="font-weight-bold movie-details">Runtime:</span>
                     </Col>
                     <Col>
-                    <span className="">{imbd.data.runtimeStr}</span>
+                    <span className="">{imbd.data.runtimeMins} min</span>
                     </Col>
                 </Row>
+                }
+                
                 <Row className="mt-3">
                     <Col xs={3}>
                     <span className="font-weight-bold movie-details">Year:</span>
@@ -188,7 +195,8 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
                     <span className="">{imbd.data.year}</span>
                     </Col>
                 </Row>
-                <Row className="mt-3">
+                {
+                    imbd.data.awards===""?<></>:<Row className="mt-3">
                     <Col xs={3}>
                     <span className="font-weight-bold movie-details">Awards:</span>
                     </Col>
@@ -196,9 +204,11 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
                     <span className="">{imbd.data.awards}</span>
                     </Col>
                 </Row>
+                }
+                
                 <Row className="mt-3">
                     <Col xs={3}>
-                    <span className="font-weight-bold movie-details">IMDB rating:</span>
+                    <span className="font-weight-bold movie-details">Rating:</span>
                     </Col>
                     <Col>
                     <span className=""><FontAwesomeIcon icon={faStar} className="text-warning"/>{movie.movie.rating+"/10"}</span>

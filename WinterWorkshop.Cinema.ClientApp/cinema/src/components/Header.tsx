@@ -26,6 +26,7 @@ const Header: React.FC = (props: any) => {
     shouldHide: true,
   });
    
+  /*
   useEffect( ()=> {
 
     if(localStorage.getItem("userLoggedIn") === null)
@@ -33,17 +34,42 @@ const Header: React.FC = (props: any) => {
       getTokenForGuest();
     }
   },[]);
+  */
+
+  useEffect( ()=> {
+   async function fetcsAsync(){
+
+    if(localStorage.getItem("userLoggedIn") === null)
+    {
+      await getTokenForGuest();
+    }
+    else{
+      setTimeout(()=> {}, 6000)
+    }
+   }
+    
+   fetcsAsync()
+  },[]);
+
 
   const getTokenForGuest =async()=>{
 
     let guestTOken = await userService.getTokenForGuest();
-    
-    if(guestTOken != null)
+
+
+    if(guestTOken === undefined)
     {
-    localStorage.setItem("jwt", guestTOken.token);
+    localStorage.setItem("jwt", guestTOken);
 
     }
+    else{
+      setTimeout(()=> {}, 6000)
+    }
   };
+ 
+
+
+
   useEffect(() => {
     let tokenExp = getTokenExp();
     let currentTimestamp = +new Date();

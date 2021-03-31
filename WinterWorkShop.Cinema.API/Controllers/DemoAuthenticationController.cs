@@ -61,7 +61,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 var jwt = JwtTokenGenerator
                 .Generate("","guest",Guid.NewGuid(), _configuration["Tokens:Issuer"], _configuration["Tokens:Key"]);
 
-                return Ok(new { token = jwt, firstName = "guest"});
+                return Ok(new { token = jwt });
            
         }
     }
