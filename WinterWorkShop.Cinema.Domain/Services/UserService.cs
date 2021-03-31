@@ -184,7 +184,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
             return domainModel;
         }
 
-        public async Task<GenericResult<UserDomainModel>> IncrementBonusPointsForUser(Guid userId)
+        public async Task<GenericResult<UserDomainModel>> IncrementBonusPointsForUser(Guid userId,int number)
         {
             var userExists = await _usersRepository.GetByIdAsync(userId);
             if(userExists == null)
@@ -196,7 +196,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                 };
             }
 
-            userExists.Points++;
+            userExists.Points+=number;
             _usersRepository.Update(userExists);
             _usersRepository.Save();
 
@@ -229,9 +229,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
 
             userForUpdate.FirstName = userToUpdate.FirstName;
             userForUpdate.LastName = userToUpdate.LastName;
-            //userForUpdate.UserName = userToUpdate.UserName.ToLower();
-            //userForUpdate.Role = userToUpdate.Role.ToLower();
-
+           
             _usersRepository.Update(userForUpdate);
 
             _usersRepository.SaveAsync();
@@ -245,7 +243,7 @@ namespace WinterWorkShop.Cinema.Domain.Services
                     Role = userForUpdate.Role,
                     FirstName = userForUpdate.FirstName,
                     LastName = userForUpdate.LastName,
-                     UserName = userForUpdate.UserName
+                    UserName = userForUpdate.UserName
                 } 
             };
 
