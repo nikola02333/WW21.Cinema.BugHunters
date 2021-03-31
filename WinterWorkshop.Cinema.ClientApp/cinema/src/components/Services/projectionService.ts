@@ -105,6 +105,7 @@ async function deleteProjectino(id: string)
                         })
                         .catch(err => {
                           if (err.response) {
+                            NotificationManager.error("Cannot be deleted");
                             NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
                            // NotificationManager.error("Server Error");

@@ -99,7 +99,7 @@ const MovieProjectCard:React.FC<IProps> = memo(({submitted,movies,filteredProjec
           return(
           <Container key={filteredProjection.movieId} className="shadow rounded my-3">
             <Row className="">
-              <Col md={4} className="justify-content-center my-3">
+              <Col md={3} className="justify-content-center my-3">
                 
               <img onClick={() => history.push(`MovieDeatails/${movie.id}`)} className=" img-fluid" style={{  borderRadius:5}} src={movie.coverPicture} />
               </Col>

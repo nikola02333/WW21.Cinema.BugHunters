@@ -124,12 +124,13 @@ const EditCinema: React.FC = (props: any) => {
 
   return (
     <Container>
-      <Row>
-        <Col>
+      <Row className="d-flex justify-content-center">
+        <Col xs={5}>
           <h1 className="form-header">Edit Existing Cinema</h1>
           <form onSubmit={handleSubmit}>
-            <FormGroup>
+            <FormGroup >
               <FormControl
+              className="my-2"
                 id="name"
                 type="text"
                 placeholder="Cinema name"
@@ -137,6 +138,7 @@ const EditCinema: React.FC = (props: any) => {
                 onChange={handleChange}
               />
                <FormControl
+               className="my-2"
                 id="address"
                 type="text"
                 placeholder="Cinema address"
@@ -144,6 +146,7 @@ const EditCinema: React.FC = (props: any) => {
                 onChange={handleChange}
               />
                <FormControl
+               className="my-2"
                 id="cityName"
                 type="text"
                 placeholder="Cinema city mame"
