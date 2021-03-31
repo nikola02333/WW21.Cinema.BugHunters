@@ -80,7 +80,7 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
           >
             <FontAwesomeIcon className="text-info mr-2 fa-1x" icon={faEdit} />
           </td>
-          <td
+          {/* <td
             width="5%"
             className="text-center cursor-pointer"
             onClick={() => removeAuditorium(auditorium.id)}
@@ -89,7 +89,7 @@ const ShowAllAuditoriums: React.FC = (props: any) => {
               className="text-danger mr-2 fa-1x"
               icon={faTrash}
             />
-          </td>
+          </td> */}
         </tr>
       );
     });

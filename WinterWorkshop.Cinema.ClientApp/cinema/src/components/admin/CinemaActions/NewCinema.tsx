@@ -118,8 +118,8 @@ const NewCinema: React.FC = (props: any) => {
       
       NotificationManager.success("New cinema added!");
       props.history.push(`AllCinemas`);
-   
-      ; 
+      window.location.reload();
+      
   };
 
 
