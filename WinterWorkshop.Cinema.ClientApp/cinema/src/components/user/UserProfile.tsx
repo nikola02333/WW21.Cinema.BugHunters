@@ -143,7 +143,7 @@ const UserProfile: React.FC = () => {
       return;
    }
    setState( (prevState)=> ({...prevState, user: editUser}));
-      //window.location.reload();
+    window.location.reload();
      
   };
 
