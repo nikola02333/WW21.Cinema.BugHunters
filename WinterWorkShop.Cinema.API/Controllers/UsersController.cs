@@ -206,8 +206,8 @@ namespace WinterWorkShop.Cinema.API.Controllers
             return Accepted(user.Data);
         }
         [HttpPost]
-        [Route("IncrementPoints/{userId}")]
-        public async Task<ActionResult<GenericResult<UserDomainModel>>> IncrementBonusPointsForUser(Guid userId)
+        [Route("IncrementPoints/{userId}/{number:int}")]
+        public async Task<ActionResult<GenericResult<UserDomainModel>>> IncrementBonusPointsForUser(Guid userId,int number)
         {
             if(userId == Guid.Empty)
             {
@@ -219,7 +219,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 return BadRequest(errorResponse);
             }
 
-           var userResult= await _userService.IncrementBonusPointsForUser(userId);
+           var userResult= await _userService.IncrementBonusPointsForUser(userId,number);
 
             if(!userResult.IsSuccessful)
             {

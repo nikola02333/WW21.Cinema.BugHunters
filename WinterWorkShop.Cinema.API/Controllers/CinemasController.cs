@@ -124,6 +124,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpDelete]
         [Route("Delete/{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> DeleteCinema(int id)
         {
 
@@ -154,6 +155,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpPut]
         [Route("{id}")]
+        [Authorize(Roles = "admin")]
         public async Task<ActionResult> UpdateCinema(int id, [FromBody] CinemaDomainModel updatedMovie)
         {
             updatedMovie.Id = id;

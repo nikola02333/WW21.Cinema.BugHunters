@@ -29,11 +29,11 @@ namespace WinterWorkShop.Cinema.API.Controllers
         /// <returns></returns>
         [HttpGet]
         [Route("all")]
-        public async Task<ActionResult<IEnumerable<ProjectionDomainModel>>> GetAsync(bool currant=false)
+        public async Task<ActionResult<IEnumerable<ProjectionDomainModel>>> GetAsync(bool currant = false)
         {
             IEnumerable<ProjectionDomainModel> projectionDomainModels;
-           
-             projectionDomainModels = await _projectionService.GetAllAsync(currant);            
+
+            projectionDomainModels = await _projectionService.GetAllAsync(currant);
 
             if (projectionDomainModels == null)
             {
@@ -65,7 +65,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("filter")]
-        [Authorize(Roles = "user")]
+        [Authorize(Roles = "admin,user,superUser,guest")]
         public async Task<ActionResult<GenericResult<ProjectionDomainModel>>> GetFilteredProjection([FromQuery] FilterProjectionModel query)
         {
             var filter = new FilterProjectionDomainModel
