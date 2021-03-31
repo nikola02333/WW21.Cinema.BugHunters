@@ -38,6 +38,7 @@ const ShowAllCinemas: React.FC = (props: any) => {
     var cinemas= await cinemaService.getCinemas();
     if(cinemas=== undefined)
     {
+      console.log("object");
       return;
     }
     setState({ ...state, cinemas: cinemas, isLoading: false });

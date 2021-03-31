@@ -39,7 +39,7 @@ const MovieProjectionButtons : React.FC<IProps> =({groupedProjections,movie,hist
           return(<></>);
         }
     
-        debugger
+       
         const projectionButton = filteredProjection.projections.map((projectio,index) => {
     
         const bottonsCinema= projectio.cinema.map((cinema,index)=>{

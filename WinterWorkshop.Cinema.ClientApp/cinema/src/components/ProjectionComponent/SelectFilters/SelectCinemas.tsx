@@ -15,7 +15,7 @@ const SelectCinenma  = memo((props:{setInfo,cinemas,setFilteredData}) =>{
 
     const hendleChange = async(e) =>{
       var id=e.target.value;
-      console.log(id)
+      
       e.preventDefault();
       if(id!=="none" && id){
       props.setInfo((prev)=>({...prev, cinemaId: id }));

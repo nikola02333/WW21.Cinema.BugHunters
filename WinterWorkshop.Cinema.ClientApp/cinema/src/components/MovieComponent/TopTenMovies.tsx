@@ -87,12 +87,10 @@ const TopTenMovies: React.FC = (props: any) => {
 
 const getTopTenMoviesFomImdb = async()=>{
 
-  
-  console.log(state.checked);
   if(!state.checked){
     setState(prevState=> ({ ...prevState, isLoading: true }));
     var moviesImdb = await imdbService.getTopTenMovies();
-    debugger;
+    
     if( moviesImdb === undefined)
     {
       setState(prevState=> ({ ...prevState, isLoading: false,checked:!prevState.checked }));
@@ -107,11 +105,14 @@ const getTopTenMoviesFomImdb = async()=>{
 }
 
 const getTopTenMovies =  async()=>{
+ 
     setState((prev)=>({ ...prev,isLoading: true }));
     var movies = await movieService.getTopTen();
-    console.log(movies);
+    
     if(movies === undefined)
     {
+      props.history.push('/dashboard/AllCinemas');
+      setState(prevState=> ({ ...prevState, movies: movies, isLoading: false }));
       return;
     }
     setState(prevState=> ({ ...prevState, movies: movies, isLoading: false }));
@@ -184,7 +185,7 @@ const getMoviesByYear = async(e)=> {
         <h1 className="form-header form-heading">Top 10 Movies</h1>
       </Row>
       <Row className="year-filter justify-content-start">
-        <Col  xs={1}>
+        <Col  xs={2}>
         <span className="filter-heading ">Filter by:</span>
         </Col>
         <Col  xs={1}>

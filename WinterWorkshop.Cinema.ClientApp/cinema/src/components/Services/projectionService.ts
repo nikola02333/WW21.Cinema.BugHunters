@@ -101,12 +101,13 @@ async function deleteProjectino(id: string)
     {
         return await API.delete(`${serviceConfig.baseURL}/api/Projections/Delete/${id}`)
                         .then( response=> {
+                          
                           return response.data;
                         })
                         .catch(err => {
                           if (err.response) {
                             NotificationManager.error("Cannot be deleted");
-                            NotificationManager.error(err.response.data.errorMessage);
+                            // NotificationManager.error(err.response.data.errorMessage);
                           } else if (err.request) {
                            // NotificationManager.error("Server Error");
                           } else {

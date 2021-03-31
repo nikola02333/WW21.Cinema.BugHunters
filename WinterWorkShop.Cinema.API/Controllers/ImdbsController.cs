@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using WinterWorkShop.Cinema.API.Models;
@@ -105,7 +106,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
                 { 
                     
                     Title= movie.Title,
-                     Rating= double.Parse( movie.IMDbRating),
+                     Rating= Convert.ToDouble( movie.IMDbRating),
                       Year=  int.Parse(movie.Year),
                       Current= true
 
