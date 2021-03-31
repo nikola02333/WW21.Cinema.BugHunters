@@ -81,9 +81,7 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
         // getProjection(id);
     },[])
 
-    useEffect(()=>{
-        console.log(movie);
-    },[movie])
+    
 
     const getFromIMDB = async(id:string | undefined)=>{
         if(!uploaded){
@@ -93,7 +91,7 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
                     return;
                 }
                 setImdb(data);
-                console.log(data);
+                
             }
             setUploaded(true);
         }
@@ -125,7 +123,7 @@ const [groupedProjections,setGroupedProjections]=useState<IGroupedProjections>(
         if(data.imdb!==undefined || data.imdb!==null){
             getFromIMDB(data.imdb);
         }
-        console.log(data);
+        
         
         setMovie({movie:data});
         

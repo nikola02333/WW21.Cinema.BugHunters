@@ -45,7 +45,7 @@ export const groupProjectionButton = (projections:IProjection[]) => {
       return(<></>);
     }
 
-    debugger
+    
     const projectionButton = filteredProjection.projections.map((projectio,index) => {
 
     const bottonsCinema= projectio.cinema.map((cinema,index)=>{

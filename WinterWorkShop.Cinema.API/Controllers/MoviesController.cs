@@ -65,7 +65,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("TopTenMovies")]
-        [Authorize(Roles = "admin,user,superUser")]
+        [Authorize(Roles = "admin,user,superUser,guest")]
         public async Task<ActionResult> GetTopTenMoviesAsync()
         {
 
@@ -75,7 +75,7 @@ namespace WinterWorkShop.Cinema.API.Controllers
 
         [HttpGet]
         [Route("GetMoviesSortedByYear")]
-        [Authorize(Roles = "admin,user,superUser")]
+        [Authorize(Roles = "admin,user,superUser,guest")]
         public async Task<ActionResult> GetMoviesSortedByYear()
         {
 

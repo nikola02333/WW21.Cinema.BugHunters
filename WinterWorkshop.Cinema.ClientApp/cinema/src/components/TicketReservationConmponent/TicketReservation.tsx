@@ -53,9 +53,7 @@ const TicketReservation:React.FC = () =>{
     useEffect(()=>{
       getUserByUsernameReservatino(setInfo);
     },[]);
-    useEffect(()=>{
-      console.log(info)
-    },[info]);
+    
  
      function getSeatData(auditoriumId,projectionId){
        Service.getReservedSeats(projectionId,setSeat);

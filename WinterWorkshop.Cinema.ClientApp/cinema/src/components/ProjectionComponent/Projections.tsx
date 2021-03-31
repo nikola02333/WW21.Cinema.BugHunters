@@ -113,7 +113,7 @@ const Projections : React.FC = (props: any) => {
       };
 
       var filteredProjections =await projectionService.getFilteredProjection(filter);
-      debugger;
+      
       if(filteredProjections===undefined || filteredProjections.length===0){
         NotificationManager.info("No projections for given filter");
         setInfo((prev)=>({ ...prev, submitted: false,selectedDate: false,dateTime:new Date(0)}));
